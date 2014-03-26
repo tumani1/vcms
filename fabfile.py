@@ -55,6 +55,10 @@ def _create_db():
     if not postgres.database_exists(db_name):
         require.postgres.database(db_name, db_user)
 
+def drop_db():
+    if postgres.database_exists(db_name):
+        postgres.drop_database(db_name)
+
 def _init_directories():
     """Create initial directories."""
     print('\n\nCreating initial directories...')
@@ -103,22 +107,23 @@ def _create_symlink():
 
 def _update_requirements():
     with virtualenv(virtualenv_path):
-        fabtools.python.install_requirements('%(project_path)s/current/requirements/prod.txt' % env)
+        with cd(env.project_current_path):
+            fabtools.python.install_requirements('%(project_path)s/current/requirements/prod.txt' % env)
 
 def _syncdb():
     with virtualenv(virtualenv_path):
         with cd(env.project_current_path):
-            run('python manage.py syncdb  --noinput ')
+            run('python manage.py syncdb ')
 
 def _migrate():
     with virtualenv(virtualenv_path):
         with cd(env.project_current_path):
-            run('python manage.py migrate --noinput --no-initial-data')
+            run('python manage.py migrate --no-initial-data')
 
 def _collectstatic():
     with virtualenv(virtualenv_path):
         with cd(env.project_current_path):
-            run('python manage.py collectstatic --dry-run --noinput')
+            run('python manage.py collectstatic --dry-run ')
 
 def restart_supervisor():
     fabtools.supervisor.restart_process(env.supervisor_service_name)
