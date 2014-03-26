@@ -1,5 +1,8 @@
-from django.db import models
+# coding: utf-8
 
 from .persons import Persons
 from .persons_extras import PersonsExtras
-# Create your models here.
+from .persons_topics import PersonsTopics
+from .users_persons import UsersPersons
+
+__all__ = ['Persons', 'PersonsExtras', 'PersonsTopics', 'UsersPersons']
