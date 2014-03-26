@@ -19,6 +19,7 @@ class TopicsPersonsExtend(models.Model):
     def __unicode__(self):
         return u'[{}] {}-{}'.format(self.pk, self.person.get_full_name, self.topic.name)
 
+
     class Meta:
         # Имя таблицы в БД
         db_table = 'topics_persons_extend'
