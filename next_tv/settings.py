@@ -50,6 +50,12 @@ INSTALLED_APPS = (
     'django_extensions',
     'south',
     'apps.core',
+    'apps.users',
+    'apps.comments',
+    'apps.media_contents',
+    'apps.contents',
+    'apps.topics',
+    'apps.persons',
 )
 
 MIDDLEWARE_CLASSES = (

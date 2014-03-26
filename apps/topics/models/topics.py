@@ -6,7 +6,7 @@ from django.db import models
 #############################################################################################################
 # Модель Расширения персоны
 class Topics(models.Model):
-    name           = models.CharField(max_length=255,verbose_name=u'Имя', primary_key = True)
+    name           = models.CharField(max_length=255,verbose_name=u'Имя', primary_key=True)
     title          = models.CharField(max_length=255,verbose_name=u'Название' )
     title_orig     = models.CharField(max_length=255,verbose_name=u'Оригинальное название')
     description    = models.TextField(verbose_name=u'Описание')
@@ -15,7 +15,6 @@ class Topics(models.Model):
     user_scheme    = models.CharField(max_length=255,verbose_name=u'Схема пользователя')
     person_scheme  = models.CharField(max_length=255,verbose_name=u'Схема персоны')
     content_scheme = models.CharField(max_length=255,verbose_name=u'Схема контента')
-
 
 
     def __unicode__(self):
@@ -27,4 +26,3 @@ class Topics(models.Model):
         app_label = 'topics'
         verbose_name = u'Тема'
         verbose_name_plural = u'Темы'
-

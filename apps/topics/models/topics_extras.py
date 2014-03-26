@@ -1,21 +1,20 @@
 # coding: utf-8
 
 from django.db import models
-from apps.mediacontent.models import MediaContents
+from apps.media_contents.models import MediaContents
 
 
 #############################################################################################################
 # Модель Расширения Тем
 class TopicsExtras(models.Model):
-
-    media_content = models.ForeignKey(MediaContents,verbose_name = u"Медиа контент")
-    topic = models.ForeignKey('Topics', verbose_name = u'Тема')
-    description = models.TextField(verbose_name = u'Описание')
-    etype = models.IntegerField(verbose_name = u'Тип')
+    media_content = models.ForeignKey(MediaContents, related_name='media_content_topics', verbose_name=u'Медиа контент')
+    topic         = models.ForeignKey('Topics', verbose_name=u'Тема')
+    description   = models.TextField(verbose_name=u'Описание')
+    type          = models.SmallIntegerField(choices=(), verbose_name=u'Тип')
 
 
     def __unicode__(self):
-        return u'[{}] {} {}'.format(self.pk, self.media_content.name,self.topic.name)
+        return u'[{0}] {1} {2}'.format(self.pk, self.media_content.name, self.topic.name)
 
     class Meta:
         # Имя таблицы в БД
@@ -23,4 +22,3 @@ class TopicsExtras(models.Model):
         app_label = 'topics'
         verbose_name = u'Дополнительный материал Темы'
         verbose_name_plural = u'Дополнительные материалы Тем'
-
