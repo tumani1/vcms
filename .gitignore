@@ -43,3 +43,4 @@ nosetests.xml
 .project
 .pydevproject
 /db.sqlite3
+/next_tv/settings_local.py
