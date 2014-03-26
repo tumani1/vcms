@@ -16,7 +16,7 @@ env.project_path = '/var/www/next_tv'
 env.project_current_path = '/var/www/next_tv/current'
 env.server_user = 'www-data'
 env.server_group = 'www-data'
-
+env.supervisor_service_name = 'next_tv_test'
 repo = 'git@git.aaysm.com:developers/next_tv.git'
 branch = 'master'
 db_name = 'next_tv'
@@ -120,8 +120,8 @@ def _collectstatic():
         with cd(env.project_current_path):
             run('python manage.py collectstatic --dry-run --noinput')
 
-def _restart_supervisor():
-    pass
+def restart_supervisor():
+    fabtools.supervisor.restart_process(env.supervisor_service_name)
 
 def deploy():
     _deploy_code()
@@ -130,3 +130,4 @@ def deploy():
     _syncdb()
     _migrate()
     _collectstatic()
+    restart_supervisor()
