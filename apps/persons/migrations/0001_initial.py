@@ -39,29 +39,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('persons', ['PersonsExtras'])
 
-        # Adding model 'PersonsTopics'
-        db.create_table('persons_topics', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['persons.Persons'], max_length=255)),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['topics.Topics'], max_length=255)),
-            ('t_type', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('t_character', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('description', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('persons', ['PersonsTopics'])
-
-        # Adding model 'UsersPersons'
-        db.create_table('users_persons', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.Users'])),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['persons.Persons'])),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['topics.Topics'])),
-            ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('rating', self.gf('django.db.models.fields.FloatField')()),
-            ('status', self.gf('django.db.models.fields.SmallIntegerField')()),
-        ))
-        db.send_create_signal('persons', ['UsersPersons'])
-
 
     def backwards(self, orm):
         # Deleting model 'Persons'
@@ -72,12 +49,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'PersonsExtras'
         db.delete_table('persons_extras')
-
-        # Deleting model 'PersonsTopics'
-        db.delete_table('persons_topics')
-
-        # Deleting model 'UsersPersons'
-        db.delete_table('users_persons')
 
 
     models = {
@@ -100,7 +71,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'name_orig': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'p_status': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'tags'", 'symmetrical': 'False', 'to': "orm['contents.Tags']"}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'contents_tags'", 'symmetrical': 'False', 'to': "orm['contents.Tags']"}),
             'views_cnt': ('django.db.models.fields.IntegerField', [], {})
         },
         'persons.persons': {
@@ -121,63 +92,6 @@ class Migration(SchemaMigration):
             'location': ('django.db.models.fields.TextField', [], {}),
             'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Persons']", 'max_length': '255'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
-        'persons.personstopics': {
-            'Meta': {'object_name': 'PersonsTopics', 'db_table': "'persons_topics'"},
-            'description': ('django.db.models.fields.TextField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Persons']", 'max_length': '255'}),
-            't_character': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            't_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'topic': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['topics.Topics']", 'max_length': '255'})
-        },
-        'persons.userspersons': {
-            'Meta': {'object_name': 'UsersPersons', 'db_table': "'users_persons'"},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['persons.Persons']"}),
-            'rating': ('django.db.models.fields.FloatField', [], {}),
-            'status': ('django.db.models.fields.SmallIntegerField', [], {}),
-            'topic': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['topics.Topics']"}),
-            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.Users']"})
-        },
-        'topics.topics': {
-            'Meta': {'object_name': 'Topics', 'db_table': "'topics'"},
-            'content_scheme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'description': ('django.db.models.fields.TextField', [], {}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'primary_key': 'True'}),
-            'person_scheme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'release_date': ('django.db.models.fields.DateField', [], {}),
-            's_status': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'title_orig': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'user_scheme': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
-        'users.users': {
-            'Meta': {'object_name': 'Users', 'db_table': "'users'"},
-            'address': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'bio': ('django.db.models.fields.TextField', [], {}),
-            'birth_date': ('django.db.models.fields.DateField', [], {}),
-            'city': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'country': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '255'}),
-            'firstname': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_visited': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'lastname': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'status': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
-            'time_zone': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'type': ('django.db.models.fields.SmallIntegerField', [], {}),
-            'userpic_id': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': "orm['users.UsersPics']", 'null': 'True', 'blank': 'True'}),
-            'userpic_type': ('django.db.models.fields.SmallIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
-        },
-        'users.userspics': {
-            'Meta': {'object_name': 'UsersPics', 'db_table': "'users_pics'"},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['users.Users']"})
         }
     }
 

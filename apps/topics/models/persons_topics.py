@@ -1,14 +1,14 @@
 # coding: utf-8
 
 from django.db import models
-from apps.topics.models import Topics
+from apps.persons.models import Persons
 
 
 #############################################################################################################
 # Модель Связь Персоны и Темы
 class PersonsTopics(models.Model):
-    person      = models.ForeignKey('Persons', max_length=255, verbose_name=u'Персона')
-    topic       = models.ForeignKey(Topics, max_length=255, verbose_name=u'Топик')
+    person      = models.ForeignKey(Persons, related_name='person_topics', max_length=255, verbose_name=u'Персона')
+    topic       = models.ForeignKey('Topics', max_length=255, verbose_name=u'Топик')
     t_type      = models.CharField(max_length=255, verbose_name=u'Тип топика')
     t_character = models.CharField(max_length=255, verbose_name=u'Характеристика топика')
     description = models.TextField(verbose_name=u'Описание')
@@ -20,6 +20,6 @@ class PersonsTopics(models.Model):
     class Meta:
         # Имя таблицы в БД
         db_table = 'persons_topics'
-        app_label = 'persons'
+        app_label = 'topics'
         verbose_name = u'Связь персоны и темы'
         verbose_name_plural = u'Связи персон и тем'

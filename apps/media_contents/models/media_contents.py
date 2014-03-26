@@ -19,7 +19,7 @@ class MediaContents(models.Model):
     mc_type        = models.CharField(max_length=255, verbose_name=u'Тип медиа контента')
     p_status       = models.CharField(max_length=255, verbose_name=u'Статус')
     bio            = models.TextField(verbose_name=u'Биография')
-    tags           = models.ManyToManyField(Tags, related_name='tags')
+    tags           = models.ManyToManyField(Tags, related_name='contents_tags')
 
 
     def __unicode__(self):

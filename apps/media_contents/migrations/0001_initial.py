@@ -117,7 +117,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'name_orig': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'p_status': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'tags'", 'symmetrical': 'False', 'to': "orm['contents.Tags']"}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'contents_tags'", 'symmetrical': 'False', 'to': "orm['contents.Tags']"}),
             'views_cnt': ('django.db.models.fields.IntegerField', [], {})
         }
     }
