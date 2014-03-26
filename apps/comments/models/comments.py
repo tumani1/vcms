@@ -9,9 +9,9 @@ class Comments(models.Model):
     ctext       = models.TextField( verbose_name=u'Текст комментария')
     created     = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=u'Дата создания')
     user_id     = models.IntegerField(max_length=255, verbose_name=u'Родительский комментарий')
-    obj_id   = models.IntegerField(verbose_name = 'Номер объекта')
-    obj_type = models.CharField(max_length=255, verbose_name=u'Тип объекта')
-    obj_name = models.CharField(max_length=255, verbose_name=u'Название объекта')
+    obj_id      = models.IntegerField(verbose_name = u'Номер объекта')
+    obj_type    = models.CharField(max_length=255, verbose_name=u'Тип объекта')
+    obj_name    = models.CharField(max_length=255, verbose_name=u'Название объекта')
 
     def __unicode__(self):
         return u'[{}] {}'.format(self.pk, self.user_id)
