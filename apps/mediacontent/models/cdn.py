@@ -8,9 +8,9 @@ from media_content import MediaContent
 class CDN(models.Model):
     name            = models.CharField(max_length=255, verbose_name=u'Имя',primary_key = True)
     description     = models.CharField(max_length=255, verbose_name=u'Описание')
-    has_mobile      = models.BooleanField(verbose_name = 'Имеется ли доступ с мобильных устройств')
-    has_auth        = models.BooleanField(verbose_name = 'Имеется ли аутентификация')
-    url             = models.URLField(max_length=255, verbose_name = 'Ссылка')
+    has_mobile      = models.BooleanField(verbose_name = u'Имеется ли доступ с мобильных устройств')
+    has_auth        = models.BooleanField(verbose_name = u'Имеется ли аутентификация')
+    url             = models.URLField(max_length=255, verbose_name = u'Ссылка')
     location_regexp = models.CharField(max_length=255, verbose_name=u'Регулярное выражение')
 
 

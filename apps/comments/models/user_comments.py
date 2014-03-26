@@ -6,8 +6,8 @@ from apps.users.models import Users
 #############################################################################################################
 # Модель Комментария Пользователя
 class UsersComments(models.Model):
-    comment = models.ForeignKey('Users', verbose_name=u'Комментарий')
-    user    = models.ForeignKey('Users', verbose_name=u'Пользователь')
+    comment   = models.ForeignKey('Users', verbose_name=u'Комментарий')
+    user      = models.ForeignKey('Users', verbose_name=u'Пользователь')
     uc_status = models.CharField(max_length=255, verbose_name=u'Статус')
     uc_rating = models.IntegerField(max_length=255, verbose_name=u'Рейтинг')
 
