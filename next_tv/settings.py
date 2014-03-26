@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'south',
+    'apps.core',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -120,7 +121,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
 SITE_ID = 1
+
+MEDIA_ROOT = os.path.abspath(BASE_PATH + '/../static')
+MEDIA_URL = '/static/'
+
+STATIC_URL = '/production/static/'
+STATIC_ROOT = os.path.join('/var/www/')
 
 from settings_local import *
