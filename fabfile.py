@@ -125,7 +125,7 @@ def _migrate():
         with cd(env.project_current_path):
             run('python manage.py migrate --no-initial-data')
 
-def collectstatic():
+def _collectstatic():
     with settings(user = "www-data"):
         with virtualenv(virtualenv_path):
             with cd(env.project_current_path):
