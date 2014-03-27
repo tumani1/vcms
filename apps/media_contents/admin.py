@@ -2,13 +2,13 @@
 
 from django.contrib import admin
 
-from mediacontent.models import MediaContent, MediaContentLocations, CDN
+from .models import *
 
 # Register your models here.
 #############################################################################################################
 
 # Администрирование таблицы Медиа контента
-class MediaContentAdmin(admin.ModelAdmin):
+class MediaContentsAdmin(admin.ModelAdmin):
     search_fields = ('id',)
 
 
@@ -24,7 +24,7 @@ class CDNAdmin(admin.ModelAdmin):
 
 #############################################################################################################
 # Регистрация моделей в админке
-admin.site.register(MediaContent, MediaContentAdmin)
+admin.site.register(MediaContents, MediaContentsAdmin)
 admin.site.register(MediaContentLocations, MediaContentLocationsAdmin)
 admin.site.register(CDN, CDNAdmin)
 

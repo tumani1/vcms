@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from comments.models import Comments, UsersComments
+from .models import*
 
 # Register your models here.
 #############################################################################################################

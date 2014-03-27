@@ -2,8 +2,7 @@
 
 from django.contrib import admin
 
-from comments.models import Topics, TopicsExtras, TopicsPersonsExtend
-
+from .models import *
 
 class TopicsAdmin(admin.ModelAdmin):
     search_fields = ('id',)
@@ -15,22 +14,25 @@ class TopicsPersonsExtendAdmin(admin.ModelAdmin):
     search_fields = ('id',)
 
 
-admin.site.register(Topics, TopicsAdmin)
-admin.site.register(TopicsExtras, TopicsExtrasAdmin)
-admin.site.register(TopicsPersonsExtend, TopicsPersonsExtendAdmin)
+#############################################################################################################
+# Администрирование таблицы расширения
+class UsersPersonsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'person', 'topic', 'rating', 'status', 'updated',)
+    list_filter = ('status', 'updated',)
+    search_fields = ('user', )
+    raw_id_fields = ('user', 'person', 'topic',)
 
 
-Topics, TopicsExtras, TopicsPersonsExtend
-class CommentsAdmin(admin.ModelAdmin):
-    search_fields = ('id',)
-
-# Администрирование таблицы комментариев пользователей
-class UsersCommentsAdmin(admin.ModelAdmin):
+#############################################################################################################
+# Администрирование таблицы связей персон и тем
+class PersonsTopicsAdmin(admin.ModelAdmin):
     search_fields = ('id',)
 
 
 #############################################################################################################
 # Регистрация моделей в админке
-admin.site.register(Comments, CommentsAdmin)
-admin.site.register(UsersComments, UsersCommentsAdmin)
-
+admin.site.register(Topics, TopicsAdmin)
+admin.site.register(TopicsExtras, TopicsExtrasAdmin)
+admin.site.register(TopicsPersonsExtend, TopicsPersonsExtendAdmin)
+admin.site.register(PersonsTopics, PersonsTopicsAdmin)
+admin.site.register(UsersPersons, UsersPersonsAdmin)

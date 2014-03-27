@@ -52,10 +52,10 @@ INSTALLED_APPS = (
     'apps.core',
     'apps.users',
     'apps.comments',
-    'apps.media_contents',
     'apps.contents',
-    'apps.topics',
+    'apps.media_contents',
     'apps.persons',
+    'apps.topics',
 )
 
 MIDDLEWARE_CLASSES = (
