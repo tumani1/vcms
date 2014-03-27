@@ -23,10 +23,15 @@ db_name = 'next_tv'
 db_user = 'pgadmin'
 db_password = 'qwerty'
 virtualenv_path = '/home/virtualenv/next_tv'
-def setup_db_locally():
+def create_db_locally():
     database_vars = app_settings.DATABASES['default']
     local('''createdb --owner %(USER)s \
                       -U %(USER)s \
+                      -W %(NAME)s''' % database_vars)
+
+def drop_db_locally():
+    database_vars = app_settings.DATABASES['default']
+    local('''dropdb   -U %(USER)s \
                       -W %(NAME)s''' % database_vars)
 
 
@@ -120,10 +125,11 @@ def _migrate():
         with cd(env.project_current_path):
             run('python manage.py migrate --no-initial-data')
 
-def _collectstatic():
-    with virtualenv(virtualenv_path):
-        with cd(env.project_current_path):
-            run('python manage.py collectstatic --dry-run ')
+def collectstatic():
+    with settings(user = "www-data"):
+        with virtualenv(virtualenv_path):
+            with cd(env.project_current_path):
+                run('python manage.py collectstatic --noinput')
 
 def restart_supervisor():
     fabtools.supervisor.restart_process(env.supervisor_service_name)
