@@ -1,9 +1,0 @@
-[uwsgi]
-chdir=/home/tumani1/workspace/next_tv
-module=next_tv.wsgi:application
-master=True
-pidfile=/tmp/next_tv.pid
-vacuum=True
-max-requests=5000
-daemonize=/tmp/next_tv.log
-socket=/tmp/uwsgi.sock
