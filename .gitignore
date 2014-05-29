@@ -1,12 +1,10 @@
-*.log
-*.pot
-*.pyc
-local_settings.py
-
-configs/db.ini
-configs/uwsgi.ini
+# Ini
+*.ini
 
 *.py[cod]
+
+# Pycharm conf
+.idea
 
 # C extensions
 *.so
@@ -42,5 +40,5 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-/db.sqlite3
-/next_tv/settings_local.py
+# Cache
+cache
