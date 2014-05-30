@@ -1,5 +1,6 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
 
 from models import Base
 
@@ -7,10 +8,12 @@ from models import Base
 class Countries(Base):
     __tablename__ = 'countries'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256), nullable=False)
-    name_orig = Column(String(256), nullable=False)
+    id          = Column(Integer, primary_key=True)
+    name        = Column(String(256), nullable=False)
+    name_orig   = Column(String(256), nullable=False)
     description = Column(Text)
+
+    cities      = relationship('Cities', backref='country')
 
     def __init__(self, name, name_orig, description=None):
         self.name = name

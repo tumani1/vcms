@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, ForeignKey, String
 from models import Base
 
 
-class ChatUsers(Base):
+class UsersChat(Base):
     __tablename__ = 'chat_users'
 
     chat_id = Column(Integer, ForeignKey('chats.id'), nullable=False, unique=True)

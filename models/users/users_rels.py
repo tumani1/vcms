@@ -9,15 +9,19 @@ class UsersRels(Base):
     __tablename__ = 'users_rels'
 
     RELS_TYPE = (
-        ('f', u'Друзья'),
-        ('n', u'Никаких')
+        (0, u'Нет'),
+        # это когда сам юзер отправил запрос
+        (1, u'Запрос отправлен'),
+        # это когда ему другой юзер отправил
+        (2, u'запрос отправлен пользователем'),
+        (9, u'Обоюдная дружба'),
     )
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    id         = Column(Integer, primary_key=True)
+    user_id    = Column(Integer, ForeignKey('users.id'), nullable=False)
     partner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    urStatus = Column(ChoiceType(RELS_TYPE), nullable=False)
-    update = Column(DateTime)
+    urStatus   = Column(ChoiceType(RELS_TYPE), nullable=False)
+    update     = Column(DateTime)
 
     def __init__(self, user, partner, urStatus, update):
         self.user_id = user
