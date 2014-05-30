@@ -7,6 +7,7 @@ from models import Base
 
 class UsersRels(Base):
     __tablename__ = 'users_rels'
+    __table_args__ = {'extend_existing': True}
 
     RELS_TYPE = (
         (0, u'Нет'),

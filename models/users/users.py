@@ -8,6 +8,7 @@ from models import Base
 
 class Users(Base):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
 
     TYPE_GENDER = (
         ('m', u'Мужской'),
@@ -23,18 +24,18 @@ class Users(Base):
     firstname    = Column(String(128), nullable=False)
     lastname     = Column(String(128), nullable=False)
     gender       = Column(ChoiceType(TYPE_GENDER))
-    phone        = Column(PhoneNumberType(country_code='RU'))
-    city_id      = Column(Integer, ForeignKey('city.id'), nullable=False)
+    phone        = Column(PhoneNumberType())
+    city_id      = Column(Integer, ForeignKey('cities.id'), nullable=False)
     address      = Column(Text)
-    time_zone    = Column(TimezoneType())
+    time_zone    = Column(TimezoneType(backend='pytz'))
     bio          = Column(Text)
     created      = Column(DateTime, nullable=False)
     last_visit   = Column(DateTime)
     email        = Column(String(256))
-    password     = Column(PasswordType(schemes=['md5_crypt'], deprecated='md5_crypto'))
-    uStatus      = Column(ChoiceType(TYPE_STATUS))
+    password     = Column(PasswordType(schemes=['md5_crypt']))
+    # uStatus      = Column(ChoiceType(TYPE_STATUS))
     birthdate    = Column(Date)
-    uType        = Column(ChoiceType(TYPE_TYPE))
+    # uType        = Column(ChoiceType(TYPE_TYPE))
     userpic_type = Column(String(1))
     userpic_id   = Column(Integer)
 

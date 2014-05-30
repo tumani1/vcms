@@ -7,10 +7,14 @@ from models import Base
 
 class UsersMsgrThreads(Base):
     __tablename__ = 'users_msgr_threads'
+    __table_args__ = {'extend_existing': True}
 
-    TYPE_STATUS = ()
+    TYPE_STATUS = (
+        (0, u'Заблокирован'),
+        (1, u'Не заблокирован'),
+    )
 
-    user_id         = Column(Integer, ForeignKey("users.id"), unique=True)
+    user_id         = Column(Integer, ForeignKey("users.id"), primary_key=True)
     msgr_threads_id = Column(Integer, ForeignKey('msgr_threads.id'), unique=True)
     umtStatus       = Column(ChoiceType(TYPE_STATUS), default=0)
     last_msg_sent   = Column(DateTime)

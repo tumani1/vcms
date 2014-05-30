@@ -7,6 +7,7 @@ from models import Base
 
 class MsgrThreads(Base):
     __tablename__ = 'msgr_threads'
+    __table_args__ = {'extend_existing': True}
 
     id       = Column(Integer, primary_key=True)
     msg_cnt  = Column(Integer, default=0)

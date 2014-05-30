@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy_utils import ChoiceType
 
 from models import Base
@@ -14,4 +14,11 @@ class UsersSocial(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     sType   = Column(ChoiceType(TYPE_SOCIAL))
     sToken  = Column(String(40))
-    created = Column()
+    created = Column(DateTime)
+    updated = Column(DateTime)
+
+    def __init__(self):
+        pass
+
+    def __repr__(self):
+        pass

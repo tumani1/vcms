@@ -7,6 +7,7 @@ from models import Base
 
 class Countries(Base):
     __tablename__ = 'countries'
+    __table_args__ = {'extend_existing': True}
 
     id          = Column(Integer, primary_key=True)
     name        = Column(String(256), nullable=False)
