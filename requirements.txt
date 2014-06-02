@@ -1,6 +1,8 @@
 flask
 SQLAlchemy
 sqlalchemy-utils
+pyyaml
+psycopg2
 pytz
 phonenumbers
 passlib
