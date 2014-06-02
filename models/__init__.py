@@ -1,7 +1,8 @@
 # coding: utf-8
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from next_tv.settings import ENGINE_STR
+from settings import ENGINE_STR
+
 
 engine = create_engine(ENGINE_STR)
 

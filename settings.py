@@ -4,7 +4,7 @@ from ConfigParser import RawConfigParser
 
 BASE_PATH = os.path.dirname(__file__)
 BASE_DIR = os.path.dirname(BASE_PATH)
-CONFIG_PATH = os.path.join(BASE_DIR, 'configs')
+CONFIG_PATH = os.path.join(BASE_DIR, 'next_tv/configs')
 
 ENGINE_STR_TPL = '{engine}://{username}:{password}@{host}:{port}/{database}'
 
