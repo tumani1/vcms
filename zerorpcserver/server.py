@@ -3,8 +3,9 @@ import zerorpc
 
 
 class HelloRPC(object):
-    def hello(self, s):
-        return "{} !!!".format(s.upper())
+
+    def routing(self, json_data):
+        return "{} !!!".format(json_data.upper())
 
 server = zerorpc.Server(HelloRPC())
 server.bind("tcp://0.0.0.0:4242")

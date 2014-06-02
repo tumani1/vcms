@@ -3,6 +3,8 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType
 
+import datetime
+
 from models import Base
 
 
@@ -16,23 +18,19 @@ class Users(Base):
         ('n', u'Не установлен'),
     )
 
-    TYPE_STATUS = ()
-
-    TYPE_TYPE = ()
-
     id           = Column(Integer, primary_key=True)
     firstname    = Column(String(128), nullable=False)
     lastname     = Column(String(128), nullable=False)
-    gender       = Column(ChoiceType(TYPE_GENDER))
+    gender       = Column(ChoiceType(TYPE_GENDER), default='n')
     phone        = Column(PhoneNumberType())
     city_id      = Column(Integer, ForeignKey('cities.id'), nullable=False)
     address      = Column(Text)
     time_zone    = Column(TimezoneType(backend='pytz'))
     bio          = Column(Text)
-    created      = Column(DateTime, nullable=False)
+    created      = Column(DateTime, default=datetime.datetime.now(), nullable=False)
     last_visit   = Column(DateTime)
     email        = Column(String(256))
-    password     = Column(PasswordType(schemes=['md5_crypt']))
+    password     = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
     # uStatus      = Column(ChoiceType(TYPE_STATUS))
     birthdate    = Column(Date)
     # uType        = Column(ChoiceType(TYPE_TYPE))
@@ -44,9 +42,6 @@ class Users(Base):
     values       = relationship('UsersValues', backref='users')
     msgr_log     = relationship('MsgrLog', backref='users')
     msgr_threads = relationship('UsersMsgrThreads', backref='users')
-
-    def __init__(self):
-        pass
 
     def __repr__(self):
         return '<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)

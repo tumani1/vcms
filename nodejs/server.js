@@ -6,10 +6,10 @@ var zerorpc = require('zerorpc');
     var server = ws.createServer(function (conn) {
         console.log("New connection");
 
-        conn.on("text", function (str) {
+        conn.on("text", function (json) {
             var client = new zerorpc.Client();
             client.connect("tcp://127.0.0.1:4242");
-            client.invoke("hello", str, function(error, res, more) {
+            client.invoke("routing", json, function(error, res, more) {
                 console.log(res);
                 conn.sendText(res);
             });
