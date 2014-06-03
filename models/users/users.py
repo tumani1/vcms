@@ -1,7 +1,7 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType
+from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 import datetime
 
@@ -25,24 +25,24 @@ class Users(Base):
     gender       = Column(ChoiceType(TYPE_GENDER), default=APP_USERS_GENDER_UNDEF)
     password     = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
     city_id      = Column(Integer, ForeignKey('cities.id'), nullable=False)
-    created      = Column(DateTime, default=datetime.datetime.now())
+    created      = Column(DateTime, default=datetime.datetime.now)
+    email        = Column(EmailType())
     phone        = Column(PhoneNumberType())
     address      = Column(Text)
     time_zone    = Column(TimezoneType(backend='pytz'))
     bio          = Column(Text)
     last_visit   = Column(DateTime)
-    email        = Column(String(256))
     birthdate    = Column(Date)
     userpic_type = Column(String(1))
     userpic_id   = Column(Integer)
     # uStatus      = Column(ChoiceType(TYPE_STATUS))
     # uType        = Column(ChoiceType(TYPE_TYPE))
 
-    rels         = relationship('UsersRels', backref='users')
+    # rels         = relationship('UsersRels.user_id', backref='users')
     chats        = relationship('UsersChat', backref='users')
-    values       = relationship('UsersValues', backref='users')
-    msgr_log     = relationship('MsgrLog', backref='users')
-    msgr_threads = relationship('UsersMsgrThreads', backref='users')
+    # values       = relationship('UsersValues', backref='users')
+    # msgr_log     = relationship('MsgrLog', backref='users')
+    # msgr_threads = relationship('UsersMsgrThreads', backref='users')
 
     def __repr__(self):
         return '<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)
