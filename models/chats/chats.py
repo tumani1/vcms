@@ -14,8 +14,5 @@ class Chats(Base):
 
     user_chats = relationship('ChatUsers', backref='chats')
 
-    def __init__(self, description):
-        self.description = description
-
     def __repr__(self):
         return "<Chats([{}] {})>".format(self.id, self.description)

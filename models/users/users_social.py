@@ -8,7 +8,10 @@ from models import Base
 class UsersSocial(Base):
     __tablename__ = 'users_social'
 
-    TYPE_SOCIAL = ()
+    TYPE_SOCIAL = (
+        (),
+        (),
+    )
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
@@ -17,8 +20,5 @@ class UsersSocial(Base):
     created = Column(DateTime)
     updated = Column(DateTime)
 
-    def __init__(self):
-        pass
-
     def __repr__(self):
-        pass
+        return '<UsersSocial([{}] {} {})>'.format(self.id, self.user_id, self.sType)

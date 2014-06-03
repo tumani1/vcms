@@ -6,3 +6,4 @@ psycopg2
 pytz
 phonenumbers
 passlib
+zerorpc

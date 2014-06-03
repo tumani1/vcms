@@ -19,12 +19,5 @@ class Cities(Base):
 
     users       = relationship("Users", backref='cities')
 
-    def __init__(self, country, name, name_orig, time_zone, description=None):
-        self.country_id = country
-        self.name = name
-        self.name_orig = name_orig
-        self.time_zone = time_zone
-        self.description = description
-
     def __repr__(self):
         return "<Cities([{}] {})>".format(self.id, self.name)

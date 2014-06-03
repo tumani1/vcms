@@ -1,0 +1,4 @@
+# coding: utf-8
+APP_USERS_GENDER_MAN = 'm'
+APP_USERS_GENDER_WOMAN = 'f'
+APP_USERS_GENDER_UNDEF = 'n'
