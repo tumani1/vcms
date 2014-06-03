@@ -5,6 +5,7 @@ from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, Password
 
 import datetime
 
+from constants import APP_USERS_GENDER_MAN, APP_USERS_GENDER_WOMAN, APP_USERS_GENDER_UNDEF
 from models import Base
 
 
@@ -13,29 +14,29 @@ class Users(Base):
     __table_args__ = {'extend_existing': True}
 
     TYPE_GENDER = (
-        ('m', u'Мужской'),
-        ('f', u'Женский'),
-        ('n', u'Не установлен'),
+        (APP_USERS_GENDER_MAN, u'Мужской'),
+        (APP_USERS_GENDER_WOMAN, u'Женский'),
+        (APP_USERS_GENDER_UNDEF, u'Не установлен'),
     )
 
     id           = Column(Integer, primary_key=True)
     firstname    = Column(String(128), nullable=False)
     lastname     = Column(String(128), nullable=False)
-    gender       = Column(ChoiceType(TYPE_GENDER), default='n')
-    phone        = Column(PhoneNumberType())
+    gender       = Column(ChoiceType(TYPE_GENDER), default=APP_USERS_GENDER_UNDEF)
+    password     = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
     city_id      = Column(Integer, ForeignKey('cities.id'), nullable=False)
+    created      = Column(DateTime, default=datetime.datetime.now())
+    phone        = Column(PhoneNumberType())
     address      = Column(Text)
     time_zone    = Column(TimezoneType(backend='pytz'))
     bio          = Column(Text)
-    created      = Column(DateTime, default=datetime.datetime.now(), nullable=False)
     last_visit   = Column(DateTime)
     email        = Column(String(256))
-    password     = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
-    # uStatus      = Column(ChoiceType(TYPE_STATUS))
     birthdate    = Column(Date)
-    # uType        = Column(ChoiceType(TYPE_TYPE))
     userpic_type = Column(String(1))
     userpic_id   = Column(Integer)
+    # uStatus      = Column(ChoiceType(TYPE_STATUS))
+    # uType        = Column(ChoiceType(TYPE_TYPE))
 
     rels         = relationship('UsersRels', backref='users')
     chats        = relationship('UsersChat', backref='users')

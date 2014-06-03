@@ -24,7 +24,6 @@ class UsersRels(Base):
     urStatus   = Column(ChoiceType(RELS_TYPE), nullable=False)
     update     = Column(DateTime)
 
-
     def __repr__(self):
         return "<UsersRels({}-{}:{})>".format(self.user_id, self.partner_id,
                                               self.urStatus)
