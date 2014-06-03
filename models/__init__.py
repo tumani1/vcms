@@ -6,9 +6,7 @@ from sqlalchemy.engine.url import URL
 
 from settings import DATABASE
 
-print DATABASE['postgresql']
 engine = create_engine(URL(**DATABASE['postgresql']))
-
 Base = declarative_base()
 
 from users import *
