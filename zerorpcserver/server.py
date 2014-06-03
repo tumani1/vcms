@@ -3,7 +3,6 @@ import zerorpc
 
 
 class HelloRPC(object):
-
     def routing(self, json_data):
         return "{} !!!".format(json_data.upper())
 
