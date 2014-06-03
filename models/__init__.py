@@ -1,14 +1,9 @@
 # coding: utf-8
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.engine.url import URL
+from connectors import DBWrapper
 
-from settings import DATABASE
-
-print DATABASE['postgresql']
-engine = create_engine(URL(**DATABASE['postgresql']))
-
+db = DBWrapper()
 Base = declarative_base()
 
 from users import *
