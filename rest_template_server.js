@@ -3,6 +3,16 @@ var url = require("url");
 var zerorpc = require("zerorpc");
 
 
+function validate(vurl) {
+    // user/friends.format
+    // topics/{name}/info.format
+    // persons/{id}/values.format
+    var re = new RegExp("^\/([a-z]{4,10})(\/[0-9]+|\/[a-z0-9]+)?\/([a-z]{4,10})$");
+    if (re.test(vurl) == true) {
+        
+    }
+}
+
 function form_ipc_pack(purl, http_method) {
     var parsed_url = url.parse(purl, true);
     var idx = parsed_url.pathname.lastIndexOf(".");
