@@ -1,4 +1,5 @@
 flask
+flask-admin
 SQLAlchemy
 sqlalchemy-utils
 pyyaml
