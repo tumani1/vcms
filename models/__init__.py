@@ -18,6 +18,3 @@ from chats import *
 from scheme import *
 from topics import *
 from persons import *
-
-
-# Base.metadata.create_all(engine)

@@ -1,10 +1,10 @@
 # coding: utf-8
-
 import os
 import yaml
 
-
 BASE_PATH = os.path.dirname(__file__)
+
+# Base path for configs folder
 CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
 
 # Parse DB Config
