@@ -1,0 +1,35 @@
+<! DOCTYPE html>
+<html>
+<head>
+    <title>Пример работы с websocket</title>
+    <script>
+        var socket = new WebSocket("ws://localhost:8001/api");
+
+        socket.onopen = function() {
+          alert("Соединение установлено.");
+        };
+
+        socket.onmessage = function(event) {
+            var el = document.getElementById("output");
+            el.innerHTML = '';
+            el.innerHTML = event.data;
+        };
+
+        function send(){
+            var el = document.getElementById("text");
+            socket.send(el.value);
+        }
+
+    </script>
+</head>
+<body>
+    <div>
+        <label for="text">Исходный текст:</label>
+        <input name="text" id="text" type="text" title="Текст" />
+        <button onclick="send()">Отправить сообщение</button>
+    </div>
+    <div id="output"></div>
+</body>
+</html>
+
+

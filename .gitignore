@@ -1,5 +1,8 @@
-# Ini
-*.ini
+*.log
+*.pot
+*.pyc
+
+configs/db.yaml
 
 *.py[cod]
 
