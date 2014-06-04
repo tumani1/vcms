@@ -11,7 +11,7 @@ __all__ = ['DBWrapper', 'db_connect']
 # Create connection to the database
 def db_connect(type='postgresql', **kwargs):
     db_settings = DATABASE[type]
-    return create_engine(URL(**db_settings), **kwargs)
+    return create_engine(URL(**db_settings), echo=True, **kwargs)
 
 
 class DBWrapper(object):

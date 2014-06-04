@@ -14,11 +14,9 @@ class HelloRPC(object):
         pd = ujson.loads(json_data)
         user = authorize(pd['token'])
         mashed_key = (pd['api_group'], pd['api_method'], pd['http_method'])
-        print mashed_routes[mashed_key]
+
         #response = routes[pd['api_group']][pd['api_method']][pd['http_method']](user_id=user_id, **pd['query_params'])
         response = mashed_routes[mashed_key](user, **pd['query_params'])
-
-        print response
         return response
 
 server = zerorpc.Server(HelloRPC())
