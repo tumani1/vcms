@@ -14,12 +14,6 @@ class UsersChat(Base):
     last_update = Column(Integer)
     cuStatus = Column(String(128))
 
-    def __init__(self, chat, user, last_update=None, cuStatus=None):
-        self.chat_id = chat
-        self.user_id = user
-        self.last_update = last_update
-        self.cuStatus = cuStatus
-
     def __repr__(self):
         return "<ChatUser({} {})>".format(self.chat_id, self.user_id)
 

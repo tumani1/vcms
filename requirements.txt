@@ -1,6 +1,11 @@
 flask
+flask-admin
 SQLAlchemy
 sqlalchemy-utils
+pyyaml
+psycopg2
 pytz
 phonenumbers
 passlib
+zerorpc
+ujson

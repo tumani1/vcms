@@ -14,11 +14,5 @@ class MsgrLog(Base):
     text            = Column(String(256), nullable=False)
     attachments     = Column(Binary)
 
-    def __init__(self, msgr_threads, user, text, attachments=None):
-        self.msgr_threads_id = msgr_threads
-        self.user_id = user
-        self.text = text
-        self.attachments = attachments
-
     def __repr__(self):
         return "<MsgrLog([{}] {} {})>".format(self.id, self.msgr_threads_id, self.user_id)

@@ -12,10 +12,7 @@ class Chats(Base):
     id = Column(Integer, primary_key=True)
     description = Column(Integer)
 
-    user_chats = relationship('ChatUsers', backref='chats')
-
-    def __init__(self, description):
-        self.description = description
+    user_chats = relationship('UsersChat', backref='chats')
 
     def __repr__(self):
         return "<Chats([{}] {})>".format(self.id, self.description)

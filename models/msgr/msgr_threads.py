@@ -15,8 +15,5 @@ class MsgrThreads(Base):
     msg_logs           = relationship('MsgrLog', backref='msgr_threads')
     users_msgr_threads = relationship("UsersMsgrThreads", backref='msgr_threads')
 
-    def __init__(self, msg_cnt=0):
-        self.msg_cnt = msg_cnt
-
     def __repr__(self):
         return "<MsgrThreads([{}] {})>".format(self.id, self.msg_cnt)
