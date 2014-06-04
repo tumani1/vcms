@@ -7,17 +7,16 @@ from test import routes as test_routing
 routes = {
     'users': users_routing,
     'topics': topics_routing,
-    'persons' : persons_routing,
-    'test':test_routing
+    'persons': persons_routing,
+    'test': test_routing
 }
+
 
 def authorize(token):
 
-    if token=='foobar':
+    if token == 'foobar':
         return 1
     elif token == 'snafu':
         return 2
     else:
         return None
-
-    

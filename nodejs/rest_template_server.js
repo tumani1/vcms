@@ -2,7 +2,7 @@ var http = require("http");
 var zerorpc = require("zerorpc");
 var url = require("url");
 var querystring = require("querystring");
-var log = console.log
+var log = console.log;
 
 
 function validate(vurl) {
@@ -12,7 +12,6 @@ function validate(vurl) {
 
 function form_ipc_pack(request, directives, query_params) {
     // request нужен, чтобы взять параметры при типе запроса PUT/POST
-    log(directives[1], directives[2]);
     qp = querystring.parse(query_params);
     qp["ident"] = (directives[2] ? directives[2].slice(1) : null);
 
