@@ -30,20 +30,25 @@ function run_server(host, port) {  // якобы общепринятое пра
         var meth = request.method;
         var directives = validate(vurl);
         var IPC_pack;
-        if (meth in ["POST", "PUT"] && directives != null) {
+        log(meth);
+        if (["POST", "PUT"].indexOf(meth)>-1 && directives != null) {
             IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log("received IPC: " + IPC_pack.toString());
+            log(meth);
+            log("received IPC: " + IPC_pack);
             request.on('data', function(chunk) {
-                IPC_pack["query_params"] = null;
+                log(chunk);
+                IPC_pack["query_params"] += chunk;
+            });
+            request.on("end", function() {
                 client.invoke("route", IPC_pack, function(error, res, more) {
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.end(res);
                 })
-            });
+            })
         }
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log("received IPC: " + IPC_pack.toString());
+            log("received IPC: " + IPC_pack);
             client.invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
                 response.end(res);
