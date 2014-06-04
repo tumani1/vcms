@@ -14,8 +14,6 @@ class Countries(Base):
     name_orig   = Column(String(256), nullable=False)
     description = Column(Text)
 
-    cities      = relationship('Cities', backref='country')
-
     def __repr__(self):
-        return "<Countries([{}] {})>".format(self.id, self.name)
+        return u"<Countries([{}] {})>".format(self.id, self.name)
 
