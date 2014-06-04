@@ -7,8 +7,7 @@ from models import engine
 
 admin = Admin(name='NextTV')
 
-Session = sessionmaker(bind=engine)
-session = Session()
+session = sessionmaker(bind=engine)()
 
 from models.users import Users
 from models.contents import Cities, Countries

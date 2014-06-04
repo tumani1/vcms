@@ -1,15 +1,18 @@
 # coding: utf-8
 
 from sqlalchemy.ext.declarative import declarative_base
-from connectors import DBWrapper
+from sqlalchemy.orm import sessionmaker
+from connectors import DBWrapper, db_connect
 
-db = DBWrapper()
+engine = db_connect()
+dbWrap = DBWrapper()
 Base = declarative_base()
+session = sessionmaker(bind=engine, expire_on_commit=False)()
 
 from users import *
 from msgr import *
 from contents import *
 from chats import *
 from scheme import *
-from topics import *
 from persons import *
+from topics import *
