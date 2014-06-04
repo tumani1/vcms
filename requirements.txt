@@ -8,3 +8,4 @@ pytz
 phonenumbers
 passlib
 zerorpc
+ujson
