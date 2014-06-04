@@ -6,7 +6,7 @@ from api import authorize
 from raven import Client
 
 DEBUG = True
-mashed_routes = dict( ((g,a,h),routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
+mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
 
 def raven_report(func):
@@ -28,15 +28,13 @@ class ZeroRpcService(object):
     @raven_report
     def route(self, IPC_pack):
 
-        print(IPC_pack)
         pd = ujson.loads(IPC_pack)
         user_id = authorize(pd['token'])
         mashed_key = (pd['api_group'],
                       pd['api_method'],
                       pd['http_method'])
-        response = mashed_routes[mashed_key](user_id, **pd['query_params'])
-        print(response)
-        return response
+        return mashed_routes[mashed_key](user_id, **pd['query_params'])
+
 
 if __name__ == '__main__':
     server = zerorpc.Server(ZeroRpcService())
