@@ -20,8 +20,8 @@ if __name__ == '__main__':
     admin_c = subparser.add_parser('admin', help='Start sites admin')
     admin_c.add_argument('-p', '--port', metavar='PORT', type=int, help='Port to start admin', default=5000)
     admin_c.add_argument('-H', '--host', metavar='HOST', help='Host to start admin', default='127.0.0.1')
-    admin_c.add_argument('--debug', dest='debug', action='store_true')
-    admin_c.add_argument('--no-debug', dest='debug', action='store_false')
+    admin_c.add_argument('--debug', dest='debug', action='store_true', help='Run admin in debug mode')
+    admin_c.add_argument('--no-debug', dest='debug', action='store_false', help='Run admin without debug mode')
     admin_c.set_defaults(func=start_admin, debug=True)
 
     syncdb_c = subparser.add_parser('syncdb', help='Create database')
