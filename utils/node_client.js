@@ -2,8 +2,8 @@ var http = require("http");
 var options = {
     hostname: '127.0.0.1',
     port: 7777,
-    path: "/api/v1/films/7914/persons.json.xml.yaml?type=a&top=4"
-//    path: "/users/56/friends.format"
+//    path: "/api/v1/films/7914/persons.json.xml.yaml?type=a&top=4"
+    path: "/users/info?type=a&top=4&id=77"
 };
 
 
