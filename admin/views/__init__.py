@@ -1,19 +1,30 @@
 # coding: utf-8
 from flask.ext.admin import Admin
-from flask.ext.admin.contrib.sqla import ModelView
+
 from sqlalchemy.orm import sessionmaker
 
-from models import engine
+from connectors import db_connect
 
 admin = Admin(name='NextTV')
 
+engine = db_connect()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-from models.users import Users
-from models.contents import Cities, Countries
-admin.add_view(ModelView(Users, session, category=u'Пользователи', name=u'Пользователи'))
+###############################################################################
+# User
+from users import UsersRelsModelView, UsersModelView
+from models.users import UsersRels, Users
 
-admin.add_view(ModelView(Cities, session, category=u'Локации', name=u'Города'))
-admin.add_view(ModelView(Countries, session, category=u'Локации', name=u'Страны'))
+admin.add_view(UsersRelsModelView(UsersRels, session, category=u'Пользователи', name=u'Отношения пользователей'))
+admin.add_view(UsersModelView(Users, session, category=u'Пользователи', name=u'Пользователи'))
+###############################################################################
 
+###############################################################################
+# Contents
+from contents import CountryModelView, CitieModelView
+from models.contents import Countries, Cities
+
+admin.add_view(CitieModelView(Cities, session, category=u'Локации', name=u'Города'))
+admin.add_view(CountryModelView(Countries, session, category=u'Локации', name=u'Страны'))
+###############################################################################

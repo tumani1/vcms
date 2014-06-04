@@ -9,3 +9,6 @@ phonenumbers
 passlib
 zerorpc
 ujson
+raven
+wtforms-html5
+wtforms
