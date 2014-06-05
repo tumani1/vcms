@@ -1,3 +1,3 @@
 #!/bin/bash
 # Example of client request for our backend zerorpc service
-zerorpc --json --client tcp://0.0.0.0:4242 route '{"api_group": "users", "api_method":"friendship", "http_method":"get", "query_params":{"partner_id":1}, "token": "foobar"}'
+zerorpc --client tcp://0.0.0.0:4242 routing '{"api_group": "topics", "api_method":"info", "api_format":"json", "token":"foobar", "http_method":"get", "query_params":{"name":"test"}}'

@@ -1,7 +1,7 @@
-from models import db, Users, Cities, Countries
+from models import dbWrap, Users, Cities, Countries
 
 
-@db
+@dbWrap
 def get(user_id, session= None):
     user = session.query(Users).filter_by(id=user_id).first()
     city = session.query(Cities).filter_by(id=user.city_id).first()
@@ -16,6 +16,7 @@ def get(user_id, session= None):
         'city': city.name,
     }
     return result
-@db
+
+@dbWrap
 def put(user_id, session=None,**kwargs):
     pass
