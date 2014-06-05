@@ -1,6 +1,8 @@
-from user_info import get
+from user_info import get, put
 
-info = {'get':get
+info = {
+    'get':get,
+    'put': put
 }
 
 

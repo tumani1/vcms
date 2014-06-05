@@ -16,5 +16,13 @@ def get(user_id, session= None):
         'city': city.name,
     }
     return result
+
+
 @db
 def put(user_id, session=None,**kwargs):
+    user = session.query(Users).filter_by(id=user_id).first()
+    user.firstname = kwargs['firstname']
+    user.lastname = kwargs['lastname']
+    user.time_zone = kwargs['time_zone']
+    session.commit()
+
