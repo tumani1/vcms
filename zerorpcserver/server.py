@@ -1,8 +1,13 @@
 # coding: utf-8
+
+import ujson
 import zerorpc
+
+from raven import Client
+
 from api import routes
 from api import authorize
-from raven import Client
+
 
 DEBUG = True
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
@@ -27,10 +32,9 @@ class ZeroRpcService(object):
     @raven_report
     def route(self, IPC_pack):
         user_id = authorize(IPC_pack['token'])
-        mashed_key = (IPC_pack['api_group'],
-                      IPC_pack['api_method'],
-                      IPC_pack['http_method'])
-        return mashed_routes[mashed_key](user_id, **IPC_pack['query_params'])
+        mashed_key = (IPC_pack['api_group'], IPC_pack['api_method'], IPC_pack['http_method'])
+        response = mashed_routes[mashed_key](user_id, **IPC_pack['query_params'])
+        return response
 
 
 if __name__ == '__main__':

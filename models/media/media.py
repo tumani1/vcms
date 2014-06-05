@@ -8,8 +8,8 @@ from models import Base
 class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key=True)
-    title = Column(String(128), nullable=False)
-    title_orig = Column(String(128), nullable=True)
+    title = Column(String, nullable=False)
+    title_orig = Column(String, nullable=True)
     allow_mobile = Column(Boolean, default=False)
     allow_smarttv = Column(Boolean, default=False)
     allow_external = Column(Boolean, default=False)
