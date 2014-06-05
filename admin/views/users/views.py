@@ -14,6 +14,10 @@ class UsersRelsModelView(ModelView):
         urStatus=fields.Select2Field
     )
 
+    column_choices = dict(
+        urStatus=APP_USERSRELS_TYPE,
+    )
+
     column_labels = dict(user=u'Пользователь', partner=u'Партнёр',
                          urStatus=u'Тип отношений',
                          update=u'Последнее обновление')
@@ -53,6 +57,10 @@ class UsersModelView(ModelView):
                          time_zone=u'Временная зона', created=u'Дата создания',
                          phone=u'Телефон', last_visit=u'Последний визит')
     column_exclude_list = ('userpic_type', 'userpic_id')
+
+    column_choices = dict(
+        gender=APP_USERS_TYPE_GENDER,
+    )
 
     form_args = dict(
         city=dict(
