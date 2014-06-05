@@ -18,3 +18,4 @@ def get(user_id, session= None):
     return result
 @db
 def put(user_id, session=None,**kwargs):
+    pass
