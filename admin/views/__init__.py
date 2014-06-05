@@ -1,6 +1,6 @@
 # coding: utf-8
-from flask.ext.admin import Admin
 
+from flask.ext.admin import Admin
 from sqlalchemy.orm import sessionmaker
 
 from connectors import db_connect
@@ -8,8 +8,7 @@ from connectors import db_connect
 admin = Admin(name='NextTV')
 
 engine = db_connect()
-Session = sessionmaker(bind=engine)
-session = Session()
+session = sessionmaker(bind=engine)()
 
 ###############################################################################
 # User
