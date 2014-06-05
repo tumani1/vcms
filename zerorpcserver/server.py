@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import ujson
 import zerorpc
 
 from raven import Client
