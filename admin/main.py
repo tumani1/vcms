@@ -4,7 +4,7 @@ from flask import Flask
 from views import admin
 
 
-if __name__ == '__main__':
+def start_application(host='127.0.0.1', port=5000, debug=True):
     app = Flask(__name__)
     admin.init_app(app)
-    app.run()
+    app.run(debug=debug, port=port, host=host)
