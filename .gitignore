@@ -3,8 +3,12 @@
 *.pyc
 
 configs/db.yaml
+configs/zero_rpc_services.yaml
 
 *.py[cod]
+
+# node temp dirs
+.bin
 
 # Pycharm conf
 .idea
