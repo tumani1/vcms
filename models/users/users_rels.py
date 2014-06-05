@@ -18,7 +18,7 @@ class UsersRels(Base):
     user       = relationship('Users', foreign_keys=user_id, backref='friends')
     partner_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
     partner    = relationship('Users', foreign_keys=partner_id, backref='partners')
-    urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE, impl=Integer()), nullable=False)
+    urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE), nullable=False)
     update     = Column(DateTime, onupdate=datetime.datetime.now, default=datetime.datetime.now)
 
     def __repr__(self):

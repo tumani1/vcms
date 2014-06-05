@@ -6,6 +6,7 @@ from sqlalchemy.event import listens_for, listen
 from sqlalchemy.dialects.postgresql import BYTEA
 
 from models import Base
+from models.scheme import Scheme
 
 
 class TopicsValues(Base):
@@ -22,8 +23,19 @@ class TopicsValues(Base):
 
     @classmethod
     def tmpl_for_values(cls, session):
-        query = session.query(cls)
+        return session.query(cls)
+
+
+    @classmethod
+    def get_values_through_schema(cls, session, name, scheme_name):
+        if not isinstance(scheme_name, list):
+            scheme_name = [scheme_name]
+
+        query = cls.tmpl_for_values(session).join(Scheme).\
+            filter(cls.topic_name == name, Scheme.name.in_(scheme_name))
+
         return query
+
 
     @classmethod
     def data(cls, data):
@@ -49,6 +61,9 @@ class TopicsValues(Base):
         result['value'] = value
 
         return result
+
+
+
 
 
     # value_int, value_text, value_string - обязательно одни из

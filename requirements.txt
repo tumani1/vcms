@@ -10,3 +10,4 @@ passlib
 zerorpc
 raven
 wtforms-html5
+fabric

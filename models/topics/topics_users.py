@@ -19,8 +19,24 @@ class UsersTopics(Base):
     liked      = Column(DateTime, nullable=True)
 
 
+    @classmethod
+    def tmpl_for_user_topic(cls, session):
+        return session.query(cls)
+
+
+    @classmethod
+    def get_user_topic(cls, user, name, session):
+        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == user, cls.topic_name == name)
+        return query
+
+
     @property
     def check_liked(self):
+        return True if self.liked else False
+
+
+    @property
+    def check_subscribed(self):
         return True if self.liked else False
 
 

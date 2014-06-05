@@ -1,37 +1,38 @@
 # coding: utf-8
 
 from models import dbWrap, TopicsValues
+from models.scheme import Scheme
 
 __all__ = ['get_topic_values']
 
 
 @dbWrap
-def get_topic_values(user, session, **kwargs):
+def get_topic_values(user, session, name, **kwargs):
     # Params
     params = {
-        'user': user,
+        'name': name,
         'session': session,
-        'name': None,
+        'scheme_name': None,
     }
 
-    if 'name' in kwargs:
-        name = kwargs['name']
-        if not isinstance(name, list):
+    if 'scheme_name' in kwargs:
+        scheme_name = kwargs['scheme_name']
+        if not isinstance(scheme_name, list):
             try:
-                params['name'] = str(name).strip()
+                params['scheme_name'] = [str(scheme_name).strip()]
             except Exception, e:
                 pass
         else:
-            if isinstance(name, list):
+            if isinstance(scheme_name, list):
                 try:
-                    params['name'] = [str(i).strip() for i in name]
+                    params['scheme_name'] = [str(i).strip() for i in scheme_name]
                 except Exception, e:
                     pass
 
-    if params['name'] is None:
+    if params['scheme_name'] is None:
         #return 404
         pass
 
-    query = TopicsValues.tmpl_for_values(session).filter(TopicsValues.name.in_(name))
+    query = TopicsValues.get_values_through_schema(**params).all()
 
     return TopicsValues.data(query)

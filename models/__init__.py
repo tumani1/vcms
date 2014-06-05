@@ -5,9 +5,8 @@ from sqlalchemy.orm import sessionmaker
 from connectors import DBWrapper, db_connect
 
 engine = db_connect()
-dbWrap = DBWrapper()
+dbWrap = DBWrapper(engine=engine)
 Base = declarative_base()
-session = sessionmaker(bind=engine, expire_on_commit=False)()
 
 from users import *
 from msgr import *
@@ -16,3 +15,5 @@ from chats import *
 from scheme import *
 from persons import *
 from topics import *
+from media import *
+from extras import *

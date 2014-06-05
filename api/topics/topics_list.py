@@ -57,6 +57,6 @@ def get_topics_list(user, session, **kwargs):
 
             params['limit'] = (r1, r2)
 
-    query = Topics.get_topics_list(**params)
+    query = Topics.get_topics_list(**params).all()
 
     return Topics.data(user, query)
