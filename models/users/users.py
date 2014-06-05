@@ -36,3 +36,7 @@ class Users(Base):
 
     def __repr__(self):
         return u'<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)
+
+    @property
+    def get_full_name(self):
+        return u'{0} {1}'.format(self.firstname, self.lastname)

@@ -2,7 +2,7 @@ from models import db, Users, Cities, Countries
 
 
 @db
-def get(user_id, session= None):
+def get(user_id, session=None):
     user = session.query(Users).filter_by(id=user_id).first()
     city = session.query(Cities).filter_by(id=user.city_id).first()
     country = session.query(Countries).filter_by(id=city.country_id).first()
@@ -19,10 +19,14 @@ def get(user_id, session= None):
 
 
 @db
-def put(user_id, session=None,**kwargs):
+def put(user_id, session=None, **kwargs):
     user = session.query(Users).filter_by(id=user_id).first()
-    user.firstname = kwargs['firstname']
-    user.lastname = kwargs['lastname']
-    user.time_zone = kwargs['time_zone']
-    session.commit()
+    if 'firstname' in kwargs:
+        user.firstname = kwargs['firstname']
+    if 'lastname' in kwargs:
+        user.lastname = kwargs['lastname']
+    if 'time_zone' in kwargs:
+        user.time_zone = kwargs['time_zone']
+    if session.dirty:
+        session.commit()
 
