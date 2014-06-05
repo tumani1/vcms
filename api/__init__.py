@@ -5,7 +5,7 @@ from users import routing as users_routing
 from topics import routing as topics_routing
 from persons import routing as persons_routing
 from test import routes as test_routing
-from user import  routing as user_routing
+from user import routing as user_routing
 
 
 routes = {

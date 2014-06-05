@@ -1,12 +1,12 @@
 # coding: utf-8
 
-from models import dbWrap, Topics
+from models import db, Topics
 from models.topics.constants import TOPIC_TYPE
 
 __all__ = ['get_topics_list']
 
 
-@dbWrap
+@db
 def get_topics_list(user, session, **kwargs):
     # Params
     params = {

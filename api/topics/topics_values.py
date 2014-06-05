@@ -1,12 +1,11 @@
 # coding: utf-8
 
-from models import dbWrap, TopicsValues
-from models.scheme import Scheme
+from models import db, TopicsValues
 
 __all__ = ['get_topic_values']
 
 
-@dbWrap
+@db
 def get_topic_values(user, session, name, **kwargs):
     # Params
     params = {

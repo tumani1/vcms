@@ -1,12 +1,12 @@
 # coding: utf-8
 
 import datetime
-from models import dbWrap, UsersTopics
+from models import db, UsersTopics
 
 __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
 
-@dbWrap
+@db
 def get_subscribe(user, name, session, **kwargs):
     if not user is None:
         params = {
@@ -25,7 +25,7 @@ def get_subscribe(user, name, session, **kwargs):
     return {'error': 403}
 
 
-@dbWrap
+@db
 def post_subscribe(user, session, name, **kwargs):
     if not user is None:
         ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=datetime.datetime.now())
@@ -35,7 +35,7 @@ def post_subscribe(user, session, name, **kwargs):
     return {'error': 403}
 
 
-@dbWrap
+@db
 def delete_subscribe(user, session, name, **kwargs):
     if not user is None:
         pass

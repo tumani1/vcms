@@ -1,11 +1,11 @@
 # coding: utf-8
 
-from models import dbWrap, UsersTopics
+from models import db, UsersTopics
 
 __all__ = ['get_like', 'post_like', 'delete_like']
 
 
-@dbWrap
+@db
 def get_like(user, session, name, **kwargs):
     if not user is None:
         params = {
@@ -24,7 +24,7 @@ def get_like(user, session, name, **kwargs):
     return {'error': 403}
 
 
-@dbWrap
+@db
 def post_like(user, session, name, **kwargs):
     if not user is None:
         pass
@@ -32,7 +32,7 @@ def post_like(user, session, name, **kwargs):
     return {'error': 403}
 
 
-@dbWrap
+@db
 def delete_like(user, session, name, **kwargs):
     if not user is None:
         pass

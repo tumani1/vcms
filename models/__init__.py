@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from connectors import DBWrapper, db_connect
 
 engine = db_connect()
-dbWrap = DBWrapper(engine=engine)
+db = DBWrapper()
 Base = declarative_base()
 
 from users import *
