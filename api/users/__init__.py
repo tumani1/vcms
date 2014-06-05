@@ -1,6 +1,8 @@
-from users_friendship_action import get
+from users_friendship_action import get, post, delete
 
-friendship = {'get':get
+friendship = {'get': get,
+              'post': post,
+              'delete': delete,
 }
 
 
