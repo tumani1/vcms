@@ -7,7 +7,6 @@ from sqlalchemy_utils import ChoiceType
 
 from models import Base
 from topics_users import UsersTopics
-# from topics_values import TopicsValues
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 

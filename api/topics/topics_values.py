@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from models import dbWrap, TopicsValues
-from models.topics.constants import TOPIC_TYPE
 
 __all__ = ['get_topic_values']
 
