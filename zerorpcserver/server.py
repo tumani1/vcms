@@ -1,9 +1,8 @@
 # coding: utf-8
 
 import zerorpc
-
+import yaml
 from raven import Client
-
 from api import routes
 from api import authorize
 
@@ -38,6 +37,10 @@ class ZeroRpcService(object):
 
 
 if __name__ == '__main__':
-    server = zerorpc.Server(ZeroRpcService())
-    server.bind("tcp://0.0.0.0:4242")
-    server.run()
+    with open('../configs/zero_rpc_services.yaml') as conf:
+        services = yaml.safe_load(conf)
+
+    for s in services:
+        server = zerorpc.Server(ZeroRpcService())
+        server.bind("{schema}://{address}:{port}".format(**s))
+        server.run()

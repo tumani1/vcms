@@ -1,18 +1,35 @@
 var http = require("http");
-var zerorpc = require("zerorpc");
 var url = require("url");
 var querystring = require("querystring");
+var fs = require("fs");
+var path = require("path");
+var zerorpc = require("zerorpc");
+var yaml = require("js-yaml");
+
 var log = console.log;
 
-
 function validate(vurl) {
+    // user/friends
+    // topics/{name}/info
+    // persons/{id}/values
     var re = new RegExp("^\/([a-z]{4,10})(\/[0-9]+|\/[a-z0-9]+)?\/([a-z]{4,10})$");
     return re.exec(vurl);  // длинна массива соотвествует количеству групп в regexp +1
 }
 
 function form_ipc_pack(directives, method, query_params) {
+    /*Список групп методов API проекта:
+     [auth, user, topics,
+      media, content, persons,
+      stream, chat, users,
+      mediaunits, msgr]
+    Хитро формируем параметр из первой и второй групп регулярного выражения, удаляя начальный слэш у второй группы
+    и последнюю букву s у первой группы, если она присутствует. Это необходимо для правльной перелачи в API методы.
+    */
     var qp = querystring.parse(query_params);
-    qp["ident"] = (directives[2] ? directives[2].slice(1) : null);
+    if (directives[2]) {
+        var k = directives[1].match('(.*[^s])')[0];
+        qp[k] = directives[2].slice(1);
+    }
 
     return {api_group: directives[1],
             api_method: directives[3],
@@ -21,8 +38,14 @@ function form_ipc_pack(directives, method, query_params) {
 }
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
-    var client = new zerorpc.Client();
-    client.connect("tcp://127.0.0.1:4242");
+    var max_KB = 4 * 1024;
+    var services = yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, '../configs/zero_rpc_services.yaml'), 'utf8'));
+    var clients = [];  // клиенты, по которым настраивать балансировку
+    for (var s=0;s<services.length;s++) {
+        var cl =  new zerorpc.Client();
+        cl.connect(services[s]["schema"]+"://"+services[s]["address"]+":"+services[s]["port"]);
+        clients.push(cl);
+    }
 
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url);
@@ -30,30 +53,44 @@ function run_server(host, port) {  // якобы общепринятое пра
         var meth = request.method;
         var directives = validate(vurl);
         var IPC_pack;
-        log(meth);
+
         if (["POST", "PUT"].indexOf(meth)>-1 && directives != null) {
+            var all_data = '';
             IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log(meth);
-            log("received IPC: " + IPC_pack);
+            log("received IPC: " + JSON.stringify(IPC_pack));
             request.on('data', function(chunk) {
-                log(chunk);
-                IPC_pack["query_params"] += chunk;
+                /*накапливание данных, потому как ответ может придти за раз неполностью*/
+                log(chunk.length);
+                log(chunk.toString());
+                all_data += chunk;
             });
             request.on("end", function() {
-                client.invoke("route", IPC_pack, function(error, res, more) {
-                    response.writeHead(200, {"Content-Type": "text/plain"});
-                    response.end(res);
-                })
+                if (all_data.length < max_KB) {
+                    all_data = JSON.parse(all_data.toString());
+                    for (var attrname in all_data) {
+                        IPC_pack["query_params"][attrname] = all_data[attrname];
+                    }
+                    clients[0].invoke("route", IPC_pack, function(error, res, more) {
+                        response.writeHead(200, {"Content-Type": "text/plain"});
+                        response.end(res);
+                    });
+                }
+                else {
+                    response.writeHead(400, {"Content-Type": "text/plain"});
+                    response.end("too large request");
+                }
             })
         }
+
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log("received IPC: " + IPC_pack);
-            client.invoke("route", IPC_pack, function(error, res, more) {
+            log("received IPC: " + JSON.stringify(IPC_pack));
+            clients[0].invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
                 response.end(res);
             });
         }
+
         else {
             log("invalid url");
             response.writeHead(404, {"Content-Type": "text/plain"});
