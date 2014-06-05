@@ -59,7 +59,3 @@ def delete(user_id, partner_id, session=None, *args, **kwargs):
     for rel in rels:
         rel.urStatus = APP_USERSRELS_TYPE_UNDEF
     session.commit()
-
-
-print get(1, 2)
-post(1, 2, APP_USERSRELS_TYPE_SEND_TO)
