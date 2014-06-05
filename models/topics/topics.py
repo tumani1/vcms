@@ -22,20 +22,24 @@ class Topics(Base):
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
-    user_topics = relationship('UsersTopics', backref='topics')
+    user_topics = relationship('UsersTopics', backref='topics', uselist=False)
+
+
+    @classmethod
+    def tmpl_for_topics(cls, user, session):
+        query = session.query(cls)
+
+        if hasattr(user, 'id'):
+            query = query.\
+                outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
+                options(contains_eager(cls.user_topics))
+
+        return query
 
 
     @classmethod
     def get_topics_by_name(cls, user, name, session):
-        user_id = 0
-        if not user is None and hasattr(user, 'id'):
-            user_id = user.id
-
-        instance = session.query(cls).\
-            outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user_id)).\
-            options(contains_eager(cls.user_topics)).\
-            filter(cls.name == name).first()
-
+        instance = cls.tmpl_for_topics(user, session).filter(cls.name == name).first()
         return instance
 
 
@@ -54,10 +58,10 @@ class Topics(Base):
         result['type'] = result['type'].code
 
         result['relation'] = {}
-        if not user is None and len(self.user_topics):
+        if hasattr(user, 'id') and not self.user_topics is None:
             result['relation'] = {
-                'subscribed': self.user_topics[0].subscribed,
-                'linked': True if self.user_topics[0].liked else False,
+                'subscribed': self.user_topics.subscribed,
+                'linked': True if self.user_topics.liked else False,
             }
 
         return result
