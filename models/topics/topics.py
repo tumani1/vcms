@@ -38,9 +38,38 @@ class Topics(Base):
 
 
     @classmethod
-    def get_topics_by_name(cls, user, name, session):
-        instance = cls.tmpl_for_topics(user, session).filter(cls.name == name).first()
-        return instance
+    def get_topics_by_name(cls, user, name, session, **kwargs):
+        query = cls.tmpl_for_topics(user, session).filter(cls.name == name).first()
+        return query
+
+
+    @classmethod
+    def get_topics_list(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
+        query = cls.tmpl_for_topics(user, session)
+
+        # Set name filter
+        if not name is None:
+            query = query.filter(Topics.name == name)
+
+        # Set description filter
+        # if not text is None:
+        #     query = query.filter(Topics.description == text)
+
+        # Set type filter
+        if not _type is None:
+            query = query.filter(Topics.type == _type)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if not limit[0] is None:
+                query = query.offset(limit[1])
+
+        return query
 
 
     @classmethod
