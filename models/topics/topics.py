@@ -7,6 +7,7 @@ from sqlalchemy_utils import ChoiceType
 
 from models import Base
 from topics_users import UsersTopics
+# from topics_values import TopicsValues
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 
@@ -22,7 +23,8 @@ class Topics(Base):
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
-    user_topics = relationship('UsersTopics', backref='topics', uselist=False)
+    topic_values = relationship('TopicsValues', backref='topics')
+    topic_user = relationship('UsersTopics', backref='topics', uselist=False)
     # extra_topics = relationship('UsersTopics', backref='topics')
 
 
@@ -53,8 +55,9 @@ class Topics(Base):
             query = query.filter(cls.name == name)
 
         # Set description filter
-        # if not text is None:
+        if not text is None:
         #     query = query.filter(cls.description == text)
+            pass
 
         # Set type filter
         if not _type is None:
@@ -97,8 +100,8 @@ class Topics(Base):
         result['relation'] = {}
         if hasattr(user, 'id') and not self.user_topics is None:
             result['relation'] = {
-                'subscribed': self.user_topics.subscribed,
-                'linked': True if self.user_topics.liked else False,
+                'subscribed': self.topic_user.subscribed,
+                'liked': self.topic_user.check_liked,
             }
 
         return result

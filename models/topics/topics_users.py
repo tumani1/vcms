@@ -18,5 +18,11 @@ class UsersTopics(Base):
     subscribed = Column(DateTime, nullable=False)
     liked      = Column(DateTime, nullable=True)
 
+
+    @property
+    def check_liked(self):
+        return True if self.liked else False
+
+
     def __repr__(self):
         return u"<UsersTopics(user={0}, topic={1}, subscr={2})>".format(self.user_id, self.topic_name, self.subscribed)

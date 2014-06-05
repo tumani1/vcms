@@ -20,13 +20,13 @@ def get_topics_list(user, session, **kwargs):
 
     if 'name' in kwargs:
         try:
-            params['name'] = str(kwargs['name'])
+            params['name'] = str(kwargs['name']).strip()
         except Exception, e:
             pass
 
     if 'text' in kwargs:
         try:
-            params['text'] = str(kwargs['text'])
+            params['text'] = str(kwargs['text']).strip()
         except Exception, e:
             pass
 

@@ -9,4 +9,3 @@ __all__ = ['get_topic_extars']
 @dbWrap
 def get_topic_extars(user, session, **kwargs):
     return {}
-

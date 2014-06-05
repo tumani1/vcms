@@ -10,6 +10,7 @@ from models import Base
 
 class TopicsValues(Base):
     __tablename__ = 'topics_values'
+    __jsonexport__ = ['name', 'value']
 
     id           = Column(Integer, primary_key=True)
     scheme_id    = Column(Integer, ForeignKey('scheme.id'), nullable=False, index=True)
@@ -17,6 +18,37 @@ class TopicsValues(Base):
     value_int    = Column(Integer, nullable=True)
     value_text   = Column(BYTEA, nullable=True)
     value_string = Column(String, nullable=True)
+
+
+    @classmethod
+    def tmpl_for_values(cls, session):
+        query = session.query(cls)
+        return query
+
+    @classmethod
+    def data(cls, data):
+        if isinstance(data, list):
+            data = [item.to_native() for item in data]
+        else:
+            data = data.to_native()
+
+        return data
+
+
+    def to_native(self):
+        result = {
+            'name': self.topic_name
+        }
+
+        value = None
+        for item in ['value_int', 'self.value_text', 'self.value_string']:
+           if not getattr(self, item) is None:
+               value = getattr(self, item)
+               break
+
+        result['value'] = value
+
+        return result
 
 
     # value_int, value_text, value_string - обязательно одни из
