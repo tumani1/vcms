@@ -3,8 +3,11 @@
 from models import dbWrap, Topics
 from models.topics.constants import TOPIC_TYPE
 
+__all__ = ['get_topics_list']
+
+
 @dbWrap
-def get_topics_list(user, session=None, **kwargs):
+def get_topics_list(user, session, **kwargs):
     # Params
     params = {
         'user': user,
@@ -55,4 +58,5 @@ def get_topics_list(user, session=None, **kwargs):
             params['limit'] = (r1, r2)
 
     query = Topics.get_topics_list(**params)
+
     return Topics.data(user, query)

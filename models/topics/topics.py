@@ -23,6 +23,7 @@ class Topics(Base):
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
     user_topics = relationship('UsersTopics', backref='topics', uselist=False)
+    # extra_topics = relationship('UsersTopics', backref='topics')
 
 
     @classmethod
@@ -49,15 +50,15 @@ class Topics(Base):
 
         # Set name filter
         if not name is None:
-            query = query.filter(Topics.name == name)
+            query = query.filter(cls.name == name)
 
         # Set description filter
         # if not text is None:
-        #     query = query.filter(Topics.description == text)
+        #     query = query.filter(cls.description == text)
 
         # Set type filter
         if not _type is None:
-            query = query.filter(Topics.type == _type)
+            query = query.filter(cls.type == _type)
 
         # Set limit and offset filter
         if not limit is None:
@@ -68,6 +69,13 @@ class Topics(Base):
             # Set Offset
             if not limit[0] is None:
                 query = query.offset(limit[1])
+
+        return query
+
+
+    @classmethod
+    def get_topics_extras(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
+        query = session.query(cls)
 
         return query
 
