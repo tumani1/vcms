@@ -1,6 +1,5 @@
 # coding: utf-8
 import zerorpc
-import ujson
 from api import routes
 from api import authorize
 from raven import Client
@@ -27,13 +26,11 @@ class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-
-        pd = ujson.loads(IPC_pack)
-        user_id = authorize(pd['token'])
-        mashed_key = (pd['api_group'],
-                      pd['api_method'],
-                      pd['http_method'])
-        return mashed_routes[mashed_key](user_id, **pd['query_params'])
+        user_id = authorize(IPC_pack['token'])
+        mashed_key = (IPC_pack['api_group'],
+                      IPC_pack['api_method'],
+                      IPC_pack['http_method'])
+        return mashed_routes[mashed_key](user_id, **IPC_pack['query_params'])
 
 
 if __name__ == '__main__':
