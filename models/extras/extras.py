@@ -3,12 +3,13 @@
 import time
 import datetime
 
-from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime, and_
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 from models.extras.constants import EXTRA_TYPE
 
 from models import Base
+from models.extras.extras_topics import ExtrasTopics
 
 
 class Extras(Base):
@@ -31,8 +32,8 @@ class Extras(Base):
 
 
     @classmethod
-    def get_extras_by_topics(cls, session, id=None, text=None, _type=None, limit=None):
-        query = cls.tmpl_for_extras(session)
+    def get_extras_by_topics(cls, session, name, id=None, text=None, _type=None, limit=None):
+        query = cls.tmpl_for_extras(session).join(ExtrasTopics, and_(cls.id == ExtrasTopics.extras_id, ExtrasTopics.topic_name == name))
 
         # Set name filter
         if not id is None:

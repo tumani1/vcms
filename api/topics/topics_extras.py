@@ -9,13 +9,15 @@ __all__ = ['get_topic_extars']
 
 
 @db
-def get_topic_extars(user, session, **kwargs):
+def get_topic_extars(user, name,  session, **kwargs):
     # Params
     params = {
         'id': None,
         'text': None,
-        'type': None,
+        '_type': None,
         'limit': None,
+        'name': name,
+        'session': session,
     }
 
     if 'id' in kwargs:
@@ -40,12 +42,12 @@ def get_topic_extars(user, session, **kwargs):
 
     if 'type' in kwargs:
         if kwargs['type'] in dict(EXTRA_TYPE).keys():
-            params['type'] = kwargs['type']
+            params['_type'] = kwargs['type']
 
     if 'limit' in kwargs:
         params['limit'] = validate_mLimit(limit=kwargs['limit'])
 
 
+    result = Extras.get_extras_by_topics(**params).all()
 
-
-    return {}
+    return Extras.data(result)
