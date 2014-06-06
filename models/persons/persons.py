@@ -5,22 +5,18 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 from models import Base
+from constants import APP_PERSONS_STATUS_TYPE
 
 
 class Persons(Base):
     __tablename__ = 'persons'
 
-    TYPE_STATUS = (
-        (u'1', u'Статус-Дятел'),
-        (u'2', u'Статус-Волчара'),
-    )
-
     id        = Column(Integer, primary_key=True)
-    user_id   = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    user_id   = Column(Integer, ForeignKey('users.id'), index=True)
     user      = relationship('Users', foreign_keys=user_id, backref='person')
     firstname = Column(String(128), nullable=False)
     lastname  = Column(String(128), nullable=False)
-    status    = Column(ChoiceType(TYPE_STATUS))
+    status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
     bio       = Column(Text)
 
     @property
