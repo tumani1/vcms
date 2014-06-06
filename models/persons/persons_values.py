@@ -36,7 +36,7 @@ class PersonsValues(Base):
 
 
     def __repr__(self):
-        return u'<PersonsValues(id={0}, person={1}, schema={2})'.format(self.id, self.person_id.get_full_name, self.scheme_id)
+        return u'<PersonsValues(id={0}, person={1}, schema={2})'.format(self.id, self.person_id, self.scheme_id)
 
 
 def validate_values(mapper, connect, target):

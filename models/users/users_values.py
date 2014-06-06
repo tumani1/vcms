@@ -8,6 +8,7 @@ from models import Base
 class UsersValues(Base):
     __tablename__ = 'users_values'
 
+    id           = Column(Integer, primary_key=True)
     scheme_id    = Column(Integer, ForeignKey('scheme.id'), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
     value_int    = Column(Integer)
@@ -29,9 +30,8 @@ class UsersValues(Base):
 
         return self
 
-
     def __repr__(self):
-        return u'<UsersValues(user={1}, schema={2})'.format(self.user_id.get_full_name, self.scheme_id)
+        return u'<UsersValues[{0}](user={1}, scheme={2})'.format(self.id, self.user_id, self.scheme_id)
 
 
 def validate_values(mapper, connect, target):
