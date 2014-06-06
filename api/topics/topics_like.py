@@ -1,40 +1,62 @@
 # coding: utf-8
 
+import datetime
+
 from models import db, UsersTopics
+from utils import need_authorization
 
 __all__ = ['get_like', 'post_like', 'delete_like']
 
 
+@need_authorization
 @db
 def get_like(user, session, name, **kwargs):
-    if not user is None:
-        params = {
-            'user': user.id,
-            'name': name,
-            'session': session,
-        }
+    params = {
+        'user': user.id,
+        'name': name,
+        'session': session,
+    }
 
-        query = UsersTopics.get_user_topic(**params).first()
+    query = UsersTopics.get_user_topic(**params).first()
 
-        if not query is None:
-            return query.check_liked
+    if not query is None:
+        return query.check_liked
 
-        return False
-
-    return {'error': 403}
+    return 0
 
 
+@need_authorization
 @db
-def post_like(user, session, name, **kwargs):
-    if not user is None:
-        pass
+def post_like(user, name, session, **kwargs):
+    params = {
+        'user': user.id,
+        'name': name,
+        'session': session,
+    }
 
-    return {'error': 403}
+    date = datetime.datetime.now()
+
+    ut = UsersTopics.get_user_topic(**params).first()
+    if ut is None:
+        ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=date, liked=date)
+        session.add(ut)
+    else:
+        ut.liked = date
+
+    session.commit()
 
 
+@need_authorization
 @db
-def delete_like(user, session, name, **kwargs):
-    if not user is None:
-        pass
+def delete_like(user, name, session, **kwargs):
+    params = {
+        'user': user.id,
+        'name': name,
+        'session': session,
+    }
 
-    return {'error': 403}
+    # Delete query
+    ut = UsersTopics.get_user_topic(**params).first()
+    if not ut is None:
+        ut.liked = None
+        session.commit()

@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import time
+
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
@@ -32,12 +34,12 @@ class UsersTopics(Base):
 
     @property
     def check_liked(self):
-        return True if self.liked else False
+        return time.mktime(self.liked.timetuple()) if not self.liked is None else 0
 
 
     @property
     def check_subscribed(self):
-        return True if self.liked else False
+        return True if self.subscribed else False
 
 
     def __repr__(self):
