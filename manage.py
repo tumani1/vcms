@@ -1,3 +1,4 @@
+
 # coding: utf-8
 from argparse import ArgumentParser
 
@@ -7,7 +8,7 @@ from models import Base
 from connectors import db_connect
 
 
-def start_syncdb(options):
+def start_syncdb(**options):
     Base.metadata.create_all(bind=db_connect())
 
 
