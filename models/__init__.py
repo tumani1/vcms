@@ -1,7 +1,9 @@
 # coding: utf-8
 
 from sqlalchemy.ext.declarative import declarative_base
-from connectors import DBWrapper, db_connect
+
+from utils.connectors import DBWrapper, db_connect
+
 
 engine = db_connect()
 db = DBWrapper()
