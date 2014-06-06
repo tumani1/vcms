@@ -28,3 +28,11 @@ from models.contents import Countries, Cities
 admin.add_view(CitieModelView(Cities, session, category=u'Локации', name=u'Города'))
 admin.add_view(CountryModelView(Countries, session, category=u'Локации', name=u'Страны'))
 ###############################################################################
+
+###############################################################################
+# Persons
+from persons import PersonsModelView
+from models.persons import Persons
+
+admin.add_view(PersonsModelView(Persons, session, category=u'Персоны', name=u'Персоны'))
+###############################################################################
