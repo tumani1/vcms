@@ -17,8 +17,8 @@ class UsersTopics(Base):
     id         = Column(Integer, primary_key=True)
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
     topic_name = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
-    subscribed = Column(DateTime, nullable=False)
-    liked      = Column(DateTime, nullable=True)
+    subscribed = Column(DateTime)
+    liked      = Column(DateTime)
 
 
     @classmethod

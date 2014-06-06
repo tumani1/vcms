@@ -37,7 +37,7 @@ def post_like(user, name, session, **kwargs):
 
     ut = UsersTopics.get_user_topic(**params).first()
     if ut is None:
-        ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=date, liked=date)
+        ut = UsersTopics(user_id=user.id, topic_name=name, liked=date)
         session.add(ut)
     else:
         ut.liked = date

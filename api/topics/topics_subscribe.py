@@ -55,4 +55,7 @@ def delete_subscribe(user, name, session, **kwargs):
     }
 
     # Delete query
-    UsersTopics.get_user_topic(**params).delete()
+    ut = UsersTopics.get_user_topic(**params).first()
+    if not ut is None:
+        ut.subscribed = None
+        session.commit()
