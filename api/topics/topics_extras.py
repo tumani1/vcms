@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from models import db, Topics
+from models import db, Topics, ExtrasTopics
 from models.extras.constants import EXTRA_TYPE
 
 from utils.validation import validate_mLimit

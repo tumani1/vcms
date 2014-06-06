@@ -12,11 +12,12 @@ from models import Base
 class Extras(Base):
     __tablename__ = 'extras'
 
-    id = Column(Integer, primary_key=True)
-    cdn_name = Column(String, ForeignKey('cdn.name'), nullable=False)
-    type = Column(ChoiceType(EXTRA_TYPE), nullable=False)
-    location = Column(String, nullable=True)
-    created = Column(DateTime, default=datetime.datetime.now)
+
+    id          = Column(Integer, primary_key=True)
+    cdn_name    = Column(String, ForeignKey('cdn.name'), nullable=False)
+    type        = Column(ChoiceType(EXTRA_TYPE), nullable=False)
+    location    = Column(String, nullable=True)
+    created     = Column(DateTime, default=datetime.datetime.now)
     description = Column(Text, nullable=True)
-    title = Column(String, nullable=False)
-    title_orig = Column(String, nullable=True)
+    title       = Column(String, nullable=False)
+    title_orig  = Column(String, nullable=True)

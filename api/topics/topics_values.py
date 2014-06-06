@@ -29,8 +29,7 @@ def get_topic_values(user, session, name, **kwargs):
                     pass
 
     if params['scheme_name'] is None:
-        #return 404
-        pass
+        return {'code': 404}
 
     query = TopicsValues.get_values_through_schema(**params).all()
 
