@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from models import db, Topics, ExtrasTopics
+from models import db, Topics, ExtrasTopics, Extras
 from models.extras.constants import EXTRA_TYPE
 
 from utils.validation import validate_mLimit
@@ -44,6 +44,7 @@ def get_topic_extars(user, session, **kwargs):
 
     if 'limit' in kwargs:
         params['limit'] = validate_mLimit(limit=kwargs['limit'])
+
 
 
 
