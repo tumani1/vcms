@@ -1,14 +1,26 @@
 # coding: utf-8
-
 import zerorpc
 import yaml
 from raven import Client
 from api import routes
 from api import authorize
+from settings import CONFIG_PATH
+from os.path import join
 
 
 DEBUG = True
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
+
+
+def start_zerorpc_services():
+    with open(join(CONFIG_PATH, 'zero_rpc_services.yaml')) as conf:
+        services = yaml.safe_load(conf)
+
+    for s in services:
+        server = zerorpc.Server(ZeroRpcService())
+        server.bind("{schema}://{address}:{port}".format(**s))
+        server.run()
+
 
 
 def raven_report(func):
@@ -37,10 +49,4 @@ class ZeroRpcService(object):
 
 
 if __name__ == '__main__':
-    with open('../configs/zero_rpc_services.yaml') as conf:
-        services = yaml.safe_load(conf)
-
-    for s in services:
-        server = zerorpc.Server(ZeroRpcService())
-        server.bind("{schema}://{address}:{port}".format(**s))
-        server.run()
+    start_zerorpc_services()
