@@ -13,11 +13,56 @@ class Persons(Base):
 
     id        = Column(Integer, primary_key=True)
     user_id   = Column(Integer, ForeignKey('users.id'), index=True)
-    user      = relationship('Users', foreign_keys=user_id, backref='person')
     firstname = Column(String(128), nullable=False)
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
     bio       = Column(Text)
+
+    user      = relationship('Users', foreign_keys=user_id, backref='person')
+
+
+    @classmethod
+    def tmpl_for_persons(cls, user, session):
+        return session.query(cls)
+
+
+    @classmethod
+    def get_persons_by_id(cls, user, person, session, **kwargs):
+        if not isinstance(person, list):
+            person = [person]
+
+        query = cls.tmpl_for_persons(user, session).filter(cls.id.in_(person))
+
+        return query
+
+
+    @classmethod
+    def data(cls, data):
+        if isinstance(data, list):
+            data = [item.to_native() for item in data]
+        else:
+            data = data.to_native()
+
+        return data
+
+
+    def to_native(self, user):
+        result = {
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'user': '',
+            'relation': {},
+        }
+
+        if not user is None:
+            result['relation'] = {
+                'liked': '',
+                'subscribed': '',
+            }
+
+        return result
+
 
     @property
     def get_full_name(self):
