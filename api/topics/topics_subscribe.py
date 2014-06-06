@@ -28,13 +28,21 @@ def get_subscribe(user, name, session, **kwargs):
 @need_authorization
 @db
 def post_subscribe(user, name, session, **kwargs):
-    ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=datetime.datetime.now())
-    session.add(ut)
+    params = {
+        'user': user.id,
+        'name': name,
+        'session': session,
+    }
+
+    date = datetime.datetime.now()
+    ut = UsersTopics.get_user_topic(**params).first()
+    if ut is None:
+        ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=date)
+        session.add(ut)
+    else:
+        ut.subscribed = date
+
     session.commit()
-    # try:
-    #     session.commit()
-    # except Exception, e:
-    #     return {'error': e.message, 'code': 400}
 
 
 @need_authorization

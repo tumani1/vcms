@@ -18,7 +18,6 @@ def get_like(user, session, name, **kwargs):
     }
 
     query = UsersTopics.get_user_topic(**params).first()
-
     if not query is None:
         return query.check_liked
 
