@@ -1,21 +1,24 @@
-from models import db
+import zerorpc
+import unittest
+from create_test_user import create
 
-from models import Countries,Cities,Users
-import zerorpc 
 
-from tests import create_test_user
+class ZeroRpcServiceTestCase(unittest.TestCase):
 
-def test_echo():
+    def setUp(self):
+        self.cl = zerorpc.Client()
+        self.cl.connect("tcp://127.0.0.1:4242")
+        create()
 
-    c = zerorpc.Client()
-    c.connect("tcp://127.0.0.1:4242")
-    assert 'hello' ==  c.route({'api_group':'test',
-                                'api_method':'echo',
-                                'http_method':'put',
-                                'token':'foobar',
-                                'query_params':{
-                                    'message':'hello'
-                                },
-                            })
-    
-    
+    def test_echo(self):
+        IPC_pack = {'api_group':'test',
+                    'api_method':'echo',
+                    'http_method':'PUT',
+                    'token':'echo_token',
+                    'query_params':{
+                        'message':'hello'}}
+        resp = self.cl.route(IPC_pack)
+        self.assertEqual(IPC_pack['query_params'], resp)
+
+    def tearDown(self):
+        self.cl.close()

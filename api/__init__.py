@@ -18,10 +18,8 @@ routes = {
 
 @db
 def authorize(token, session=None):
-    if token == 'foobar':
+    if token == 'echo_token':
         return session.query(Users).filter_by(id=1).first()
-    elif token == 'snafu':
-        return session.query(Users).filter_by(id=2).first()
     else:
         return None
 

@@ -12,17 +12,6 @@ DEBUG = True
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
 
-def start_zerorpc_services():
-    with open(join(CONFIG_PATH, 'zero_rpc_services.yaml')) as conf:
-        services = yaml.safe_load(conf)
-
-    for s in services:
-        server = zerorpc.Server(ZeroRpcService())
-        server.bind("{schema}://{address}:{port}".format(**s))
-        server.run()
-
-
-
 def raven_report(func):
     if DEBUG:
         return func
@@ -41,11 +30,20 @@ class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-        print(IPC_pack)
         user_id = authorize(IPC_pack['token'])
         mashed_key = (IPC_pack['api_group'], IPC_pack['api_method'], IPC_pack['http_method'])
         response = mashed_routes[mashed_key](user_id, **IPC_pack['query_params'])
         return response
+
+
+def start_zerorpc_services():
+    with open(join(CONFIG_PATH, 'zerorpc_services.yaml')) as conf:
+        services = yaml.safe_load(conf)
+
+    for s in services:
+        server = zerorpc.Server(ZeroRpcService())
+        server.bind("{schema}://{host}:{port}".format(**s))
+        server.run()
 
 
 if __name__ == '__main__':
