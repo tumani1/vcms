@@ -1,6 +1,3 @@
-
-
-
 routes = {'echo':
-          {'put':lambda user_id,message:message}
+              {'put': lambda user_id,message:message}
 }

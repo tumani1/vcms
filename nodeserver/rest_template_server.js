@@ -5,8 +5,12 @@ var fs = require("fs");
 var path = require("path");
 var zerorpc = require("zerorpc");
 var yaml = require("js-yaml");
-
 var log = console.log;
+
+
+function load_conf(filename) {
+    return yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, filename), 'utf8'));
+}
 
 function validate(vurl) {
     // user/friends
@@ -39,7 +43,7 @@ function form_ipc_pack(directives, method, query_params) {
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024;
-    var services = yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, '../configs/zero_rpc_services.yaml'), 'utf8'));
+    var services = load_conf('../configs/zerorpc_services.yaml');
     var clients = [];  // клиенты, по которым настраивать балансировку
     for (var s=0;s<services.length;s++) {
         var cl =  new zerorpc.Client();
@@ -101,4 +105,5 @@ function run_server(host, port) {  // якобы общепринятое пра
     log("server runnig on "+host+":"+port);
 }
 
-run_server("127.0.0.1", 7777);
+var conf = load_conf('../configs/node_service.yaml');
+run_server(conf["address"], conf["port"]);

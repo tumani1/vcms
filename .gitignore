@@ -4,6 +4,7 @@
 
 configs/db.yaml
 configs/zero_rpc_services.yaml
+node_service.yaml
 
 *.py[cod]
 
