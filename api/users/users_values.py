@@ -2,3 +2,6 @@
 from models import db
 
 
+@db
+def get(user_id, session=None, **kwargs):
+    pass
