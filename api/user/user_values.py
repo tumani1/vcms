@@ -1,7 +1,7 @@
 from models import db, UsersValues, Scheme
 from utils import need_authorization
 from sqlalchemy import and_, not_, update
-
+from api.users.users_values import get as users_get
 
 @db
 @need_authorization
@@ -27,3 +27,8 @@ def put(user, name, value, topic=None, session=None):
     session.add_all(user_values)
     if session.new or session.dirty:
         session.commit()
+
+
+@need_authorization
+def get(user, **kwargs):
+        users_get(user.id, **kwargs)
