@@ -36,4 +36,3 @@ from models.persons import Persons
 
 admin.add_view(PersonsModelView(Persons, session, category=u'Персоны', name=u'Персоны'))
 ###############################################################################
-
