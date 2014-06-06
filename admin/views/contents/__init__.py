@@ -1,2 +1,3 @@
 # coding: utf-8
-from views import CitieModelView, CountryModelView
+from cities import CitieModelView
+from country import CountryModelView

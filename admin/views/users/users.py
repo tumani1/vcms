@@ -6,37 +6,7 @@ from wtforms_html5 import EmailField
 
 from pytz import common_timezones
 
-from models.users.constants import APP_USERSRELS_TYPE, APP_USERS_TYPE_GENDER
-
-
-class UsersRelsModelView(ModelView):
-    form_overrides = dict(
-        urStatus=fields.Select2Field
-    )
-
-    column_choices = dict(
-        urStatus=APP_USERSRELS_TYPE,
-    )
-
-    column_labels = dict(user=u'Пользователь', partner=u'Партнёр',
-                         urStatus=u'Тип отношений',
-                         update=u'Последнее обновление')
-
-    form_args = dict(
-        user=dict(
-            label=u'Пользователь'
-        ),
-        partner=dict(
-            label=u'Партнёры'
-        ),
-        urStatus=dict(
-            label=u'Тип отношений',
-            choices=APP_USERSRELS_TYPE,
-        ),
-
-    )
-
-    form_excluded_columns = ('update', )
+from models.users.constants import APP_USERS_TYPE_GENDER
 
 
 class UsersModelView(ModelView):
@@ -51,7 +21,7 @@ class UsersModelView(ModelView):
     form_excluded_columns = ('friends', 'partners', 'created', 'last_visit',
                              'userpic_type', 'userpic_id')
 
-    column_labels = dict(city=u'Родной город', firstname=u'Имя',
+    column_labels = dict(city=u'Родной город', firstname=u'Имя', gender=u'Пол',
                          lastname=u'Фамилия', address=u'Адресс',
                          bio=u'Биография', birthdate=u'Дата рождения',
                          time_zone=u'Временная зона', created=u'Дата создания',
@@ -79,7 +49,7 @@ class UsersModelView(ModelView):
             label=u'Биография',
         ),
         birthdate=dict(
-          label=u'Дата рождения',
+            label=u'Дата рождения',
         ),
         time_zone=dict(
             label=u'Временная зона',

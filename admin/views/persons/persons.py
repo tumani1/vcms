@@ -32,3 +32,4 @@ class PersonsModelView(ModelView):
             label=u'Пользователь'
         ),
     )
+# coding: utf-8
