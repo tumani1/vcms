@@ -1,8 +1,9 @@
 # coding: utf-8
 
 from sqlalchemy.ext.declarative import declarative_base
-from connectors import DBWrapper
+from connectors import DBWrapper, db_connect
 
+engine = db_connect()
 db = DBWrapper()
 Base = declarative_base()
 
@@ -14,3 +15,6 @@ from scheme import *
 from topics import *
 from persons import *
 from media import *
+from topics import *
+from cdn import *
+from extras import *

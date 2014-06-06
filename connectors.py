@@ -30,6 +30,7 @@ class DBWrapper(object):
             try:
                 return func(session=session, *args, **kwargs)
             except Exception as e:
+                print e.message
                 session.rollback()
                 raise e
             finally:

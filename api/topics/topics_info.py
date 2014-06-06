@@ -2,6 +2,11 @@
 
 from models import db, Topics
 
+__all__ = ['get_topic_info']
+
+
 @db
-def get_topics_info(name, session=None):
-    instance = session.query(Topics)
+def get_topic_info(user, name, session, **kwargs):
+    instance = Topics.get_topics_by_name(user, name, session)
+
+    return Topics.data(user, instance)
