@@ -1,24 +1,24 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
+import datetime
+
+from constants import APP_USERSOCIAL_TYPE
 from models import Base
 
 
 class UsersSocial(Base):
     __tablename__ = 'users_social'
 
-    TYPE_SOCIAL = (
-        (),
-        (),
-    )
-
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    sType   = Column(ChoiceType(TYPE_SOCIAL))
-    sToken  = Column(String(40))
-    created = Column(DateTime)
-    updated = Column(DateTime)
+    user    = relationship('Users', backref='social', cascade='')
+    sType   = Column(ChoiceType(APP_USERSOCIAL_TYPE), nullable=False)
+    sToken  = Column(String(40), nullable=False)
+    created = Column(DateTime, default=datetime.datetime.now)
+    updated = Column(DateTime, onupdate=datetime.datetime.now, default=datetime.datetime.now)
 
     def __repr__(self):
-        return '<UsersSocial([{}] {} {})>'.format(self.id, self.user_id, self.sType)
+        return u'<UsersSocial([{}] {} {})>'.format(self.id, self.user_id, self.sType.code)

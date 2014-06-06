@@ -5,7 +5,7 @@ from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 
 
 @db
-def get(user_id, id, session=None):
+def get(user_id, id, session=None, **kwargs):
     user = session.query(Users).get(id)
     if not user:
         raise Exception()

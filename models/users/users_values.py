@@ -2,6 +2,8 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, String
 from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy.event import listens_for, listen
+from sqlalchemy.orm import relationship
+
 from models import Base
 
 
@@ -10,7 +12,9 @@ class UsersValues(Base):
 
     id           = Column(Integer, primary_key=True)
     scheme_id    = Column(Integer, ForeignKey('scheme.id'), nullable=False, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    scheme        = relationship('Scheme', backref='users_value')
+    user_id      = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    user         = relationship('Users', backref='users_values')
     value_int    = Column(Integer)
     value_text   = Column(BYTEA)
     value_string = Column(String)
