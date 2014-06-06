@@ -14,11 +14,11 @@ class UsersSocial(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    user    = relationship('Users', backref='social')
+    user    = relationship('Users', backref='social', cascade='')
     sType   = Column(ChoiceType(APP_USERSOCIAL_TYPE), nullable=False)
     sToken  = Column(String(40), nullable=False)
     created = Column(DateTime, default=datetime.datetime.now)
-    updated = Column(DateTime, updated=datetime.datetime.now, default=datetime.datetime.now)
+    updated = Column(DateTime, onupdate=datetime.datetime.now, default=datetime.datetime.now)
 
     def __repr__(self):
         return u'<UsersSocial([{}] {} {})>'.format(self.id, self.user_id, self.sType.code)
