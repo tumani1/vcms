@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 from models import Base
@@ -16,6 +17,7 @@ class Persons(Base):
 
     id        = Column(Integer, primary_key=True)
     user_id   = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    user      = relationship('Users', foreign_keys=user_id, backref='person')
     firstname = Column(String(128), nullable=False)
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(TYPE_STATUS))

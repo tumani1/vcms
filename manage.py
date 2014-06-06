@@ -1,9 +1,9 @@
 # coding: utf-8
 from argparse import ArgumentParser
-from admin.main import start_application
 
+from admin.main import start_application
 from models import Base
-from connectors import db_connect
+from utils.connectors import db_connect
 
 
 def start_admin(options):
