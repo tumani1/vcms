@@ -36,34 +36,6 @@ class Persons(Base):
         return query
 
 
-    @classmethod
-    def data(cls, data):
-        if isinstance(data, list):
-            data = [item.to_native() for item in data]
-        else:
-            data = data.to_native()
-
-        return data
-
-
-    def to_native(self, user):
-        result = {
-            'id': self.id,
-            'firstname': self.firstname,
-            'lastname': self.lastname,
-            'user': '',
-            'relation': {},
-        }
-
-        if not user is None:
-            result['relation'] = {
-                'liked': '',
-                'subscribed': '',
-            }
-
-        return result
-
-
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
