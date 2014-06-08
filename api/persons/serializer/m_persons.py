@@ -1,10 +1,11 @@
 # coding: utf-8
 
-from collections import OrderedDict
+from utils.serializer import DefaultSerializer
 
 __all__ = ['mPersonSerializer']
 
-class mPersonSerializer(object):
+
+class mPersonSerializer(DefaultSerializer):
 
     __read_keys = {
         'id': '',
@@ -15,10 +16,7 @@ class mPersonSerializer(object):
     }
 
     def __init__(self, instance, user, **kwargs):
-        self.user = user
-        self.is_auth = True if not user is None else False
-
-        self.instance = instance
+        super(mPersonSerializer, self).__init__(instance, user, **kwargs)
 
         # Calc
         self.calc_list_user_id()
@@ -58,25 +56,3 @@ class mPersonSerializer(object):
             }
 
         return {}
-
-    @property
-    def data(self):
-        data = self.instance
-        if isinstance(data, list):
-            data = [self.to_native(item) for item in data]
-        else:
-            data = self.to_native(data)
-
-        return data
-
-
-    def to_ntive(self, data):
-        result = {}
-
-        if data is None:
-            return result
-
-        for item in self.__read_keys:
-            result[item] = getattr(self, 'get_{0}'.format(item))(data)
-
-        return result
