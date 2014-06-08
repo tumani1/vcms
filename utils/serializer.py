@@ -57,7 +57,7 @@ class DefaultSerializer(object):
     def to_native(self, obj):
         result = self._dict_class()
 
-        for key,value in self.fields.items:
+        for key,value in self.fields.items():
             method = getattr(self, 'get_{0}'.format(key), None)
 
             if callable(method):

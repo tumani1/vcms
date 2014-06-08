@@ -20,18 +20,17 @@ class mPersonSerializer(DefaultSerializer):
 
         # Calc
         self.calc_list_user_id()
-        # self.calc()
 
 
     def calc_list_user_id(self):
         result = []
-        data = self.instance
+        obj = self.instance
 
-        if isinstance(data, list):
-           result = [item.user_id for item in data if not item.user_id is None]
+        if hasattr(obj, '__iter__'):
+           result = [item.user_id for item in obj if not item.user_id is None]
         else:
-            if not data.user_id is None:
-                result.append(data.user_id)
+            if not obj is None and not obj.user_id is None:
+                result.append(obj.user_id)
 
         self.list_user_id = result
 
