@@ -23,7 +23,9 @@ class UsersPersons(Base):
 
     @classmethod
     def tmpl_for_user_person(cls, session):
-        return session.query(cls)
+        query = session.query(cls)
+
+        return query
 
 
     @classmethod

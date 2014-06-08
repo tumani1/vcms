@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from utils.serializer import DefaultSerializer
+from models.users.users import Users
 
 __all__ = ['mPersonSerializer']
 
@@ -20,6 +21,7 @@ class mPersonSerializer(DefaultSerializer):
 
         # Calc
         self.calc_list_user_id()
+        # Users.get_user_with_person()
 
 
     def calc_list_user_id(self):
