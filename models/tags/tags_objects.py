@@ -1,0 +1,18 @@
+
+
+class TagsObjects(Base):
+    __tablename__ = 'tags_objects'
+    __jsonexport__ = ['tag_id', 'obj_type','obj_id','obj_type']
+
+    tag_id      = Column(Integer,ForeignKey('tag.id'),nullable = False, index =True)
+    obj_type    = Column(String)
+    obj_id      = Column(Integer)
+    obj_name    = Column(String)
+    
+    def __repr__(self):
+        return u'TagsObjects(name={0}, type={1}, obj_id={2},)'.format(self.obj_name, self.obj_type, self.obj_id)
+
+
+
+
+                                                                      
