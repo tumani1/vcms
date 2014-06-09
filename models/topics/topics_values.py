@@ -63,9 +63,6 @@ class TopicsValues(Base):
         return result
 
 
-
-
-
     # value_int, value_text, value_string - обязательно одни из
     def validate_values(self):
         count = 0
