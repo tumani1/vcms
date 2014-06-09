@@ -1,6 +1,7 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import contains_eager
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 import datetime
@@ -8,6 +9,7 @@ import datetime
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
 from models import Base
+from models.persons.users_persons import UsersPersons
 
 
 class Users(Base):
@@ -34,9 +36,30 @@ class Users(Base):
     # uStatus      = Column(ChoiceType(TYPE_STATUS))
     # uType        = Column(ChoiceType(TYPE_TYPE))
 
-    def __repr__(self):
-        return u'<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)
+
+    user_persons = relationship('UsersPersons', backref='topics', uselist=False)
+
+
+    @classmethod
+    def tmpl_for_users(cls, session):
+        query = session.query(cls)
+
+        return query
+
+
+    @classmethod
+    def get_user_with_person(cls, user, person, session, **kwargs):
+        query = cls.tmpl_for_users(session).filter(cls.id == user).\
+            outerjoin(UsersPersons, and_(cls.name == UsersPersons.topic_name, UsersPersons.person_id == person)).\
+            options(contains_eager(cls.user_persons)).first()
+
+        return query
+
 
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
+
+
+    def __repr__(self):
+        return u'<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)

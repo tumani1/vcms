@@ -8,27 +8,29 @@ from sqlalchemy.orm import relationship
 from models import Base
 
 
-class UsersTopics(Base):
-    __tablename__ = 'users_topics'
+class UsersPersons(Base):
+    __tablename__ = 'users_persons'
     __table_args__ = (
-        UniqueConstraint('user_id', 'topic_name', name='_user_id_topic_name'),
+        UniqueConstraint('user_id', 'person_id', name='_user_id_person_id'),
     )
 
     id         = Column(Integer, primary_key=True)
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
-    topic_name = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
+    person_id  = Column(Integer, ForeignKey('persons.id'), nullable=False, index=True)
     subscribed = Column(DateTime)
     liked      = Column(DateTime)
 
 
     @classmethod
-    def tmpl_for_user_topic(cls, session):
-        return session.query(cls)
+    def tmpl_for_user_person(cls, session):
+        query = session.query(cls)
+
+        return query
 
 
     @classmethod
-    def get_user_topic(cls, user, name, session):
-        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == user, cls.topic_name == name)
+    def get_user_person(cls, user, person, session):
+        query = cls.tmpl_for_user_person(session).filter(cls.user_id == user, cls.person_id == person)
         return query
 
 
@@ -43,5 +45,5 @@ class UsersTopics(Base):
 
 
     def __repr__(self):
-        return u"<UsersTopics(user={0}, topic={1}, subscr={2}, liked={3})>".\
-            format(self.user_id, self.topic_name, self.subscribed, self.liked)
+        return u"<UsersPersons(user={0}, person={1}, subscr={2}, liked={3})>".\
+            format(self.user_id, self.person_id, self.subscribed, self.liked)

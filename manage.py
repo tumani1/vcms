@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from admin.main import start_admin_application
 from zerorpcserver.server import start_zerorpc_services
 from models import Base
-from connectors import db_connect
+from utils.connectors import db_connect
 
 
 def start_syncdb(**options):
