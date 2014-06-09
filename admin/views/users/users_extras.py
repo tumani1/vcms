@@ -1,11 +1,16 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
 from flask.ext.admin.form import fields
 
+from models.users import UsersExtras
 from models.users.constants import APP_USERSEXTRAS_TYPE
 
 
-class UsersExtrasModelView(ModelView):
+class UsersExtrasModelView(BaseModelView):
+    model = UsersExtras
+    category = u'Пользователи'
+    name = u'Дополнительные материалы'
+
     form_overrides = dict(
         extra_type=fields.Select2Field
     )

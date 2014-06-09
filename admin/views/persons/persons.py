@@ -1,11 +1,16 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
 from flask.ext.admin.form import fields
 
+from models.persons import Persons
 from models.persons.constants import APP_PERSONS_STATUS_TYPE
 
 
-class PersonsModelView(ModelView):
+class PersonsModelView(BaseModelView):
+    model = Persons
+    category = u'Персоны'
+    name = u'Персоны'
+
     form_overrides = dict(
         status=fields.Select2Field
     )

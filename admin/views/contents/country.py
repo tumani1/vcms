@@ -1,8 +1,13 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
+
+from models.contents import Countries
 
 
-class CountryModelView(ModelView):
+class CountryModelView(BaseModelView):
+    model = Countries
+    category = u'Локации'
+    name = u'Страны'
 
     column_labels = dict(name=u'Название', name_orig=u'Оригинальное название',
                          description=u'Описание')
