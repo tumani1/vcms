@@ -4,6 +4,6 @@ from persons_info import *
 
 routing = {
     'info': {
-        'get': get_person_info,
+        'GET': get_person_info,
     },
 }
