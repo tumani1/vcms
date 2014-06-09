@@ -3,10 +3,14 @@
 from persons_info import *
 from persons_subscribe import *
 from persons_like import *
+from persons_extras import *
 
 routing = {
     'info': {
         'get': get_person_info,
+    },
+    'extras': {
+        'get': get_person_extars,
     },
     'subscribe': {
         'get': get_subscribe,
