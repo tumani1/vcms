@@ -9,7 +9,8 @@ from sqlalchemy_utils import ChoiceType
 from models.extras.constants import EXTRA_TYPE
 
 from models import Base
-from models.extras import ExtrasTopics, PersonsExtras
+from models.extras.extras_topics import ExtrasTopics
+from models.extras.extras_persons import PersonsExtras
 
 
 class Extras(Base):
