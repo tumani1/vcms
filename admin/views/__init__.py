@@ -31,13 +31,6 @@ admin.add_view(PersonsModelView(session))
 ###############################################################################
 
 ###############################################################################
-# Topics
-from topics import TopicsModelView
-
-admin.add_view(TopicsModelView(session))
-###############################################################################
-
-###############################################################################
 # Chats
 from chats import ChatsModelView, UsersChatModelView
 
