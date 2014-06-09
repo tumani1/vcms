@@ -6,9 +6,11 @@ from topics import routing as topics_routing
 from persons import routing as persons_routing
 from test import routes as test_routing
 from user import routing as user_routing
+from media_unit import routing as media_unit_routing
 
 
 routes = {
+    'mediaunits': media_unit_routing,
     'user': user_routing,
     'users': users_routing,
     'topics': topics_routing,
