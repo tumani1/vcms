@@ -18,7 +18,7 @@ class Persons(Base):
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
     bio       = Column(Text)
 
-    user      = relationship('Users', foreign_keys=user_id, backref='person')
+    user      = relationship('Users', foreign_keys=user_id, backref='persons')
 
 
     @classmethod
