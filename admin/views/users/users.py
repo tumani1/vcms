@@ -32,6 +32,7 @@ class UsersModelView(BaseModelView):
                          bio=u'Биография', birthdate=u'Дата рождения',
                          time_zone=u'Временная зона', created=u'Дата создания',
                          phone=u'Телефон', last_visit=u'Последний визит')
+
     column_exclude_list = ('userpic_type', 'userpic_id')
 
     column_choices = dict(
