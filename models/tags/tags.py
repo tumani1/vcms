@@ -1,12 +1,12 @@
 # coding: utf-8
-from sqlalchemy import String
+from sqlalchemy import Column,Integer,String
 from models import Base
 
 class Tags(Base):
     __tablename__ = 'tags'
     __jsonexport__ = ['name','status','type']
 
-    
+    id = Column(Integer,primary_key = True,index = True)    
     name    = Column(String)
     status  = Column(String)
     type    = Column(String)

@@ -7,7 +7,8 @@ class TagsObjects(Base):
     __tablename__ = 'tags_objects'
     __jsonexport__ = ['tag_id', 'obj_type','obj_id','obj_type']
 
-    tag_id      = Column(Integer,ForeignKey('tag.id'),nullable = False, index =True)
+    id          = Column(Integer, primary_key=True)
+    tag_id      = Column(Integer,ForeignKey('tags.id'),nullable = False, index =True)
     obj_type    = Column(String)
     obj_id      = Column(Integer)
     obj_name    = Column(String)
