@@ -1,10 +1,11 @@
+# coding=utf-8
 import unittest
 import yaml
-import json
 import requests
 from settings import CONFIG_PATH
 from os.path import join
 from create_test_user import create
+from datetime import datetime as dt
 
 
 class RestTemplateNodeServiceTestCase(unittest.TestCase):
@@ -13,14 +14,16 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
         with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
             conf = yaml.safe_load(file)
         self.fullpath = 'http://{}:{}'.format(conf['host'], conf['port'])
+        self.session =  requests.Session()
+        self.session.headers.update({'Token': 'echo_token'})
         create()
 
     def test_echo_get(self):
-        resp = requests.get(self.fullpath+'/test/echo?message=hello')
+        resp = self.session.get(self.fullpath+'/test/echo?message=hello')
         self.assertEqual(resp.json(), {'message': 'hello'})
 
-    @unittest.skipUnless('надо поправить обработку PUT в node')
     def test_echo_put(self):
-        data = {'message': 'hello'}
-        resp = requests.put(self.fullpath+'/test/echo', data=data)
-        self.assertEqual(resp.json(), {'message': 'hello'})
+        data = {'message': 'hello', 'date': dt.now().strftime('%d %B %Y'), 'count': 9999999999999999,
+                'f1': 'qqqq', 'f2': 'rrrr', 'f3': 'yyyyy'}
+        resp = self.session.put(self.fullpath+'/test/echo', data=data)
+        self.assertEqual(resp.json(), data)

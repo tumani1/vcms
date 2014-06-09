@@ -1,11 +1,12 @@
-var http = require("http");
-var url = require("url");
-var querystring = require("querystring");
-var fs = require("fs");
-var path = require("path");
-var zerorpc = require("zerorpc");
-var yaml = require("js-yaml");
-var log = console.log;
+var http = require("http"),
+    url = require("url"),
+    querystring = require("querystring"),
+    fs = require("fs"),
+    path = require("path"),
+    zerorpc = require("zerorpc"),
+    yaml = require("js-yaml"),
+    formidable = require("formidable"),
+    log = console.log;
 
 
 function load_conf(filename) {
@@ -43,9 +44,9 @@ function form_ipc_pack(directives, method, query_params) {
 }
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
-    var max_KB = 4 * 1024;
-    var services = load_conf('../configs/zerorpc_services.yaml');
-    var zero_clients = [];  // клиенты, по которым настраивать балансировку
+    var max_KB = 4 * 1024,
+        services = load_conf('../configs/zerorpc_services.yaml'),
+        zero_clients = [];  // клиенты, по которым настраивать балансировку
     for (var s=0;s<services.length;s++) {
         var cl =  new zerorpc.Client();
         cl.connect(services[s]["schema"]+"://"+services[s]["host"]+":"+services[s]["port"]);
@@ -53,38 +54,61 @@ function run_server(host, port) {  // якобы общепринятое пра
     }
 
     var server = http.createServer(function(request, response) {
-        var parsed = url.parse(request.url);
-        var vurl = parsed.pathname, query_params = parsed.query;
-        var meth = request.method;
-        var directives = validate(vurl);
-        var IPC_pack;
+        var parsed = url.parse(request.url),
+            vurl = parsed.pathname, query_params = parsed.query,
+            meth = request.method.toLowerCase(),
+            directives = validate(vurl),
+            IPC_pack;
 
-        if (["POST", "PUT"].indexOf(meth)>-1 && directives != null) {
-            var all_data = '';
+        if (["post", "put"].indexOf(meth)>-1 && directives != null) {
+            var all_data = '',
+                form = new formidable.IncomingForm();
             IPC_pack = form_ipc_pack(directives, meth, query_params);
             log("received IPC: " + JSON.stringify(IPC_pack));
-            request.on('data', function(chunk) {
-                /*накапливание данных, потому как ответ может придти за раз неполностью*/
-                log(chunk.length);
-                log(chunk.toString());
-                all_data += chunk;
-            });
-            request.on("end", function() {
-                if (all_data.length < max_KB) {
-                    all_data = JSON.parse(all_data.toString()); //TODO: ломается на невалидных данных
-                    for (var attrname in all_data) {
-                        IPC_pack["query_params"][attrname] = all_data[attrname];
+
+            form.maxFields = 1;
+            form.maxFieldsSize = max_KB;
+            form.parse(request, function(error, fields, files) {
+                log(fields);
+                for (var property in fields) {
+                        if (!IPC_pack["query_params"].hasOwnProperty(property)) {
+                            IPC_pack["query_params"][property] = fields[property];
+                        }
                     }
-                    zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
-                        response.writeHead(200, {"Content-Type": "text/plain"});
-                        response.end(res);
-                    });
-                }
-                else {
-                    response.writeHead(400, {"Content-Type": "text/plain"});
-                    response.end("too large request");
-                }
-            })
+                zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
+                    response.writeHead(200, {"Content-Type": "text/plain"});
+                    response.end(JSON.stringify(res));
+                });
+            });
+
+
+
+
+
+//            request.on('data', function(chunk) {
+//                /*накапливание данных, потому как ответ может придти за раз неполностью*/
+//                log(chunk.length);
+//                log(chunk.toString());
+//                all_data += chunk;
+//            });
+//
+//            request.on("end", function() {
+//                if (all_data.length < max_KB) {
+//                    all_data = formidable();
+//                    all_data = JSON.parse(all_data.toString()); //TODO: ломается на невалидных данных
+//                    for (var attrname in all_data) {
+//                        IPC_pack["query_params"][attrname] = all_data[attrname];
+//                    }
+//                    zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
+//                        response.writeHead(200, {"Content-Type": "text/plain"});
+//                        response.end(res);
+//                    });
+//                }
+//                else {
+//                    response.writeHead(400, {"Content-Type": "text/plain"});
+//                    response.end("too large request");
+//                }
+//            })
         }
 
         else if (directives != null) {
