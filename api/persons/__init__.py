@@ -4,6 +4,7 @@ from persons_info import *
 from persons_subscribe import *
 from persons_like import *
 from persons_extras import *
+from persons_values import *
 
 routing = {
     'info': {
@@ -11,6 +12,9 @@ routing = {
     },
     'extras': {
         'get': get_person_extars,
+    },
+    'values': {
+        'get': get_person_values,
     },
     'subscribe': {
         'get': get_subscribe,

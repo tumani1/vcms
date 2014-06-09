@@ -99,7 +99,7 @@ class Extras(Base):
             'title_orig': self.title_orig,
             'description': self.description,
             'location': self.location,
-            'created': self.get_unixtime,
+            'created': self.get_by_created_unixtime,
         }
 
         return result
@@ -111,5 +111,5 @@ class Extras(Base):
 
 
     @property
-    def get_unixtime(self):
+    def get_by_created_unixtime(self):
         return time.mktime(self.created.timetuple())
