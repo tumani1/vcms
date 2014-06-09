@@ -52,3 +52,12 @@ def validate_list_string(value, **kwargs):
         pass
 
     return None
+
+
+def validate_string(value, **kwargs):
+    try:
+         return str(value).strip()
+    except Exception, e:
+        pass
+
+    return None

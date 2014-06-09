@@ -5,6 +5,7 @@ from persons_subscribe import *
 from persons_like import *
 from persons_extras import *
 from persons_values import *
+from persons_list import *
 
 routing = {
     'list': {
