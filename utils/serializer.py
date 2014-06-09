@@ -10,7 +10,7 @@ class DefaultSerializer(object):
     """
         Пример заполнения массива __read_keys
 
-        __read_keys = {
+        __read_fields = {
             'id': '',
             'firstname': '',
             'lastname': '',
@@ -19,11 +19,10 @@ class DefaultSerializer(object):
         }
     """
 
-    __read_fields = {}
     _dict_class = OrderedDict
 
     def __init__(self, instance=None, user=None,
-                 context=None, many=None, **kwargs):
+                 context=None, many=None, session=None, **kwargs):
 
         self.instance = instance
         self.many = many
@@ -32,10 +31,11 @@ class DefaultSerializer(object):
         self.is_auth = True if not user is None else False
 
         self.context = context or {}
-        self.fields = self.__read_fields
 
         self._data = None
         self._errors = None
+
+        self.session = session
 
         if many and instance is not None and not hasattr(instance, '__iter__'):
             raise ValueError('instance should be a queryset or other iterable with many=True')
@@ -57,8 +57,8 @@ class DefaultSerializer(object):
     def to_native(self, obj):
         result = self._dict_class()
 
-        for key,value in self.fields.items():
-            method = getattr(self, 'get_{0}'.format(key), None)
+        for key, value in self.fields.items():
+            method = getattr(self, 'transform_{0}'.format(key), None)
 
             if callable(method):
                 result[key] = method(obj)

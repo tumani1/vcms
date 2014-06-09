@@ -36,6 +36,7 @@ def post_subscribe(user, name, session, **kwargs):
 
     date = datetime.datetime.now()
     ut = UsersTopics.get_user_topic(**params).first()
+
     if ut is None:
         ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=date)
         session.add(ut)
