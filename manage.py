@@ -8,7 +8,16 @@ from models import Base
 from utils.connectors import db_connect
 
 
-def start_syncdb(**options):
+def delete_tables(**options):
+    Base.metadata.drop_all(bind=db_connect())
+
+
+def create_tables(**options):
+    Base.metadata.create_all(bind=db_connect())
+
+
+def db_reset(**options):
+    Base.metadata.drop_all(bind=db_connect())
     Base.metadata.create_all(bind=db_connect())
 
 
@@ -23,8 +32,14 @@ if __name__ == '__main__':
     admin_c.add_argument('--no-debug', dest='debug', action='store_false', help='Run admin without debug mode')
     admin_c.set_defaults(func=start_admin_application, debug=True)
 
-    syncdb_c = subparser.add_parser('syncdb', help='Create database')
-    syncdb_c.set_defaults(func=start_syncdb)
+    syncdb_c = subparser.add_parser('syncdb', help='Create tabels')
+    syncdb_c.set_defaults(func=create_tables)
+
+    drop_all_c = subparser.add_parser('dropdb', help='Delete all tabels')
+    drop_all_c.set_defaults(func=delete_tables)
+
+    reset_c = subparser.add_parser('resetdb', help='Local database reset')
+    reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
     zerorpc_server_c.set_defaults(func=start_zerorpc_services)

@@ -8,17 +8,17 @@ def validate_mLimit(limit, **kwargs):
     elif len(result) == 2:
         # Check limit
         if not len(result[0]):
-            r1 = None
+            limit = None
         else:
             try:
-                r1 = int(result[0])
+                limit = int(result[0])
             except Exception, e:
-                r1 = None
+                limit = None
 
         # Check top
         try:
-            r2 = int(result[1])
+            top = int(result[1])
         except Exception, e:
-            r2 = 0
+            top = 0
 
-        return r1, r2
+        return limit, top

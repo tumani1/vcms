@@ -1,10 +1,15 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
 
+from models.users import UsersValues
 from wtforms.fields import StringField
 
 
-class UsersValuesModelView(ModelView):
+class UsersValuesModelView(BaseModelView):
+    model = UsersValues
+    category = u'Пользователи'
+    name = u'Дополнительная информация'
+
     form_overrides = dict(
         value_text=StringField,
     )
