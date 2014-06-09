@@ -16,3 +16,18 @@ class MediaUnits(Base):
     end_date = Column(Date, nullable=True)
     batch = Column(String, nullable=True)
 
+    @classmethod
+    def tmpl_for_media_units(cls, user, session):
+        query = session.query(cls)
+
+        if not user is None:
+            query = query.\
+                outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
+                options(contains_eager(cls.user_topics))
+
+        return query
+
+    @classmethod
+    def get_media_units_list(cls, user, session, id=None, text=None, batch=None, topic=None):
+        pass
+

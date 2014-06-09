@@ -3,8 +3,8 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from models import Base
 
-class MediaUnit(Base):
-    __tablename__ = 'media_unit'
+class MediaInUnit(Base):
+    __tablename__ = 'media_in_unit'
     id = Column(Integer, primary_key=True)
     media_id = Column(Integer, ForeignKey('media.id'), nullable=False)
     media_unit_id = Column(Integer, ForeignKey('media_units.id'), nullable=False)
