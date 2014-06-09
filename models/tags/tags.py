@@ -1,3 +1,7 @@
+# coding: utf-8
+from sqlalchemy import String
+from models import Base
+
 class Tags(Base):
     __tablename__ = 'tags'
     __jsonexport__ = ['name','status','type']

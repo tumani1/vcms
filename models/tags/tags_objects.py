@@ -1,3 +1,6 @@
+# coding: utf-8
+from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from models import Base
 
 
 class TagsObjects(Base):
