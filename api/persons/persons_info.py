@@ -10,4 +10,10 @@ __all__ = ['get_person_info']
 def get_person_info(user, person, session, **kwargs):
     instance = Persons.get_persons_by_id(user, person, session).first()
 
-    return mPersonSerializer(instance, user).data
+    params = {
+        'instance': instance,
+        'user': user,
+        'session': session,
+    }
+
+    return mPersonSerializer(**params).data
