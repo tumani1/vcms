@@ -13,7 +13,7 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
     def test_echo(self):
         IPC_pack = {'api_group':'test',
                     'api_method':'echo',
-                    'http_method':'PUT',
+                    'http_method':'put',
                     'token':'echo_token',
                     'query_params':{
                         'message':'hello'}}
