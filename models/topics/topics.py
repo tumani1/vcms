@@ -31,7 +31,7 @@ class Topics(Base):
     def tmpl_for_topics(cls, user, session):
         query = session.query(cls)
 
-        if hasattr(user, 'id'):
+        if not user is None:
             query = query.\
                 outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
                 options(contains_eager(cls.user_topics))

@@ -5,8 +5,12 @@ var fs = require("fs");
 var path = require("path");
 var zerorpc = require("zerorpc");
 var yaml = require("js-yaml");
-
 var log = console.log;
+
+
+function load_conf(filename) {
+    return yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, filename), 'utf8'));
+}
 
 function validate(vurl) {
     // user/friends
@@ -34,17 +38,18 @@ function form_ipc_pack(directives, method, query_params) {
     return {api_group: directives[1],
             api_method: directives[3],
             http_method: method,
+            token: 'echo_token', //TODO сделать парсинг заголовка токена
             query_params: qp};
 }
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024;
-    var services = yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, '../configs/zero_rpc_services.yaml'), 'utf8'));
-    var clients = [];  // клиенты, по которым настраивать балансировку
+    var services = load_conf('../configs/zerorpc_services.yaml');
+    var zero_clients = [];  // клиенты, по которым настраивать балансировку
     for (var s=0;s<services.length;s++) {
         var cl =  new zerorpc.Client();
-        cl.connect(services[s]["schema"]+"://"+services[s]["address"]+":"+services[s]["port"]);
-        clients.push(cl);
+        cl.connect(services[s]["schema"]+"://"+services[s]["host"]+":"+services[s]["port"]);
+        zero_clients.push(cl);
     }
 
     var server = http.createServer(function(request, response) {
@@ -66,11 +71,11 @@ function run_server(host, port) {  // якобы общепринятое пра
             });
             request.on("end", function() {
                 if (all_data.length < max_KB) {
-                    all_data = JSON.parse(all_data.toString());
+                    all_data = JSON.parse(all_data.toString()); //TODO: ломается на невалидных данных
                     for (var attrname in all_data) {
                         IPC_pack["query_params"][attrname] = all_data[attrname];
                     }
-                    clients[0].invoke("route", IPC_pack, function(error, res, more) {
+                    zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
                         response.writeHead(200, {"Content-Type": "text/plain"});
                         response.end(res);
                     });
@@ -85,9 +90,9 @@ function run_server(host, port) {  // якобы общепринятое пра
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, meth, query_params);
             log("received IPC: " + JSON.stringify(IPC_pack));
-            clients[0].invoke("route", IPC_pack, function(error, res, more) {
+            zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
-                response.end(res);
+                response.end(JSON.stringify(res));
             });
         }
 
@@ -101,4 +106,5 @@ function run_server(host, port) {  // якобы общепринятое пра
     log("server runnig on "+host+":"+port);
 }
 
-run_server("127.0.0.1", 7777);
+var conf = load_conf('../configs/node_service.yaml');
+run_server(conf["host"], conf["port"]);
