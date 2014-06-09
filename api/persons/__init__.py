@@ -8,7 +8,7 @@ from persons_values import *
 
 routing = {
     'info': {
-        'GET': get_person_info,
+        'get': get_person_info,
     },
     'extras': {
         'get': get_person_extars,

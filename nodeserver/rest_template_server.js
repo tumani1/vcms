@@ -21,7 +21,7 @@ function validate(vurl) {
     return re.exec(vurl);  // длинна массива соотвествует количеству групп в regexp +1
 }
 
-function form_ipc_pack(directives, method, query_params) {
+function form_ipc_pack(directives, headers, method, query_params) {
     /*Список групп методов API проекта:
      [auth, user, topics,
       media, content, persons,
@@ -39,7 +39,8 @@ function form_ipc_pack(directives, method, query_params) {
     return {api_group: directives[1],
             api_method: directives[3],
             http_method: method,
-            token: 'echo_token', //TODO сделать парсинг заголовка токена
+            token: headers['token'],
+            x_token: headers['x-token'],
             query_params: qp};
 }
 
@@ -59,17 +60,18 @@ function run_server(host, port) {  // якобы общепринятое пра
             meth = request.method.toLowerCase(),
             directives = validate(vurl),
             IPC_pack;
+            headers = request.headers;
+        log('headrers ', headers);
 
         if (["post", "put"].indexOf(meth)>-1 && directives != null) {
-            var all_data = '',
-                form = new formidable.IncomingForm();
-            IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log("received IPC: " + JSON.stringify(IPC_pack));
+            var form = new formidable.IncomingForm();
+            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+            log("formed IPC: " + JSON.stringify(IPC_pack));
 
-            form.maxFields = 1;
-            form.maxFieldsSize = max_KB;
+            form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
+            form.maxFields = 3;
             form.parse(request, function(error, fields, files) {
-                log(fields);
+                log('fields', fields);
                 for (var property in fields) {
                         if (!IPC_pack["query_params"].hasOwnProperty(property)) {
                             IPC_pack["query_params"][property] = fields[property];
@@ -80,40 +82,15 @@ function run_server(host, port) {  // якобы общепринятое пра
                     response.end(JSON.stringify(res));
                 });
             });
-
-
-
-
-
-//            request.on('data', function(chunk) {
-//                /*накапливание данных, потому как ответ может придти за раз неполностью*/
-//                log(chunk.length);
-//                log(chunk.toString());
-//                all_data += chunk;
-//            });
-//
-//            request.on("end", function() {
-//                if (all_data.length < max_KB) {
-//                    all_data = formidable();
-//                    all_data = JSON.parse(all_data.toString()); //TODO: ломается на невалидных данных
-//                    for (var attrname in all_data) {
-//                        IPC_pack["query_params"][attrname] = all_data[attrname];
-//                    }
-//                    zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
-//                        response.writeHead(200, {"Content-Type": "text/plain"});
-//                        response.end(res);
-//                    });
-//                }
-//                else {
-//                    response.writeHead(400, {"Content-Type": "text/plain"});
-//                    response.end("too large request");
-//                }
-//            })
+            form.on('error', function(error) {
+                log('error', error);
+                response.end();
+            });
         }
 
         else if (directives != null) {
-            IPC_pack = form_ipc_pack(directives, meth, query_params);
-            log("received IPC: " + JSON.stringify(IPC_pack));
+            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+            log("formed IPC: " + JSON.stringify(IPC_pack));
             zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
                 response.end(JSON.stringify(res));
