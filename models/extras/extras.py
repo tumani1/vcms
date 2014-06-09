@@ -9,7 +9,7 @@ from sqlalchemy_utils import ChoiceType
 from models.extras.constants import EXTRA_TYPE
 
 from models import Base
-from models.extras.extras_topics import ExtrasTopics
+from models.extras import ExtrasTopics, PersonsExtras
 
 
 class Extras(Base):
@@ -32,9 +32,7 @@ class Extras(Base):
 
 
     @classmethod
-    def get_extras_by_topics(cls, session, name, id=None, text=None, _type=None, limit=None):
-        query = cls.tmpl_for_extras(session).join(ExtrasTopics, and_(cls.id == ExtrasTopics.extras_id, ExtrasTopics.topic_name == name))
-
+    def query_filling(cls, query, id=None, text=None, _type=None, limit=None):
         # Set name filter
         if not id is None:
             query = query.filter(cls.id.in_(id))
@@ -57,6 +55,28 @@ class Extras(Base):
             # Set Offset
             if not limit[0] is None:
                 query = query.offset(limit[1])
+
+        return query
+
+
+    @classmethod
+    def get_extras_by_topics(cls, name, session, id=None, text=None, _type=None, limit=None):
+        query = cls.tmpl_for_extras(session).\
+            join(ExtrasTopics, and_(cls.id == ExtrasTopics.extras_id, ExtrasTopics.topic_name == name))
+
+        # Конструктор запроса
+        query = cls.query_filling(query, id=None, text=None, _type=None, limit=None)
+
+        return query
+
+
+    @classmethod
+    def get_extras_by_person(cls, person, session, id=None, text=None, _type=None, limit=None):
+        query = cls.tmpl_for_extras(session).\
+            join(PersonsExtras, and_(cls.id == ExtrasTopics.extras_id, PersonsExtras.person_id == person))
+
+        # Конструктор запроса
+        query = cls.query_filling(query, id=None, text=None, _type=None, limit=None)
 
         return query
 
