@@ -29,8 +29,8 @@ class UsersPersons(Base):
 
 
     @classmethod
-    def get_user_person(cls, user, person, session):
-        query = cls.tmpl_for_user_person(session).filter(cls.user_id == user, cls.person_id == person)
+    def get_user_person(cls, user_id, person_id, session):
+        query = cls.tmpl_for_user_person(session).filter(cls.user_id == user_id, cls.person_id == person_id)
         return query
 
 
