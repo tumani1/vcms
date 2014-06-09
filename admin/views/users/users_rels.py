@@ -1,11 +1,16 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
 from flask.ext.admin.form import fields
 
+from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE
 
 
-class UsersRelsModelView(ModelView):
+class UsersRelsModelView(BaseModelView):
+    model = UsersRels
+    category = u'Пользователи'
+    name = u'Отношения пользователей'
+
     form_overrides = dict(
         urStatus=fields.Select2Field
     )
