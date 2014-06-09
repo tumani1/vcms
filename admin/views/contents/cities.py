@@ -1,11 +1,16 @@
 # coding: utf-8
-from flask.ext.admin.contrib.sqla import ModelView
+from admin.views.base import BaseModelView
 from flask.ext.admin.form import fields
 
+from models.contents import Cities
 from pytz import common_timezones
 
 
-class CitieModelView(ModelView):
+class CitieModelView(BaseModelView):
+    model = Cities
+    category = u'Локации'
+    name = u'Города'
+
     form_overrides = dict(
         time_zone=fields.Select2Field
     )
@@ -34,24 +39,3 @@ class CitieModelView(ModelView):
     )
 
     form_excluded_columns = ('users', )
-
-
-class CountryModelView(ModelView):
-
-    column_labels = dict(name=u'Название', name_orig=u'Оригинальное название',
-                         description=u'Описание')
-
-    form_args = dict(
-        name=dict(
-            label=u'Название'
-        ),
-        name_orig=dict(
-            label=u'Оригинальное название'
-        ),
-        description=dict(
-            label=u'Описание'
-        )
-    )
-
-    form_excluded_columns = ('cities', )
-

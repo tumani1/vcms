@@ -13,26 +13,35 @@ session = sessionmaker(bind=engine)()
 
 ###############################################################################
 # User
-from users import UsersRelsModelView, UsersModelView
-from models.users import UsersRels, Users
+from users import UsersRelsModelView, UsersModelView, UsersValuesModelView,\
+    UsersSocialModelView, UsersExtrasModelView
 
-admin.add_view(UsersRelsModelView(UsersRels, session, category=u'Пользователи', name=u'Отношения пользователей'))
-admin.add_view(UsersModelView(Users, session, category=u'Пользователи', name=u'Пользователи'))
-###############################################################################
-
-###############################################################################
-# Contents
-from contents import CountryModelView, CitieModelView
-from models.contents import Countries, Cities
-
-admin.add_view(CitieModelView(Cities, session, category=u'Локации', name=u'Города'))
-admin.add_view(CountryModelView(Countries, session, category=u'Локации', name=u'Страны'))
+admin.add_view(UsersModelView(session))
+admin.add_view(UsersRelsModelView(session))
+admin.add_view(UsersSocialModelView(session))
+admin.add_view(UsersValuesModelView(session))
+admin.add_view(UsersExtrasModelView(session))
 ###############################################################################
 
 ###############################################################################
 # Persons
 from persons import PersonsModelView
-from models.persons import Persons
 
-admin.add_view(PersonsModelView(Persons, session, category=u'Персоны', name=u'Персоны'))
+admin.add_view(PersonsModelView(session))
+###############################################################################
+
+###############################################################################
+# Chats
+from chats import ChatsModelView, UsersChatModelView
+
+admin.add_view(ChatsModelView(session))
+admin.add_view(UsersChatModelView(session))
+###############################################################################
+
+###############################################################################
+# Contents
+from contents import CountryModelView, CitieModelView
+
+admin.add_view(CitieModelView(session))
+admin.add_view(CountryModelView(session))
 ###############################################################################

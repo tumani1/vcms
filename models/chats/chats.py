@@ -1,6 +1,5 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer
-from sqlalchemy.orm import relationship
 
 from models import Base
 
@@ -10,9 +9,7 @@ class Chats(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    description = Column(Integer)
-
-    user_chats = relationship('UsersChat', backref='chats')
+    description = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<Chats([{}] {})>".format(self.id, self.description)
+        return u"<Chats([{}] {})>".format(self.id, self.description)

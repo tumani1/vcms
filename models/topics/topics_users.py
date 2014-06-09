@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import time
+
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
@@ -15,8 +17,8 @@ class UsersTopics(Base):
     id         = Column(Integer, primary_key=True)
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
     topic_name = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
-    subscribed = Column(DateTime, nullable=False)
-    liked      = Column(DateTime, nullable=True)
+    subscribed = Column(DateTime)
+    liked      = Column(DateTime)
 
 
     @classmethod
@@ -32,13 +34,14 @@ class UsersTopics(Base):
 
     @property
     def check_liked(self):
-        return True if self.liked else False
+        return time.mktime(self.liked.timetuple()) if not self.liked is None else 0
 
 
     @property
     def check_subscribed(self):
-        return True if self.liked else False
+        return True if self.subscribed else False
 
 
     def __repr__(self):
-        return u"<UsersTopics(user={0}, topic={1}, subscr={2})>".format(self.user_id, self.topic_name, self.subscribed)
+        return u"<UsersTopics(user={0}, topic={1}, subscr={2}, liked={3})>".\
+            format(self.user_id, self.topic_name, self.subscribed, self.liked)

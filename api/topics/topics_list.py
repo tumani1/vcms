@@ -3,6 +3,8 @@
 from models import db, Topics
 from models.topics.constants import TOPIC_TYPE
 
+from utils.validation import validate_mLimit
+
 __all__ = ['get_topics_list']
 
 
@@ -35,27 +37,7 @@ def get_topics_list(user, session, **kwargs):
             params['_type'] = kwargs['type']
 
     if 'limit' in kwargs:
-        result = kwargs['limit'].split(',', 1)
-
-        if len(result) == 1:
-            params['limit'] = (result[0], 0)
-        elif len(result) == 2:
-            # Check limit
-            if not len(result[0]):
-                r1 = None
-            else:
-                try:
-                    r1 = int(result[0])
-                except Exception, e:
-                    r1 = None
-
-            # Check top
-            try:
-                r2 = int(result[1])
-            except Exception, e:
-                r2 = 0
-
-            params['limit'] = (r1, r2)
+        params['limit'] = validate_mLimit(limit=kwargs['limit'])
 
     query = Topics.get_topics_list(**params).all()
 

@@ -5,20 +5,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 from models import Base
+from models.scheme.constants import KLASS_TYPE, M_SCHEME_INT
 
 
 class Scheme(Base):
     __tablename__ = 'scheme'
-
-    M_SCHEME_INT = u'int'
-    M_SCHEME_STR = u'string'
-    M_SCHEME_TXT = u'text'
-
-    KLASS_TYPE = (
-        (M_SCHEME_INT, u'Целое'),
-        (M_SCHEME_STR, u'Строка'),
-        (M_SCHEME_TXT, u'Текст'),
-    )
 
     id           = Column(Integer, primary_key=True)
     topic_name   = Column(String, ForeignKey('topics.name'), nullable=True)

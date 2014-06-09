@@ -1,7 +1,7 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, String
+from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.dialects.postgresql import BYTEA
-from sqlalchemy.event import listens_for, listen
+from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 
 from models import Base
