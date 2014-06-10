@@ -6,6 +6,7 @@ from persons_like import *
 from persons_extras import *
 from persons_values import *
 from persons_list import *
+from persons_media import *
 
 routing = {
     'list': {
@@ -16,6 +17,9 @@ routing = {
     },
     'extras': {
         'get': get_person_extars,
+    },
+    'media': {
+       'get': get_person_media,
     },
     'values': {
         'get': get_person_values,
