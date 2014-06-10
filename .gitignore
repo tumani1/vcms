@@ -9,7 +9,7 @@ node_service.yaml
 *.py[cod]
 
 # node temp dirs
-.bin
+node_modules
 
 # Pycharm conf
 .idea
