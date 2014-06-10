@@ -10,6 +10,7 @@ from models.extras.constants import EXTRA_TYPE
 
 from models import Base
 from models.extras.extras_topics import ExtrasTopics
+from models.extras.extras_persons import PersonsExtras
 
 
 class Extras(Base):
@@ -32,9 +33,7 @@ class Extras(Base):
 
 
     @classmethod
-    def get_extras_by_topics(cls, session, name, id=None, text=None, _type=None, limit=None):
-        query = cls.tmpl_for_extras(session).join(ExtrasTopics, and_(cls.id == ExtrasTopics.extras_id, ExtrasTopics.topic_name == name))
-
+    def query_filling(cls, query, id=None, text=None, _type=None, limit=None):
         # Set name filter
         if not id is None:
             query = query.filter(cls.id.in_(id))
@@ -62,6 +61,28 @@ class Extras(Base):
 
 
     @classmethod
+    def get_extras_by_topics(cls, name, session, id=None, text=None, _type=None, limit=None):
+        query = cls.tmpl_for_extras(session).\
+            join(ExtrasTopics, and_(cls.id == ExtrasTopics.extras_id, ExtrasTopics.topic_name == name))
+
+        # Конструктор запроса
+        query = cls.query_filling(query, id=None, text=None, _type=None, limit=None)
+
+        return query
+
+
+    @classmethod
+    def get_extras_by_person(cls, person, session, id=None, text=None, _type=None, limit=None):
+        query = cls.tmpl_for_extras(session).\
+            join(PersonsExtras, and_(cls.id == ExtrasTopics.extras_id, PersonsExtras.person_id == person))
+
+        # Конструктор запроса
+        query = cls.query_filling(query, id=None, text=None, _type=None, limit=None)
+
+        return query
+
+
+    @classmethod
     def data(cls, data):
         if isinstance(data, list):
             data = [item.to_native() for item in data]
@@ -79,7 +100,7 @@ class Extras(Base):
             'title_orig': self.title_orig,
             'description': self.description,
             'location': self.location,
-            'created': self.get_unixtime,
+            'created': self.get_by_created_unixtime,
         }
 
         return result
@@ -91,5 +112,5 @@ class Extras(Base):
 
 
     @property
-    def get_unixtime(self):
+    def get_by_created_unixtime(self):
         return time.mktime(self.created.timetuple())

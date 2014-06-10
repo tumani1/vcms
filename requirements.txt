@@ -13,3 +13,4 @@ raven
 wtforms-html5
 fabric
 nose
+requests
