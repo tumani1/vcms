@@ -1,12 +1,13 @@
 # coding: utf-8
 
 from models import db, PersonsValues
+from utils.validation import validate_list_string
 
 __all__ = ['get_person_values']
 
 
 @db
-def get_person_values(person, session, **kwargs):
+def get_person_values(user, person, session, **kwargs):
     # Params
     params = {
         'person': person,
@@ -17,18 +18,7 @@ def get_person_values(person, session, **kwargs):
     }
 
     if 'name' in kwargs:
-        name = kwargs['name']
-        if not isinstance(name, list):
-            try:
-                params['name'] = [str(name).strip()]
-            except Exception, e:
-                pass
-        else:
-            if isinstance(name, list):
-                try:
-                    params['name'] = [str(i).strip() for i in name]
-                except Exception, e:
-                    pass
+        params['name'] = validate_list_string(kwargs['name'])
 
     if 'topic' in kwargs:
         try:
@@ -39,16 +29,18 @@ def get_person_values(person, session, **kwargs):
     if 'value' in kwargs:
         value = kwargs['value']
         if not isinstance(value, list):
+            value = [value]
+
+        clean_value = []
+        for i in value:
             try:
-                params['value'] = [str(value).strip()]
+                clean_value.append(int(i))
             except Exception, e:
-                pass
-        else:
-            if isinstance(value, list):
-                try:
-                    params['value'] = [str(i).strip() for i in value]
-                except Exception, e:
-                    pass
+                clean_value.append(str(i))
+
+        if len(clean_value):
+            params['value'] = clean_value
+
 
     if params['name'] is None:
         return {'code': 404}
@@ -56,6 +48,6 @@ def get_person_values(person, session, **kwargs):
     if params['value'] is None:
         return {'code': 404}
 
-    query = PersonsValues.get_values_through_schema(**params).all()
+    query = PersonsValues.get_person_values(**params).all()
 
     return PersonsValues.data(query)

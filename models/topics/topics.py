@@ -23,7 +23,7 @@ class Topics(Base):
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
     topic_values = relationship('TopicsValues', backref='topics')
-    topic_user = relationship('UsersTopics', backref='topics', uselist=False)
+    topic_user   = relationship('UsersTopics', backref='topics', uselist=False)
     # extra_topics = relationship('UsersTopics', backref='topics')
 
 
@@ -34,7 +34,7 @@ class Topics(Base):
         if not user is None:
             query = query.\
                 outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
-                options(contains_eager(cls.user_topics))
+                options(contains_eager(cls.topic_user))
 
         return query
 
