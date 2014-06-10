@@ -40,19 +40,21 @@ class Persons(Base):
 
 
     @classmethod
-    def get_persons_list(cls, person, session, id=None, text=None, is_online=None,
+    def get_persons_list(cls, session, id=None, text=None, is_online=None,
                          is_user=None, limit=None, topic=None, _type=None, **kwargs):
 
-        person_list = [int(person)]
+        query = cls.tmpl_for_persons(None, session)
+
+        # Set filter which check that person online
+        if not is_online is None:
+            pass
 
         # Set filter by ids
         if not id is None:
             if not hasattr(id, '__iter__'):
-                person_list.append(id)
-            else:
-                person_list += id
+                id = [id]
 
-        query = session.query(cls).filter(cls.id.in_(person_list))
+            query = query.filter(cls.id.in_(id))
 
         # Set filter which check that person is user
         if not is_user is None:
