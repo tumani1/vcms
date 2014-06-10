@@ -25,11 +25,11 @@ def validate_mLimit(limit, **kwargs):
 
 
 def validate_list_int(value, **kwargs):
-    if not isinstance( value, list):
+    if not isinstance(value, list):
          value = [value]
 
     try:
-        clean_value = [int(i) for i in id]
+        clean_value = [int(i) for i in value]
         if len(clean_value):
             return clean_value
 

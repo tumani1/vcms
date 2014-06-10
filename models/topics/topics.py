@@ -23,7 +23,7 @@ class Topics(Base):
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
     topic_values = relationship('TopicsValues', backref='topics')
-    topic_user = relationship('UsersTopics', backref='topics', uselist=False)
+    topic_user   = relationship('UsersTopics', backref='topics', uselist=False)
     # extra_topics = relationship('UsersTopics', backref='topics')
 
 

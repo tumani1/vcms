@@ -4,6 +4,7 @@ from models import db, Persons
 from models.topics.constants import TOPIC_TYPE
 
 from utils.validation import validate_list_int, validate_mLimit, validate_string
+from api.persons.serializer import mPersonSerializer, mPersonRoleSerializer
 
 __all__ = ['get_person_list']
 
@@ -44,4 +45,15 @@ def get_person_list(user, session, **kwargs):
             if kwargs['type'] in dict(TOPIC_TYPE).keys():
                 params['_type'] = kwargs['type']
 
-    return {}
+    instance = Persons.get_persons_list(**params).all()
+
+    new_param = {
+        'instance': instance,
+        'user': user,
+        'session': session,
+    }
+
+    if not params['topic'] is None:
+        return mPersonRoleSerializer(**new_param).data
+
+    return mPersonSerializer(**new_param).data
