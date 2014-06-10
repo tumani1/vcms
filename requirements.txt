@@ -2,6 +2,7 @@ flask
 flask-admin
 SQLAlchemy
 sqlalchemy-utils
+SQLAlchemy-Searchable
 pyyaml
 psycopg2
 pytz

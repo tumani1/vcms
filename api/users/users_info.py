@@ -4,6 +4,7 @@ from models.users import Users, UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 
 
+# TODO online
 @db
 def get(user_id, id, session=None, **kwargs):
     user = session.query(Users).get(id)
