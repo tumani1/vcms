@@ -1,12 +1,13 @@
 # coding: utf-8
 from models import db
+from models.persons import Persons
 from models.users import UsersRels, Users
 from models.contents import Cities, Countries
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 from utils.validation import validate_mLimit
 
 
-# TODO person and online and text
+# TODO online, text
 @db
 def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         city=None, limit=',0', country=None, **kwargs):
@@ -21,8 +22,11 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         pass
     if is_online:
         pass
-    if is_person:
-        pass
+    if not is_person is None:
+        if is_person:
+            query = query.outerjoin(Persons).filter(Persons.user_id != None)
+        else:
+            query = query.outerjoin(Persons).filter(Persons.user_id == None)
 
     if city:
         query = query.join(Cities).filter(Cities.name == city.encode('utf-8'))
@@ -58,7 +62,11 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         if u.person and is_person:
             ret_dict['person_id'] = u.person.id
         if user:
-         ret_dict['relation'] = session.query(UsersRels.urStatus).filter_by(user_id=user, partner_id=u.id).first()
+            rel = session.query(UsersRels).filter_by(user_id=user, partner_id=u.id).first()
+            if rel:
+                ret_dict['relation'] = rel.urStatus.code
+            else:
+                ret_dict['relation'] = APP_USERSRELS_TYPE_UNDEF
 
         ret_list.append(ret_dict)
 

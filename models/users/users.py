@@ -1,8 +1,8 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
+from sqlalchemy.sql.expression import and_
 from sqlalchemy.orm import relationship, contains_eager
-from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType, TSVectorType
-from sqlalchemy_searchable import make_searchable
+from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 import datetime
 
@@ -10,9 +10,6 @@ from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
 from models import Base
 from models.persons import UsersPersons
-
-
-make_searchable()
 
 
 class Users(Base):

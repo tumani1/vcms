@@ -1,11 +1,12 @@
 # coding: utf-8
 from models import db
+from models.persons import Persons
 from models.users import Users, UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils.validation import validate_mLimit
 
 
-# TODO: online person type text
+# TODO: online type text
 @db
 def get(user, id, session=None, type=None, limit=',0', text='', is_online=None,
         is_person=None, **kwargs):
@@ -14,10 +15,17 @@ def get(user, id, session=None, type=None, limit=',0', text='', is_online=None,
 
     if type:
         pass
-    if is_person:
-        pass
     if is_online:
         pass
+
+    if text:
+        pass
+
+    if not is_person is None:
+        if is_person:
+            query = query.outerjoin(Persons).filter(Persons.user_id != None)
+        else:
+            query = query.outerjoin(Persons).filter(Persons.user_id == None)
 
     limit = validate_mLimit(limit)
      # Set limit and offset filter
@@ -34,13 +42,16 @@ def get(user, id, session=None, type=None, limit=',0', text='', is_online=None,
     for u in query:
         ret_dict = dict(
             id=u.id,
-            firtsname=u.firtsname,
+            firstname=u.firstname,
             lastname=u.lastname,
             is_online=False,
-            person_id=None,
         )
+        if is_person:
+            ret_dict['person_id'] = u.person.id
         if user:
             ret_dict['relation'] = APP_USERSRELS_TYPE_FRIEND
         ret_list.append(ret_dict)
 
     return ret_list
+
+get(None, id=2)
