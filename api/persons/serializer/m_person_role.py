@@ -20,8 +20,6 @@ class mPersonRoleSerializer(DefaultSerializer):
     }
 
     def __init__(self, **kwargs):
-        self.fields = self.__read_fields
-
         keys = ['person', 'topic_name', 'role', 'type']
         kwargs['instance'] = [dict(zip(keys, item)) for item in kwargs['instance']]
 
