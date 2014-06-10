@@ -20,8 +20,8 @@ class Persons(Base):
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
     bio       = Column(Text)
 
-    user      = relationship('Users', foreign_keys=user_id, backref='persons')
-    topics    = relationship('PersonsTopics', backref='persons')
+    user          = relationship('Users', foreign_keys=user_id, backref='persons')
+    person_topics = relationship('PersonsTopics', backref='persons')
 
 
     @classmethod
@@ -40,17 +40,19 @@ class Persons(Base):
 
 
     @classmethod
-    def get_persons_list(cls, session, id=None, text=None, is_online=None,
+    def get_persons_list(cls, person, session, id=None, text=None, is_online=None,
                          is_user=None, limit=None, topic=None, _type=None, **kwargs):
 
-        query = cls.tmpl_for_persons(None, session)
+        person_list = [int(person)]
 
         # Set filter by ids
         if not id is None:
             if not hasattr(id, '__iter__'):
-                id = [id]
+                person_list.append(id)
+            else:
+                person_list += id
 
-            query = query.filter(cls.id.in_(id))
+        query = session.query(cls).filter(cls.id.in_(person_list))
 
         # Set filter which check that person is user
         if not is_user is None:
@@ -64,7 +66,9 @@ class Persons(Base):
 
         # Set filter by topic
         if not topic is None:
-            query = query.join(PersonsTopics).filter(PersonsTopics.topic_name == topic)
+            query = query.join(PersonsTopics).\
+                add_columns(PersonsTopics.topic_name, PersonsTopics.role, PersonsTopics.type).\
+                filter(PersonsTopics.topic_name == topic)
 
             # Set filter by type
             if not _type is None:

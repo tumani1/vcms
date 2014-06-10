@@ -34,7 +34,7 @@ class Topics(Base):
         if not user is None:
             query = query.\
                 outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
-                options(contains_eager(cls.user_topics))
+                options(contains_eager(cls.topic_user))
 
         return query
 

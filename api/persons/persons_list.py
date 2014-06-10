@@ -10,7 +10,7 @@ __all__ = ['get_person_list']
 
 
 @db
-def get_person_list(user, session, **kwargs):
+def get_person_list(user, person, session, **kwargs):
     # Params
     params = {
         'id': None,
@@ -20,6 +20,7 @@ def get_person_list(user, session, **kwargs):
         'limit': None,
         'topic': None,
         '_type': None,
+        'person': person,
         'session': session,
     }
 
