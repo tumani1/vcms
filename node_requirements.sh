@@ -1,1 +1,1 @@
-npm i -g zerorpc js-yaml formidable
+sudo npm install zerorpc js-yaml formidable
