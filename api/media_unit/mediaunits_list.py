@@ -1,6 +1,5 @@
 from models import db, MediaUnits
 from api.media_unit.serializer import mMediaUnitsSerializer
-from utils import need_authorization
 
 
 @db
@@ -26,6 +25,10 @@ def get(user=None, session=None, **kwargs):
     if 'topic' in kwargs:
         params['topic'] = str(kwargs['topic']).strip()
 
-    instance = ''
-
-    return mMediaUnitsSerializer(user, session, instance)
+    instance = MediaUnits.get_media_units_list(**params)
+    serializer_params = {
+        'user': user,
+        'session': session,
+        'instance': instance,
+    }
+    return mMediaUnitsSerializer(**serializer_params).data

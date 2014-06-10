@@ -1,5 +1,11 @@
 from mediaunits_list import get as get_list
+from media_units_info import get as get_info
 
-
-list = {'get': get_list}
-routing = {'list': list}
+routing = {
+    'list': {
+        'get': get_list
+    },
+    'info': {
+        'get': get_info
+    },
+}

@@ -1,7 +1,10 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT, Text, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT, Text, Date, and_
 from models import Base
+from models.media.users_media_units import UsersMediaUnits
+from sqlalchemy.orm import relationship, contains_eager
+
 
 class MediaUnits(Base):
     __tablename__ = 'media_units'
@@ -16,18 +19,43 @@ class MediaUnits(Base):
     end_date = Column(Date, nullable=True)
     batch = Column(String, nullable=True)
 
+    user_media_units = relationship('UsersMediaUnits', backref='media_units', uselist=False)
+
+
     @classmethod
     def tmpl_for_media_units(cls, user, session):
         query = session.query(cls)
 
         if not user is None:
             query = query.\
-                outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
-                options(contains_eager(cls.user_topics))
+                outerjoin(UsersMediaUnits, and_(cls.id == UsersMediaUnits.media_unit_id, UsersMediaUnits.user_id == user.id)).\
+                options(contains_eager(cls.user_media_units))
 
         return query
 
     @classmethod
     def get_media_units_list(cls, user, session, id=None, text=None, batch=None, topic=None):
-        pass
+        query = cls.tmpl_for_media_units(user, session)
+
+        if not id is None:
+            query = query.filter(cls.id == id)
+
+        if not text is None:
+            query = query.filter(cls.title == text)
+
+        if not batch is None:
+            query = query.filter(cls.batch == batch)
+
+        if not topic is None:
+            query = query.filter(cls.topic_name == topic)
+
+        return query
+
+    @classmethod
+    def get_media_unit_by_name(cls, user, session, id, **kwargs):
+        query = cls.tmpl_for_media_units(user, session).filter(cls.id == id).first()
+        return query
+
+
+
 

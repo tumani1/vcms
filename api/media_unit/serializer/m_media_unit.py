@@ -50,4 +50,11 @@ class mMediaUnitsSerializer(DefaultSerializer):
         return instance.previous_unit
 
     def transform_relation(self, instance, **kwargs):
-        return {}
+        relation = {}
+        user_media_unit = instance.user_media_units
+        if self.is_auth and not user_media_unit is None:
+            if user_media_unit.subscribed:
+                relation.update(subscribed=user_media_unit.subscribed)
+            if user_media_unit.watched:
+                relation.update(watched=user_media_unit.watched)
+        return relation
