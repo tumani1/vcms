@@ -3,6 +3,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from models import Base
 
+
 class CDN(Base):
     __tablename__ = 'cdn'
     name = Column(String, nullable=False, primary_key=True)

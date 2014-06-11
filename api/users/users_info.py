@@ -9,7 +9,7 @@ from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 def get(user_id, id, session=None, **kwargs):
     user = session.query(Users).get(id)
     if not user:
-        raise Exception()
+        raise ValueError("Not valid Id for user")
 
     return_dict = dict(
         id=user.id,

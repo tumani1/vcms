@@ -1,4 +1,6 @@
 # coding: utf-8
+from sqlalchemy.sql.expression import func
+
 from models import db
 from models.persons import Persons
 from models.users import UsersRels, Users
@@ -7,7 +9,7 @@ from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 from utils.validation import validate_mLimit
 
 
-# TODO online, text
+# TODO online
 @db
 def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         city=None, limit=',0', country=None, **kwargs):
@@ -19,7 +21,8 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         query = query.filter(Users.id.in_(id))
 
     if text:
-        pass
+        query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
+
     if is_online:
         pass
     if not is_person is None:

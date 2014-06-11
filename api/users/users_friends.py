@@ -1,4 +1,6 @@
 # coding: utf-8
+from sqlalchemy.sql.expression import func
+
 from models import db
 from models.persons import Persons
 from models.users import Users, UsersRels
@@ -6,20 +8,20 @@ from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils.validation import validate_mLimit
 
 
-# TODO: online type text
+# TODO: online type
 @db
-def get(user, id, session=None, type=None, limit=',0', text='', is_online=None,
+def get(user, id, session=None, type=None, limit=',0', text=u'', is_online=None,
         is_person=None, **kwargs):
     subquery = session.query(UsersRels.partner_id).filter_by(user_id=id).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))
-
     if type:
         pass
+
     if is_online:
         pass
 
     if text:
-        pass
+        query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
 
     if not is_person is None:
         if is_person:
@@ -53,5 +55,3 @@ def get(user, id, session=None, type=None, limit=',0', text='', is_online=None,
         ret_list.append(ret_dict)
 
     return ret_list
-
-get(None, id=2)
