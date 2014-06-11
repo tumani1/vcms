@@ -8,13 +8,17 @@ __all__ = ['get_topic_info']
 
 @db
 def get_topic_info(user, name, session, **kwargs):
+    data = {}
     instance = Topics.get_topics_by_name(user, name, session)
 
-    # Params
-    params = {
-        'user': user,
-        'instance': instance,
-        'session': session,
-    }
+    if not instance is None:
+        # Params
+        params = {
+            'user': user,
+            'instance': instance,
+            'session': session,
+        }
 
-    return mTopicSerializer(**params).data
+        data = mTopicSerializer(**params).data
+
+    return data

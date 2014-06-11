@@ -47,7 +47,7 @@ class DefaultSerializer(object):
         if self._data is None:
             obj = self.instance
 
-            if self.many or hasattr(obj, '__iter__'):
+            if isinstance(obj, list):
                 self._data = [self.to_native(item) for item in obj]
             else:
                 self._data = self.to_native(obj)

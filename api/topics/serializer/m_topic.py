@@ -24,33 +24,36 @@ class mTopicSerializer(DefaultSerializer):
     def __init__(self, **kwargs):
         if not kwargs['instance'] is None:
             key = ['topic', 'user', 'subscribed', 'liked']
-            kwargs['instance'] = dict(zip(key, kwargs['instance']))
+            if isinstance(kwargs['instance'], list):
+                kwargs['instance'] = [dict(zip(key, item)) for item in kwargs['instance']]
+            else:
+                kwargs['instance'] = dict(zip(key, kwargs['instance']))
 
         super(mTopicSerializer, self).__init__(**kwargs)
 
 
     def transform_name(self, instance, **kwargs):
-        return instance.name
+        return instance['topic'].name
 
 
     def transform_title(self, instance, **kwargs):
-        return instance.title
+        return instance['topic'].title
 
 
     def transform_title_orig(self, instance, **kwargs):
-        return instance.title_orig
+        return instance['topic'].title_orig
 
 
     def transform_description(self, instance, **kwargs):
-        return instance.title_orig
+        return instance['topic'].description
 
 
     def transform_releasedate(self, instance, **kwargs):
-        return instance.title_orig
+        return instance['topic'].releasedate
 
 
     def transform_type(self, instance, **kwargs):
-        return instance.type.code
+        return instance['topic'].type.code
 
 
     def transform_relation(self, instance, **kwargs):
