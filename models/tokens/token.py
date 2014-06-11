@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
 
 from models import Base
 
-import time
+import datetime
 import os
 import base64
 
@@ -21,27 +21,26 @@ class TokenMixin(Base):
     token_length = 48
 
     @declared_attr
-    def id(cls):
-        return Column('id', Integer, primary_key=True)
-
-    @declared_attr
     def user_id(cls):
-        return Column('user_id', Integer, ForeignKey('users.id'), nullable=False)
+        return Column('user_id', Integer, ForeignKey('users.id'), nullable=False, unique=True)
 
     @declared_attr
     def token(cls):
-        return Column('token', String(64), default=token_gen(cls.token_length))
+        return Column('token', String(64), default=token_gen(cls.token_length), unique=True, index=True)
 
     @declared_attr
     def created(cls):
-        return Column('created', DateTime, default=time.time)
+        return Column('created', DateTime, default=datetime.datetime.now)
+
+    def __repr__(self):
+        return u'<{}({}-{})>'.format(self.__class__.__name__, self.user_id, self.token)
 
     @classmethod
     def generate_token(cls, user_id, session=None):
         '''
         (Re)Generate token for given user_id
         '''
-        qr = session.query(cls).filter(user_id=user_id).first()
+        qr = session.query(cls).filter(cls.user_id == user_id).first()
 
         if qr is None:
             gt = cls(user_id=user_id)
