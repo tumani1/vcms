@@ -35,7 +35,8 @@ class UsersModelView(BaseModelView):
                          phone=u'Телефон', last_visit=u'Последний визит')
 
     column_list = ('id', 'firstname', 'lastname', 'gender', 'city', 'address',
-                   'bio', 'birthdate', 'phone', 'time_zone', 'created', 'last_visit')
+                   'password', 'bio', 'birthdate', 'phone', 'time_zone',
+                   'created', 'last_visit')
 
     column_choices = dict(
         gender=APP_USERS_TYPE_GENDER,
