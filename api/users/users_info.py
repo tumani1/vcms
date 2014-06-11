@@ -2,30 +2,32 @@
 from models import db
 from models.users import Users, UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF
+from utils.exceptions import DoesNotExist
 
 
+# TODO online
 @db
-def get(user_id, id, session=None, **kwargs):
-    user = session.query(Users).get(id)
-    if not user:
-        raise Exception()
+def get(user, id, session=None, **kwargs):
+    query = session.query(Users).get(id)
+    if not query:
+        raise DoesNotExist
 
     return_dict = dict(
-        id=user.id,
-        firstname=user.firstname,
-        lastname=user.lastname,
-        gender=user.gender.code,
-        regdate=user.created,
-        lastvisit=user.last_visit,
+        id=query.id,
+        firstname=query.firstname,
+        lastname=query.lastname,
+        gender=query.gender.code,
+        regdate=query.created,
+        lastvisit=query.last_visit,
         is_online=False,
-        city=user.city.name,
-        country=user.city.country.name,
+        city=query.city.name,
+        country=query.city.country.name,
     )
-    if user.person:
-        return_dict['person_id'] = user.person.id
+    if query.person:
+        return_dict['person_id'] = query.person.id
 
-    if user_id:
-        rel = session.query(UsersRels).filter_by(user_id=user_id, partner_id=id).first()
+    if user:
+        rel = session.query(UsersRels).filter_by(user_id=query, partner_id=id).first()
         if rel is None:
             status = APP_USERSRELS_TYPE_UNDEF
         else:

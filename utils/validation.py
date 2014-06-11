@@ -22,3 +22,42 @@ def validate_mLimit(limit, **kwargs):
             top = 0
 
         return limit, top
+
+
+def validate_list_int(value, **kwargs):
+    if not isinstance(value, list):
+         value = [value]
+
+    try:
+        clean_value = [int(i) for i in value]
+        if len(clean_value):
+            return clean_value
+
+    except Exception, e:
+        pass
+
+    return None
+
+
+def validate_list_string(value, **kwargs):
+    if not isinstance(value, list):
+       value = [value]
+
+    try:
+         clean_value = [str(i).strip() for i in value]
+         if len(clean_value):
+             return clean_value
+
+    except Exception, e:
+        pass
+
+    return None
+
+
+def validate_string(value, **kwargs):
+    try:
+         return str(value).strip()
+    except Exception, e:
+        pass
+
+    return None

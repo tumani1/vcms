@@ -30,6 +30,7 @@ class DefaultSerializer(object):
         self.user = user
         self.is_auth = True if not user is None else False
 
+        self.fields = getattr(self, '_{0}__read_fields'.format(self.__class__.__name__))
         self.context = context or {}
 
         self._data = None

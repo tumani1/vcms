@@ -5,23 +5,26 @@ from utils.common import group_by
 
 from models.users.users import Users
 
-__all__ = ['mPersonSerializer']
+__all__ = ['mPersonRoleSerializer']
 
 
-class mPersonSerializer(DefaultSerializer):
-
+class mPersonRoleSerializer(DefaultSerializer):
     __read_fields = {
         'id': '',
         'firstname': '',
         'lastname': '',
         'user': '',
+        'role': '',
+        'type': '',
         'relation': '',
     }
 
     def __init__(self, **kwargs):
-        super(mPersonSerializer, self).__init__(**kwargs)
+        keys = ['person', 'topic_name', 'role', 'type']
+        kwargs['instance'] = [dict(zip(keys, item)) for item in kwargs['instance']]
 
-        # Calc
+        super(mPersonRoleSerializer, self).__init__(**kwargs)
+
         self.calc_list_user_id()
 
         params = {
@@ -41,32 +44,33 @@ class mPersonSerializer(DefaultSerializer):
         obj = self.instance
 
         if hasattr(obj, '__iter__'):
-           user_list = [item.user_id for item in obj if not item.user_id is None]
-           person_list = [item.id for item in obj]
-        else:
-            person_list.append(obj.id)
-
-            if not obj is None and not obj.user_id is None:
-                user_list.append(obj.user_id)
+           user_list = [item['person'].user_id for item in obj if not item['person'].user_id is None]
+           person_list = [item['person'].id for item in obj]
 
         self.list_user_id = user_list
         self.list_person_id = person_list
 
 
     def transform_id(self, instance, **kwargs):
-        return instance.id
+        return instance['person'].id
 
     def transform_firstname(self, instance, **kwargs):
-        return instance.firstname
+        return instance['person'].firstname
 
     def transform_lastname(self, instance, **kwargs):
-        return instance.lastname
+        return instance['person'].lastname
 
     def transform_user(self, instance, **kwargs):
         return {}
 
+    def transform_role(self, instance, **kwargs):
+        return instance['role']
+
+    def transform_type(self, instance, **kwargs):
+        return instance['type'].code
+
     def transform_relation(self, instance, **kwargs):
-        user_id = instance.user_id
+        user_id = instance['person'].user_id
         if self.is_auth and not user_id is None:
             result = self.up.get(user_id, False)
 

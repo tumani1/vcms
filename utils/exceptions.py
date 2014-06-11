@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class RequestErrorException(Exception):
     pass
 

@@ -6,6 +6,8 @@ from topics_extras import *
 from topics_values import *
 from topics_subscribe import *
 from topics_like import *
+from topics_persons import *
+from topics_media import *
 
 
 routing = {
@@ -17,6 +19,12 @@ routing = {
     },
     'extras': {
         'get': get_topic_extars,
+    },
+    'persons': {
+        'get': get_topic_person,
+    },
+    'media': {
+        'get': get_topic_media,
     },
     'values': {
         'get': get_topic_values,

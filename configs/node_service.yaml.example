@@ -1,2 +1,7 @@
-host: 127.0.0.1
-port   : 9977
+render_serv:
+  host: 127.0.0.1
+  port   : 9966
+  template_dir: 'templates'
+rest_serv:
+  host: 127.0.0.1
+  port   : 9977

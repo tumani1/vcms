@@ -104,8 +104,8 @@ function run_server(host, port) {  // якобы общепринятое пра
         }
         });
     server.listen(port, host);
-    log("server runnig on "+host+":"+port);
+    log("rest server runnig on "+host+":"+port);
 }
 
 var conf = load_conf('../configs/node_service.yaml');
-run_server(conf["host"], conf["port"]);
+run_server(conf["rest_serv"]["host"], conf["rest_serv"]["port"]);

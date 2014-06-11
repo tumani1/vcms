@@ -6,7 +6,7 @@ import datetime
 from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime, and_
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
-from models.extras.constants import EXTRA_TYPE
+from models.extras.constants import APP_EXTRA_TYPE
 
 from models import Base
 from models.extras.extras_topics import ExtrasTopics
@@ -19,7 +19,8 @@ class Extras(Base):
 
     id          = Column(Integer, primary_key=True)
     cdn_name    = Column(String, ForeignKey('cdn.name'), nullable=False)
-    type        = Column(ChoiceType(EXTRA_TYPE), nullable=False)
+    cdn         = relationship('CDN', backref='extras')
+    type        = Column(ChoiceType(APP_EXTRA_TYPE), nullable=False)
     location    = Column(String, nullable=False)
     created     = Column(DateTime, default=datetime.datetime.now)
     description = Column(Text, nullable=False)
@@ -114,3 +115,6 @@ class Extras(Base):
     @property
     def get_by_created_unixtime(self):
         return time.mktime(self.created.timetuple())
+
+    def __repr__(self):
+        return u'<Extras([{}] {})>'.format(self.id, self.cdn_name)
