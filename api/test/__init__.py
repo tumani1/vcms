@@ -1,8 +1,8 @@
-def put(user_id, **kwargs):
+def put(user, **kwargs):
     return kwargs
 
 
-def get(user_id, **kwargs):
+def get(user, **kwargs):
     return kwargs
 
 

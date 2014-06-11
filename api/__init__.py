@@ -23,9 +23,12 @@ def authorize(IPC_pack, session=None):
 
     if IPC_pack['token'] == 'echo_token':
         
-        return IPC_pack.update({'user':
-                         session.query(Users).filter_by(id=1).first()[0]
+        IPC_pack['query_params'].update({'user':
+                         session.query(Users).filter_by(id=1).first()
                      })
+
+        print IPC_pack
+        return IPC_pack
     
     if IPC_pack['api_group'] =='auth':
         IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
@@ -38,13 +41,13 @@ def authorize(IPC_pack, session=None):
         user_id = GlobalToken.get_user_id_by_token(token_string = IPC_pack['token'],session=session)
         
     if user_id:
-        user = session.query(Users).filter_by(id=1).first()[0]
+        user = session.query(Users).filter_by(id=1).first()
     else:
         user = None
 
 
-    IPC_pack.update({'user':user})
+    IPC_pack['query_parameters'].update({'user':user})
     
-    
+    return IPC_pack
         
 

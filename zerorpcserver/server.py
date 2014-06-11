@@ -17,12 +17,12 @@ def raven_report(func):
     else:
         client = Client('http://5aec720be5594c3e8c4e456ec8f8523a:6d461d2eecce47c281c052cff0ec8a63@sentry.aaysm.com/3')
 
-        def wrapper(self, IPC_pack):
+        def rvwrapper(IPC_pack):
             try:
-                return func(self, IPC_pack)
+                return func(IPC_pack)
             except Exception:
                 client.captureException()
-        return wrapper
+        return rvwrapper
 
 
 class ZeroRpcService(object):

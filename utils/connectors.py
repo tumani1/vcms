@@ -30,7 +30,7 @@ class DBWrapper(object):
 
 
     def __call__(self, func):
-        def wrapper(*args, **kwargs):
+        def wrapper(*args,**kwargs):
             # Init params
             params = {
                 'bind': self.engine,
@@ -40,12 +40,13 @@ class DBWrapper(object):
             # Init Session
             session = scoped_session(sessionmaker(**params))()
 
-            try:
+            #try:
+            if True:
                 return func(session=session, *args, **kwargs)
-            except Exception, e:
+            #except Exception, e:
                 session.rollback()
                 raise e
-            finally:
+            #finally:
                 session.close()
 
         return wrapper
