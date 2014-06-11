@@ -30,7 +30,7 @@ class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-        user_id, Auth_IPC_pack = authorize(IPC_pack)
+        Auth_IPC_pack = authorize(IPC_pack)
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
         response = mashed_routes[mashed_key](**Auth_IPC_pack['query_params'])
         return response
