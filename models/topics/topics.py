@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from sqlalchemy import Column, String, DateTime, and_
-from sqlalchemy.orm import joinedload, contains_eager
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
@@ -23,7 +22,7 @@ class Topics(Base):
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
     topic_values = relationship('TopicsValues', backref='topics')
-    topic_user   = relationship('UsersTopics', backref='topics', uselist=False)
+    topic_user   = relationship('UsersTopics', backref='topics')
     # extra_topics = relationship('UsersTopics', backref='topics')
 
 
@@ -34,7 +33,7 @@ class Topics(Base):
         if not user is None:
             query = query.\
                 outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
-                options(contains_eager(cls.topic_user))
+                add_columns(UsersTopics.user_id, UsersTopics.subscribed, UsersTopics.liked)
 
         return query
 

@@ -9,6 +9,7 @@ __all__ = ['mPersonRoleSerializer']
 
 
 class mPersonRoleSerializer(DefaultSerializer):
+
     __read_fields = {
         'id': '',
         'firstname': '',
@@ -18,6 +19,7 @@ class mPersonRoleSerializer(DefaultSerializer):
         'type': '',
         'relation': '',
     }
+
 
     def __init__(self, **kwargs):
         keys = ['person', 'topic_name', 'role', 'type']
@@ -60,17 +62,22 @@ class mPersonRoleSerializer(DefaultSerializer):
     def transform_id(self, instance, **kwargs):
         return instance['person'].id
 
+
     def transform_firstname(self, instance, **kwargs):
         return instance['person'].firstname
+
 
     def transform_lastname(self, instance, **kwargs):
         return instance['person'].lastname
 
+
     def transform_role(self, instance, **kwargs):
         return instance['role']
 
+
     def transform_type(self, instance, **kwargs):
         return instance['type'].code
+
 
     def transform_user(self, instance, **kwargs):
         user_id = instance.user_id
@@ -81,6 +88,7 @@ class mPersonRoleSerializer(DefaultSerializer):
                 # return UserSerializer(user_person['user']).data
 
         return {}
+
 
     def transform_relation(self, instance, **kwargs):
         user_id = instance.user_id
