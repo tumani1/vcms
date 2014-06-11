@@ -20,9 +20,9 @@ def get_subscribe(user, name, session, **kwargs):
     query = UsersTopics.get_user_topic(**params).first()
 
     if not query is None:
-        return query.check_subscribed
+        return {'subscribed': query.check_subscribed}
 
-    return False
+    return {'subscribed': False}
 
 
 @need_authorization

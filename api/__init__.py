@@ -21,15 +21,6 @@ routes = {
 @db
 def authorize(IPC_pack, session=None):
 
-    if IPC_pack['token'] == 'echo_token':
-        
-        IPC_pack['query_params'].update({'user':
-                         session.query(Users).filter_by(id=1).first()
-                     })
-
-        print IPC_pack
-        return IPC_pack
-    
     if IPC_pack['api_group'] =='auth':
         IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
                                          'token':IPC_pack['token']

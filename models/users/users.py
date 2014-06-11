@@ -1,10 +1,10 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
-from sqlalchemy.sql.expression import and_
-from sqlalchemy.orm import relationship, contains_eager
-from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 import datetime
+
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_
+from sqlalchemy.orm import relationship
+from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
@@ -36,8 +36,10 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
+
     person       = relationship('Persons', backref='users', uselist=False)
     user_persons = relationship('UsersPersons', backref='users')
+
 
     @classmethod
     def tmpl_for_users(cls, session):
@@ -55,14 +57,16 @@ class Users(Base):
             person_id = []
 
         query = cls.tmpl_for_users(session).filter(cls.id.in_(user_id)).\
-            outerjoin(UsersPersons, and_(cls.id == UsersPersons.person_id, UsersPersons.person_id.in_(person_id))).\
-            options(contains_eager(cls.user_persons))
+            add_columns(UsersPersons.person_id, UsersPersons.subscribed, UsersPersons.liked).\
+            outerjoin(UsersPersons, and_(cls.id == UsersPersons.user_id, UsersPersons.person_id.in_(person_id)))
 
         return query
 
-    def __repr__(self):
-        return u'<User([{}] {} {})>'.format(self.id, self.firstname, self.lastname)
 
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
+
+
+    def __repr__(self):
+        return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)

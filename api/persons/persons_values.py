@@ -1,13 +1,19 @@
 # coding: utf-8
 
 from models import db, PersonsValues
-from utils.validation import validate_list_string
+
+from utils.validation import validate_list_string, validate_int
 
 __all__ = ['get_person_values']
 
 
 @db
 def get_person_values(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     # Params
     params = {
         'person': person,
@@ -40,7 +46,6 @@ def get_person_values(user, person, session, **kwargs):
 
         if len(clean_value):
             params['value'] = clean_value
-
 
     if params['name'] is None:
         return {'code': 404}

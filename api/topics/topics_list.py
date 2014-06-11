@@ -3,6 +3,8 @@
 from models import db, Topics
 from models.topics.constants import TOPIC_TYPE
 
+from serializer import mTopicSerializer
+
 from utils.validation import validate_mLimit
 
 __all__ = ['get_topics_list']
@@ -39,6 +41,13 @@ def get_topics_list(user, session, **kwargs):
     if 'limit' in kwargs:
         params['limit'] = validate_mLimit(limit=kwargs['limit'])
 
-    query = Topics.get_topics_list(**params).all()
+    instance = Topics.get_topics_list(**params).all()
 
-    return Topics.data(user, query)
+    # Params
+    params = {
+        'user': user,
+        'instance': instance,
+        'session': session,
+    }
+
+    return mTopicSerializer(**params).data

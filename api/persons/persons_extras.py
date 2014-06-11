@@ -3,13 +3,18 @@
 from models import db, Topics, ExtrasTopics, Extras
 from models.extras.constants import APP_EXTRA_TYPE
 
-from utils.validation import validate_mLimit, validate_list_int
+from utils.validation import validate_mLimit, validate_list_int, validate_int
 
 __all__ = ['get_person_extars']
 
 
 @db
 def get_person_extars(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     # Params
     params = {
         'id': None,
