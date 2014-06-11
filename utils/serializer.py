@@ -38,7 +38,7 @@ class DefaultSerializer(object):
 
         self.session = session
 
-        if many and instance is not None and not hasattr(instance, '__iter__'):
+        if many or (instance is None and not hasattr(instance, '__iter__')):
             raise ValueError('instance should be a queryset or other iterable with many=True')
 
 

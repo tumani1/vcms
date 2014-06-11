@@ -22,6 +22,10 @@ class mTopicSerializer(DefaultSerializer):
 
 
     def __init__(self, **kwargs):
+        if not kwargs['instance'] is None:
+            key = ['topic', 'user', 'subscribed', 'liked']
+            kwargs['instance'] = dict(zip(key, kwargs['instance']))
+
         super(mTopicSerializer, self).__init__(**kwargs)
 
 
@@ -50,14 +54,10 @@ class mTopicSerializer(DefaultSerializer):
 
 
     def transform_relation(self, instance, **kwargs):
-        user_id = instance.user_id
-        if self.is_auth and not user_id is None:
-            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
-
-            if user_person:
-                return {
-                    'liked': UsersPersons.cls_check_liked(user_person['liked']),
-                    'subscribed': UsersPersons.cls_check_subscribed(user_person['subscribed']),
-                }
+        if self.is_auth:
+            return {
+                'liked': UsersPersons.cls_check_liked(instance['liked']),
+                'subscribed': UsersPersons.cls_check_subscribed(instance['subscribed']),
+            }
 
         return {}

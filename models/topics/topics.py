@@ -30,23 +30,28 @@ class Topics(Base):
     def tmpl_for_topics(cls, user, session):
         query = session.query(cls)
 
-        if not user is None:
-            query = query.\
-                outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
-                add_columns(UsersTopics.user_id, UsersTopics.subscribed, UsersTopics.liked)
+        return query
+
+
+    @classmethod
+    def join_with_user_topics(cls, user, session):
+        query = cls.tmpl_for_topics(user, session).\
+            outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
+            add_columns(UsersTopics.user_id, UsersTopics.subscribed, UsersTopics.liked)
 
         return query
 
 
     @classmethod
     def get_topics_by_name(cls, user, name, session, **kwargs):
-        query = cls.tmpl_for_topics(user, session).filter(cls.name == name).first()
+        query = cls.join_with_user_topics(user, session).filter(cls.name == name).first()
+
         return query
 
 
     @classmethod
     def get_topics_list(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
-        query = cls.tmpl_for_topics(user, session)
+        query = cls.join_with_user_topics(user, session)
 
         # Set name filter
         if not name is None:
@@ -72,37 +77,6 @@ class Topics(Base):
                 query = query.offset(limit[1])
 
         return query
-
-
-    @classmethod
-    def get_topics_extras(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
-        query = session.query(cls)
-
-        return query
-
-
-    @classmethod
-    def data(cls, user, data):
-        if isinstance(data, list):
-            data = [item.to_native(user) for item in data]
-        else:
-            data = data.to_native(user)
-
-        return data
-
-
-    def to_native(self, user):
-        result = dict(zip(self.__jsonexport__, [getattr(self, v) for v in self.__jsonexport__]))
-        result['type'] = result['type'].code
-
-        result['relation'] = {}
-        if hasattr(user, 'id') and not self.user_topics is None:
-            result['relation'] = {
-                'subscribed': self.topic_user.subscribed,
-                'liked': self.topic_user.check_liked,
-            }
-
-        return result
 
 
     @property
