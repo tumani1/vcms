@@ -1,38 +1,43 @@
 # coding: utf-8
+from sqlalchemy.sql.expression import func
+
 from models import db
+from models.persons import Persons
 from models.users import UsersRels, Users
 from models.contents import Cities, Countries
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 from utils.validation import validate_mLimit
 
 
-# TODO person and online and text
+# TODO online
 @db
-def get(user, session=None, **kwargs):
+def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
+        city=None, limit=',0', country=None, **kwargs):
     query = session.query(Users)
 
-    ids = kwargs.get('id', [])
-    if ids:
-        if isinstance(ids, int):
-            ids = [ids]
-        query = query.filter(Users.id.in_(ids))
+    if id:
+        if isinstance(id, int):
+            id = [id]
+        query = query.filter(Users.id.in_(id))
 
-    text = kwargs.get('text', '')
-    if text:
+    if not text is None:
+        query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
+
+    if not is_online is None:
         pass
+    if not is_person is None:
+        if is_person:
+            query = query.outerjoin(Persons).filter(Persons.user_id != None)
+        else:
+            query = query.outerjoin(Persons).filter(Persons.user_id == None)
 
-    is_online = kwargs.get('is_online', None)
-    is_person = kwargs.get('is_person', None)
-
-    city = kwargs.get('city', None)
-    if city:
+    if not city is None:
         query = query.join(Cities).filter(Cities.name == city.encode('utf-8'))
 
-    country = kwargs.get('country', None)
-    if country:
+    if not country is None:
         query = query.join(Cities).join(Countries).filter(Countries.name == city.encode('utf-8'))
 
-    limit = validate_mLimit(kwargs.get('limit', ',0'))
+    limit = validate_mLimit(limit)
      # Set limit and offset filter
     if not limit is None:
         # Set Limit
@@ -44,22 +49,28 @@ def get(user, session=None, **kwargs):
             query = query.offset(limit[1])
 
     ret_list = []
-    for user in query:
-        status = APP_USERSRELS_TYPE_UNDEF
-        ret_list.append(dict(
-            id=user.id,
-            firstname=user.firstname,
-            lastname=user.lastname,
-            gender=user.gender.code,
-            regdate=user.created,
-            lastvisit=user.last_visit,
+    for u in query:
+        ret_dict = dict(
+            id=u.id,
+            firstname=u.firstname,
+            lastname=u.lastname,
+            gender=u.gender.code,
+            regdate=u.created,
+            lastvisit=u.last_visit,
             is_online=is_online or False,
-            person_id=0,
-            city=user.city.name,
-            country=user.city.country.name,
-            relation=status,
-        ))
+            city=u.city.name,
+            country=u.city.country.name,
+
+        )
+        if u.person and is_person:
+            ret_dict['person_id'] = u.person.id
+        if user:
+            rel = session.query(UsersRels).filter_by(user_id=user, partner_id=u.id).first()
+            if rel:
+                ret_dict['relation'] = rel.urStatus.code
+            else:
+                ret_dict['relation'] = APP_USERSRELS_TYPE_UNDEF
+
+        ret_list.append(ret_dict)
 
     return ret_list
-
-get(None, id=1, city=u'Ярославль')

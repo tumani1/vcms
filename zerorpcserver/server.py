@@ -4,11 +4,10 @@ import yaml
 from raven import Client
 from api import routes
 from api import authorize
-from settings import CONFIG_PATH
+from settings import CONFIG_PATH, DEBUG
 from os.path import join
 
 
-DEBUG = True
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
 
@@ -18,21 +17,21 @@ def raven_report(func):
     else:
         client = Client('http://5aec720be5594c3e8c4e456ec8f8523a:6d461d2eecce47c281c052cff0ec8a63@sentry.aaysm.com/3')
 
-        def wrapper(self, IPC_pack):
+        def rvwrapper(IPC_pack):
             try:
-                return func(self, IPC_pack)
+                return func(IPC_pack)
             except Exception:
                 client.captureException()
-        return wrapper
+        return rvwrapper
 
 
 class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-        user_id = authorize(IPC_pack['token'])
-        mashed_key = (IPC_pack['api_group'], IPC_pack['api_method'], IPC_pack['http_method'])
-        response = mashed_routes[mashed_key](user_id, **IPC_pack['query_params'])
+        Auth_IPC_pack = authorize(IPC_pack)
+        mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
+        response = mashed_routes[mashed_key](**Auth_IPC_pack['query_params'])
         return response
 
 

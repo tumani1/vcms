@@ -1,11 +1,13 @@
+from utils.exceptions import NotAuthorizedException
 
 
 def need_authorization(func):
-    def wraper(user, *args, **kwargs):
-        if user is None:
-            raise NameError('need authorization')
+    def wraper(*args,**kwargs):
+        print args, kwargs
+        if kwargs['user'] is None:
+            raise NotAuthorizedException
         else:
-            return func(user, *args, **kwargs)
+            return func(*args, **kwargs)
     return wraper
 
 

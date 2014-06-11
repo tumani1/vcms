@@ -1,9 +1,9 @@
 # coding: utf-8
 
 from models import db, Topics, ExtrasTopics, Extras
-from models.extras.constants import EXTRA_TYPE
+from models.extras.constants import APP_EXTRA_TYPE
 
-from utils.validation import validate_mLimit
+from utils.validation import validate_mLimit, validate_list_int
 
 __all__ = ['get_topic_extars']
 
@@ -21,18 +21,7 @@ def get_topic_extars(user, name,  session, **kwargs):
     }
 
     if 'id' in kwargs:
-        id = kwargs['id']
-        if not isinstance(id, list):
-            try:
-                params['id'] = [int(kwargs['id'])]
-            except Exception, e:
-                pass
-        else:
-            if isinstance(id, list):
-                try:
-                    params['id'] = [int(i) for i in id]
-                except Exception, e:
-                    pass
+        params['id'] = validate_list_int(kwargs['id'])
 
     if 'text' in kwargs:
         try:
@@ -41,7 +30,7 @@ def get_topic_extars(user, name,  session, **kwargs):
             pass
 
     if 'type' in kwargs:
-        if kwargs['type'] in dict(EXTRA_TYPE).keys():
+        if kwargs['type'] in dict(APP_EXTRA_TYPE).keys():
             params['_type'] = kwargs['type']
 
     if 'limit' in kwargs:

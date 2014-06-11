@@ -8,6 +8,7 @@ from test import routes as test_routing
 from user import routing as user_routing
 from msgr import routing as msgr_routing
 
+from models import SessionToken, GlobalToken
 
 routes = {
     'user': user_routing,
@@ -18,10 +19,37 @@ routes = {
     'msgr': msgr_routing
 }
 
+
 @db
-def authorize(token, session=None):
-    if token == 'echo_token':
-        return session.query(Users).filter_by(id=1).first()
+def authorize(IPC_pack, session=None):
+
+    if IPC_pack['token'] == 'echo_token':
+        
+        IPC_pack['query_params'].update({'user':
+                         session.query(Users).filter_by(id=1).first()
+                     })
+
+        print IPC_pack
+        return IPC_pack
+    
+    if IPC_pack['api_group'] =='auth':
+        IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
+                                         'token':IPC_pack['token']
+                                     })
+
+    if 'x_token' in IPC_pack:
+        user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'],session=session)
+    elif 'token' in IPC_pack:
+        user_id = GlobalToken.get_user_id_by_token(token_string = IPC_pack['token'],session=session)
+        
+    if user_id:
+        user = session.query(Users).filter_by(id=1).first()
     else:
-        return None
+        user = None
+
+
+    IPC_pack['query_parameters'].update({'user':user})
+    
+    return IPC_pack
+        
 

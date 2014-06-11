@@ -15,8 +15,6 @@ class UsersExtras(Base):
     user       = relationship('Users', foreign_keys=user_id, backref='users_extras')
     extra_id   = Column(Integer, ForeignKey('extras.id'), nullable=False, unique=True)
     extra      = relationship('Extras', backref='users_extras')
-    extra_type = Column(ChoiceType(APP_USERSEXTRAS_TYPE), nullable=False)
 
     def __repr__(self):
-        return u"<UsersExtras({}-{}:{})>".format(self.user_id, self.extra_id,
-                                              self.extra_type.code)
+        return u"<UsersExtras({}-{})>".format(self.user_id, self.extra_id)

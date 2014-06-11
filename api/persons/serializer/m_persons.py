@@ -19,8 +19,6 @@ class mPersonSerializer(DefaultSerializer):
     }
 
     def __init__(self, **kwargs):
-        self.fields = self.__read_fields
-
         super(mPersonSerializer, self).__init__(**kwargs)
 
         # Calc

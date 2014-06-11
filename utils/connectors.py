@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, pool
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from settings import DATABASE
+from settings import DATABASE, DEBUG
 
 
 __all__ = ['DBWrapper', 'db_connect']
@@ -13,6 +13,8 @@ __all__ = ['DBWrapper', 'db_connect']
 # Function which create connection to the database
 def db_connect(type='postgresql', **kwargs):
     db_settings = DATABASE[type]
+    if DEBUG:
+        kwargs['echo'] = True
     return create_engine(URL(**db_settings), **kwargs)
 
 
@@ -28,7 +30,7 @@ class DBWrapper(object):
 
 
     def __call__(self, func):
-        def wrapper(*args, **kwargs):
+        def wrapper(*args,**kwargs):
             # Init params
             params = {
                 'bind': self.engine,
@@ -38,12 +40,13 @@ class DBWrapper(object):
             # Init Session
             session = scoped_session(sessionmaker(**params))()
 
-            try:
+            #try:
+            if True:
                 return func(session=session, *args, **kwargs)
-            except Exception, e:
+            #except Exception, e:
                 session.rollback()
                 raise e
-            finally:
+            #finally:
                 session.close()
 
         return wrapper
