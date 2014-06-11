@@ -27,9 +27,9 @@ def get_subscribe(user, person, session, **kwargs):
     query = UsersPersons.get_user_person(**params).first()
 
     if not query is None:
-        return query.check_subscribed
+        return {'subscribed': query.check_subscribed}
 
-    return False
+    return {'subscribed': False}
 
 
 @need_authorization

@@ -27,9 +27,9 @@ def get_like(user, person, session, **kwargs):
     query = UsersPersons.get_user_person(**params).first()
 
     if not query is None:
-        return query.check_liked
+        return {'liked': query.check_liked}
 
-    return 0
+    return {'liked': 0}
 
 
 @need_authorization
