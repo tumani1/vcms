@@ -14,7 +14,7 @@ class Persons(Base):
     __tablename__ = 'persons'
 
     id        = Column(Integer, primary_key=True)
-    user_id   = Column(Integer, ForeignKey('users.id'), index=True)
+    user_id   = Column(Integer, ForeignKey('users.id'), unique=True, index=True)
     firstname = Column(String(128), nullable=False)
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
@@ -92,7 +92,6 @@ class Persons(Base):
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
-
 
     def __repr__(self):
         return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)

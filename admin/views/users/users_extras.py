@@ -11,21 +11,20 @@ class UsersExtrasModelView(BaseModelView):
     category = u'Пользователи'
     name = u'Дополнительные материалы'
 
-    form_overrides = dict(
-        extra_type=fields.Select2Field
-    )
+    # form_overrides = dict(
+    #     extra_type=fields.Select2Field
+    # )
+    #
+    # column_choices = dict(
+    #     extra_type=APP_USERSEXTRAS_TYPE,
+    # )
 
-    column_choices = dict(
-        extra_type=APP_USERSEXTRAS_TYPE,
-    )
-
-    column_labels = dict(user=u'Пользователь', extra_type=u'Тип материалов',
-                         extra=u'Дополнительные материалы',)
-
-    form_args = dict(
-        extra_type=dict(
-            label=u'Тип материалов',
-            choices=APP_USERSEXTRAS_TYPE,
-        ),
-
-    )
+    column_labels = dict(user=u'Пользователь', extra=u'Дополнительные материалы',)
+    #
+    # form_args = dict(
+    #     extra_type=dict(
+    #         label=u'Тип материалов',
+    #         choices=APP_USERSEXTRAS_TYPE,
+    #     ),
+    #
+    # )

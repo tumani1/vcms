@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from models import db, Topics, ExtrasTopics, Extras
-from models.extras.constants import EXTRA_TYPE
+from models.extras.constants import APP_EXTRA_TYPE
 
 from utils.validation import validate_mLimit, validate_list_int
 
@@ -30,7 +30,7 @@ def get_topic_extars(user, name,  session, **kwargs):
             pass
 
     if 'type' in kwargs:
-        if kwargs['type'] in dict(EXTRA_TYPE).keys():
+        if kwargs['type'] in dict(APP_EXTRA_TYPE).keys():
             params['_type'] = kwargs['type']
 
     if 'limit' in kwargs:

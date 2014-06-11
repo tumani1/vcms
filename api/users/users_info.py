@@ -2,13 +2,15 @@
 from models import db
 from models.users import Users, UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF
+from utils.exceptions import DoesNotExist
 
 
+# TODO online
 @db
 def get(user_id, id, session=None, **kwargs):
     user = session.query(Users).get(id)
     if not user:
-        raise Exception()
+        raise DoesNotExist
 
     return_dict = dict(
         id=user.id,
