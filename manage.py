@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 
 from admin.main import start_admin_application
-from zerorpcserver.server import start_zerorpc_services
+from zerorpcserver.server import start_zerorpc_service
 from models import Base
 from utils.connectors import db_connect
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
-    zerorpc_server_c.set_defaults(func=start_zerorpc_services)
+    zerorpc_server_c.set_defaults(func=start_zerorpc_service)
 
     options = parser.parse_args()
     dict_opt = vars(options)
