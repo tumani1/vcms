@@ -4,6 +4,7 @@ from api.media_unit.serializer import mMediaUnitsSerializer
 
 @db
 def get(user=None, session=None, **kwargs):
+    data = {}
     params = {
         'user': user,
         'session': session,
@@ -26,9 +27,11 @@ def get(user=None, session=None, **kwargs):
         params['topic'] = str(kwargs['topic']).strip()
 
     instance = MediaUnits.get_media_units_list(**params)
-    serializer_params = {
-        'user': user,
-        'session': session,
-        'instance': instance,
-    }
-    return mMediaUnitsSerializer(**serializer_params).data
+    if not instance is None:
+        serializer_params = {
+            'user': user,
+            'session': session,
+            'instance': instance,
+        }
+        data = mMediaUnitsSerializer(**serializer_params).data
+    return data

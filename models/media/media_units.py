@@ -52,10 +52,16 @@ class MediaUnits(Base):
         return query
 
     @classmethod
-    def get_media_unit_by_name(cls, user, session, id, **kwargs):
+    def get_media_unit_by_id(cls, user, session, id, **kwargs):
         query = cls.tmpl_for_media_units(user, session).filter(cls.id == id).first()
         return query
 
+    @classmethod
+    def get_prev_media_unit(cls, user, session, id, **kwargs):
+        query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.previous_unit).filter(cls.id == id).subquery()).first()
+        return query
 
-
-
+    @classmethod
+    def get_next_media_unit(cls, user, session, id, **kwargs):
+        query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).first()
+        return query
