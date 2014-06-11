@@ -5,7 +5,7 @@ import datetime
 
 from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime, and_
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy_utils import ChoiceType, TSVectorType
 from models.extras.constants import APP_EXTRA_TYPE
 
 from models import Base
@@ -26,6 +26,8 @@ class Extras(Base):
     description = Column(Text, nullable=False)
     title       = Column(String, nullable=False)
     title_orig  = Column(String, nullable=False)
+
+    search_description = Column(TSVectorType('description'))
 
 
     @classmethod
