@@ -1,7 +1,6 @@
 #coding: utf-8
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-from sqlalchemy.orm import relationship
 
 from models import Base
 
@@ -24,10 +23,6 @@ class TokenMixin(Base):
     @declared_attr
     def user_id(cls):
         return Column('user_id', Integer, ForeignKey('users.id'), nullable=False, unique=True)
-
-    @declared_attr
-    def user(cls):
-        return relationship('Users', backref=cls.__name__.lower(), uselist=False)
 
     @declared_attr
     def token(cls):

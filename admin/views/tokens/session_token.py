@@ -8,9 +8,9 @@ class SessionTokenModelView(BaseModelView):
     category = u'Токены пользователя'
     name = u'Токен сэссии'
 
-    column_list = ('token', 'user', 'is_active', 'created')
+    column_list = ('token', 'users', 'is_active', 'created')
 
-    column_labels = dict(token=u'Токен', user=u'Пользователь',
+    column_labels = dict(token=u'Токен', users=u'Пользователь',
                          created=u'Дата создания', is_active=u'Активность')
 
-    form_columns = ('user', 'is_active', )
+    form_columns = ('users', 'is_active', )

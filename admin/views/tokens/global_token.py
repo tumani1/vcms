@@ -10,11 +10,11 @@ class GlobalTokenModelView(BaseModelView):
 
     can_edit = False
 
-    column_list = ('token', 'user', 'created')
+    column_list = ('token', 'users', 'created')
 
-    column_labels = dict(token=u'Токен', user=u'Пользователь',
+    column_labels = dict(token=u'Токен', users=u'Пользователь',
                          created=u'Дата создания')
 
-    form_columns = ('user', )
+    form_columns = ('users', )
 
 
