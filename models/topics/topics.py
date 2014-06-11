@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, String, DateTime, and_
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy_utils import ChoiceType, TSVectorType
 
 from models import Base
 from topics_users import UsersTopics
@@ -17,9 +17,12 @@ class Topics(Base):
     title       = Column(String, nullable=False, index=True)
     title_orig  = Column(String)
     description = Column(String, nullable=False)
+
     releasedate = Column(DateTime, nullable=False)
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
+
+    search_description = Column(TSVectorType('description'))
 
     topic_values = relationship('TopicsValues', backref='topics')
     topic_user   = relationship('UsersTopics', backref='topics')

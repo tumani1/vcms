@@ -2,7 +2,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
@@ -75,4 +75,5 @@ class Users(Base):
 
 @event.listens_for(Users, 'after_insert')
 def create_token_for_user(mapper, connect, target):
-    token = GlobalToken.generate_token(target.id, connect)
+    session = sessionmaker(bind=connect)()
+    token = GlobalToken.generate_token(target.id, session)

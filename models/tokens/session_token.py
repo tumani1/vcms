@@ -5,7 +5,6 @@ from token import TokenMixin
 from settings import TOKEN_LIFETIME
 
 import datetime
-import time
 
 
 class SessionToken(TokenMixin):
@@ -23,7 +22,7 @@ class SessionToken(TokenMixin):
         else:
             st = qr
 
-            if time.time() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME):
+            if (datetime.datetime.now() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and st.is_active:
                 return st.token
             else:
                 st.is_active = False

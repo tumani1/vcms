@@ -26,7 +26,7 @@ class UsersModelView(BaseModelView):
     form_excluded_columns = ('friends', 'partners', 'created', 'last_visit',
                              'userpic_type', 'userpic_id', 'users_values',
                              'users_chat', 'users_extras', 'person', 'social',
-                             'user_persons')
+                             'user_persons', 'token', 'session')
 
     column_labels = dict(city=u'Родной город', firstname=u'Имя', gender=u'Пол',
                          lastname=u'Фамилия', address=u'Адресс',
