@@ -37,8 +37,7 @@ class Users(Base):
     # type        = Column(ChoiceType(TYPE_TYPE))
 
     person       = relationship('Persons', backref='users', uselist=False)
-    user_persons = relationship('UsersPersons', backref='users', uselist=False)
-
+    user_persons = relationship('UsersPersons', backref='users')
 
     @classmethod
     def tmpl_for_users(cls, session):

@@ -14,13 +14,13 @@ def get(user, id, session=None, type=None, limit=',0', text=u'', is_online=None,
         is_person=None, **kwargs):
     subquery = session.query(UsersRels.partner_id).filter_by(user_id=id).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))
-    if type:
+    if not type is None:
         pass
 
-    if is_online:
+    if not is_online is None:
         pass
 
-    if text:
+    if not text is None:
         query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
 
     if not is_person is None:

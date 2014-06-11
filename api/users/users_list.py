@@ -11,7 +11,7 @@ from utils.validation import validate_mLimit
 
 # TODO online
 @db
-def get(user, session=None, id=None, is_online=None, is_person=None, text='',
+def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
         city=None, limit=',0', country=None, **kwargs):
     query = session.query(Users)
 
@@ -20,10 +20,10 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text='',
             id = [id]
         query = query.filter(Users.id.in_(id))
 
-    if text:
+    if not text is None:
         query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
 
-    if is_online:
+    if not is_online is None:
         pass
     if not is_person is None:
         if is_person:
@@ -31,10 +31,10 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text='',
         else:
             query = query.outerjoin(Persons).filter(Persons.user_id == None)
 
-    if city:
+    if not city is None:
         query = query.join(Cities).filter(Cities.name == city.encode('utf-8'))
 
-    if country:
+    if not country is None:
         query = query.join(Cities).join(Countries).filter(Countries.name == city.encode('utf-8'))
 
     limit = validate_mLimit(limit)

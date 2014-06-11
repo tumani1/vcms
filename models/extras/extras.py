@@ -115,3 +115,6 @@ class Extras(Base):
     @property
     def get_by_created_unixtime(self):
         return time.mktime(self.created.timetuple())
+
+    def __repr__(self):
+        return u'<Extras([{}] {})>'.format(self.id, self.cdn_name)
