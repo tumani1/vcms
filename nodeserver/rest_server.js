@@ -5,8 +5,7 @@ var http = require("http"),
     path = require("path"),
     zerorpc = require("zerorpc"),
     yaml = require("js-yaml"),
-    formidable = require("formidable"),
-    log = console.log;
+    formidable = require("formidable");
 
 
 function load_conf(filename) {
@@ -28,7 +27,7 @@ function form_ipc_pack(directives, headers, method, query_params) {
       stream, chat, users,
       mediaunits, msgr]
     Хитро формируем параметр из первой и второй групп регулярного выражения, удаляя начальный слэш у второй группы
-    и последнюю букву s у первой группы, если она присутствует. Это необходимо для правльной перелачи в API методы.
+    и последнюю букву s у первой группы, если она присутствует. Это необходимо для правльной пережачи в API методы.
     */
     var qp = querystring.parse(query_params);
     if (directives[2]) {
@@ -61,17 +60,14 @@ function run_server(host, port) {  // якобы общепринятое пра
             directives = validate(vurl),
             IPC_pack;
             headers = request.headers;
-        log('headrers ', headers);
 
         if (["post", "put"].indexOf(meth)>-1 && directives != null) {
             var form = new formidable.IncomingForm();
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
-            log("formed IPC: " + JSON.stringify(IPC_pack));
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
             form.maxFields = 3;
             form.parse(request, function(error, fields, files) {
-                log('fields', fields);
                 for (var property in fields) {
                         if (!IPC_pack["query_params"].hasOwnProperty(property)) {
                             IPC_pack["query_params"][property] = fields[property];
@@ -83,14 +79,12 @@ function run_server(host, port) {  // якобы общепринятое пра
                 });
             });
             form.on('error', function(error) {
-                log('error', error);
-                response.end();
+                response.end(error.message);
             });
         }
 
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
-            log("formed IPC: " + JSON.stringify(IPC_pack));
             zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
                 response.end(JSON.stringify(res));
@@ -98,13 +92,12 @@ function run_server(host, port) {  // якобы общепринятое пра
         }
 
         else {
-            log("invalid url");
             response.writeHead(404, {"Content-Type": "text/plain"});
             response.end("invalid url");
         }
         });
     server.listen(port, host);
-    log("rest server runnig on "+host+":"+port);
+    console.log("rest server runnig on "+host+":"+port);
 }
 
 var conf = load_conf('../configs/node_service.yaml');

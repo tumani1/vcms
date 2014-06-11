@@ -1,8 +1,7 @@
 # coding: utf-8
-
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
@@ -10,6 +9,7 @@ from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
 from models import Base
 from models.persons import UsersPersons
+from models.tokens import GlobalToken
 
 
 class Users(Base):
@@ -36,7 +36,8 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
-
+    token        = relationship('GlobalToken', backref='users', uselist=False)
+    session      = relationship('SessionToken', backref='users')
     person       = relationship('Persons', backref='users', uselist=False)
     user_persons = relationship('UsersPersons', backref='users')
 
@@ -70,3 +71,8 @@ class Users(Base):
 
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)
+
+
+@event.listens_for(Users, 'after_insert')
+def create_token_for_user(mapper, connect, target):
+    token = GlobalToken.generate_token(target.id, connect)

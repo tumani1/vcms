@@ -4,7 +4,6 @@ var http  = require("http"),
     path = require("path"),
     yaml = require("js-yaml"),
     jade = require("jade");
-    log = console.log;
 
 
 function load_conf(filename) {
@@ -16,18 +15,22 @@ function run_server(host, port) {
         if (request.method === "GET") {
             var parsed = url.parse(request.url);
             if (parsed.pathname === "/index.html") {
-                jade.renderFile('/home/dmitriy/Projects/next_tv/templates/index.jade', options, function(err, html) {
+                  //асинхронно
+//                fs.readFile('/home/dmitriy/Projects/next_tv/templates/index.jade', {encoding: 'utf8'}, function(error, data) {
+//                    var html = jade.render(data);
+//                    response.end(html);
+//                });
+
+                  //синхронно
+                jade.renderFile('/home/dmitriy/Projects/next_tv/templates/index.jade', function(error, html) {
                     response.end(html);
                 });
+                response.end();
             }
         }
     });
-    server.on("error", function(error) {
-        log(error);
-        log(error.stack);
-    });
-    server.listen(host, port);
-    log("render server runnig on "+host+":"+port);
+    server.listen(port, host);
+    console.log("render server runnig on "+host+":"+port);
 }
 
 var conf = load_conf('../configs/node_service.yaml');
