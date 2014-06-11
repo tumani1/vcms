@@ -17,6 +17,7 @@ routes = {
     'test': test_routing
 }
 
+
 @db
 def authorize(IPC_pack, session=None):
     if IPC_pack['api_group'] =='auth':

@@ -2,6 +2,8 @@
 import os
 import yaml
 
+DEBUG = True
+
 BASE_PATH = os.path.dirname(__file__)
 
 # Base path for configs folder
