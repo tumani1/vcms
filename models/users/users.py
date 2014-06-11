@@ -1,15 +1,9 @@
 # coding: utf-8
-<<<<<<< HEAD
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date
-from sqlalchemy.sql.expression import and_
-from sqlalchemy.orm import relationship, contains_eager
-=======
 
 import datetime
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_
 from sqlalchemy.orm import relationship
->>>>>>> origin/person_api
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
