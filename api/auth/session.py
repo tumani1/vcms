@@ -12,5 +12,5 @@ def get(user,session=None):
 @db
 def delete(user,session=None):
 
-    session.query()
+    session.query(SessionToken).filter(user_id = user.id).first()
     
