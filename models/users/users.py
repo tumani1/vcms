@@ -36,8 +36,6 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
-    token        = relationship('GlobalToken', backref='users', uselist=False)
-    session      = relationship('SessionToken', backref='users')
     person       = relationship('Persons', backref='users', uselist=False)
     user_persons = relationship('UsersPersons', backref='users')
 

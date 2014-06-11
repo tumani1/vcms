@@ -24,6 +24,14 @@ admin.add_view(UsersExtrasModelView(session))
 ###############################################################################
 
 ###############################################################################
+# Token
+from tokens import SessionTokenModelView, GlobalTokenModelView
+
+admin.add_view(SessionTokenModelView(session))
+admin.add_view(GlobalTokenModelView(session))
+###############################################################################
+
+###############################################################################
 # Persons
 from persons import PersonsModelView
 
