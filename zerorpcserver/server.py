@@ -4,11 +4,10 @@ import yaml
 from raven import Client
 from api import routes
 from api import authorize
-from settings import CONFIG_PATH
+from settings import CONFIG_PATH, DEBUG
 from os.path import join
 
 
-DEBUG = True
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
 

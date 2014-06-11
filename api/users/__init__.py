@@ -27,7 +27,7 @@ extras = {
 }
 
 stream = {
-    'get': users_extras.get
+    'get': users_stream.get
 }
 
 routing = { 'friendship': friendship,
