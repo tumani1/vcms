@@ -34,6 +34,16 @@ class UsersPersons(Base):
         return query
 
 
+    @classmethod
+    def cls_check_liked(cls, value):
+        return time.mktime(value.timetuple()) if not value is None else 0
+
+
+    @classmethod
+    def cls_check_subscribed(cls, value):
+        return True if not value is None else False
+
+
     @property
     def check_liked(self):
         return time.mktime(self.liked.timetuple()) if not self.liked is None else 0
@@ -41,7 +51,7 @@ class UsersPersons(Base):
 
     @property
     def check_subscribed(self):
-        return True if self.subscribed else False
+        return True if not self.subscribed is None else False
 
 
     def __repr__(self):

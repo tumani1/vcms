@@ -61,3 +61,19 @@ def validate_string(value, **kwargs):
         pass
 
     return None
+
+def validate_int(value, min_value=None, max_value=None, **kwargs):
+   try:
+       value = int(value)
+
+       if not min_value is None:
+          if value < min_value:
+           return Exception("Значение меньше {0}".format(min_value))
+
+       if not max_value is None:
+          if value > max_value:
+           return Exception("Значение больше {0}".format(max_value))
+   except:
+       return Exception("Значение не является целым")
+
+   return value

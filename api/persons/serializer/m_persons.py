@@ -1,9 +1,9 @@
 # coding: utf-8
 
 from utils.serializer import DefaultSerializer
-from utils.common import group_by
 
 from models.users.users import Users
+from models.persons.persons_users import UsersPersons
 
 __all__ = ['mPersonSerializer']
 
@@ -31,7 +31,13 @@ class mPersonSerializer(DefaultSerializer):
         }
 
         result = Users.get_user_by_person(**params).all()
-        self.up = group_by(result, 'id', True)
+
+        temp_users = {}
+        keys = ['user', 'person', 'subscribed', 'liked']
+        for item in result:
+            temp_users["{0}-{1}".format(item[0].id, item[1])] = dict(zip(keys, item))
+
+        self.up = temp_users
 
 
     def calc_list_user_id(self):
@@ -63,17 +69,24 @@ class mPersonSerializer(DefaultSerializer):
         return instance.lastname
 
     def transform_user(self, instance, **kwargs):
+        user_id = instance.user_id
+        if not user_id is None:
+            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
+            if user_person:
+                pass
+                # return UserSerializer(user_person['user']).data
+
         return {}
 
     def transform_relation(self, instance, **kwargs):
         user_id = instance.user_id
         if self.is_auth and not user_id is None:
-            result = self.up.get(user_id, False)
+            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
 
-            if result and not result[0].user_persons is None:
+            if user_person:
                 return {
-                    'liked': result[0].user_persons.check_liked,
-                    'subscribed': result[0].user_persons.check_subscribed,
+                    'liked': UsersPersons.cls_check_liked(user_person['liked']),
+                    'subscribed': UsersPersons.cls_check_subscribed(user_person['subscribed']),
                 }
 
         return {}
