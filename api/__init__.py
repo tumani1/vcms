@@ -7,6 +7,7 @@ from persons import routing as persons_routing
 from test import routes as test_routing
 from user import routing as user_routing
 
+from models import SessionToken
 
 routes = {
     'user': user_routing,
@@ -17,9 +18,23 @@ routes = {
 }
 
 @db
-def authorize(token, session=None):
-    if token == 'echo_token':
-        return session.query(Users).filter_by(id=1).first()
+def authorize(IPC_pack, session=None):
+    if IPC_pack['api_group'] =='auth':
+        IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
+                                         'token':IPC_pack['token']
+                                     })
+
+    if 'x_token' in IPC_pack:
+        user = SessionToken.get_user_id_by_token()
+    
+    if IPC_pack['token'] == 'echo_token':
+        
+        return IPC_pack.update({'user':
+                         session.query(Users).filter_by(id=1).first()[0]
+                     })
     else:
-        return None
+        return IPC_pack.update({'user':
+                         None
+                     })
+        
 
