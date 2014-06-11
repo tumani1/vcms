@@ -7,8 +7,8 @@ from utils import need_authorization
 
 @db
 @need_authorization
-def get(user_id, partner_id, session=None, *args, **kwargs):
-    status = session.query(UsersRels.urStatus).filter_by(user_id=user_id, partner_id=partner_id).first()[0]
+def get(user, partner_id, session=None, *args, **kwargs):
+    status = session.query(UsersRels.urStatus).filter_by(user_id=user, partner_id=partner_id).first()[0]
     if status:
         return int(status.code)
     else:
@@ -17,29 +17,29 @@ def get(user_id, partner_id, session=None, *args, **kwargs):
 
 @db
 @need_authorization
-def post(user_id, partner_id, status, session=None):
+def post(user, partner_id, status, session=None):
     if status in (APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF):
         if status == APP_USERSRELS_TYPE_FRIEND:
-            user_rels = session.query(UsersRels).filter_by(user_id=user_id, partner_id=partner_id, urStatus=APP_USERSRELS_TYPE_FROM_USER).first()
-            partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user_id, urStatus=APP_USERSRELS_TYPE_SEND_TO).first()
+            user_rels = session.query(UsersRels).filter_by(user_id=user, partner_id=partner_id, urStatus=APP_USERSRELS_TYPE_FROM_USER).first()
+            partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user, urStatus=APP_USERSRELS_TYPE_SEND_TO).first()
         else:
-            user_rels = session.query(UsersRels).filter_by(user_id=user_id, partner_id=partner_id).first()
-            partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user_id).first()
+            user_rels = session.query(UsersRels).filter_by(user_id=user, partner_id=partner_id).first()
+            partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user).first()
         if user_rels and partner_rels:
             user_rels.urStatus = partner_rels.urStatus = status
         else:
             raise ValueError("Not valid data")
 
     elif status == APP_USERSRELS_TYPE_SEND_TO:
-        user_rels = session.query(UsersRels).filter_by(user_id=user_id, partner_id=partner_id).first()
-        partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user_id).first()
+        user_rels = session.query(UsersRels).filter_by(user_id=user, partner_id=partner_id).first()
+        partner_rels = session.query(UsersRels).filter_by(user_id=partner_id, partner_id=user).first()
         if not user_rels:
-            user_rels = UsersRels(user_id=user_id, partner_id=partner_id, urStatus=status)
+            user_rels = UsersRels(user_id=user, partner_id=partner_id, urStatus=status)
             session.add(user_rels)
         else:
             user_rels.urStatus = status
         if not partner_rels:
-            partner_rels = UsersRels(user_id=partner_id, partner_id=user_id, urStatus=APP_USERSRELS_TYPE_FROM_USER)
+            partner_rels = UsersRels(user_id=partner_id, partner_id=user, urStatus=APP_USERSRELS_TYPE_FROM_USER)
             session.add(partner_rels)
         else:
             partner_rels.urStatus = APP_USERSRELS_TYPE_FROM_USER
@@ -51,11 +51,11 @@ def post(user_id, partner_id, status, session=None):
 
 @db
 @need_authorization
-def delete(user_id, partner_id, session=None, *args, **kwargs):
-    rels = session.query(UsersRels).filter(((UsersRels.user_id == user_id) &
+def delete(user, partner_id, session=None, *args, **kwargs):
+    rels = session.query(UsersRels).filter(((UsersRels.user_id == user) &
                                             (UsersRels.partner_id == partner_id))
                                            | ((UsersRels.user_id == partner_id) &
-                                              (UsersRels.partner_id == user_id)))
+                                              (UsersRels.partner_id == user)))
     for rel in rels:
         rel.urStatus = APP_USERSRELS_TYPE_UNDEF
     session.commit()
