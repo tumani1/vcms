@@ -1,8 +1,11 @@
 # coding: utf-8
 
 import datetime
+
 from models import db, UsersPersons
+
 from utils import need_authorization
+from utils.validation import validate_int
 
 __all__ = ['get_like', 'post_like', 'delete_like']
 
@@ -10,6 +13,11 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 @need_authorization
 @db
 def get_like(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,
@@ -19,14 +27,19 @@ def get_like(user, person, session, **kwargs):
     query = UsersPersons.get_user_person(**params).first()
 
     if not query is None:
-        return query.check_liked
+        return {'liked': query.check_liked}
 
-    return 0
+    return {'liked': 0}
 
 
 @need_authorization
 @db
 def post_like(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,
@@ -49,6 +62,11 @@ def post_like(user, person, session, **kwargs):
 @need_authorization
 @db
 def delete_like(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,

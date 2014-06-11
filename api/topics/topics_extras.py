@@ -1,7 +1,12 @@
 # coding: utf-8
 
+<<<<<<< HEAD
 from models import db, Topics, ExtrasTopics, Extras
 from models.extras.constants import APP_EXTRA_TYPE
+=======
+from models import db, Extras
+from models.extras.constants import EXTRA_TYPE
+>>>>>>> origin/person_api
 
 from utils.validation import validate_mLimit, validate_list_int
 
