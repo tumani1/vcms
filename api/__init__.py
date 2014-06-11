@@ -6,6 +6,7 @@ from topics import routing as topics_routing
 from persons import routing as persons_routing
 from test import routes as test_routing
 from user import routing as user_routing
+from msgr import routing as msgr_routing
 
 
 routes = {
@@ -13,7 +14,8 @@ routes = {
     'users': users_routing,
     'topics': topics_routing,
     'persons': persons_routing,
-    'test': test_routing
+    'test': test_routing,
+    'msgr': msgr_routing
 }
 
 @db

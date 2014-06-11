@@ -10,10 +10,11 @@ class UsersMsgrThreads(Base):
     __table_args__ = {'extend_existing': True}
 
     TYPE_STATUS = (
-        (0, u'Заблокирован'),
-        (1, u'Не заблокирован'),
+        (u'0', u'Заблокирован'),
+        (u'1', u'Не заблокирован'),
     )
 
+    # id              = Column(Integer, primary_key=True)
     user_id         = Column(Integer, ForeignKey("users.id"), primary_key=True)
     msgr_threads_id = Column(Integer, ForeignKey('msgr_threads.id'), unique=True)
     umtStatus       = Column(ChoiceType(TYPE_STATUS), default=0)
