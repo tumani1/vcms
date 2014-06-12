@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import time
+
 from sqlalchemy import Column, String, DateTime, and_
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
@@ -11,7 +13,6 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
-    __jsonexport__ = ['name', 'title', 'title_orig', 'description', 'releasedate', 'type']
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
@@ -38,8 +39,13 @@ class Topics(Base):
 
     @classmethod
     def join_with_user_topics(cls, user, session):
+        if user is None:
+            user_id = 0
+        else:
+            user_id = user.id
+
         query = cls.tmpl_for_topics(user, session).\
-            outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user.id)).\
+            outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user_id)).\
             add_columns(UsersTopics.user_id, UsersTopics.subscribed, UsersTopics.liked)
 
         return query
@@ -85,6 +91,10 @@ class Topics(Base):
     @property
     def get_type_code(self):
         return self.type.code
+
+    @property
+    def get_unixtime_created(self):
+        return time.mktime(self.releasedate.timetuple())
 
 
     def __repr__(self):
