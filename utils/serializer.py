@@ -22,10 +22,9 @@ class DefaultSerializer(object):
     _dict_class = OrderedDict
 
     def __init__(self, instance=None, user=None,
-                 context=None, many=None, session=None, **kwargs):
+                 context=None, session=None, **kwargs):
 
         self.instance = instance
-        self.many = many
 
         self.user = user
         self.is_auth = True if not user is None else False
@@ -38,7 +37,7 @@ class DefaultSerializer(object):
 
         self.session = session
 
-        if many or (instance is None and not hasattr(instance, '__iter__')):
+        if instance is None:
             raise ValueError('instance should be a queryset or other iterable with many=True')
 
 
@@ -59,9 +58,12 @@ class DefaultSerializer(object):
         result = self._dict_class()
 
         for key, value in self.fields.items():
-            method = getattr(self, 'transform_{0}'.format(key), None)
+
+            method = getattr(self, 'transform_{0}'.format(key), None) or getattr(obj, key)
 
             if callable(method):
                 result[key] = method(obj)
+            else:
+                result[key] = method
 
         return result
