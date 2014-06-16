@@ -2,7 +2,8 @@
 
 import time
 
-from sqlalchemy import Column, String, DateTime, and_
+from sqlalchemy import Column, String, DateTime, and_, DDL# Index
+from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
 
@@ -13,6 +14,9 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
+    # __table_args__ = (
+    #     Index('details_tsvector_idx', 'details_tsvector', postgresql_using = 'gin'),
+    # )
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
@@ -23,7 +27,7 @@ class Topics(Base):
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
-    search_description = Column(TSVectorType('description'))
+    search_description = Column(TSVectorType('description'), index=True)
 
     topic_values = relationship('TopicsValues', backref='topics')
     topic_user   = relationship('UsersTopics', backref='topics')
@@ -39,9 +43,8 @@ class Topics(Base):
 
     @classmethod
     def join_with_user_topics(cls, user, session):
-        if user is None:
-            user_id = 0
-        else:
+        user_id = 0
+        if not user is None:
             user_id = user.id
 
         query = cls.tmpl_for_topics(user, session).\
@@ -68,8 +71,7 @@ class Topics(Base):
 
         # Set description filter
         if not text is None:
-        #     query = query.filter(cls.description == text)
-            pass
+            query = query.filter(cls.search_description == text)
 
         # Set type filter
         if not _type is None:
@@ -92,6 +94,7 @@ class Topics(Base):
     def get_type_code(self):
         return self.type.code
 
+
     @property
     def get_unixtime_created(self):
         return time.mktime(self.releasedate.timetuple())
@@ -99,3 +102,25 @@ class Topics(Base):
 
     def __repr__(self):
         return u'Topics(name={0}, type={1}, status={2})'.format(self.name, self.type, self.status)
+
+
+update_ts_vector = DDL('''
+CREATE FUNCTION topics_desc_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.description <> OLD.description THEN
+            new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER topics_desc_vector_update BEFORE INSERT OR UPDATE ON topics
+FOR EACH ROW EXECUTE PROCEDURE topics_desc_update();
+''')
+
+listen(Topics.__table__, 'after_create', update_ts_vector)

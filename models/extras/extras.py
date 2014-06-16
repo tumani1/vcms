@@ -3,14 +3,16 @@
 import time
 import datetime
 
-from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime, and_
+from sqlalchemy import Column, Integer, ForeignKey, String, Text, DateTime, and_, DDL
+from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
-from models.extras.constants import APP_EXTRA_TYPE
 
 from models import Base
 from models.extras.extras_topics import ExtrasTopics
 from models.extras.extras_persons import PersonsExtras
+
+from models.extras.constants import APP_EXTRA_TYPE
 
 
 class Extras(Base):
@@ -27,7 +29,7 @@ class Extras(Base):
     title       = Column(String, nullable=False)
     title_orig  = Column(String, nullable=False)
 
-    search_description = Column(TSVectorType('description'))
+    search_description = Column(TSVectorType('description'), index=True)
 
 
     @classmethod
@@ -43,8 +45,7 @@ class Extras(Base):
 
         # Set description filter
         if not text is None:
-        #     query = query.filter(cls.description == text)
-            pass
+            query = query.filter(cls.search_description == text)
 
         # Set type filter
         if not _type is None:
@@ -118,5 +119,28 @@ class Extras(Base):
     def get_unixtime_created(self):
         return time.mktime(self.created.timetuple())
 
+
     def __repr__(self):
         return u'<Extras([{}] {})>'.format(self.id, self.cdn_name)
+
+
+update_ts_vector = DDL('''
+CREATE FUNCTION extras_desc_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.bio <> OLD.bio THEN
+            new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER extras_desc_vector_update BEFORE INSERT OR UPDATE ON extras
+FOR EACH ROW EXECUTE PROCEDURE extras_desc_update();
+''')
+
+listen(Extras.__table__, 'after_create', update_ts_vector)

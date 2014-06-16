@@ -40,13 +40,12 @@ class DBWrapper(object):
             # Init Session
             session = scoped_session(sessionmaker(**params))()
 
-            #try:
-            if True:
+            try:
                 return func(session=session, *args, **kwargs)
-            #except Exception, e:
+            except Exception, e:
                 session.rollback()
                 raise e
-            #finally:
+            finally:
                 session.close()
 
         return wrapper
