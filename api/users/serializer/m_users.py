@@ -1,11 +1,9 @@
 # coding: utf-8
 from m_users_short import mUserShort
-from models.users import UsersRels
 
 __all__ = ['mUser']
 
 
-# TODO online
 class mUser(mUserShort):
 
     __read_fields = {
@@ -34,6 +32,3 @@ class mUser(mUserShort):
 
     def transform_gender(self, obj):
         return obj.gender.code
-
-    def transform_relation(self, obj):
-        return UsersRels.get_reletion_status(self.user, obj, self.session)
