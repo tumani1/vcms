@@ -14,9 +14,7 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
-    # __table_args__ = (
-    #     Index('details_tsvector_idx', 'details_tsvector', postgresql_using = 'gin'),
-    # )
+
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
