@@ -21,8 +21,8 @@ class SessionToken(TokenMixin):
         if qr is None:
             return None
         else:
-            if (datetime.datetime.utcnow() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and qr.is_active:
-                return qr.id,qr.token,
+            if (datetime.datetime.utcnow() - qr.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and qr.is_active:
+                return qr.id,qr.token,qr.created
             else:
                 qr.is_active = False
                 session.add(qr)

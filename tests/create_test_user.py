@@ -1,6 +1,7 @@
 import datetime
 
 from models import db, Countries, Cities, Users, Topics
+import  utils
 
 
 @db
@@ -12,7 +13,7 @@ def create(session=None):
     city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
     session.add(city)
     session.commit()
-    user = Users(city=city, firstname="Test", lastname="Test", password="Test")
+    user = Users(city=city, firstname="Test", lastname="Test", password=utils.hash_password.hash_password('Test'))
     session.add(user)
     session.commit()
 
