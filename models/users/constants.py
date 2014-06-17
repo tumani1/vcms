@@ -12,17 +12,17 @@ APP_USERS_TYPE_GENDER = (
 )
 
 ##############################################################
-APP_USERSRELS_TYPE_UNDEF = u'0'
-APP_USERSRELS_TYPE_FRIEND = u'9'
-APP_USERSRELS_TYPE_SEND_TO = u'1'
-APP_USERSRELS_TYPE_FROM_USER = u'2'
+APP_USERSRELS_TYPE_UNDEF = u'u'
+APP_USERSRELS_TYPE_FRIEND = u'f'
+APP_USERSRELS_TYPE_SEND_TO = u's'
+APP_USERSRELS_TYPE_RECIEVE_USER = u'r'
 
 APP_USERSRELS_TYPE = (
     (APP_USERSRELS_TYPE_UNDEF, u'Нет'),
     # это когда сам юзер отправил запрос
     (APP_USERSRELS_TYPE_SEND_TO, u'Запрос отправлен'),
     # это когда ему другой юзер отправил
-    (APP_USERSRELS_TYPE_FROM_USER, u'Запрос отправлен пользователем'),
+    (APP_USERSRELS_TYPE_RECIEVE_USER, u'Запрос отправлен пользователем'),
     (APP_USERSRELS_TYPE_FRIEND, u'Обоюдная дружба'),
 )
 

@@ -22,6 +22,12 @@ class UsersRels(Base):
                                               self.urStatus)
 
     @classmethod
+    def tmpl_for_users_rels(cls, session):
+        query = session.query(cls)
+
+        return query
+
+    @classmethod
     def get_reletion_status(cls, user_id, person_id, session):
         obj = session.query(cls).filter_by(user_id=user_id, partner_id=person_id).first()
         if obj:
