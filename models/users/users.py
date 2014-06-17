@@ -26,7 +26,7 @@ class Users(Base):
     city_id       = Column(Integer, ForeignKey('cities.id'), nullable=False)
     city          = relationship("Cities", backref='users')
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
-    created       = Column(DateTime, default=datetime.datetime.now)
+    created       = Column(DateTime, default=datetime.datetime.utcnow)
     email         = Column(EmailType())
     phone         = Column(PhoneNumberType())
     address       = Column(Text)

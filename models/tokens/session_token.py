@@ -7,6 +7,7 @@ from settings import TOKEN_LIFETIME
 import datetime
 
 
+
 class SessionToken(TokenMixin):
     __tablename__ = "session_tokens"
 
@@ -20,13 +21,11 @@ class SessionToken(TokenMixin):
         if qr is None:
             return None
         else:
-            st = qr
-
-            if (datetime.datetime.now() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and st.is_active:
-                return st.token
+            if (datetime.datetime.utcnow() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and qr.is_active:
+                return qr.id,qr.token,
             else:
-                st.is_active = False
-                session.add(st)
+                qr.is_active = False
+                session.add(qr)
                 session.commit()
                 return None
             

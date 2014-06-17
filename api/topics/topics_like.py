@@ -33,7 +33,7 @@ def post_like(user, name, session, **kwargs):
         'session': session,
     }
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.utcnow()
 
     ut = UsersTopics.get_user_topic(**params).first()
 

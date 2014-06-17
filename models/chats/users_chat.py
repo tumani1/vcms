@@ -17,7 +17,7 @@ class UsersChat(Base):
     chat        = relationship('Chats', backref='users_chat')
     user_id     = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False)
     user        = relationship('Users', backref='users_chat')
-    last_update = Column(Integer, onupdate=datetime.datetime.now, default=datetime.datetime.now)
+    last_update = Column(Integer, onupdate=datetime.datetime.utcnow, default=datetime.datetime.now)
     cuStatus    = Column(ChoiceType(APP_USERSCHAT_TYPE), nullable=False)
 
     def __repr__(self):
