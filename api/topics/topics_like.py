@@ -19,9 +19,9 @@ def get_like(user, name, session, **kwargs):
 
     query = UsersTopics.get_user_topic(**params).first()
     if not query is None:
-        return query.check_liked
+        return {'liked': query.check_liked}
 
-    return 0
+    return {'liked': 0}
 
 
 @need_authorization
@@ -33,7 +33,7 @@ def post_like(user, name, session, **kwargs):
         'session': session,
     }
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.utcnow()
 
     ut = UsersTopics.get_user_topic(**params).first()
 

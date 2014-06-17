@@ -3,12 +3,12 @@ var http  = require("http"),
     fs = require("fs"),
     path = require("path"),
     yaml = require("js-yaml"),
-    jade = require("jade");
-    log = console.log;
+    jade = require("jade"),
+    settings = require("../settings.js");
 
 
 function load_conf(filename) {
-    return yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, filename), 'utf8'));
+    return yaml.safeLoad(fs.readFileSync(path.join(settings.CONFIG_PATH, filename), 'utf8'));
 }
 
 function run_server(host, port) {
@@ -16,19 +16,23 @@ function run_server(host, port) {
         if (request.method === "GET") {
             var parsed = url.parse(request.url);
             if (parsed.pathname === "/index.html") {
-                jade.renderFile('/home/dmitriy/Projects/next_tv/templates/index.jade', options, function(err, html) {
+                  //асинхронно
+//                fs.readFile(path.join(settings.TEMPLATES_PATH, 'index.jade'), {encoding: 'utf8'}, function(error, data) {
+//                    var html = jade.render(data);
+//                    response.end(html);
+//                });
+
+                  //синхронно
+                jade.renderFile(path.join(settings.TEMPLATES_PATH, 'index.jade'), function(error, html) {
                     response.end(html);
                 });
+                response.end();
             }
         }
     });
-    server.on("error", function(error) {
-        log(error);
-        log(error.stack);
-    });
-    server.listen(host, port);
-    log("render server runnig on "+host+":"+port);
+    server.listen(port, host);
+    console.log("render server runnig on "+host+":"+port);
 }
 
-var conf = load_conf('../configs/node_service.yaml');
+var conf = load_conf('node_service.yaml');
 run_server(conf["render_serv"]["host"], conf["render_serv"]["port"]);

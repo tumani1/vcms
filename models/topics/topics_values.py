@@ -16,9 +16,9 @@ class TopicsValues(Base):
     id           = Column(Integer, primary_key=True)
     scheme_id    = Column(Integer, ForeignKey('scheme.id'), nullable=False, index=True)
     topic_name   = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
-    value_int    = Column(Integer, nullable=True)
-    value_text   = Column(BYTEA, nullable=True)
-    value_string = Column(String, nullable=True)
+    value_int    = Column(Integer)
+    value_text   = Column(BYTEA)
+    value_string = Column(String)
 
 
     @classmethod

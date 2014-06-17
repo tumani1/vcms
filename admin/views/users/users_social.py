@@ -23,8 +23,10 @@ class UsersSocialModelView(BaseModelView):
                          sToken=u'Токен пользователя', created=u'Дата создания',
                          updated=u'Последнее обновление')
 
-    form_choices = dict(
-        sType=APP_USERSOCIAL_TYPE,
+    form_args = dict(
+        sType=dict(
+            choices=APP_USERSOCIAL_TYPE,
+        )
     )
 
     form_excluded_columns = ('updated', 'created', )

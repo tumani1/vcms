@@ -1,10 +1,7 @@
 *.log
 *.pot
 *.pyc
-
-configs/db.yaml
-configs/zero_rpc_services.yaml
-node_service.yaml
+*.yaml
 
 *.py[cod]
 

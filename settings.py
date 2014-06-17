@@ -1,4 +1,5 @@
 # coding: utf-8
+
 import os
 import yaml
 
@@ -13,3 +14,5 @@ CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
 DATABASE = {}
 with open(os.path.join(CONFIG_PATH, 'db.yaml'), 'r') as file:
     DATABASE = yaml.load(file, Loader=yaml.loader.BaseLoader)
+
+TOKEN_LIFETIME = 15
