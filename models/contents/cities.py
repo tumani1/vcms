@@ -12,11 +12,13 @@ class Cities(Base):
 
     id          = Column(Integer, primary_key=True)
     country_id  = Column(Integer, ForeignKey('countries.id'), nullable=False)
-    country     = relationship('Countries', backref='cities')
     name        = Column(String(256), nullable=False)
     name_orig   = Column(String(256), nullable=False)
     time_zone   = Column(TimezoneType(backend='pytz'), nullable=False)
     description = Column(Text)
 
+    country     = relationship('Countries', backref='cities')
+
+
     def __repr__(self):
-        return u"<Cities([{}] {})>".format(self.id, self.name)
+        return u"<Cities(id={0}, name={1})>".format(self.id, self.name)

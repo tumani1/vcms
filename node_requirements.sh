@@ -1,1 +1,2 @@
-npm i -g zerorpc js-yaml formidable
+#!/bin/sh
+sudo npm install zerorpc js-yaml formidable jade

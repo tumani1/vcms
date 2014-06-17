@@ -2,7 +2,8 @@
 
 import time
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -24,7 +25,6 @@ class UsersPersons(Base):
     @classmethod
     def tmpl_for_user_person(cls, session):
         query = session.query(cls)
-
         return query
 
 
@@ -34,6 +34,16 @@ class UsersPersons(Base):
         return query
 
 
+    @classmethod
+    def cls_check_liked(cls, value):
+        return time.mktime(value.timetuple()) if not value is None else 0
+
+
+    @classmethod
+    def cls_check_subscribed(cls, value):
+        return True if not value is None else False
+
+
     @property
     def check_liked(self):
         return time.mktime(self.liked.timetuple()) if not self.liked is None else 0
@@ -41,9 +51,16 @@ class UsersPersons(Base):
 
     @property
     def check_subscribed(self):
-        return True if self.subscribed else False
+        return True if not self.subscribed is None else False
 
 
     def __repr__(self):
         return u"<UsersPersons(user={0}, person={1}, subscr={2}, liked={3})>".\
             format(self.user_id, self.person_id, self.subscribed, self.liked)
+
+
+def validate_subcribe(mapper, connect, target):
+    if target.user_id == target.person_id:
+        raise ValueError(u'Нельзя подписаться на самого себя')
+
+listen(UsersPersons, 'before_insert', validate_subcribe)

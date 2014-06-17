@@ -24,10 +24,32 @@ admin.add_view(UsersExtrasModelView(session))
 ###############################################################################
 
 ###############################################################################
+# Token
+from tokens import SessionTokenModelView, GlobalTokenModelView
+
+admin.add_view(SessionTokenModelView(session))
+admin.add_view(GlobalTokenModelView(session))
+###############################################################################
+
+###############################################################################
 # Persons
 from persons import PersonsModelView
 
 admin.add_view(PersonsModelView(session))
+###############################################################################
+
+###############################################################################
+# Extras
+from extras import ExtrasModelView
+
+admin.add_view(ExtrasModelView(session))
+###############################################################################
+
+###############################################################################
+# CDN
+from cdn import CdnModelView
+
+admin.add_view(CdnModelView(session))
 ###############################################################################
 
 ###############################################################################

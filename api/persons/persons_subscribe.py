@@ -1,8 +1,11 @@
 # coding: utf-8
 
 import datetime
+
 from models import db, UsersPersons
+
 from utils import need_authorization
+from utils.validation import validate_int
 
 __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
@@ -10,6 +13,11 @@ __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 @need_authorization
 @db
 def get_subscribe(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,
@@ -19,21 +27,26 @@ def get_subscribe(user, person, session, **kwargs):
     query = UsersPersons.get_user_person(**params).first()
 
     if not query is None:
-        return query.check_subscribed
+        return {'subscribed': query.check_subscribed}
 
-    return False
+    return {'subscribed': False}
 
 
 @need_authorization
 @db
 def post_subscribe(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,
         'session': session,
     }
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.utcnow()
     up = UsersPersons.get_user_person(**params).first()
 
     if up is None:
@@ -48,6 +61,11 @@ def post_subscribe(user, person, session, **kwargs):
 @need_authorization
 @db
 def delete_subscribe(user, person, session, **kwargs):
+    # Validation person value
+    person = validate_int(person, min_value=1)
+    if type(person) == Exception:
+        return {'code': 404}
+
     params = {
         'user': user.id,
         'person': person,

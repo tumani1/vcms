@@ -1,15 +1,12 @@
 *.log
 *.pot
 *.pyc
-
-configs/db.yaml
-configs/zero_rpc_services.yaml
-node_service.yaml
+*.yaml
 
 *.py[cod]
 
 # node temp dirs
-.bin
+node_modules
 
 # Pycharm conf
 .idea

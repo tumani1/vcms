@@ -1,38 +1,36 @@
 # coding: utf-8
 from models import db
-from models.users import UsersRels, Users
-from models.contents import Cities, Countries
-from models.users.constants import APP_USERSRELS_TYPE_UNDEF
+from models.users import Users
 from utils.validation import validate_mLimit
+from serializer import mUser
 
 
-# TODO person and online and text
+# TODO online
 @db
-def get(user, session=None, **kwargs):
-    query = session.query(Users)
+def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
+        city=None, limit=',0', country=None, **kwargs):
+    query = Users.tmpl_for_users(session)
 
-    ids = kwargs.get('id', [])
-    if ids:
-        if isinstance(ids, int):
-            ids = [ids]
-        query = query.filter(Users.id.in_(ids))
+    if id:
+        if isinstance(id, int):
+            id = [id]
+        query = query.filter(Users.id.in_(id))
 
-    text = kwargs.get('text', '')
-    if text:
+    if not text is None:
+        query = Users.full_text_search_by_last_first_name(query=query, session=session, text=text)
+
+    if not is_online is None:
         pass
+    if not is_person is None:
+        query = Users.filter_users_person(is_person=is_person, session=session, query=query)
 
-    is_online = kwargs.get('is_online', None)
-    is_person = kwargs.get('is_person', None)
+    if not city is None:
+        query = Users.filter_by_cities(city, session, query)
 
-    city = kwargs.get('city', None)
-    if city:
-        query = query.join(Cities).filter(Cities.name == city.encode('utf-8'))
+    if not country is None:
+        query = Users.filter_by_country(country, session, query)
 
-    country = kwargs.get('country', None)
-    if country:
-        query = query.join(Cities).join(Countries).filter(Countries.name == city.encode('utf-8'))
-
-    limit = validate_mLimit(kwargs.get('limit', ',0'))
+    limit = validate_mLimit(limit)
      # Set limit and offset filter
     if not limit is None:
         # Set Limit
@@ -43,23 +41,4 @@ def get(user, session=None, **kwargs):
         if not limit[0] is None:
             query = query.offset(limit[1])
 
-    ret_list = []
-    for user in query:
-        status = APP_USERSRELS_TYPE_UNDEF
-        ret_list.append(dict(
-            id=user.id,
-            firstname=user.firstname,
-            lastname=user.lastname,
-            gender=user.gender.code,
-            regdate=user.created,
-            lastvisit=user.last_visit,
-            is_online=is_online or False,
-            person_id=0,
-            city=user.city.name,
-            country=user.city.country.name,
-            relation=status,
-        ))
-
-    return ret_list
-
-get(None, id=1, city=u'Ярославль')
+    return mUser(user=user, instance=query.all(), session=session).data

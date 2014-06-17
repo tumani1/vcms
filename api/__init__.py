@@ -8,6 +8,7 @@ from test import routes as test_routing
 from user import routing as user_routing
 from media_unit import routing as media_unit_routing
 
+from models import SessionToken, GlobalToken
 
 routes = {
     'mediaunits': media_unit_routing,
@@ -18,10 +19,29 @@ routes = {
     'test': test_routing
 }
 
+
 @db
-def authorize(token, session=None):
-    if token == 'echo_token':
-        return session.query(Users).filter_by(id=1).first()
+def authorize(IPC_pack, session=None):
+
+    if IPC_pack['api_group'] =='auth':
+        IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
+                                         'token':IPC_pack['token']
+                                     })
+    if 'x_token' in IPC_pack and IPC_pack['x_token']:
+        user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'],session=session)
+    elif 'token' in IPC_pack and IPC_pack['token']:
+        user_id = GlobalToken.get_user_id_by_token(token_string = IPC_pack['token'],session=session)
+
     else:
-        return None
+        user_id = None
+        
+    if user_id:
+        user = session.query(Users).filter_by(id=user_id).first()
+    else:
+
+        user = None
+
+    IPC_pack['query_params'].update({'user':user})
+    return IPC_pack
+        
 

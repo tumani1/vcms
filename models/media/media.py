@@ -15,7 +15,7 @@ class Media(Base):
     allow_external = Column(Boolean, default=False)
     allow_anon = Column(Boolean, default=False)
     description = Column(Text, nullable=True)
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=datetime.datetime.utcnow)
     views_cnt = Column(Integer, nullable=True)
     release_date = Column(DateTime, nullable=True)
     poster = Column(Integer, nullable=True)
