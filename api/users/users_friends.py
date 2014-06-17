@@ -38,4 +38,4 @@ def get(user, id, session=None, type=None, limit=',0', text=None, is_online=None
     return mUserShort(instance=query.all(), session=session, user=user).data
 
 
-get(5, 1)
+# get(5, 1)
