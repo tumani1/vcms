@@ -29,5 +29,10 @@ class SessionToken(TokenMixin):
                 session.add(st)
                 session.commit()
                 return None
-            
+
+    @classmethod
+    def user_is_online(cls, user_id, session=None):
+        sess = session.query(cls).filter_by(user_id=user_id).order_by(cls.created.desc()).first()
+        return sess and sess.is_active and (datetime.datetime.now() - sess.created < datetime.timedelta(minutes=TOKEN_LIFETIME))
+
 

@@ -16,7 +16,6 @@ from models.tokens import GlobalToken
 
 class Users(Base):
     __tablename__ = 'users'
-    __table_args__ = {'extend_existing': True}
 
     id            = Column(Integer, primary_key=True)
     firstname     = Column(String(128), nullable=False)
@@ -38,6 +37,8 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
+    friends       = relationship('UsersRels', foreign_keys='UsersRels.user_id', backref='user', cascade='all, delete')
+    partners      = relationship('UsersRels', foreign_keys='UsersRels.partner_id', backref='partner', cascade='all, delete')
     global_token  = relationship('GlobalToken', backref="users", uselist=False, cascade='all, delete')
     session_token = relationship('SessionToken', backref="users", cascade='all, delete')
     person        = relationship('Persons', backref='users', uselist=False)

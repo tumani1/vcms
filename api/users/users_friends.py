@@ -1,18 +1,16 @@
 # coding: utf-8
-from sqlalchemy.sql.expression import func
-
 from models import db
-from models.persons import Persons
 from models.users import Users, UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils.validation import validate_mLimit
+from serializer import mUserShort
 
 
-# TODO: online type
+# TODO: type
 @db
-def get(user, id, session=None, type=None, limit=',0', text=u'', is_online=None,
+def get(user, id, session=None, type=None, limit=',0', text=None, is_online=None,
         is_person=None, **kwargs):
-    subquery = session.query(UsersRels.partner_id).filter_by(user_id=id).subquery()
+    subquery = session.query(UsersRels.partner_id).filter_by(user_id=id, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))
     if not type is None:
         pass
@@ -21,13 +19,10 @@ def get(user, id, session=None, type=None, limit=',0', text=u'', is_online=None,
         pass
 
     if not text is None:
-        query = query.filter(func.to_tsvector(func.concat(Users.firstname, " ", Users.lastname)).match(text))
+        query = Users.full_text_search_by_last_first_name(text, session, query)
 
     if not is_person is None:
-        if is_person:
-            query = query.outerjoin(Persons).filter(Persons.user_id != None)
-        else:
-            query = query.outerjoin(Persons).filter(Persons.user_id == None)
+        query = Users.filter_users_person(is_person, session, query)
 
     limit = validate_mLimit(limit)
      # Set limit and offset filter
@@ -40,18 +35,7 @@ def get(user, id, session=None, type=None, limit=',0', text=u'', is_online=None,
         if not limit[0] is None:
             query = query.offset(limit[1])
 
-    ret_list = []
-    for u in query:
-        ret_dict = dict(
-            id=u.id,
-            firstname=u.firstname,
-            lastname=u.lastname,
-            is_online=False,
-        )
-        if is_person:
-            ret_dict['person_id'] = u.person.id
-        if user:
-            ret_dict['relation'] = APP_USERSRELS_TYPE_FRIEND
-        ret_list.append(ret_dict)
+    return mUserShort(instance=query.all(), session=session, user=user).data
 
-    return ret_list
+
+get(5, 1)
