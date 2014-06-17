@@ -1,5 +1,5 @@
 #coding: utf-8
-from token import TokenMixin
+from models.tokens.token import TokenMixin
 
 
 class GlobalToken(TokenMixin):
@@ -14,17 +14,6 @@ class GlobalToken(TokenMixin):
             return None
         else:
             return qr
-        
-            
-            
-            
-            
-
-    
-
-
-    
-        
 
 
 
