@@ -24,7 +24,7 @@ class Extras(Base):
     cdn         = relationship('CDN', backref='extras')
     type        = Column(ChoiceType(APP_EXTRA_TYPE), nullable=False)
     location    = Column(String, nullable=False)
-    created     = Column(DateTime, default=datetime.datetime.now)
+    created     = Column(DateTime, default=datetime.datetime.utcnow)
     description = Column(Text, nullable=False)
     title       = Column(String, nullable=False)
     title_orig  = Column(String, nullable=False)

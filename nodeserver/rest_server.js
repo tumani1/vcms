@@ -5,11 +5,12 @@ var http = require("http"),
     path = require("path"),
     zerorpc = require("zerorpc"),
     yaml = require("js-yaml"),
-    formidable = require("formidable");
+    formidable = require("formidable"),
+    settings = require("../settings.js");
 
 
 function load_conf(filename) {
-    return yaml.safeLoad(fs.readFileSync(path.resolve(__dirname, filename), 'utf8'));
+    return yaml.safeLoad(fs.readFileSync(path.join(settings.CONFIG_PATH, filename), 'utf8'));
 }
 
 function validate(vurl) {
@@ -45,7 +46,7 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024,
-        services = load_conf('../configs/zerorpc_services.yaml'),
+        services = load_conf('zerorpc_services.yaml'),
         zero_clients = [];  // клиенты, по которым настраивать балансировку
     for (var s=0;s<services.length;s++) {
         var cl =  new zerorpc.Client();
@@ -100,5 +101,5 @@ function run_server(host, port) {  // якобы общепринятое пра
     console.log("rest server runnig on "+host+":"+port);
 }
 
-var conf = load_conf('../configs/node_service.yaml');
+var conf = load_conf('node_service.yaml');
 run_server(conf["rest_serv"]["host"], conf["rest_serv"]["port"]);

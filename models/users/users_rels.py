@@ -15,7 +15,7 @@ class UsersRels(Base):
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False)
     partner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE), nullable=False)
-    updated    = Column(DateTime, onupdate=datetime.datetime.now, default=datetime.datetime.now)
+    updated    = Column(DateTime, onupdate=datetime.datetime.utcnow, default=datetime.datetime.now)
 
     def __repr__(self):
         return u"<UsersRels({}-{}:{})>".format(self.user_id, self.partner_id,

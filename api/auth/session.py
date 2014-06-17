@@ -12,5 +12,10 @@ def get(user,session=None):
 @db
 def delete(user,session=None):
 
-    session.query(SessionToken).filter(user_id = user.id).first()
+    st = session.query(SessionToken).filter(user_id = user.id).first()
+    st.is_active = False
+
+    session.add(st)
+    session.commit()
+
     

@@ -8,9 +8,7 @@ def post(user_id, email, password, session=None):
     user = session.query(Users).filter(email=email)
 
     if verify_password(password, user.password):
-        return GlobalToken.generate_token(user_id,session)
+        return {'token':GlobalToken.generate_token(user_id, session)}
     else:
         raise NotAuthorizedException
-        
-        
     

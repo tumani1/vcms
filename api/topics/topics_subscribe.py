@@ -34,7 +34,7 @@ def post_subscribe(user, name, session, **kwargs):
         'session': session,
     }
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.utcnow()
     ut = UsersTopics.get_user_topic(**params).first()
 
     if ut is None:

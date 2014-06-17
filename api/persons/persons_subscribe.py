@@ -46,7 +46,7 @@ def post_subscribe(user, person, session, **kwargs):
         'session': session,
     }
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.utcnow()
     up = UsersPersons.get_user_person(**params).first()
 
     if up is None:

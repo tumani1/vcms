@@ -30,7 +30,7 @@ class TokenMixin(Base):
 
     @declared_attr
     def created(cls):
-        return Column('created', DateTime, default=datetime.datetime.now)
+        return Column('created', DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
         return u'<{}({}-{})>'.format(self.__class__.__name__, self.user_id, self.token)
