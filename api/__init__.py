@@ -34,7 +34,7 @@ def authorize(IPC_pack, session=None):
         user_id = None
         
     if user_id:
-        user = session.query(Users).filter_by(id=1).first()
+        user = session.query(Users).filter_by(id=user_id).first()
     else:
 
         user = None
