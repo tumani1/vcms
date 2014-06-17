@@ -49,7 +49,7 @@ class mTopicSerializer(DefaultSerializer):
 
 
     def transform_releasedate(self, instance, **kwargs):
-        return instance['topic'].releasedate
+        return instance['topic'].get_unixtime_created
 
 
     def transform_type(self, instance, **kwargs):

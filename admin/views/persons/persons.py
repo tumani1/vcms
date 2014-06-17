@@ -17,7 +17,11 @@ class PersonsModelView(BaseModelView):
 
     column_labels = dict(firstname=u'Имя', lastname=u'Фамилия',
                          status=u'Статус персоны',
-                         bio=u'Биография', user=u'Пользователь')
+                         bio=u'Биография', users=u'Пользователь')
+
+    column_list = ('firstname', 'lastname', 'status', 'bio', 'users')
+
+    form_columns = column_list
 
     form_args = dict(
         firstname=dict(
@@ -33,8 +37,7 @@ class PersonsModelView(BaseModelView):
         bio=dict(
             label=u'Биография',
         ),
-        user=dict(
+        users=dict(
             label=u'Пользователь'
         ),
     )
-# coding: utf-8
