@@ -15,5 +15,5 @@ class PersonsTopics(Base):
     person_id   = Column(Integer, ForeignKey('persons.id'), nullable=False, index=True)
     topic_name  = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
     role        = Column(String, nullable=False)
-    description = Column(Text, nullable=True)
-    type        = Column(ChoiceType(PERSON_TOPIC_TYPE), nullable=True)
+    description = Column(Text)
+    type        = Column(ChoiceType(PERSON_TOPIC_TYPE))

@@ -15,5 +15,5 @@ class Countries(Base):
     description = Column(Text)
 
     def __repr__(self):
-        return u"<Countries([{}] {})>".format(self.id, self.name)
+        return u"<Countries(id={0}, name={1})>".format(self.id, self.name)
 
