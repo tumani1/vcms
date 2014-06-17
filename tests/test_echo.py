@@ -2,9 +2,9 @@ import zerorpc
 import unittest
 from create_test_user import create
 
-
 class ZeroRpcServiceTestCase(unittest.TestCase):
 
+    
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect("tcp://127.0.0.1:4242")

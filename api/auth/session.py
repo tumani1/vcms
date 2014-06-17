@@ -1,12 +1,18 @@
 from models import db
 from models import SessionToken
 from utils import need_authorization
+from settings import TOKEN_LIFETIME
+import datetime
 
 @need_authorization
 @db
 def get(user,session=None):
-    return SessionToken.generate_token(user.id,session)
-    
+    sid, token, created =  SessionToken.generate_token(user.id,session)
+
+    return { 'id': sid,
+             'token':token,
+             'expire': created + datetime.timedelta(minutes = TOKEN_LIFETIME)
+         }
         
 @need_authorization
 @db

@@ -45,5 +45,5 @@ def authorize(IPC_pack, session=None):
     #
     # IPC_pack['query_params'].update({'user':user})
     # return IPC_pack
-        
+
 
