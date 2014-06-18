@@ -49,6 +49,9 @@ class mMediaUnitsSerializer(DefaultSerializer):
     def transform_prev(self, instance, **kwargs):
         return instance.previous_unit
 
+    def transform_next(self, instance, **kwargs):
+        return instance.next_unit
+
     def transform_relation(self, instance, **kwargs):
         relation = {}
         user_media_unit = instance.user_media_units
