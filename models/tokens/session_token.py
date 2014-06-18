@@ -16,17 +16,16 @@ class SessionToken(TokenMixin):
     @classmethod
     def get_user_id_by_token(cls, token_string, session=None):
 
-        qr = session.query(SessionToken.user_id).filter(cls.token == token_string).first()
+        st = session.query(SessionToken).filter(cls.token == token_string).first()
 
-        print 'Qr', qr
-        if qr is None:
+        if st is None:
             return None
         else:
-            if (datetime.datetime.utcnow() - qr.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and qr.is_active:
-                return qr.id, qr.token, qr.created
+            if (datetime.datetime.utcnow() - st.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and st.is_active:
+                return st.user_id
             else:
-                qr.is_active = False
-                session.add(qr)
+                st.is_active = False
+                session.add(st)
                 session.commit()
                 return None
 
@@ -47,22 +46,14 @@ class SessionToken(TokenMixin):
 
 
     @classmethod
-    def generate_token(cls,user_id,session=None):
+    def generate_token(cls,user_id,session):
 
         '''
         (Re)Generate token for given user_id
         '''
-        qr = session.query(cls).filter(cls.user_id == user_id).first()
 
-        if qr is None:
-            gt = cls(user_id=user_id)
-            session.add(gt)
-            session.commit()
-            return gt.id,gt.token,gt.created
-
-        else:
-            gt, = qr
-            gt.token = cls.token_gen(cls.token_length)
-            session.add(gt)
-            session.commit()
-            return gt.id,gt.token,gt.created
+        st = SessionToken(user_id=user_id,is_active=True)
+        
+        session.add(st)
+        session.commit()
+        return st.id,st.token,st.created

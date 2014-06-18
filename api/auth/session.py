@@ -3,13 +3,15 @@ from models import SessionToken
 from utils import need_authorization
 from settings import TOKEN_LIFETIME
 import datetime
+from utils.serializer import serialize
 @need_authorization
+@serialize
 @db
 def get(auth_user,session=None, **kwargs):
     sid, token, created =  SessionToken.generate_token(auth_user.id,session)
 
     result = { 'id': sid,
-             'token':token,
+             'session_token':token,
              'expire': created + datetime.timedelta(minutes = TOKEN_LIFETIME)
          }
     return result

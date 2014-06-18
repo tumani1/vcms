@@ -9,7 +9,7 @@ def get(auth_user, **kwargs):
 @need_authorization
 def echo_auth(auth_user, **kwargs):
 
-    return {'message':"Hello,{}".format(user.firstname)}
+    return {'message':"Hello,{}".format(auth_user.firstname)}
 
 routes = {'echo':
               {'put': put,
