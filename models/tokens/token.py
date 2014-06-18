@@ -40,6 +40,12 @@ class TokenMixin(Base):
         return u'<{}({}-{})>'.format(self.__class__.__name__, self.user_id, self.token)
 
     @classmethod
+    def get_tmpl(cls, session):
+        query = session.query(cls)
+
+        return query
+
+    @classmethod
     def generate_token(cls, user_id, session=None):
         '''
         (Re)Generate token for given user_id

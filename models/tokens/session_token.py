@@ -1,11 +1,11 @@
 #coding: utf-8
 from sqlalchemy import Column, Boolean
+from sqlalchemy.sql.expression import or_
 
 from token import TokenMixin
 from settings import TOKEN_LIFETIME
 
 import datetime
-
 
 
 class SessionToken(TokenMixin):
@@ -23,7 +23,7 @@ class SessionToken(TokenMixin):
             return None
         else:
             if (datetime.datetime.utcnow() - qr.created < datetime.timedelta(minutes=TOKEN_LIFETIME)) and qr.is_active:
-                return qr.id,qr.token,qr.created
+                return qr.id, qr.token, qr.created
             else:
                 qr.is_active = False
                 session.add(qr)
@@ -34,6 +34,15 @@ class SessionToken(TokenMixin):
     def user_is_online(cls, user_id, session=None):
         sess = session.query(cls).filter_by(user_id=user_id).order_by(cls.created.desc()).first()
         return sess and sess.is_active and (datetime.datetime.utcnow() - sess.created < datetime.timedelta(minutes=TOKEN_LIFETIME))
+
+    @classmethod
+    def filter_users_is_online(cls, is_online, query):
+        if is_online:
+            query = query.join(cls).filter(cls.is_active, cls.created - datetime.datetime.utcnow() < datetime.timedelta(minutes=TOKEN_LIFETIME))
+        else:
+            query = query.join(cls).filter(or_(cls.is_active == False, cls.created - datetime.datetime.utcnow() >= datetime.timedelta(minutes=TOKEN_LIFETIME)))
+
+        return query
 
 
 
