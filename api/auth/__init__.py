@@ -8,5 +8,5 @@ auth = {'login':
         'session':{
             'get':get,
   'delete':delete},
- 'revoke':revoke
+ 'revoke':{'get':revoke}
     }
