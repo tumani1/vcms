@@ -7,14 +7,14 @@ __all__ = ['get_topic_info']
 
 
 @db
-def get_topic_info(user, name, session, **kwargs):
+def get_topic_info(auth_user, name, session, **kwargs):
     data = {}
-    instance = Topics.get_topics_by_name(user, name, session)
+    instance = Topics.get_topics_by_name(auth_user, name, session)
 
     if not instance is None:
         # Params
         params = {
-            'user': user,
+            'user': auth_user,
             'instance': instance,
             'session': session,
         }

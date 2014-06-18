@@ -7,9 +7,9 @@ from serializer import mUser
 
 
 @db
-def get(user, id, session=None, **kwargs):
+def get(auth_user, id, session=None, **kwargs):
     query = session.query(Users).get(id)
     if not query:
         raise DoesNotExist
 
-    return mUser(instance=query, user=user, session=session).data
+    return mUser(instance=query, user=auth_user, session=session).data

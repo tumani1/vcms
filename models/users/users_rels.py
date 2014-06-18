@@ -6,6 +6,7 @@ import datetime
 
 from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_UNDEF
 from models import Base
+from models.users import Users
 
 
 class UsersRels(Base):
@@ -36,3 +37,7 @@ class UsersRels(Base):
             status = APP_USERSRELS_TYPE_UNDEF
 
         return status
+
+    @classmethod
+    def filter_users_by_status(cls, status, query):
+        return query.join(cls, Users.id == cls.user_id).join(cls, cls.partner_id == Users.id).filter(cls.urStatus == status)

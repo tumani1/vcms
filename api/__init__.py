@@ -7,6 +7,7 @@ from persons import routing as persons_routing
 from test import routes as test_routing
 from user import routing as user_routing
 from media_unit import routing as media_unit_routing
+from auth import auth
 
 from models import SessionToken, GlobalToken
 
@@ -16,7 +17,8 @@ routes = {
     'users': users_routing,
     'topics': topics_routing,
     'persons': persons_routing,
-    'test': test_routing
+    'test': test_routing,
+    'auth': auth    
 }
 
 
@@ -24,7 +26,7 @@ routes = {
 def authorize(IPC_pack, session=None):
 
     if IPC_pack['api_group'] =='auth':
-        IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'],
+        IPC_pack['query_params'].update({'x_token': IPC_pack['x_token'] if 'x_token' in IPC_pack else None,
                                          'token':IPC_pack['token']
                                      })
     if 'x_token' in IPC_pack and IPC_pack['x_token']:
@@ -41,7 +43,7 @@ def authorize(IPC_pack, session=None):
 
         user = None
 
-    IPC_pack['query_params'].update({'user':user})
+    IPC_pack['query_params'].update({'auth_user':user})
     return IPC_pack
         
 

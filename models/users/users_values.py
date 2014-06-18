@@ -14,7 +14,6 @@ class UsersValues(Base):
     scheme_id    = Column(Integer, ForeignKey('scheme.id'), nullable=False, index=True)
     scheme        = relationship('Scheme', backref='users_value')
     user_id      = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
-    user         = relationship('Users', backref='users_values')
     value_int    = Column(Integer)
     value_text   = Column(BYTEA)
     value_string = Column(String)

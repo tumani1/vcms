@@ -1,12 +1,16 @@
 # coding: utf-8
 
 from sqlalchemy.ext.declarative import declarative_base
-from utils.connectors import DBWrapper, db_connect
+from utils.connectors import DBWrapper, db_connect, create_session
 
 
 # Init default connections
 engine = db_connect()
-db = DBWrapper(engine=engine)
+
+# Init Session
+session = create_session(bind=engine, expire_on_commit=False)
+
+db = DBWrapper(engine=engine, session=session)
 
 # Init default declarative base `
 Base = declarative_base()

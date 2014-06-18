@@ -9,14 +9,14 @@ __all__ = ['get_person_info']
 
 
 @db
-def get_person_info(user, person, session, **kwargs):
+def get_person_info(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
     data = {}
-    instance = Persons.get_persons_by_id(user, person, session).first()
+    instance = Persons.get_persons_by_id(auth_user, person, session).first()
 
     if not instance is None:
         params = {

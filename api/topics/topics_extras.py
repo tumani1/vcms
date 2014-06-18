@@ -9,7 +9,7 @@ __all__ = ['get_topic_extars']
 
 
 @db
-def get_topic_extars(user, name,  session, **kwargs):
+def get_topic_extars(auth_user, name,  session, **kwargs):
     # Params
     params = {
         'id': None,
