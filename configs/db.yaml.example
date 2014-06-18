@@ -15,5 +15,5 @@ test:
   database: test
 
 test_config:
-  use_test_db: 0
+  use_test_db: false
 

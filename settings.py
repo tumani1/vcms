@@ -15,7 +15,8 @@ DATABASE = {}
 with open(os.path.join(CONFIG_PATH, 'db.yaml'), 'r') as file:
     DATABASE = yaml.load(file, Loader=yaml.loader.BaseLoader)
 
-if DATABASE['test_config']['use_test_db']:
+
+if DATABASE['test_config']['use_test_db'] == u'true':
     PREFIX_TEST = 'test_'
 else:
     PREFIX_TEST = ''
