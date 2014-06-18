@@ -7,7 +7,7 @@ __all__ = ['get_topic_values']
 
 
 @db
-def get_topic_values(user, session, name, **kwargs):
+def get_topic_values(auth_user, session, name, **kwargs):
     # Params
     params = {
         'name': name,

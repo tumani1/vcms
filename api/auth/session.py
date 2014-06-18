@@ -6,19 +6,22 @@ import datetime
 
 @need_authorization
 @db
-def get(user,session=None):
-    sid, token, created =  SessionToken.generate_token(user.id,session)
+def get(auth_user,session=None, **kwargs):
+    print "Start get"
+    sid, token, created =  SessionToken.generate_token(auth_user.id,session)
 
-    return { 'id': sid,
+    result = { 'id': sid,
              'token':token,
              'expire': created + datetime.timedelta(minutes = TOKEN_LIFETIME)
          }
+    print result
+    return result
         
 @need_authorization
 @db
-def delete(user,session=None):
+def delete(auth_user,session=None, **kwargs):
 
-    st = session.query(SessionToken).filter(user_id = user.id).first()
+    st = session.query(SessionToken).filter(user_id = auth_user.id).first()
     st.is_active = False
 
     session.add(st)

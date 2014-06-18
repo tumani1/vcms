@@ -27,8 +27,8 @@ class UsersTopics(Base):
 
 
     @classmethod
-    def get_user_topic(cls, user, name, session):
-        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == user, cls.topic_name == name)
+    def get_user_topic(cls, auth_user, name, session):
+        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == auth_user, cls.topic_name == name)
         return query
 
 

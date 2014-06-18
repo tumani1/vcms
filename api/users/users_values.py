@@ -3,5 +3,5 @@ from models import db
 
 
 @db
-def get(user, session=None, **kwargs):
+def get(auth_user, session=None, **kwargs):
     pass

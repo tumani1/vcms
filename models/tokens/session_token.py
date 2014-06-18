@@ -18,6 +18,7 @@ class SessionToken(TokenMixin):
 
         qr = session.query(SessionToken.user_id).filter(cls.token == token_string).first()
 
+        print 'Qr', qr
         if qr is None:
             return None
         else:
@@ -44,3 +45,24 @@ class SessionToken(TokenMixin):
         return query
 
 
+
+    @classmethod
+    def generate_token(cls,user_id,session=None):
+
+        '''
+        (Re)Generate token for given user_id
+        '''
+        qr = session.query(cls).filter(cls.user_id == user_id).first()
+
+        if qr is None:
+            gt = cls(user_id=user_id)
+            session.add(gt)
+            session.commit()
+            return gt.id,gt.token,gt.created
+
+        else:
+            gt, = qr
+            gt.token = cls.token_gen(cls.token_length)
+            session.add(gt)
+            session.commit()
+            return gt.id,gt.token,gt.created

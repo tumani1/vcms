@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 
 @db
-def get(user, id, session=None, type=None, limit=',0', text=None, is_online=None,
+def get(auth_user, id, session=None, type=None, limit=',0', text=None, is_online=None,
         is_person=None, **kwargs):
     subquery = session.query(UsersRels.partner_id).filter_by(user_id=id, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))
@@ -36,4 +36,7 @@ def get(user, id, session=None, type=None, limit=',0', text=None, is_online=None
         if not limit[0] is None:
             query = query.offset(limit[1])
 
-    return mUserShort(instance=query.all(), session=session, user=user).data
+
+    return mUserShort(instance=query.all(), session=session, user=auth_user).data
+
+

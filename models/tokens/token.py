@@ -21,12 +21,16 @@ class TokenMixin(Base):
     token_length = 48
 
     @declared_attr
+    def id(cls):
+        return Column(Integer,nullable=False, primary_key= True, index =True)
+
+    @declared_attr
     def user_id(cls):
-        return Column('user_id', Integer, ForeignKey('users.id'), nullable=False, unique=True)
+        return Column('user_id', Integer, ForeignKey('users.id'), nullable=False)
 
     @declared_attr
     def token(cls):
-        return Column('token', String(64), default=token_gen(cls.token_length), primary_key=True, index=True)
+        return Column('token', String(64), default=token_gen(cls.token_length))
 
     @declared_attr
     def created(cls):

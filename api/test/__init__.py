@@ -1,15 +1,15 @@
 from utils import need_authorization
 
-def put(user, **kwargs):
+def put(auth_user, **kwargs):
     return kwargs
 
 
-def get(user, **kwargs):
+def get(auth_user, **kwargs):
     return kwargs
 @need_authorization
-def echo_auth(user, **kwargs):
+def echo_auth(auth_user, **kwargs):
 
-    return "Hello,{}".format(user.firstname)
+    return {'message':"Hello,{}".format(user.firstname)}
 
 routes = {'echo':
               {'put': put,
