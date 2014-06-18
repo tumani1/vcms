@@ -19,7 +19,7 @@ def get_like(auth_user, person, session, **kwargs):
         return {'code': 404}
 
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -34,14 +34,14 @@ def get_like(auth_user, person, session, **kwargs):
 
 @need_authorization
 @db
-def post_like(user, person, session, **kwargs):
+def post_like(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
     params = {
-        'user': user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -51,7 +51,7 @@ def post_like(user, person, session, **kwargs):
     up = UsersPersons.get_user_person(**params).first()
 
     if up is None:
-        up = UsersPersons(user_id=user.id, person_id=person, liked=date)
+        up = UsersPersons(user_id=auth_user.id, person_id=person, liked=date)
         session.add(up)
     else:
         up.liked = date
@@ -68,7 +68,7 @@ def delete_like(auth_user, person, session, **kwargs):
         return {'code': 404}
 
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }

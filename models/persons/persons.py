@@ -50,7 +50,7 @@ class Persons(Base):
 
         # Set filter by ids
         if not id is None:
-            if not hasattr(id, '__iter__'):
+            if not isinstance(id, list):
                 id = [id]
 
             query = query.filter(cls.id.in_(id))

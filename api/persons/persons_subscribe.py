@@ -19,7 +19,7 @@ def get_subscribe(auth_user, person, session, **kwargs):
         return {'code': 404}
 
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -41,7 +41,7 @@ def post_subscribe(auth_user, person, session, **kwargs):
         return {'code': 404}
 
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -67,7 +67,7 @@ def delete_subscribe(auth_user, person, session, **kwargs):
         return {'code': 404}
 
     params = {
-        'user': user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }

@@ -28,7 +28,7 @@ def get_like(auth_user, name, session, **kwargs):
 @db
 def post_like(auth_user, name, session, **kwargs):
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }
@@ -48,9 +48,9 @@ def post_like(auth_user, name, session, **kwargs):
 
 @need_authorization
 @db
-def delete_like(user, name, session, **kwargs):
+def delete_like(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }

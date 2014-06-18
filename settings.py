@@ -20,3 +20,10 @@ if 'true' in sys.argv:
     DATABASE['postgresql']['database'] = PREFIX_TEST + DATABASE['postgresql']['database']
     print DATABASE
 TOKEN_LIFETIME = 15
+
+PREFIX_TEST = "test_"
+
+if int(os.environ.get('TEST_EXEC', -1)):
+    for k, v in DATABASE.items():
+        v['database'] = PREFIX_TEST + v['database']
+

@@ -42,8 +42,8 @@ class Topics(Base):
     @classmethod
     def join_with_user_topics(cls, auth_user, session):
         user_id = 0
-        if not user is None:
-            user_id = user.id
+        if not auth_user is None:
+            user_id = auth_user.id
 
         query = cls.tmpl_for_topics(auth_user, session).\
             outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user_id)).\

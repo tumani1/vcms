@@ -1,13 +1,16 @@
 # coding: utf-8
 
 from models import Users, db
-from users import routing as users_routing
-from topics import routing as topics_routing
-from persons import routing as persons_routing
-from test import routes as test_routing
-from user import routing as user_routing
-from media_unit import routing as media_unit_routing
-from auth import auth
+
+from api.users import routing as users_routing
+from api.topics import routing as topics_routing
+from api.persons import routing as persons_routing
+from api.media_unit import routing as media_unit_routing
+from api.test import routes as test_routing
+from api.user import routing as user_routing
+from api.auth import auth
+
+
 
 from models import SessionToken, GlobalToken
 
