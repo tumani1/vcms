@@ -3,5 +3,5 @@ from utils import need_authorization
 
 
 @need_authorization
-def get(user, **kwargs):
+def get(auth_user, **kwargs):
     users_get_friends(user.id, **kwargs)

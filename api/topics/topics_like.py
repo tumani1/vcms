@@ -10,9 +10,9 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 
 @need_authorization
 @db
-def get_like(user, name, session, **kwargs):
+def get_like(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user.id,
         'name': name,
         'session': session,
     }
@@ -26,9 +26,9 @@ def get_like(user, name, session, **kwargs):
 
 @need_authorization
 @db
-def post_like(user, name, session, **kwargs):
+def post_like(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user.id,
         'name': name,
         'session': session,
     }
@@ -38,7 +38,7 @@ def post_like(user, name, session, **kwargs):
     ut = UsersTopics.get_user_topic(**params).first()
 
     if ut is None:
-        ut = UsersTopics(user_id=user.id, topic_name=name, liked=date)
+        ut = UsersTopics(user_id=auth_user.id, topic_name=name, liked=date)
         session.add(ut)
     else:
         ut.liked = date

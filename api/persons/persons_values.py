@@ -8,7 +8,7 @@ __all__ = ['get_person_values']
 
 
 @db
-def get_person_values(user, person, session, **kwargs):
+def get_person_values(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:

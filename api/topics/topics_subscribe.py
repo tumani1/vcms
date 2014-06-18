@@ -10,9 +10,9 @@ __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
 @need_authorization
 @db
-def get_subscribe(user, name, session, **kwargs):
+def get_subscribe(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user.id,
         'name': name,
         'session': session,
     }
@@ -27,7 +27,7 @@ def get_subscribe(user, name, session, **kwargs):
 
 @need_authorization
 @db
-def post_subscribe(user, name, session, **kwargs):
+def post_subscribe(auth_user, name, session, **kwargs):
     params = {
         'user': user.id,
         'name': name,
@@ -38,7 +38,7 @@ def post_subscribe(user, name, session, **kwargs):
     ut = UsersTopics.get_user_topic(**params).first()
 
     if ut is None:
-        ut = UsersTopics(user_id=user.id, topic_name=name, subscribed=date)
+        ut = UsersTopics(user_id=auth_user.id, topic_name=name, subscribed=date)
         session.add(ut)
     else:
         ut.subscribed = date

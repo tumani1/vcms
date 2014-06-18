@@ -7,7 +7,7 @@ from serializer import mUser
 
 # TODO online
 @db
-def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
+def get(auth_user, session=None, id=None, is_online=None, is_person=None, text=None,
         city=None, limit=',0', country=None, **kwargs):
     query = Users.tmpl_for_users(session)
 
@@ -41,4 +41,4 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
         if not limit[0] is None:
             query = query.offset(limit[1])
 
-    return mUser(user=user, instance=query.all(), session=session).data
+    return mUser(user=auth_user, instance=query.all(), session=session).data

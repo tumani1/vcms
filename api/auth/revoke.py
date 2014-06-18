@@ -1,6 +1,6 @@
 from models import GlobalToken
 
-def revoke(user,x_token,token,session = None):
+def revoke(auth_user,x_token,token,session = None):
     '''
     Revoking access for users Global Token by deleting it
     '''

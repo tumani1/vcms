@@ -24,16 +24,16 @@ class Persons(Base):
 
 
     @classmethod
-    def tmpl_for_persons(cls, user, session):
+    def tmpl_for_persons(cls, auth_user, session):
         return session.query(cls)
 
 
     @classmethod
-    def get_persons_by_id(cls, user, person, session, **kwargs):
+    def get_persons_by_id(cls, auth_user, person, session, **kwargs):
         if not isinstance(person, list):
             person = [person]
 
-        query = cls.tmpl_for_persons(user, session).filter(cls.id.in_(person))
+        query = cls.tmpl_for_persons(auth_user, session).filter(cls.id.in_(person))
 
         return query
 
