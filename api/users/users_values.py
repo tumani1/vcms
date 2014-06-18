@@ -36,4 +36,3 @@ def get(auth_user, user, name=None, topic=None, text=None, id=None, session=None
     return mValue(instance=query.all(), session=session).data
 
 
-get(None, 1)
