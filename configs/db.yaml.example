@@ -5,6 +5,7 @@ postgresql:
   host: localhost
   port: 5432
   database: next_tv
+  usetestdb:0
 
 test:
   drivername: postgresql+psycopg2
@@ -13,3 +14,4 @@ test:
   host: localhost
   port: 5432
   database: test
+  usetestdb:0

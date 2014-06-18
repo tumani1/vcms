@@ -4,21 +4,21 @@ import sys
 import yaml
 
 DEBUG = True
-USE_TEST_DB = False
 
 BASE_PATH = os.path.dirname(__file__)
 
 # Base path for configs folder
 CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
-if USE_TEST_DB:
-    PREFIX_TEST = 'test_'
-else:
-    PREFIX_TEST = ''
 
 # Parse DB Config
 DATABASE = {}
 with open(os.path.join(CONFIG_PATH, 'db.yaml'), 'r') as file:
     DATABASE = yaml.load(file, Loader=yaml.loader.BaseLoader)
+
+if DATABASE['usetestdb']:
+    PREFIX_TEST = 'test_'
+else:
+    PREFIX_TEST = ''
 
 if 'true' in sys.argv:
     DATABASE['postgresql']['database'] = PREFIX_TEST + DATABASE['postgresql']['database']
