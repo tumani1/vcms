@@ -4,12 +4,16 @@ import sys
 import yaml
 
 DEBUG = True
+USE_TEST_DB = False
 
 BASE_PATH = os.path.dirname(__file__)
 
 # Base path for configs folder
 CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
-PREFIX_TEST = 'test_'
+if USE_TEST_DB:
+    PREFIX_TEST = 'test_'
+else:
+    PREFIX_TEST = ''
 
 # Parse DB Config
 DATABASE = {}
@@ -20,8 +24,6 @@ if 'true' in sys.argv:
     DATABASE['postgresql']['database'] = PREFIX_TEST + DATABASE['postgresql']['database']
     print DATABASE
 TOKEN_LIFETIME = 15
-
-PREFIX_TEST = "test_"
 
 if int(os.environ.get('TEST_EXEC', -1)):
     for k, v in DATABASE.items():
