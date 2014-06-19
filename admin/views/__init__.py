@@ -3,7 +3,7 @@
 from flask.ext.admin import Admin
 from sqlalchemy.orm import sessionmaker
 
-from utils.connectors import db_connect
+from db_engine.dbe import db_connect
 
 
 admin = Admin(name='NextTV')

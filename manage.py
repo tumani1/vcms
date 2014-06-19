@@ -1,10 +1,12 @@
 # coding: utf-8
 from argparse import ArgumentParser
+
+from fabric.api import local
+
 from admin.main import start_admin_application
 from zerorpcserver.server import start_zerorpc_service
 from models import Base
-from utils.connectors import db_connect
-from fabric.api import local
+from db_engine.dbe import db_connect
 
 
 def local_db_reset():
