@@ -3,7 +3,7 @@
 from flask.ext.admin import Admin
 from sqlalchemy.orm import sessionmaker
 
-from utils.connectors import db_connect
+from db_engine import db_connect
 
 
 admin = Admin(name='NextTV')
@@ -43,6 +43,20 @@ admin.add_view(PersonsModelView(session))
 from extras import ExtrasModelView
 
 admin.add_view(ExtrasModelView(session))
+###############################################################################
+
+###############################################################################
+# Scheme
+from scheme import SchemeModelView
+
+admin.add_view(SchemeModelView(session))
+###############################################################################
+
+###############################################################################
+# Topics
+from topics import TopicsModelView
+
+admin.add_view(TopicsModelView(session))
 ###############################################################################
 
 ###############################################################################

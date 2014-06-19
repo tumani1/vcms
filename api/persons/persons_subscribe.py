@@ -2,7 +2,8 @@
 
 import datetime
 
-from models import db, UsersPersons
+from models import UsersPersons
+from db_engine import db
 
 from utils import need_authorization
 from utils.validation import validate_int
@@ -12,14 +13,14 @@ __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
 @need_authorization
 @db
-def get_subscribe(user, person, session, **kwargs):
+def get_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
     params = {
-        'user': user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -34,14 +35,14 @@ def get_subscribe(user, person, session, **kwargs):
 
 @need_authorization
 @db
-def post_subscribe(user, person, session, **kwargs):
+def post_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
     params = {
-        'user': user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }
@@ -50,7 +51,7 @@ def post_subscribe(user, person, session, **kwargs):
     up = UsersPersons.get_user_person(**params).first()
 
     if up is None:
-        up = UsersPersons(user_id=user.id, person_id=person, subscribed=date)
+        up = UsersPersons(user_id=auth_user.id, person_id=person, subscribed=date)
         session.add(up)
     else:
         up.subscribed = date
@@ -60,14 +61,14 @@ def post_subscribe(user, person, session, **kwargs):
 
 @need_authorization
 @db
-def delete_subscribe(user, person, session, **kwargs):
+def delete_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
     params = {
-        'user': user.id,
+        'user': auth_user,
         'person': person,
         'session': session,
     }

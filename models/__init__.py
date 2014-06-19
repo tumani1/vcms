@@ -1,17 +1,8 @@
 # coding: utf-8
-
 from sqlalchemy.ext.declarative import declarative_base
-from utils.connectors import DBWrapper, db_connect
 
-
-# Init default connections
-engine = db_connect()
-db = DBWrapper(engine=engine)
-
-# Init default declarative base `
 Base = declarative_base()
 
-# Import models
 from users import *
 from msgr import *
 from contents import *

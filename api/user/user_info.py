@@ -1,4 +1,5 @@
-from models import db, Users, Cities, Countries
+from models import Users, Cities, Countries
+from db_engine import db
 from utils import need_authorization
 
 

@@ -33,19 +33,19 @@ class Topics(Base):
 
 
     @classmethod
-    def tmpl_for_topics(cls, user, session):
+    def tmpl_for_topics(cls, auth_user, session):
         query = session.query(cls)
 
         return query
 
 
     @classmethod
-    def join_with_user_topics(cls, user, session):
+    def join_with_user_topics(cls, auth_user, session):
         user_id = 0
-        if not user is None:
-            user_id = user.id
+        if not auth_user is None:
+            user_id = auth_user.id
 
-        query = cls.tmpl_for_topics(user, session).\
+        query = cls.tmpl_for_topics(auth_user, session).\
             outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user_id)).\
             add_columns(UsersTopics.user_id, UsersTopics.subscribed, UsersTopics.liked)
 
@@ -53,8 +53,8 @@ class Topics(Base):
 
 
     @classmethod
-    def get_topics_by_name(cls, user, name, session, **kwargs):
-        query = cls.join_with_user_topics(user, session).filter(cls.name == name).first()
+    def get_topics_by_name(cls, auth_user, name, session, **kwargs):
+        query = cls.join_with_user_topics(auth_user, session).filter(cls.name == name).first()
 
         return query
 

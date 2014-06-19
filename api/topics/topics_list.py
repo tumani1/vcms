@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, Topics
+from models import Topics
+from db_engine import db
 from models.topics.constants import TOPIC_TYPE
 
 from serializer import mTopicSerializer
@@ -11,10 +12,10 @@ __all__ = ['get_topics_list']
 
 
 @db
-def get_topics_list(user, session, **kwargs):
+def get_topics_list(auth_user, session, **kwargs):
     # Params
     params = {
-        'user': user,
+        'user': auth_user,
         'session': session,
         'name': None,
         'text': None,
@@ -45,7 +46,7 @@ def get_topics_list(user, session, **kwargs):
 
     # Params
     params = {
-        'user': user,
+        'user': auth_user,
         'instance': instance,
         'session': session,
     }

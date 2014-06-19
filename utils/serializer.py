@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from collections import OrderedDict
+import time
+import datetime
 
 __all__ = ['DefaultSerializer']
 
@@ -67,3 +69,25 @@ class DefaultSerializer(object):
                 result[key] = method
 
         return result
+
+def sanitize_datetime(datadict):
+
+    answer = {}
+    for key,value in datadict.items():
+
+        if type(value) is datetime.datetime:
+            answer[key] = time.mktime(value.timetuple())
+        elif type(value) is dict:
+            answer[key] = sanitize_datetime(value)
+        else:
+            answer[key] = value
+
+    return answer
+        
+        
+def serialize(func):
+    def wrapper(*args,**kwargs):
+        result = func(*args,**kwargs)
+        assert type(result) is dict
+        return sanitize_datetime(result)
+    return wrapper

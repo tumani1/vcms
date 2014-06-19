@@ -1,12 +1,14 @@
 import datetime
 
-from models import db, Countries, Cities, Users, Topics
+from models import Countries, Cities, Users, Topics
+from db_engine import db
 from utils import hash_password
 
 
 @db
 def create(session=None):
 
+    
     country = Countries(name='Test', name_orig="Test")
     session.add(country)
     session.commit()
@@ -16,6 +18,9 @@ def create(session=None):
     user = Users(city=city, firstname="Test", lastname="Test", password=hash_password.hash_pass('Test'))
     session.add(user)
     session.commit()
+
+    return user.id
+    
 
 @db
 def create_topic(session):

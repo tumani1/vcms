@@ -1,14 +1,14 @@
 # coding: utf-8
-from models import db
-from models.users import Users
+from db_engine import db
+from models.users import Users, UsersRels
+from models.tokens import SessionToken
 from utils.validation import validate_mLimit
 from serializer import mUser
 
 
-# TODO online
 @db
-def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
-        city=None, limit=',0', country=None, **kwargs):
+def get(auth_user, session=None, id=None, is_online=None, is_person=None, text=None,
+        city=None, limit=',0', country=None, friendship=None, **kwargs):
     query = Users.tmpl_for_users(session)
 
     if id:
@@ -19,8 +19,12 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
     if not text is None:
         query = Users.full_text_search_by_last_first_name(query=query, session=session, text=text)
 
+    if not friendship is None:
+        query = UsersRels.filter_users_by_status(friendship, query)
+
     if not is_online is None:
-        pass
+        query = SessionToken.filter_users_is_online(is_online, query)
+
     if not is_person is None:
         query = Users.filter_users_person(is_person=is_person, session=session, query=query)
 
@@ -41,4 +45,4 @@ def get(user, session=None, id=None, is_online=None, is_person=None, text=None,
         if not limit[0] is None:
             query = query.offset(limit[1])
 
-    return mUser(user=user, instance=query.all(), session=session).data
+    return mUser(user=auth_user, instance=query.all(), session=session).data

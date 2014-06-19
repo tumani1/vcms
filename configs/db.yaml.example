@@ -5,3 +5,15 @@ postgresql:
   host: localhost
   port: 5432
   database: next_tv
+
+test:
+  drivername: postgresql+psycopg2
+  username: pgadmin
+  password: qwerty
+  host: localhost
+  port: 5432
+  database: test
+
+test_config:
+  use_test_db: false
+

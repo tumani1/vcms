@@ -28,7 +28,11 @@ class UsersTopics(Base):
 
     @classmethod
     def get_user_topic(cls, user, name, session):
-        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == user, cls.topic_name == name)
+        user_id = 0
+        if not user is None:
+            user_id = user.id
+
+        query = cls.tmpl_for_user_topic(session).filter(cls.user_id == user_id, cls.topic_name == name)
         return query
 
 
