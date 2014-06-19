@@ -5,7 +5,7 @@ import unittest
 import datetime
 
 from create_test_user import create
-from models import Base, Topics, SessionToken
+from models import Base, Topics, SessionToken, UsersTopics, Users
 from db_engine import db, db_connect, create_session
 
 
@@ -23,12 +23,12 @@ def create_topic(session):
 
 
 @db
-def create_topic(session):
-    topic1 = Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
-    topic2 = Topics(name="test1", title="test1", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
-    topic3 = Topics(name="test2", title="test2", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
+def create_user_topic(session):
+    ut1 = UsersTopics(user_id=1, topic_name="test")
+    ut2 = UsersTopics(user_id=1, topic_name="test1", subscribed=datetime.datetime(2014,1,1,0,0,0))
+    ut3 = UsersTopics(user_id=1, topic_name="test2", liked=datetime.datetime(2014,1,1,0,0,0))
 
-    session.add_all([topic1, topic2, topic3])
+    session.add_all([ut1, ut2, ut3])
     session.commit()
 
 
@@ -41,7 +41,7 @@ def setUpModule():
     # Fixture
     create()
     create_topic()
-
+    create_user_topic()
 
 
 
@@ -51,48 +51,48 @@ def tearDownModule():
 
 
 
-# ###################################################################################
-# class TopicInfoTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.cl = zerorpc.Client(timeout=3000)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = "test"
-#
-#         self.user_id = 1
-#         self.session_token = SessionToken.generate_token(self.user_id, session=session)
-#
-#
-#     def test_echo(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "info",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": self.topic,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {
-#             'name': 'test',
-#             'title': 'test',
-#             'title_orig': None,
-#             'description': 'test test',
-#             'releasedate': 1388520000.0,
-#             'type': 'news',
-#             'relation': {
-#                 'subscribed': False,
-#                 'liked': 0,
-#             }
-#         }
-#
-#         self.assertDictEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
+###################################################################################
+class TopicInfoTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.cl = zerorpc.Client(timeout=3000)
+        self.cl.connect("tcp://127.0.0.1:4242")
+        self.topic = "test"
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=session)
+
+
+    def test_echo(self):
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "info",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "get",
+            "query_params": {
+                "name": self.topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = {
+            'name': 'test',
+            'title': 'test',
+            'title_orig': None,
+            'description': 'test test',
+            'releasedate': 1388520000.0,
+            'type': 'news',
+            'relation': {
+                'subscribed': False,
+                'liked': 0,
+            }
+        }
+
+        self.assertDictEqual(temp, resp)
+
+    def tearDown(self):
+        self.cl.close()
 
 
 ###################################################################################
@@ -102,13 +102,12 @@ class TopicLikeTestCase(unittest.TestCase):
         self.cl = zerorpc.Client(timeout=300)
         self.cl.connect("tcp://127.0.0.1:4242")
 
-        self.topic = create_topic()
-
-        self.user_id = create()
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=session)
 
 
     def test_echo_get(self):
+        topic = "test"
         IPC_pack = {
             "api_group": "topics",
             "api_method": "like",
@@ -116,17 +115,18 @@ class TopicLikeTestCase(unittest.TestCase):
             "x_token": self.session_token[1],
             "http_method": "get",
             "query_params": {
-                "name": self.topic.name,
+                "name": topic,
             }
         }
 
         resp = self.cl.route(IPC_pack)
-        temp = {}
+        temp = {'liked': 0}
 
-        self.assertEqual(temp, resp)
+        self.assertDictEqual(temp, resp)
 
 
     def test_echo_post(self):
+        topic = "test1"
         IPC_pack = {
             "api_group": "topics",
             "api_method": "like",
@@ -134,17 +134,21 @@ class TopicLikeTestCase(unittest.TestCase):
             "x_token": self.session_token[1],
             "http_method": "post",
             "query_params": {
-                "name": self.topic.name,
+                "name": topic,
             }
         }
 
         resp = self.cl.route(IPC_pack)
-        temp = {}
+        self.assertEqual(resp, None)
 
-        self.assertEqual(temp, resp)
+        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        self.assertNotEqual(topic.liked, None)
 
 
     def test_echo_delete(self):
+        topic = "test2"
         IPC_pack = {
             "api_group": "topics",
             "api_method": "like",
@@ -152,92 +156,101 @@ class TopicLikeTestCase(unittest.TestCase):
             "x_token": self.session_token[1],
             "http_method": "delete",
             "query_params": {
-                "name": self.topic.name,
+                "name": topic,
             }
         }
 
         resp = self.cl.route(IPC_pack)
-        temp = {}
+        self.assertEqual(resp, None)
 
-        self.assertEqual(temp, resp)
+        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        self.assertEqual(topic.liked, None)
 
 
     def tearDown(self):
         self.cl.close()
 
 
-# ###################################################################################
-# class TopicSubscribeTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#
-#         self.topic = create_topic()
-#
-#         self.user_id = create()
-#         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
-#
-#
-#
-#     def test_echo_get(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "subscribe",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#
-#     def test_echo_post(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "subscribe",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "post",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#
-#     def test_echo_delete(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "subscribe",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "delete",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#
-#     def tearDown(self):
-#         self.cl.close()
-#
-#
+###################################################################################
+class TopicSubscribeTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.cl = zerorpc.Client(timeout=300)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=session)
+
+
+    def test_echo_get(self):
+        topic = "test"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "get",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = {'subscribed': 0}
+
+        self.assertDictEqual(temp, resp)
+
+
+    def test_echo_post(self):
+        topic = "test2"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "post",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        self.assertNotEqual(topic.subscribed, None)
+
+
+    def test_echo_delete(self):
+        topic = "test1"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "delete",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        self.assertEqual(topic.subscribed, None)
+
+
+    def tearDown(self):
+        self.cl.close()
+
+
 # ###################################################################################
 # class TopicExtrasTestCase(unittest.TestCase):
 #

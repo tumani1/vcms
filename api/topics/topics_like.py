@@ -13,7 +13,7 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 @db
 def get_like(auth_user, name, session, **kwargs):
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }

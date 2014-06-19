@@ -12,7 +12,7 @@ from db_engine import db_connect
 def local_db_reset():
     '''Перезаписать локальную базу из репозитория
     '''
-    local('''echo "DROP DATABASE IF EXIST next_tv;" | sudo  sudo -u postgres psql''')
+    local('''echo "DROP DATABASE IF EXISTS next_tv;" | sudo  sudo -u postgres psql''')
     local('''echo "CREATE USER pgadmin WITH PASSWORD 'qwerty'; CREATE DATABASE next_tv; GRANT ALL PRIVILEGES ON DATABASE next_tv to pgadmin;" | sudo  sudo -u postgres psql''')
 
 def delete_tables(**options):
