@@ -12,8 +12,8 @@ class MsgrThreads(Base):
     id       = Column(Integer, primary_key=True)
     msg_cnt  = Column(Integer, default=0)
 
-    msg_logs           = relationship('MsgrLog', backref='msgr_threads')
-    users_msgr_threads = relationship("UsersMsgrThreads", backref='msgr_threads')
+    # msg_logs           = relationship('MsgrLog', backref='msgr_threads')
+    # users_msgr_threads = relationship("UsersMsgrThreads", backref='msgr_threads')
 
     def __repr__(self):
         return "<MsgrThreads([{}] {})>".format(self.id, self.msg_cnt)
