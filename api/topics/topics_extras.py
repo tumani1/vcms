@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, Extras
+from models import Extras
+from db_engine import db
 from models.extras.constants import APP_EXTRA_TYPE
 
 from utils.validation import validate_mLimit, validate_list_int

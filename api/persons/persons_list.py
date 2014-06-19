@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, Persons
+from models import Persons
+from db_engine import db
 from models.topics.constants import TOPIC_TYPE
 
 from utils.validation import validate_list_int, validate_mLimit, validate_string

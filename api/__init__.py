@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from models import Users, db
-
+from models import Users
+from db_engine import db
 from api.users import routing as users_routing
 from api.topics import routing as topics_routing
 from api.persons import routing as persons_routing

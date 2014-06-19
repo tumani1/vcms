@@ -2,7 +2,8 @@
 
 import datetime
 
-from models import db, UsersPersons
+from models import UsersPersons
+from db_engine import db
 
 from utils import need_authorization
 from utils.validation import validate_int

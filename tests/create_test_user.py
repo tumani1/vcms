@@ -1,6 +1,7 @@
 import datetime
 
-from models import db, Countries, Cities, Users
+from models import Countries, Cities, Users
+from db_engine import db
 from utils import hash_password
 
 

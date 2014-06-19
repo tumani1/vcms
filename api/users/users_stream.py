@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import db
+from db_engine import db
 
 
 @db

@@ -1,4 +1,4 @@
-from models import db
+from db_engine import db
 from models import SessionToken
 from utils import need_authorization
 from settings import TOKEN_LIFETIME

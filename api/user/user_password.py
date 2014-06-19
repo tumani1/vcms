@@ -1,4 +1,5 @@
-from models import db, Users
+from models import Users
+from db_engine import db
 from utils import need_authorization
 from utils.hash_password import hash_pass
 
