@@ -7,20 +7,20 @@ from utils import need_authorization
 
 @db
 @need_authorization
-def get(user, session=None, **kwargs):
+def get(auth_user, session=None, **kwargs):
     result = []
     params = {
-        'user': user,
+        'user': auth_user,
         'session': session,
         'instance': ''
         }
 
     if 'user_author' in kwargs:
         params['instance'] = Users.get_users_by_id(session, kwargs['user_author']).all()
-        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(user, session, user_author=kwargs['user_author']).all()
+        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session, user_author=kwargs['user_author']).all()
     else:
-        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(user, session).all()
-        params['instance'] = user
+        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session).all()
+        params['instance'] = auth_user
 
     for user_msgr_thread in msgr_threads:
         if not user_msgr_thread.msgr_threads is None:

@@ -4,5 +4,5 @@ from utils import need_authorization
 
 @db
 @need_authorization
-def put(user, session, **kwargs):
+def put(auth_user, session, **kwargs):
     pass
