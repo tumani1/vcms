@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from admin.main import start_admin_application
 from zerorpcserver.server import start_zerorpc_service
 from models import Base
-from utils.connectors import db_connect
+from utils.db_engine import db_connect
 from fabric.api import local
 
 

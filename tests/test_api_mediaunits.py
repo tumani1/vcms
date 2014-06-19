@@ -5,7 +5,7 @@ from create_test_user import create
 from sqlalchemy import create_engine, pool
 from models import Base
 from sqlalchemy.orm import sessionmaker, scoped_session
-from utils.connectors import db_connect
+from utils.db_engine import db_connect
 from models import Users, db
 
 
