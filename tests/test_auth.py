@@ -1,10 +1,13 @@
+# coding: utf-8
+
 import zerorpc
 import unittest
-from create_test_user import create
-from models import GlobalToken,Users
-from models import db
-from zerorpcserver.server import mashed_routes, authorize
+
 from zerorpc.exceptions import RemoteError
+
+from create_test_user import create
+from models import GlobalToken, Users, db
+
 
 @db
 def get_token_by_id(user_id,session = None):

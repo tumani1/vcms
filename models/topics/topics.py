@@ -60,8 +60,8 @@ class Topics(Base):
 
 
     @classmethod
-    def get_topics_list(cls, auth_user, session, name=None, text=None, _type=None, limit=None, **kwargs):
-        query = cls.join_with_user_topics(auth_user, session)
+    def get_topics_list(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
+        query = cls.join_with_user_topics(user, session)
 
         # Set name filter
         if not name is None:
