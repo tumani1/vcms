@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, Persons
+from models import Persons
+from db_engine import db
 from api.persons.serializer import mPersonSerializer
 
 from utils.validation import validate_int
@@ -21,7 +22,7 @@ def get_person_info(auth_user, person, session, **kwargs):
     if not instance is None:
         params = {
             'instance': [instance],
-            'user': user,
+            'user': auth_user,
             'session': session,
         }
 

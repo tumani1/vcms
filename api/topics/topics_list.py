@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, Topics
+from models import Topics
+from db_engine import db
 from models.topics.constants import TOPIC_TYPE
 
 from serializer import mTopicSerializer

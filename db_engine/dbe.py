@@ -5,9 +5,6 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
-__all__ = ['DBWrapper', 'db_connect']
-
-
 def db_connect(type='postgresql', **kwargs):
     db_settings = DATABASE[type]
 
@@ -21,11 +18,11 @@ def create_session(**kwargs):
     return scoped_session(sessionmaker(**kwargs))()
 
 
-class DBW(object):
+class DBWrapper(object):
     """Декоратор-синглтон , который используется при определении методов API.
      Передает им в параметр session уже существующий объект сессии"""
 
-    class __DBW(object):
+    class __DBWrapper(object):
 
         def __init__(self):
             self.engine = db_connect()
@@ -46,10 +43,8 @@ class DBW(object):
     instance = None
 
     def __init__(self):
-        if not DBW.instance:
-            DBW.instance = DBW.__DBW()
+        if not DBWrapper.instance:
+            DBWrapper.instance = DBWrapper.__DBWrapper()
 
     def __call__(self, func):
         return self.instance.__call__(func)
-
-DBWrapper = DBW()

@@ -1,4 +1,5 @@
-from models import db, MediaUnits
+from models import MediaUnits
+from db_engine import db
 from api.media_unit.serializer import mMediaUnitsSerializer
 
 

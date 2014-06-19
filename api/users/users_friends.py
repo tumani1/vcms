@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import db
+from db_engine import db
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
