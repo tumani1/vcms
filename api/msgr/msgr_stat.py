@@ -1,6 +1,7 @@
-from models import db
 from utils import need_authorization
 from models.msgr import UsersMsgrThreads
+from db_engine import db
+
 
 @db
 @need_authorization

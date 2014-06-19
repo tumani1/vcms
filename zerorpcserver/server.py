@@ -6,6 +6,7 @@ from api import routes
 from api import authorize
 from settings import CONFIG_PATH, DEBUG
 from os.path import join
+from db_engine import db
 
 
 mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
@@ -31,7 +32,8 @@ class ZeroRpcService(object):
     def route(self, IPC_pack):
         Auth_IPC_pack = authorize(IPC_pack)
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
-        response = mashed_routes[mashed_key](**Auth_IPC_pack['query_params'])
+        api_method = mashed_routes[mashed_key]
+        response = api_method(**Auth_IPC_pack['query_params'])
         return response
 
 

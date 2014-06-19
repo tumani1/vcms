@@ -1,6 +1,7 @@
 
 from api.users.serializer import mUserShort
-from models import db, UsersMsgrThreads, Users
+from models import UsersMsgrThreads, Users
+from db_engine import db
 from utils import need_authorization
 
 
