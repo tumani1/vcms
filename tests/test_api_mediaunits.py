@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 from create_test_user import create
 from models import Base
-from db_engine.dbe import db_connect
+from db_engine import db_connect
 
 
 class MediaUnitsTestCase(unittest.TestCase):

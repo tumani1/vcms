@@ -6,7 +6,7 @@ from fabric.api import local
 from admin.main import start_admin_application
 from zerorpcserver.server import start_zerorpc_service
 from models import Base
-from db_engine.dbe import db_connect
+from db_engine import db_connect
 
 
 def local_db_reset():
