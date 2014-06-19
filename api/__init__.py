@@ -22,7 +22,7 @@ routes = {
 
 @db
 def authorize(IPC_pack, session=None):
-    user = session.query(Users).filter_by(id=1).first()
+    user = session.query(Users).filter_by(id=2).first()
     IPC_pack['query_params'].update({'user': user})
     return IPC_pack
     # if IPC_pack['api_group'] =='auth':

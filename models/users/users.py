@@ -67,6 +67,11 @@ class Users(Base):
         return query
 
     @classmethod
+    def get_users_by_id(cls, session, users_id):
+        query = cls.tmpl_for_users(session).filter(Users.id.in_(users_id))
+        return query
+
+    @classmethod
     def full_text_search_by_last_first_name(cls, text, session, query=None):
         if query is None:
             query = cls.tmpl_for_users(session)
