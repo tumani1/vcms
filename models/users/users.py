@@ -37,14 +37,17 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
+    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
+    social        = relationship('UsersSocial', backref='user', cascade='all, delete')
+    users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
     users_values  = relationship('UsersValues', backref='user', cascade='all, delete')
     friends       = relationship('UsersRels', foreign_keys='UsersRels.user_id', backref='user', cascade='all, delete')
     partners      = relationship('UsersRels', foreign_keys='UsersRels.partner_id', backref='partner', cascade='all, delete')
     global_token  = relationship('GlobalToken', backref="users", uselist=False, cascade='all, delete')
     session_token = relationship('SessionToken', backref="users", cascade='all, delete')
-    person        = relationship('Persons', backref='users', uselist=False)
-    user_persons  = relationship('UsersPersons', backref='users')
-
+    person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
+    user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
+    user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):

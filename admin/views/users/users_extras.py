@@ -1,9 +1,6 @@
 # coding: utf-8
 from admin.views.base import BaseModelView
-from flask.ext.admin.form import fields
-
 from models.users import UsersExtras
-from models.users.constants import APP_USERSEXTRAS_TYPE
 
 
 class UsersExtrasModelView(BaseModelView):

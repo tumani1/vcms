@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 from models import Base
@@ -17,3 +16,6 @@ class PersonsTopics(Base):
     role        = Column(String, nullable=False)
     description = Column(Text)
     type        = Column(ChoiceType(PERSON_TOPIC_TYPE))
+
+    def __repr__(self):
+        return u'<PersonsTopics([{}]-{} {})>'.format(self.id, self.person_id, self.topic_name)

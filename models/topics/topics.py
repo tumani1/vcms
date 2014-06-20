@@ -15,7 +15,6 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 class Topics(Base):
     __tablename__ = 'topics'
 
-
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
     title_orig  = Column(String)
@@ -27,10 +26,10 @@ class Topics(Base):
 
     search_description = Column(TSVectorType('description'), index=True)
 
-    topic_values = relationship('TopicsValues', backref='topics')
-    topic_user   = relationship('UsersTopics', backref='topics')
-    # extra_topics = relationship('UsersTopics', backref='topics')
-
+    topic_values = relationship('TopicsValues', backref='topics', cascade='all, delete')
+    topic_user   = relationship('UsersTopics', backref='topics', cascade='all, delete')
+    extra_topics = relationship('ExtrasTopics', backref='topics', cascade='all, delete')
+    topic_person = relationship('PersonsTopics', backref='topic', cascade='all, delete')
 
     @classmethod
     def tmpl_for_topics(cls, auth_user, session):

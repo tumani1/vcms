@@ -1,20 +1,16 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy_utils import ChoiceType
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, ForeignKey, PrimaryKeyConstraint
 
-from constants import APP_USERSEXTRAS_TYPE
 from models import Base
 
 
 class UsersExtras(Base):
     __tablename__ = 'users_extras'
-    __table_args__ = {'extend_existing': True}
+    __table_args__ = (PrimaryKeyConstraint('user_id', 'extra_id', name='user_extra_id'), )
 
-    user_id    = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    user       = relationship('Users', foreign_keys=user_id, backref='users_extras')
+
+    user_id    = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
     extra_id   = Column(Integer, ForeignKey('extras.id'), nullable=False, unique=True)
-    extra      = relationship('Extras', backref='users_extras')
 
     def __repr__(self):
         return u"<UsersExtras({}-{})>".format(self.user_id, self.extra_id)
