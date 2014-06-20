@@ -3,9 +3,10 @@ import unittest
 import zerorpc
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-from create_test_user import create
+from tests.create_test_user import create
 from models import Base
 from db_engine import db_connect
+from unittest import skip
 
 
 class MediaUnitsTestCase(unittest.TestCase):
@@ -17,7 +18,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.cl = zerorpc.Client()
         self.cl.connect("tcp://127.0.0.1:4242")
         create()
-
+    @skip
     def test_info(self):
         IPC_pack = {'api_group':'mediaunits',
                     'api_method':'info',
