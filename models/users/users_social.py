@@ -1,6 +1,5 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 import datetime
@@ -14,7 +13,6 @@ class UsersSocial(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    user    = relationship('Users', backref='social', cascade='')
     sType   = Column(ChoiceType(APP_USERSOCIAL_TYPE), nullable=False)
     sToken  = Column(String(40), nullable=False)
     created = Column(DateTime, default=datetime.datetime.utcnow)

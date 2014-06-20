@@ -30,7 +30,9 @@ class Extras(Base):
     title_orig  = Column(String, nullable=False)
 
     search_description = Column(TSVectorType('description'), index=True)
-
+    users_extras       = relationship('UsersExtras', backref='extra', cascade='all, delete')
+    extras_topics      = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
+    person_extras      = relationship('PersonsExtras', backref='extra', cascade='all, delete')
 
     @classmethod
     def tmpl_for_extras(cls, session):

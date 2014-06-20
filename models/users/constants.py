@@ -38,9 +38,3 @@ APP_USERSOCIAL_TYPE = (
     (APP_USERSOCIAL_TYPE_FACEBOOK, u'Facebook'),
     (APP_USERSOCIAL_TYPE_TWITTER, u'Twitter'),
 )
-
-
-APP_USERSEXTRAS_TYPE = (
-    ('1', u'Первый тип'),
-    ('2', u'Второй тип'),
-)
