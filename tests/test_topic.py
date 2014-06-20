@@ -9,9 +9,6 @@ from models import Base, Topics, SessionToken, UsersTopics, Users
 from db_engine import db, db_connect, create_session
 
 
-engine = db_connect()
-session = create_session(bind=engine, expire_on_commit=False)
-
 @db
 def create_topic(session):
     topic1 = Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
@@ -33,7 +30,7 @@ def create_user_topic(session):
 
 
 def setUpModule():
-    engine.execute("drop schema public cascade; create schema public;")
+    engine = db_connect().connect()
 
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -43,27 +40,30 @@ def setUpModule():
     create_topic()
     create_user_topic()
 
+    engine.closr()
 
 
 def tearDownModule():
-    engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
-
+    pass
 
 
 ###################################################################################
 class TopicInfoTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+
         self.cl = zerorpc.Client(timeout=3000)
         self.cl.connect("tcp://127.0.0.1:4242")
-        self.topic = "test"
 
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=session)
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
 
     def test_echo(self):
+        topic = "test"
         IPC_pack = {
             "api_group": "topics",
             "api_method": "info",
@@ -71,7 +71,7 @@ class TopicInfoTestCase(unittest.TestCase):
             "x_token": self.session_token[1],
             "http_method": "get",
             "query_params": {
-                "name": self.topic,
+                "name": topic,
             }
         }
 
@@ -91,19 +91,25 @@ class TopicInfoTestCase(unittest.TestCase):
 
         self.assertDictEqual(temp, resp)
 
+
     def tearDown(self):
         self.cl.close()
+        self.session.close()
+        self.engine.close()
 
 
 ###################################################################################
 class TopicLikeTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
         self.cl = zerorpc.Client(timeout=300)
         self.cl.connect("tcp://127.0.0.1:4242")
 
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=session)
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
 
     def test_echo_get(self):
@@ -141,9 +147,9 @@ class TopicLikeTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
         self.assertEqual(resp, None)
 
-        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
-        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertNotEqual(topic.liked, None)
 
 
@@ -163,25 +169,30 @@ class TopicLikeTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
         self.assertEqual(resp, None)
 
-        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
-        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertEqual(topic.liked, None)
 
 
     def tearDown(self):
         self.cl.close()
+        self.session.close()
+        self.engine.close()
 
 
 ###################################################################################
 class TopicSubscribeTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
         self.cl = zerorpc.Client(timeout=300)
         self.cl.connect("tcp://127.0.0.1:4242")
 
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=session)
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
 
     def test_echo_get(self):
@@ -219,9 +230,9 @@ class TopicSubscribeTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
         self.assertEqual(resp, None)
 
-        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
-        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertNotEqual(topic.subscribed, None)
 
 
@@ -241,14 +252,16 @@ class TopicSubscribeTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
         self.assertEqual(resp, None)
 
-        user = Users.get_users_by_id(session=session, users_id=[self.user_id]).first()
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
-        topic = UsersTopics.get_user_topic(user=user, name=topic, session=session).first()
+        topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertEqual(topic.subscribed, None)
 
 
     def tearDown(self):
         self.cl.close()
+        self.session.close()
+        self.engine.close()
 
 
 # ###################################################################################
