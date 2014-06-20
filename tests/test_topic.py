@@ -40,7 +40,7 @@ def setUpModule():
     create_topic()
     create_user_topic()
 
-    engine.closr()
+    engine.close()
 
 
 def tearDownModule():
