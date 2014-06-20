@@ -4,7 +4,7 @@ import zerorpc
 import unittest
 import datetime
 
-from create_test_user import create
+from tests.create_test_user import create
 from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
 from db_engine import db, db_connect, create_session
 
@@ -455,70 +455,70 @@ class TopicValuesTestCase(unittest.TestCase):
         self.session.close()
         self.engine.close()
 
-#
-# ###################################################################################
-# class TopicMediaTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.engine = db_connect().connect()
-#         self.session = create_session(bind=self.engine, expire_on_commit=False)
-#
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#
-#
-#     def test_echo(self):
-#         topic = "test"
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "media",
-#             "api_format": "json",
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": topic,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
-#         self.session.close()
-#         self.engine.close()
-#
-#
-# ###################################################################################
-# class TopicPersonsTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.engine = db_connect().connect()
-#         self.session = create_session(bind=self.engine, expire_on_commit=False)
-#
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#
-#
-#     def test_echo(self):
-#         topic = "test"
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "persons",
-#             "api_format": "json",
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": topic,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
-#         self.session.close()
-#         self.engine.close()
+
+###################################################################################
+class TopicMediaTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.cl = zerorpc.Client(timeout=300)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+
+    def test_echo(self):
+        topic = "test"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "media",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = []
+
+        self.assertEqual(temp, resp)
+
+    def tearDown(self):
+        self.cl.close()
+        self.session.close()
+        self.engine.close()
+
+
+###################################################################################
+class TopicPersonsTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.cl = zerorpc.Client(timeout=300)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+
+    def test_echo(self):
+        topic = "test"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "persons",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = {}
+
+        self.assertEqual(temp, resp)
+
+    def tearDown(self):
+        self.cl.close()
+        self.session.close()
+        self.engine.close()
