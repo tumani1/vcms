@@ -17,9 +17,9 @@ def raven_report(func):
     else:
         client = Client('http://5aec720be5594c3e8c4e456ec8f8523a:6d461d2eecce47c281c052cff0ec8a63@sentry.aaysm.com/3')
 
-        def rvwrapper(IPC_pack):
+        def rvwrapper(*args,**kwargs):
             try:
-                return func(IPC_pack)
+                return func(*args,**kwargs)
             except Exception:
                 client.captureException()
         return rvwrapper
