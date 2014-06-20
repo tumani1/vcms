@@ -3,7 +3,7 @@
 import os
 import yaml
 
-DEBUG = True
+DEBUG = False
 
 BASE_PATH = os.path.dirname(__file__)
 

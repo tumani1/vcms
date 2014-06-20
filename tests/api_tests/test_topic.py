@@ -4,7 +4,7 @@ import zerorpc
 import unittest
 import datetime
 
-from create_test_user import create
+from tests.create_test_user import create
 from models import Base, Topics, SessionToken, UsersTopics, Users
 from db_engine import db, db_connect, create_session
 

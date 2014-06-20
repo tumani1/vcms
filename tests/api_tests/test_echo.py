@@ -1,6 +1,6 @@
 import zerorpc
 import unittest
-from create_test_user import create
+from tests.create_test_user import create
 
 class ZeroRpcServiceTestCase(unittest.TestCase):
 
