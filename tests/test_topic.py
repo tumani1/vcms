@@ -5,28 +5,75 @@ import unittest
 import datetime
 
 from create_test_user import create
-from models import Base, Topics, SessionToken, UsersTopics, Users
+from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
 from db_engine import db, db_connect, create_session
 
 
 @db
 def create_topic(session):
-    topic1 = Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
-    topic2 = Topics(name="test1", title="test1", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
-    topic3 = Topics(name="test2", title="test2", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0), status="a", type="news")
+    list_topics = [
+        Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
+        Topics(name="test1", title="test1", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
+        Topics(name="test2", title="test2", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="show"),
+    ]
 
-    session.add_all([topic1, topic2, topic3])
+    session.add_all(list_topics)
     session.commit()
 
 
 @db
 def create_user_topic(session):
-    ut1 = UsersTopics(user_id=1, topic_name="test")
-    ut2 = UsersTopics(user_id=1, topic_name="test1", subscribed=datetime.datetime(2014,1,1,0,0,0))
-    ut3 = UsersTopics(user_id=1, topic_name="test2", liked=datetime.datetime(2014,1,1,0,0,0))
+    list_uts = [
+        UsersTopics(user_id=1, topic_name="test"),
+        UsersTopics(user_id=1, topic_name="test1", subscribed=datetime.datetime(2014,1,1,0,0,0,0)),
+        UsersTopics(user_id=1, topic_name="test2", liked=datetime.datetime(2014,1,1,0,0,0,0)),
+    ]
 
-    session.add_all([ut1, ut2, ut3])
+    session.add_all(list_uts)
     session.commit()
+
+
+@db
+def create_cdn(session):
+    list_cdn = [
+        CDN(name="cdn1", description="test", has_mobile=False, has_auth=False, url="ya.ru", location_regxp="", cdn_type=""),
+        CDN(name="cdn2", description="test", has_mobile=False, has_auth=True, url="google.com", location_regxp="", cdn_type=""),
+    ]
+
+    session.add_all(list_cdn)
+    session.commit()
+
+
+@db
+def create_extras(session):
+    list_extras = [
+        Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
+        Extras(cdn_name='cdn1', type="v", location="russia", description="test1 test", title="test1", title_orig="test1", created=datetime.datetime(2014,1,1,0,0,0,0)),
+        Extras(cdn_name='cdn1', type="a", location="russia", description="test2 test", title="test2", title_orig="test2", created=datetime.datetime(2014,1,1,0,0,0,0)),
+        Extras(cdn_name='cdn1', type="a", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
+        Extras(cdn_name='cdn2', type="v", location="russia", description="test1 test", title="test1", title_orig="test1", created=datetime.datetime(2014,1,1,0,0,0,0)),
+        Extras(cdn_name='cdn2', type="v", location="russia", description="test2 test", title="test2", title_orig="test2", created=datetime.datetime(2014,1,1,0,0,0,0)),
+    ]
+
+    session.add_all(list_extras)
+    session.commit()
+
+
+@db
+def create_topic_extras(session):
+    list_te = [
+        ExtrasTopics(extras_id=1, topic_name="test"),
+        ExtrasTopics(extras_id=1, topic_name="test1"),
+        ExtrasTopics(extras_id=1, topic_name="test2"),
+        ExtrasTopics(extras_id=2, topic_name="test"),
+        ExtrasTopics(extras_id=3, topic_name="test1"),
+        ExtrasTopics(extras_id=4, topic_name="test2"),
+    ]
+
+
+    session.add_all(list_te)
+    session.commit()
+
 
 
 def setUpModule():
@@ -39,6 +86,9 @@ def setUpModule():
     create()
     create_topic()
     create_user_topic()
+    create_cdn()
+    create_extras()
+    create_topic_extras()
 
     engine.close()
 
@@ -264,110 +314,168 @@ class TopicSubscribeTestCase(unittest.TestCase):
         self.engine.close()
 
 
-# ###################################################################################
-# class TopicExtrasTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = create_topic()
-#
-#
-#     def test_echo(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "extras",
-#             "api_format": "json",
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
-#
-#
-# ###################################################################################
-# class TopicListTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = create_topic()
-#
-#
-#     def test_echo(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "list",
-#             "api_format": "json",
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
-#
-#
-# ###################################################################################
-# class TopicValuesTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = create_topic()
-#
-#
-#     def test_echo(self):
-#         IPC_pack = {
-#             "api_group": "topics",
-#             "api_method": "values",
-#             "api_format": "json",
-#             "http_method": "get",
-#             "query_params": {
-#                 "name": self.topic.name,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {}
-#
-#         self.assertEqual(temp, resp)
-#
-#     def tearDown(self):
-#         self.cl.close()
-#
+###################################################################################
+class TopicExtrasTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.cl = zerorpc.Client(timeout=3000)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+
+    def test_echo(self):
+        topic = 'test'
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "extras",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                "name": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+
+        temp = [
+            {
+                'description': 'test test',
+                'created': 1388520000.0,
+                'title': 'test',
+                'title_orig': 'test',
+                'location': 'russia',
+                'type': 'v',
+                'id': 1
+            }, {
+                'description': 'test1 test',
+                'created': 1388520000.0,
+                'title': 'test1',
+                'title_orig': 'test1',
+                'location': 'russia',
+                'type': 'v',
+                'id': 2
+            }
+        ]
+
+        self.assertListEqual(temp, resp)
+
+    def tearDown(self):
+        self.cl.close()
+        self.session.close()
+        self.engine.close()
+
+
+###################################################################################
+class TopicListTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.cl = zerorpc.Client(timeout=300)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+
+    def test_echo(self):
+        topic = 'news'
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "list",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                "type": topic,
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        self.assertEqual(len(resp), 2)
+
+        temp = [
+            {
+                'description': 'test test',
+                'title': 'test1',
+                'releasedate': 1388520000.0,
+                'relation': {},
+                'title_orig': None,
+                'type': 'news',
+                'name': 'test1'
+            }, {
+                'description': 'test test',
+                'title': 'test',
+                'releasedate': 1388520000.0,
+                'relation': {},
+                'title_orig': None,
+                'type': 'news',
+                'name': 'test'
+            }
+        ]
+        self.assertListEqual(temp, resp)
+
+
+    def tearDown(self):
+        self.cl.close()
+        self.session.close()
+        self.engine.close()
+
+
+###################################################################################
+class TopicValuesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.cl = zerorpc.Client(timeout=300)
+        self.cl.connect("tcp://127.0.0.1:4242")
+
+
+    def test_echo(self):
+        topic = "test"
+        IPC_pack = {
+            "api_group": "topics",
+            "api_method": "values",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                "name": topic,
+                "scheme_name": "t",
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = []
+
+        self.assertEqual(temp, resp)
+
+    def tearDown(self):
+        self.cl.close()
+        self.session.close()
+        self.engine.close()
+
 #
 # ###################################################################################
 # class TopicMediaTestCase(unittest.TestCase):
 #
 #     def setUp(self):
+#         self.engine = db_connect().connect()
+#         self.session = create_session(bind=self.engine, expire_on_commit=False)
+#
 #         self.cl = zerorpc.Client(timeout=300)
 #         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = create_topic()
 #
 #
 #     def test_echo(self):
+#         topic = "test"
 #         IPC_pack = {
 #             "api_group": "topics",
 #             "api_method": "media",
 #             "api_format": "json",
 #             "http_method": "get",
 #             "query_params": {
-#                 "name": self.topic.name,
+#                 "name": topic,
 #             }
 #         }
 #
@@ -378,25 +486,30 @@ class TopicSubscribeTestCase(unittest.TestCase):
 #
 #     def tearDown(self):
 #         self.cl.close()
+#         self.session.close()
+#         self.engine.close()
 #
 #
 # ###################################################################################
 # class TopicPersonsTestCase(unittest.TestCase):
 #
 #     def setUp(self):
+#         self.engine = db_connect().connect()
+#         self.session = create_session(bind=self.engine, expire_on_commit=False)
+#
 #         self.cl = zerorpc.Client(timeout=300)
 #         self.cl.connect("tcp://127.0.0.1:4242")
-#         self.topic = create_topic()
 #
 #
 #     def test_echo(self):
+#         topic = "test"
 #         IPC_pack = {
 #             "api_group": "topics",
 #             "api_method": "persons",
 #             "api_format": "json",
 #             "http_method": "get",
 #             "query_params": {
-#                 "name": self.topic.name,
+#                 "name": topic,
 #             }
 #         }
 #
@@ -407,3 +520,5 @@ class TopicSubscribeTestCase(unittest.TestCase):
 #
 #     def tearDown(self):
 #         self.cl.close()
+#         self.session.close()
+#         self.engine.close()

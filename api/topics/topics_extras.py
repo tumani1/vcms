@@ -37,7 +37,6 @@ def get_topic_extars(auth_user, name,  session, **kwargs):
     if 'limit' in kwargs:
         params['limit'] = validate_mLimit(limit=kwargs['limit'])
 
-
     result = Extras.get_extras_by_topics(**params).all()
 
     return Extras.data(result)

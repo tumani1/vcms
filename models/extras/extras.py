@@ -21,7 +21,6 @@ class Extras(Base):
 
     id          = Column(Integer, primary_key=True)
     cdn_name    = Column(String, ForeignKey('cdn.name'), nullable=False)
-    cdn         = relationship('CDN', backref='extras')
     type        = Column(ChoiceType(APP_EXTRA_TYPE), nullable=False)
     location    = Column(String, nullable=False)
     created     = Column(DateTime, default=datetime.datetime.utcnow)
@@ -30,9 +29,12 @@ class Extras(Base):
     title_orig  = Column(String, nullable=False)
 
     search_description = Column(TSVectorType('description'), index=True)
+
+    cdn                = relationship('CDN', backref='extras')
     users_extras       = relationship('UsersExtras', backref='extra', cascade='all, delete')
     extras_topics      = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
     person_extras      = relationship('PersonsExtras', backref='extra', cascade='all, delete')
+
 
     @classmethod
     def tmpl_for_extras(cls, session):
@@ -123,7 +125,7 @@ class Extras(Base):
 
 
     def __repr__(self):
-        return u'<Extras([{}] {})>'.format(self.id, self.cdn_name)
+        return u'<Extras(id={0}, cdn={1})>'.format(self.id, self.cdn_name)
 
 
 update_ts_vector = DDL('''
