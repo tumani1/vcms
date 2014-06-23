@@ -3,10 +3,10 @@ from api.media_unit.serializer import mMediaUnitsSerializer
 
 
 @db
-def get(user=None, session=None, **kwargs):
+def get(auth_user=None, session=None, **kwargs):
     data = {}
     params = {
-        'user': user,
+        'user': auth_user,
         'session': session,
         'id': None,
         'text': None,
@@ -26,10 +26,10 @@ def get(user=None, session=None, **kwargs):
     if 'topic' in kwargs:
         params['topic'] = str(kwargs['topic']).strip()
 
-    instance = MediaUnits.get_media_units_list(**params)
+    instance = MediaUnits.get_media_units_list(**params).all()
     if not instance is None:
         serializer_params = {
-            'user': user,
+            'user': auth_user,
             'session': session,
             'instance': instance,
         }

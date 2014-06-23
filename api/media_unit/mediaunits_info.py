@@ -4,13 +4,13 @@ from serializer import mMediaUnitsSerializer
 
 
 @db
-def get(user, session, id, **kwargs):
+def get(auth_user, session, id, **kwargs):
     data = {}
-    instance = MediaUnits.get_media_unit_by_id(user, session, id)
+    instance = MediaUnits.get_media_unit_by_id(auth_user, session, id)
     if not instance is None:
         params = {
             'instance': instance,
-            'user': user,
+            'user': auth_user,
             'session': session,
         }
         data = mMediaUnitsSerializer(**params).data
