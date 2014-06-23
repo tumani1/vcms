@@ -22,7 +22,7 @@ class TokenMixin(Base):
 
     @declared_attr
     def id(cls):
-        return Column(Integer,nullable=False, primary_key= True, index =True)
+        return Column(Integer, nullable=False, primary_key=True, index=True)
 
     @declared_attr
     def user_id(cls):
@@ -30,7 +30,7 @@ class TokenMixin(Base):
 
     @declared_attr
     def token(cls):
-        return Column('token', String(64), default=token_gen(cls.token_length))
+        return Column('token', String(64), default=token_gen(cls.token_length), unique=True)
 
     @declared_attr
     def created(cls):

@@ -1,8 +1,8 @@
-from models import db, Users, Cities, Countries
+from models import Users, Cities, Countries
+from db_engine import db
 from utils import need_authorization
 
-@db
-@need_authorization
+
 def get(user_id, session=None):
     user = session.query(Users).filter_by(id=user_id).first()
     city = session.query(Cities).filter_by(id=user.city_id).first()

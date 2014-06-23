@@ -1,10 +1,9 @@
 import zerorpc
 import unittest
-from create_test_user import create, create_topic
 from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
-from utils.connectors import db_connect
-from fixtures import create_media_units
+from db_engine.dbe import db_connect
+from fixtures import create_media_units, create_topic, create
 
 
 def setUpModule():
@@ -102,8 +101,6 @@ class MediaUnitsTestCase(unittest.TestCase):
             'relation': {'watched': 1388520000.0},
         }
         resp = self.cl.route(IPC_pack)
-        print 'resp: ', resp
-        print 'temp: ', temp
         self.assertDictEqual(resp, temp)
 
     def test_list(self):
@@ -127,8 +124,6 @@ class MediaUnitsTestCase(unittest.TestCase):
             'relation': {'watched': 1388520000.0},
         }
         resp = self.cl.route(IPC_pack)
-        print 'resp: ', resp[0]
-        print 'temp: ', temp
         self.assertDictEqual(resp[0], temp)
 
     def tearDown(self):

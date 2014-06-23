@@ -29,7 +29,11 @@ class UsersPersons(Base):
 
 
     @classmethod
-    def get_user_person(cls, user_id, person_id, session):
+    def get_user_person(cls, user, person_id, session):
+        user_id = 0
+        if not user is None:
+            user_id = user.id
+
         query = cls.tmpl_for_user_person(session).filter(cls.user_id == user_id, cls.person_id == person_id)
         return query
 

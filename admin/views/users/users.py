@@ -26,14 +26,16 @@ class UsersModelView(BaseModelView):
     form_excluded_columns = ('friends', 'partners', 'created', 'last_visit',
                              'userpic_type', 'userpic_id', 'users_values',
                              'users_chat', 'users_extras', 'person', 'social',
-                             'user_persons', 'global_token', 'session_token'
+                             'user_persons', 'global_token', 'session_token',
+                             'user_topics',
     )
 
     column_labels = dict(city=u'Родной город', firstname=u'Имя', gender=u'Пол',
                          lastname=u'Фамилия', address=u'Адресс',
                          bio=u'Биография', birthdate=u'Дата рождения',
                          time_zone=u'Временная зона', created=u'Дата создания',
-                         phone=u'Телефон', last_visit=u'Последний визит')
+                         phone=u'Телефон', last_visit=u'Последний визит',
+                         password=u'Пароль', )
 
     column_list = ('id', 'firstname', 'lastname', 'gender', 'city', 'address',
                    'password', 'bio', 'birthdate', 'phone', 'time_zone',

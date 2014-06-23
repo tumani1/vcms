@@ -3,7 +3,8 @@
 import datetime
 
 from utils import need_authorization
-from models import db, UsersTopics
+from models import UsersTopics
+from db_engine import db
 
 __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
@@ -12,7 +13,7 @@ __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 @db
 def get_subscribe(auth_user, name, session, **kwargs):
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }
@@ -29,7 +30,7 @@ def get_subscribe(auth_user, name, session, **kwargs):
 @db
 def post_subscribe(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }
@@ -48,9 +49,9 @@ def post_subscribe(auth_user, name, session, **kwargs):
 
 @need_authorization
 @db
-def delete_subscribe(user, name, session, **kwargs):
+def delete_subscribe(auth_user, name, session, **kwargs):
     params = {
-        'user': user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }

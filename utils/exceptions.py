@@ -17,7 +17,12 @@ class NotAuthorizedException(Exception):
     """
     403
     """
-    pass
+    
+    def __init__(self, method):
+        self.method = method
+
+    def __str__(self):
+        return "Not authorized access to method {}".format(self.method)
 
 
 class NoSuchMethodException(Exception):

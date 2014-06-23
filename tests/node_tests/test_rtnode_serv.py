@@ -4,7 +4,7 @@ import yaml
 import requests
 from settings import CONFIG_PATH
 from os.path import join
-from create_test_user import create
+from tests.create_test_user import create
 
 
 class RestTemplateNodeServiceTestCase(unittest.TestCase):

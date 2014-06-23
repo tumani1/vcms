@@ -1,7 +1,7 @@
 # coding: utf-8
 from sqlalchemy.sql.expression import func
 
-from models import db
+from db_engine import db
 from models.users import Users, UsersExtras
 from models.extras import Extras
 from utils.exceptions import DoesNotExist

@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import db, PersonsValues
+from models import PersonsValues
+from db_engine import db
 
 from utils.validation import validate_list_string, validate_int
 

@@ -1,4 +1,4 @@
-from models import db
+from db_engine import db
 from models import SessionToken
 from utils import need_authorization
 from settings import TOKEN_LIFETIME
@@ -20,7 +20,7 @@ def get(auth_user,session=None, **kwargs):
 @db
 def delete(auth_user,session=None, **kwargs):
 
-    st = session.query(SessionToken).filter(user_id = auth_user.id).first()
+    st = session.query(SessionToken).filter(SessionToken.user_id == auth_user.id).first()
     st.is_active = False
 
     session.add(st)

@@ -1,4 +1,4 @@
-from models import db
+from db_engine import db
 from models.media.media_units import MediaUnits
 from serializer import mMediaUnitsSerializer
 

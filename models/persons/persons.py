@@ -20,7 +20,9 @@ class Persons(Base):
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE))
     bio       = Column(Text)
 
-    person_topics = relationship('PersonsTopics', backref='persons')
+    person_values = relationship('PersonsValues', backref='persons', cascade='all, delete')
+    person_topics = relationship('PersonsTopics', backref='persons', cascade='all, delete')
+    person_extras = relationship('PersonsExtras', backref='persons', cascade='all, delete')
 
 
     @classmethod
@@ -50,7 +52,7 @@ class Persons(Base):
 
         # Set filter by ids
         if not id is None:
-            if not hasattr(id, '__iter__'):
+            if not isinstance(id, list):
                 id = [id]
 
             query = query.filter(cls.id.in_(id))

@@ -15,7 +15,6 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 class Topics(Base):
     __tablename__ = 'topics'
 
-
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
     title_orig  = Column(String)
@@ -27,10 +26,10 @@ class Topics(Base):
 
     search_description = Column(TSVectorType('description'), index=True)
 
-    topic_values = relationship('TopicsValues', backref='topics')
-    topic_user   = relationship('UsersTopics', backref='topics')
-    # extra_topics = relationship('UsersTopics', backref='topics')
-
+    topic_values = relationship('TopicsValues', backref='topics', cascade='all, delete')
+    topic_user   = relationship('UsersTopics', backref='topics', cascade='all, delete')
+    extra_topics = relationship('ExtrasTopics', backref='topics', cascade='all, delete')
+    topic_person = relationship('PersonsTopics', backref='topic', cascade='all, delete')
 
     @classmethod
     def tmpl_for_topics(cls, auth_user, session):
@@ -42,8 +41,8 @@ class Topics(Base):
     @classmethod
     def join_with_user_topics(cls, auth_user, session):
         user_id = 0
-        if not user is None:
-            user_id = user.id
+        if not auth_user is None:
+            user_id = auth_user.id
 
         query = cls.tmpl_for_topics(auth_user, session).\
             outerjoin(UsersTopics, and_(cls.name == UsersTopics.topic_name, UsersTopics.user_id == user_id)).\
@@ -60,8 +59,8 @@ class Topics(Base):
 
 
     @classmethod
-    def get_topics_list(cls, auth_user, session, name=None, text=None, _type=None, limit=None, **kwargs):
-        query = cls.join_with_user_topics(auth_user, session)
+    def get_topics_list(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
+        query = cls.join_with_user_topics(user, session)
 
         # Set name filter
         if not name is None:

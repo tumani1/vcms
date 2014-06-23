@@ -1,9 +1,9 @@
 # coding: utf-8
+
 import os
-import sys
 import yaml
 
-DEBUG = True
+DEBUG = False
 
 BASE_PATH = os.path.dirname(__file__)
 

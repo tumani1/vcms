@@ -1,4 +1,5 @@
-from models import db, UsersValues, Scheme
+from models import UsersValues, Scheme
+from db_engine import db
 from utils import need_authorization
 from sqlalchemy import and_, not_, update
 from api.users.users_values import get as users_get

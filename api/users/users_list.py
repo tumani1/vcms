@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import db
+from db_engine import db
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from utils.validation import validate_mLimit
