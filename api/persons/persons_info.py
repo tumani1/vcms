@@ -21,7 +21,7 @@ def get_person_info(auth_user, person, session, **kwargs):
 
     if not instance is None:
         params = {
-            'instance': [instance],
+            'instance': instance,
             'user': auth_user,
             'session': session,
         }
