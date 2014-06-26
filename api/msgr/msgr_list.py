@@ -27,7 +27,7 @@ def get(auth_user, session=None, **kwargs):
             m_msgr_thread = {
                 'id': user_msgr_thread.msgr_threads.id,
                 'msgr_cnt': user_msgr_thread.msgr_threads.msg_cnt,
-                'users': ''
+                'users': mUserShort(**params).data
 
             }
             result.append(m_msgr_thread)

@@ -27,5 +27,10 @@ class MsgrLog(Base):
 
         return query
 
+    @classmethod
+    def get_msgr_log_by_msgr_thread_id(cls, session, msgr_thread_id):
+        query = cls.tmpl_for_msgr_log(session).filter_by(msgr_thread_id=msgr_thread_id)
+        return query
+
     def __repr__(self):
         return "<MsgrLog([{}] {} {})>".format(self.id, self.msgr_threads_id, self.user_id)

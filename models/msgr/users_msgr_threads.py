@@ -54,7 +54,7 @@ class UsersMsgrThreads(Base):
 
     @classmethod
     def get_users_msgr_threads_by_msgr_thread_id(cls, session, msgr_thread_id):
-        query = cls.tmpl_for_users_msgr_threads(session).filter_by(id=msgr_thread_id)
+        query = cls.tmpl_for_users_msgr_threads(session).filter_by(msgr_threads_id=msgr_thread_id)
         return query
 
     def __repr__(self):
