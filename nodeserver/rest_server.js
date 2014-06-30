@@ -100,23 +100,15 @@ function run_server(host, port) {  // якобы общепринятое пра
 
     var ws_server = new ws.Server({server: server});
     ws_server.on('connection', function(socket){
-        console.log('connected');
         socket.on("message", function(message){
-            console.log('mes=', message);
-            console.log(lb_client);
             IPC_pack = JSON.parse(message)
             lb_client.invoke("route", IPC_pack, function(error, res, more) {
                 if (error){
                     console.error(error);
                     return;
                 }
-                console.log('ws resp = ', res);
                 socket.send(JSON.stringify(res));
             });
-        });
-        socket.on("close", function (code, message) {
-            console.log(code);
-            console.log(message);
         });
     });
     ws_server.on('error', function(error){

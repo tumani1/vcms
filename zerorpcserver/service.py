@@ -33,7 +33,6 @@ class ZeroRpcService(object):
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
         api_method = mashed_routes[mashed_key]
         response = api_method(**Auth_IPC_pack['query_params'])
-        print(response)
         return response
 
 
