@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from models import Persons
-from db_engine import db
 from models.topics.constants import TOPIC_TYPE
 
 from utils.validation import validate_list_int, validate_mLimit, validate_string
@@ -10,7 +9,6 @@ from api.persons.serializer import mPersonSerializer, mPersonRoleSerializer
 __all__ = ['get_person_list']
 
 
-@db
 def get_person_list(auth_user, session, **kwargs):
     # Params
     params = {

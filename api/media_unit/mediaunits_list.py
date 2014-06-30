@@ -1,9 +1,8 @@
+# coding: utf-8
 from models import MediaUnits
-from db_engine import db
 from api.media_unit.serializer import mMediaUnitsSerializer
 
 
-@db
 def get(auth_user=None, session=None, **kwargs):
     data = {}
     params = {

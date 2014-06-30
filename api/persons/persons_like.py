@@ -3,7 +3,6 @@
 import datetime
 
 from models import UsersPersons
-from db_engine import db
 
 from utils import need_authorization
 from utils.validation import validate_int
@@ -12,7 +11,6 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 
 
 @need_authorization
-@db
 def get_like(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)

@@ -7,7 +7,6 @@ from utils.validation import validate_list_string
 __all__ = ['get_topic_values']
 
 
-@db
 def get_topic_values(auth_user, session, name, **kwargs):
     # Params
     params = {

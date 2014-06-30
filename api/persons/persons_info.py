@@ -1,7 +1,5 @@
 # coding: utf-8
-
 from models import Persons
-from db_engine import db
 from api.persons.serializer import mPersonSerializer
 
 from utils.validation import validate_int
@@ -9,7 +7,6 @@ from utils.validation import validate_int
 __all__ = ['get_person_info']
 
 
-@db
 def get_person_info(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)

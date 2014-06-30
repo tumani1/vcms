@@ -1,9 +1,11 @@
 # coding: utf-8
+from api import routes
+from api import authorize
+from db_engine import create_session, db_connect
+
 import zerorpc
 import yaml
 from raven import Client
-from api import routes
-from api import authorize
 from settings import CONFIG_PATH, DEBUG
 from os.path import join
 
@@ -17,9 +19,9 @@ def raven_report(func):
     else:
         client = Client('http://5aec720be5594c3e8c4e456ec8f8523a:6d461d2eecce47c281c052cff0ec8a63@sentry.aaysm.com/3')
 
-        def rvwrapper(*args,**kwargs):
+        def rvwrapper(*args, **kwargs):
             try:
-                return func(*args,**kwargs)
+                return func(*args, **kwargs)
             except Exception:
                 client.captureException()
         return rvwrapper
@@ -27,12 +29,18 @@ def raven_report(func):
 
 class ZeroRpcService(object):
 
+    def __init__(self):
+        self.session = create_session(bind=db_connect(), expire_on_commit=False)
+
     @raven_report
     def route(self, IPC_pack):
-        Auth_IPC_pack = authorize(IPC_pack)
+        Auth_IPC_pack = authorize(IPC_pack, session=self.session)
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
-        response = mashed_routes[mashed_key](**Auth_IPC_pack['query_params'])
+        response = mashed_routes[mashed_key](session=self.session, **Auth_IPC_pack['query_params'])
         return response
+
+    def __del__(self):
+        self.session.remove()
 
 
 def start_zerorpc_service():

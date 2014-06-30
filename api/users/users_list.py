@@ -1,13 +1,11 @@
 # coding: utf-8
-from db_engine import db
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from utils.validation import validate_mLimit
 from serializer import mUser
 
 
-@db
-def get(auth_user, session=None, id=None, is_online=None, is_person=None, text=None,
+def get(auth_user, session, id=None, is_online=None, is_person=None, text=None,
         city=None, limit=',0', country=None, friendship=None, **kwargs):
     query = Users.tmpl_for_users(session)
 

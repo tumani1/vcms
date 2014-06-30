@@ -1,10 +1,9 @@
 from models import UsersValues, Scheme
-from db_engine import db
 from utils import need_authorization
 from sqlalchemy import and_, not_, update
 from api.users.users_values import get as users_get
 
-@db
+
 @need_authorization
 def put(auth_user, name, value, topic=None, session=None):
     shema_val = dict(zip(name, value))
