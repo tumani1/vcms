@@ -13,3 +13,4 @@ wtforms-html5
 fabric
 nose
 requests
+websocket-client

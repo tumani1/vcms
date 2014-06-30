@@ -34,7 +34,8 @@ class ZeroRpcService(object):
     def route(self, IPC_pack):
         Auth_IPC_pack = authorize(IPC_pack, session=self.session)
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
-        response = self.mashed_routes[mashed_key](session=self.session, **Auth_IPC_pack['query_params'])
+        api_method = mashed_routes[mashed_key]
+        response = api_method(**Auth_IPC_pack['query_params'])
         return response
 
     def __del__(self):
@@ -42,12 +43,12 @@ class ZeroRpcService(object):
 
 
 def start_zerorpc_service():
-    with open(join(CONFIG_PATH, 'zerorpc_services.yaml')) as conf:
-        services = yaml.safe_load(conf)
+    with open(join(CONFIG_PATH, 'zerorpc_service.yaml')) as conf:
+        service = yaml.safe_load(conf)
 
     server = zerorpc.Server(ZeroRpcService())
-    server.bind("{schema}://{host}:{port}".format(**services[0]))
-    print("zerorpc server runnig on {host}:{port}".format(**services[0]))
+    server.bind("{schema}://{host}:{port}".format(**service))
+    print("zerorpc server runnig on {host}:{port}".format(**service))
     server.run()
 
 
