@@ -2,21 +2,21 @@ import zerorpc
 import unittest
 from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
-from db_engine.dbe import db_connect
-from fixtures import create_media_units, create_topic, create
+from utils.connection import db_connect, create_session
+from tests.api_tests.fixtures import create_media_units, create_topic, create
 
 
 def setUpModule():
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
-
+    session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
 
     # Fixture
-    create()
-    create_topic()
-    create_media_units()
+    create(session)
+    create_topic(session)
+    create_media_units(session)
 
 
 def tearDownModule():
@@ -128,4 +128,4 @@ class MediaUnitsTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.cl.close()
-        self.session.close()
+        self.session.remove()

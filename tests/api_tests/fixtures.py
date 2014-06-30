@@ -1,11 +1,10 @@
+# coding: utf-8
 import datetime
-from db_engine import db
 from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities
 from utils import hash_password
 
 
-@db
-def create_media_units(session=None):
+def create_media_units(session):
     mu1 = MediaUnits(topic_name='test1', title='mu1', title_orig=1, description='test1', next_unit=2, release_date=datetime.datetime(2011,1,1,0,0,0), end_date=datetime.datetime(2014,2,1,0,0,0), batch='batch1')
     mu2 = MediaUnits(topic_name='test1', title='mu2', title_orig=2, description='test2', previous_unit=1, next_unit=3, release_date=datetime.datetime(2012,1,1,0,0,0), end_date=datetime.datetime(2014,2,1,0,0,0), batch='batch1')
     mu3 = MediaUnits(topic_name='test1', title='mu3', title_orig=3, description='test3', previous_unit=2, release_date=datetime.datetime(2013,1,1,0,0,0), end_date=datetime.datetime(2014,2,1,0,0,0), batch='batch1')
@@ -15,7 +14,6 @@ def create_media_units(session=None):
     session.commit()
 
 
-@db
 def create_topic(session):
     list_topics = [
         Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
@@ -27,7 +25,6 @@ def create_topic(session):
     session.commit()
 
 
-@db
 def create_user_topic(session):
     list_uts = [
         UsersTopics(user_id=1, topic_name="test"),
@@ -39,7 +36,6 @@ def create_user_topic(session):
     session.commit()
 
 
-@db
 def create_cdn(session):
     list_cdn = [
         CDN(name="cdn1", description="test", has_mobile=False, has_auth=False, url="ya.ru", location_regxp="", cdn_type=""),
@@ -50,7 +46,6 @@ def create_cdn(session):
     session.commit()
 
 
-@db
 def create_extras(session):
     list_extras = [
         Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
@@ -65,7 +60,6 @@ def create_extras(session):
     session.commit()
 
 
-@db
 def create_topic_extras(session):
     list_te = [
         ExtrasTopics(extras_id=1, topic_name="test"),
@@ -80,8 +74,8 @@ def create_topic_extras(session):
     session.add_all(list_te)
     session.commit()
 
-@db
-def create(session=None):
+
+def create(session):
     country = Countries(name='Test', name_orig="Test")
     session.add(country)
     session.commit()

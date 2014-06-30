@@ -13,7 +13,7 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
         with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
             conf = yaml.safe_load(file)
         self.fullpath = 'http://{}:{}'.format(conf['rest_serv']['host'], conf['rest_serv']['port'])
-        self.session =  requests.Session()
+        self.session = requests.Session()
         create()
 
     def test_echo_get(self):
