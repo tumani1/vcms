@@ -1,7 +1,7 @@
 # coding: utf-8
 from api import routes
 from api import authorize
-from db_engine import create_session, db_connect
+from utils.connection import create_session, db_connect
 
 import zerorpc
 import yaml
