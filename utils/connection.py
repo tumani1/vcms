@@ -16,3 +16,8 @@ def db_connect(type='postgresql', **kwargs):
 
 def create_session(**kwargs):
     return scoped_session(sessionmaker(**kwargs))()
+
+
+def get_session(**kwargs):
+    engine = db_connect()
+    return create_session(bind=engine, expire_on_commit=False)

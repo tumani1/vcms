@@ -18,7 +18,7 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.session = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))
-        create()
+        create(self.session)
 
     def test_echo_get(self):
         resp = self.session.get(self.fullpath+'/test/echo?message=hello')
