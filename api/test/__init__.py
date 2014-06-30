@@ -1,7 +1,7 @@
 from utils import need_authorization
 
 
-def put(auth_user, **kwargs):
+def put(auth_user, session, **kwargs):
     return kwargs
 
 
