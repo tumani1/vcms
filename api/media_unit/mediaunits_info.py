@@ -1,9 +1,8 @@
-from db_engine import db
+# coding: utf-8
 from models.media.media_units import MediaUnits
 from serializer import mMediaUnitsSerializer
 
 
-@db
 def get(auth_user, session, id, **kwargs):
     data = {}
     instance = MediaUnits.get_media_unit_by_id(auth_user, session, id)

@@ -32,7 +32,6 @@ def get_like(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def post_like(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
@@ -59,7 +58,6 @@ def post_like(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def delete_like(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)

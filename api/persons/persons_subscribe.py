@@ -32,7 +32,6 @@ def get_subscribe(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def post_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
@@ -58,7 +57,6 @@ def post_subscribe(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def delete_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
