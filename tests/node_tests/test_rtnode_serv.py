@@ -14,7 +14,7 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
             conf = yaml.safe_load(file)
         self.fullpath = 'http://{}:{}'.format(conf['rest_serv']['host'], conf['rest_serv']['port'])
         self.session = requests.Session()
-        create()
+        create(self.session)
 
     def test_echo_get(self):
         resp = self.session.get(self.fullpath+'/test/echo?message=hello')
