@@ -5,7 +5,7 @@ import unittest
 from tests.create_test_user import create
 from models import GlobalToken,Users
 from db_engine import db
-from zerorpcserver.server import mashed_routes, authorize
+from zerorpcserver.service import mashed_routes, authorize
 from zerorpc.exceptions import RemoteError
 from tests.create_test_user import create
 from models import GlobalToken, Users

@@ -7,6 +7,7 @@ var http = require("http"),
     yaml = require("js-yaml"),
     formidable = require("formidable"),
     settings = require("../settings.js");
+    ws = require('ws');
 
 
 function load_conf(filename) {
@@ -46,14 +47,10 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024,
-        services = load_conf('zerorpc_services.yaml'),
-        zero_clients = [];  // клиенты, по которым настраивать балансировку
-    for (var s=0;s<services.length;s++) {
-        var cl =  new zerorpc.Client();
-        cl.connect(services[s]["schema"]+"://"+services[s]["host"]+":"+services[s]["port"]);
-        zero_clients.push(cl);
-    }
+        lb_conf = load_conf('zerorpc_service.yaml'),
+        lb_client = new zerorpc.Client();  // клиент к балансировщику
 
+    lb_client.connect(lb_conf["schema"]+"://"+lb_conf["host"]+":"+lb_conf["port"]);
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,
@@ -74,7 +71,7 @@ function run_server(host, port) {  // якобы общепринятое пра
                             IPC_pack["query_params"][property] = fields[property];
                         }
                     }
-                zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
+                lb_client.invoke("route", IPC_pack, function(error, res, more) {
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.end(JSON.stringify(res));
                 });
@@ -86,7 +83,7 @@ function run_server(host, port) {  // якобы общепринятое пра
 
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
-            zero_clients[0].invoke("route", IPC_pack, function(error, res, more) {
+            lb_client.invoke("route", IPC_pack, function(error, res, more) {
                 response.writeHead(200, {"Content-Type": "text/plain"});
                 response.end(JSON.stringify(res));
             });
@@ -97,8 +94,34 @@ function run_server(host, port) {  // якобы общепринятое пра
             response.end("invalid url");
         }
         });
-    server.listen(port, host);
-    console.log("rest server runnig on "+host+":"+port);
+    server.listen(port, host, function() {
+       console.log("rest server runnig on "+host+":"+port);
+    });
+
+    var ws_server = new ws.Server({server: server});
+    ws_server.on('connection', function(socket){
+        console.log('connected');
+        socket.on("message", function(message){
+            console.log('mes=', message);
+            console.log(lb_client);
+            IPC_pack = JSON.parse(message)
+            lb_client.invoke("route", IPC_pack, function(error, res, more) {
+                if (error){
+                    console.error(error);
+                    return;
+                }
+                console.log('ws resp = ', res);
+                socket.send(JSON.stringify(res));
+            });
+        });
+        socket.on("close", function (code, message) {
+            console.log(code);
+            console.log(message);
+        });
+    });
+    ws_server.on('error', function(error){
+       console.error(error)
+    });
 }
 
 var conf = load_conf('node_service.yaml');
