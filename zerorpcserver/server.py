@@ -10,9 +10,6 @@ from settings import CONFIG_PATH, DEBUG
 from os.path import join
 
 
-mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
-
-
 def raven_report(func):
     if DEBUG:
         return func
@@ -31,12 +28,13 @@ class ZeroRpcService(object):
 
     def __init__(self):
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
+        self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
     @raven_report
     def route(self, IPC_pack):
         Auth_IPC_pack = authorize(IPC_pack, session=self.session)
         mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
-        response = mashed_routes[mashed_key](session=self.session, **Auth_IPC_pack['query_params'])
+        response = self.mashed_routes[mashed_key](session=self.session, **Auth_IPC_pack['query_params'])
         return response
 
     def __del__(self):
