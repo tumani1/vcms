@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Binary, ForeignKey
+from sqlalchemy import Column, Integer, String, Binary, ForeignKey, DateTime
 
 from models import Base
 
@@ -11,6 +11,7 @@ class MsgrLog(Base):
     id              = Column(Integer, primary_key=True)
     msgr_threads_id = Column(Integer, ForeignKey('msgr_threads.id'), nullable=False)
     user_id         = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created         = Column(DateTime, nullable=False)
     text            = Column(String(256), nullable=False)
     attachments     = Column(Binary)
 
