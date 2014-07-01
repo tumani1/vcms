@@ -1,4 +1,6 @@
 # coding: utf-8
+
+import time
 from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect
@@ -30,12 +32,14 @@ class ZeroRpcService(object):
         self.connect = db_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
+
     @raven_report
     def route(self, IPC_pack):
         response = {}
         session = create_session(bind=self.connect, expire_on_commit=False)
 
         try:
+            time.sleep(5)
             Auth_IPC_pack = authorize(IPC_pack, session=session)
             mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
             api_method = self.mashed_routes[mashed_key]
@@ -47,9 +51,6 @@ class ZeroRpcService(object):
             session.close()
 
         return response
-
-    def __del__(self):
-        self.connect.dispose()
 
 
 def start_zerorpc_service():

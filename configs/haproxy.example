@@ -24,9 +24,9 @@ defaults
 
     # Не логируем пустые соединения
     option     dontlognull
-    contimeout 5000
-    clitimeout 50000
-    srvtimeout 50000
+    contimeout 500
+    clitimeout 30000
+    srvtimeout 30000
 
     # Задаём заглушки для разных кодов ошибок
     errorfile 400 /etc/haproxy/errors/400.http
