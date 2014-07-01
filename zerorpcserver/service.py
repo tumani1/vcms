@@ -49,7 +49,7 @@ class ZeroRpcService(object):
         return response
 
     def __del__(self):
-        self.connect.close()
+        self.connect.dispose()
 
 
 def start_zerorpc_service():
