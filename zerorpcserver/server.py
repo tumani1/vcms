@@ -36,12 +36,12 @@ class ZeroRpcService(object):
 
 
 def start_zerorpc_service():
-    with open(join(CONFIG_PATH, 'zerorpc_services.yaml')) as conf:
+    with open(join(CONFIG_PATH, 'zerorpc_service.yaml')) as conf:
         services = yaml.safe_load(conf)
 
     server = zerorpc.Server(ZeroRpcService())
-    server.bind("{schema}://{host}:{port}".format(**services[0]))
-    print("zerorpc server runnig on {host}:{port}".format(**services[0]))
+    server.bind("{schema}://{host}:{port}".format(**services))
+    print("zerorpc server runnig on {host}:{port}".format(**services))
     server.run()
 
 

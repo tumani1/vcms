@@ -1,10 +1,8 @@
-from db_engine import db
 from models import MsgrThreads, MsgrLog
 from utils import need_authorization
 
 
 @need_authorization
-@db
 def get(auth_user, session, id, **kwargs):
     result = {
         'id': '',
