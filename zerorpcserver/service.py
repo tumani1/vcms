@@ -27,25 +27,29 @@ def raven_report(func):
 class ZeroRpcService(object):
 
     def __init__(self):
-        self.session = create_session(bind=db_connect(), expire_on_commit=False)
+        self.connect = db_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
     @raven_report
     def route(self, IPC_pack):
         response = {}
+        session = create_session(bind=self.connect, expire_on_commit=False)
+
         try:
-            Auth_IPC_pack = authorize(IPC_pack, session=self.session)
+            Auth_IPC_pack = authorize(IPC_pack, session=session)
             mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
             api_method = self.mashed_routes[mashed_key]
-            response = api_method(session=self.session, **Auth_IPC_pack['query_params'])
+            response = api_method(session=session, **Auth_IPC_pack['query_params'])
         except Exception as e:
-            print e
-            self.session.rollback()
+            session.rollback()
+            raise e
         finally:
-            return response
+            session.close()
+
+        return response
 
     def __del__(self):
-        self.session.remove()
+        self.connect.dispose()
 
 
 def start_zerorpc_service():
