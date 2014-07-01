@@ -7,7 +7,7 @@ for e in $(nosetests -v --collect-only $1 2>&1 | pyp "p.split('(')[1].split(')')
     # Starting server process
     python -m zerorpcserver.service & zerorpc_pid=$! ;
 
-    nosetests -v $e;
+    nosetests -v --with-xunit --xunit-file=$(echo $e| pyp "'_'.join(p.split(':')[0].split('.')+p.split(':')[1:]) +'.xml'") $e;
 
     # Killing original zerorpc server process
     kill $zerorpc_pid;
