@@ -30,5 +30,5 @@ def put(auth_user, name, value, topic=None, session=None):
 
 
 @need_authorization
-def get(auth_user, **kwargs):
-    return users_get(auth_user, auth_user.id, **kwargs)
+def get(auth_user, session, **kwargs):
+    return users_get(user=auth_user.id, id=auth_user.id, session=session, **kwargs)

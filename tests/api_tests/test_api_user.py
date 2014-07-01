@@ -2,7 +2,7 @@ import zerorpc
 import unittest
 from models import Base, SessionToken, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
-from db_engine.dbe import db_connect
+from utils.connection import db_connect, create_session
 from fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
 
@@ -10,16 +10,16 @@ import random
 def setUpModule():
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
-
+    session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
 
     # Fixture
-    create()
-    create_users_rels()
-    create_topic()
-    create_scheme()
-    create_users_values()
+    create(session)
+    create_users_rels(session)
+    create_topic(session)
+    create_scheme(session)
+    create_users_values(session)
 
 
 
