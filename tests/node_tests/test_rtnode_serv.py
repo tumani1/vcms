@@ -7,6 +7,7 @@ from settings import CONFIG_PATH
 from os.path import join
 from tests.create_test_user import create
 from websocket import create_connection
+from utils.connection import get_session
 
 
 class RestTemplateNodeServiceTestCase(unittest.TestCase):
@@ -16,17 +17,20 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
             conf = yaml.safe_load(file)
         self.h, self.p = conf['rest_serv']['host'], conf['rest_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
-        self.session = requests.Session()
+        self.req_sess = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))
-        create(self.session)
+        db_sess = get_session()
+        create(db_sess)
 
     def test_echo_get(self):
-        resp = self.session.get(self.fullpath+'/test/echo?message=hello')
+        resp = self.req_sess.get(self.fullpath+'/test/echo?message=hello')
+        print(resp)
         self.assertEqual(resp.json(), {'message': 'hello'})
 
     def test_echo_put(self):
         data = {'message': 'hello'}
-        resp = self.session.put(self.fullpath+'/test/echo', data=data)
+        resp = self.req_sess.put(self.fullpath+'/test/echo', data=data)
+        print(resp)
         self.assertEqual(resp.json(), data)
 
     def test_ws_echo_get(self):
