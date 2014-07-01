@@ -37,7 +37,6 @@ def authorize(IPC_pack, session=None):
         user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
     elif 'token' in IPC_pack and IPC_pack['token']:
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
-
     user = None
     if user_id:
         user = session.query(Users).filter_by(id=user_id).first()

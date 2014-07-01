@@ -4,4 +4,4 @@ from utils import need_authorization
 
 @need_authorization
 def get(auth_user, **kwargs):
-    users_get_friends(auth_user.id, **kwargs)
+   return users_get_friends(auth_user.id, auth_user.id, **kwargs)

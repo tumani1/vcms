@@ -21,7 +21,7 @@ class Users(Base):
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
-    password      = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
+    password      = Column(String(128), nullable=False)
     city_id       = Column(Integer, ForeignKey('cities.id'), nullable=False)
     city          = relationship("Cities", backref='users')
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')

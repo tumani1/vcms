@@ -1,9 +1,10 @@
 import zerorpc
 import unittest
-from models import Base, SessionToken, Users
+from models import Base, SessionToken, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
 from db_engine.dbe import db_connect
-from fixtures import create_media_units, create_topic, create
+from fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
+import random
 
 
 def setUpModule():
@@ -15,6 +16,11 @@ def setUpModule():
 
     # Fixture
     create()
+    create_users_rels()
+    create_topic()
+    create_scheme()
+    create_users_values()
+
 
 
 def tearDownModule():
@@ -27,7 +33,7 @@ class UsersTestCase(unittest.TestCase):
     def setUp(self):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        self.cl = zerorpc.Client(timeout=3000)
+        self.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
         self.cl.connect("tcp://127.0.0.1:4242", )
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
@@ -75,6 +81,50 @@ class UsersTestCase(unittest.TestCase):
                     'http_method': 'put',
                     'api_format': 'json',
                     'x_token': self.session_token[1],
-                    'query_params': {}
+                    'query_params': {'name': ['shm1', 'shm2'], 'topic': 'test1', 'value': [23, 'str']}
         }
         resp = self.cl.route(IPC_pack)
+        user_val = self.session.query(UsersValues).all()
+        self.assertEqual(user_val[0].value_int, IPC_pack['query_params']['value'][0])
+        self.assertEqual(user_val[0].scheme_id, 1)
+        self.assertEqual(user_val[1].value_string, IPC_pack['query_params']['value'][1])
+        self.assertEqual(user_val[1].scheme_id, 2)
+
+    def test_values_get(self):
+        IPC_pack = {'api_group': 'user',
+                    'api_method': 'values',
+                    'http_method': 'get',
+                    'api_format': 'json',
+                    'x_token': self.session_token[1],
+                    'query_params': {'topic': 'test1'}
+        }
+        resp = self.cl.route(IPC_pack)
+        temp = {'id': 1, 'value': 777}
+        self.assertDictEqual(temp, resp[0])
+
+    def test_friends_get(self):
+        IPC_pack = {'api_group': 'user',
+                    'api_method': 'friends',
+                    'http_method': 'get',
+                    'api_format': 'json',
+                    'x_token': self.session_token[1],
+                    'query_params': {'limit': '4'}
+        }
+        resp = self.cl.route(IPC_pack)
+        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': None}
+        self.assertDictEqual(resp[0], temp)
+
+    def test_password_put(self):
+        IPC_pack = {'api_group': 'user',
+                    'api_method': 'password',
+                    'http_method': 'put',
+                    'api_format': 'json',
+                    'x_token': self.session_token[1],
+                    'query_params': {'password': 'testtest'+ str(random.randint(1,100))}
+        }
+        old_pass = self.session.query(Users).filter_by(id=self.user_id).first().password
+        resp = self.cl.route(IPC_pack)
+        self.session.close()
+        self.session = scoped_session(sessionmaker(bind=self.engine))
+        new_pass = self.session.query(Users).filter_by(id=self.user_id).first().password
+        self.assertNotEqual(old_pass, new_pass)

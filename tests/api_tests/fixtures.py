@@ -1,6 +1,8 @@
 import datetime
 from db_engine import db
-from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities
+from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues
+from models.users import UsersRels
+from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils import hash_password
 
 
@@ -80,6 +82,7 @@ def create_topic_extras(session):
     session.add_all(list_te)
     session.commit()
 
+
 @db
 def create(session=None):
     country = Countries(name='Test', name_orig="Test")
@@ -93,5 +96,32 @@ def create(session=None):
     user = Users(city=city, firstname="Test", lastname="Test", password=hash_password.hash_pass('Test'))
     session.add(user)
     session.commit()
+    user2 = Users(city=city, firstname="Test1", lastname="Test1", password=hash_password.hash_pass('Test1'))
+    user3 = Users(city=city, firstname="Test2", lastname="Test2", password=hash_password.hash_pass('Test2'))
+    session.add_all([user2, user3])
+    session.commit()
 
     return user.id
+
+
+@db
+def create_scheme(session=None):
+    shm1 = Scheme(topic_name='test1', name='shm1', internal=False)
+    shm2 = Scheme(topic_name='test1', name='shm2', internal=False)
+    session.add_all([shm1, shm2])
+    session.commit()
+
+
+@db
+def create_users_values(session=None):
+    user_val1 = UsersValues(scheme_id=1, user_id=1, value_int=777)
+    session.add(user_val1)
+    session.commit()
+
+
+@db
+def create_users_rels(session=None):
+    user_rels1 = UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
+    user_rels2 = UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND)
+    session.add_all([user_rels1, user_rels2])
+    session.commit()
