@@ -32,11 +32,16 @@ class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-        Auth_IPC_pack = authorize(IPC_pack, session=self.session)
-        mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
-        api_method = mashed_routes[mashed_key]
-        response = api_method(**Auth_IPC_pack['query_params'])
-        return response
+        response = {}
+        try:
+            Auth_IPC_pack = authorize(IPC_pack, session=self.session)
+            mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
+            api_method = self.mashed_routes[mashed_key]
+            response = api_method(session=self.session, **Auth_IPC_pack['query_params'])
+        except Exception as e:
+            print e
+        finally:
+            return response
 
     def __del__(self):
         self.session.remove()
