@@ -27,9 +27,11 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect("tcp://127.0.0.1:4242")
-        variable = create()
-        self.user_id = variable
+        
+        
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
+        variable = create(self.session)
+        self.user_id = variable
         self.token = get_token_by_id(self.user_id, session=self.session)
 
     def test_echo(self):
