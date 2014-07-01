@@ -53,7 +53,7 @@ class TopicsValues(Base):
         }
 
         value = None
-        for item in ['value_int', 'self.value_text', 'self.value_string']:
+        for item in ['value_int', 'value_text', 'value_string']:
            if not getattr(self, item) is None:
                value = getattr(self, item)
                break

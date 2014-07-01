@@ -21,7 +21,7 @@ class Users(Base):
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
-    password      = Column(PasswordType(schemes=['md5_crypt']), nullable=False)
+    password      = Column(String(128), nullable=False)
     city_id       = Column(Integer, ForeignKey('cities.id'), nullable=False)
     city          = relationship("Cities", backref='users')
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
@@ -37,14 +37,17 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
+    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
+    social        = relationship('UsersSocial', backref='user', cascade='all, delete')
+    users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
     users_values  = relationship('UsersValues', backref='user', cascade='all, delete')
     friends       = relationship('UsersRels', foreign_keys='UsersRels.user_id', backref='user', cascade='all, delete')
     partners      = relationship('UsersRels', foreign_keys='UsersRels.partner_id', backref='partner', cascade='all, delete')
     global_token  = relationship('GlobalToken', backref="users", uselist=False, cascade='all, delete')
     session_token = relationship('SessionToken', backref="users", cascade='all, delete')
-    person        = relationship('Persons', backref='users', uselist=False)
-    user_persons  = relationship('UsersPersons', backref='users')
-
+    person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
+    user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
+    user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):

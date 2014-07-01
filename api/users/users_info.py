@@ -1,13 +1,11 @@
 # coding: utf-8
-from db_engine import db
 from models.users import Users
 from utils.exceptions import DoesNotExist
 
 from serializer import mUser
 
 
-@db
-def get(auth_user, id, session=None, **kwargs):
+def get(auth_user, id, session, **kwargs):
     query = session.query(Users).get(id)
     if not query:
         raise DoesNotExist

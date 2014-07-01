@@ -19,3 +19,7 @@ class Scheme(Base):
     access_level = Column(SmallInteger, nullable=False, default=0)
     status       = Column(SmallInteger, nullable=False, default=0)
     internal     = Column(Boolean, nullable=False, default=0)
+
+    users_value   = relationship('UsersValues', backref='scheme', cascade='all, delete')
+    persons_value = relationship('PersonsValues', backref='scheme', cascade='all, delete')
+    topics_value  = relationship('TopicsValues', backref='scheme', cascade='all, delete')

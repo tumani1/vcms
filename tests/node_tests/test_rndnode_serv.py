@@ -11,7 +11,7 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
     def setUp(self):
         with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
             self.conf = yaml.safe_load(file)
-        self.session =  requests.Session()
+        self.session = requests.Session()
 
     def test_get_index_page(self):
         host, port = self.conf['render_serv']['host'], self.conf['render_serv']['port']

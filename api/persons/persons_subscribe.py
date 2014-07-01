@@ -3,7 +3,6 @@
 import datetime
 
 from models import UsersPersons
-from db_engine import db
 
 from utils import need_authorization
 from utils.validation import validate_int
@@ -12,7 +11,6 @@ __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 
 
 @need_authorization
-@db
 def get_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
@@ -34,7 +32,6 @@ def get_subscribe(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def post_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)
@@ -60,7 +57,6 @@ def post_subscribe(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-@db
 def delete_subscribe(auth_user, person, session, **kwargs):
     # Validation person value
     person = validate_int(person, min_value=1)

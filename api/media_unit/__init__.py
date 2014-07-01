@@ -1,5 +1,5 @@
 from mediaunits_list import get as get_list
-from media_units_info import get as get_info
+from mediaunits_info import get as get_info
 from mediaunits_prev import get as get_prev
 from mediaunits_next import get as get_next
 from mediaunits_media import get as get_media

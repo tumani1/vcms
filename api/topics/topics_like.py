@@ -3,17 +3,15 @@
 import datetime
 
 from models import UsersTopics
-from db_engine import db
 from utils import need_authorization
 
 __all__ = ['get_like', 'post_like', 'delete_like']
 
 
 @need_authorization
-@db
 def get_like(auth_user, name, session, **kwargs):
     params = {
-        'user': auth_user.id,
+        'user': auth_user,
         'name': name,
         'session': session,
     }
@@ -26,7 +24,6 @@ def get_like(auth_user, name, session, **kwargs):
 
 
 @need_authorization
-@db
 def post_like(auth_user, name, session, **kwargs):
     params = {
         'user': auth_user,
@@ -48,7 +45,6 @@ def post_like(auth_user, name, session, **kwargs):
 
 
 @need_authorization
-@db
 def delete_like(auth_user, name, session, **kwargs):
     params = {
         'user': auth_user,

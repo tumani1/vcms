@@ -1,12 +1,9 @@
-import datetime
-
+# coding: utf-8
 from models import Countries, Cities, Users
-from db_engine import db
 from utils import hash_password
 
 
-@db
-def create(session=None):
+def create(session):
     country = Countries(name='Test', name_orig="Test")
     session.add(country)
     session.commit()

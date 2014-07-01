@@ -3,7 +3,7 @@
 <head>
     <title>Пример работы с websocket</title>
     <script>
-        var socket = new WebSocket("ws://localhost:8001/api");
+        var socket = new WebSocket("ws://127.0.0.1:9977");
 
         socket.onopen = function() {
           alert("Соединение установлено.");
@@ -16,17 +16,21 @@
         };
 
         function send(){
-            var el = document.getElementById("text");
-            socket.send(el.value);
+            var IPC_pack = {api_group: "test",
+                            api_method:"echo",
+                            api_format:"json",
+                            http_method: "get",
+                            query_params: {text: "FROM BROWSER WS"}}
+            socket.send(JSON.stringify(IPC_pack));
         }
 
     </script>
 </head>
+
 <body>
     <div>
         <label for="text">Исходный текст:</label>
-        <input name="text" id="text" type="text" title="Текст" />
-        <button onclick="send()">Отправить сообщение</button>
+        <button onclick="send()">Echo</button>
     </div>
     <div id="output"></div>
 </body>
