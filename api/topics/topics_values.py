@@ -1,13 +1,11 @@
 # coding: utf-8
 
 from models import TopicsValues
-from db_engine import db
 from utils.validation import validate_list_string
 
 __all__ = ['get_topic_values']
 
 
-@db
 def get_topic_values(auth_user, session, name, **kwargs):
     # Params
     params = {

@@ -1,7 +1,6 @@
 # coding: utf-8
 from sqlalchemy.sql.expression import func
 
-from db_engine import db
 from models.users import Users, UsersValues
 from models.scheme import Scheme
 from models.topics import Topics
@@ -9,8 +8,7 @@ from utils.exceptions import RequestErrorException
 from serializer import mValue
 
 
-@db
-def get(auth_user, user, name=None, topic=None, text=None, id=None, session=None, **kwargs):
+def get(user, session, name=None, topic=None, text=None, id=None, **kwargs):
     user = session.query(Users).get(user)
     if user is None:
         raise RequestErrorException

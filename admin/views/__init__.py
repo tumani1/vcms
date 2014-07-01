@@ -1,9 +1,8 @@
 # coding: utf-8
 
 from flask.ext.admin import Admin
-from sqlalchemy.orm import sessionmaker
 
-from db_engine import db_connect
+from utils.connection import db_connect, create_session
 
 from users import UsersRelsModelView, UsersModelView, UsersValuesModelView,\
     UsersSocialModelView, UsersExtrasModelView
@@ -18,8 +17,7 @@ from contents import CountryModelView, CitieModelView
 
 admin = Admin(name='NextTV')
 
-engine = db_connect()
-session = sessionmaker(bind=engine)()
+session = create_session(bind=db_connect(), expire_on_commit=False)
 
 ###############################################################################
 # Users

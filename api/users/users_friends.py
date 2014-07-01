@@ -1,5 +1,4 @@
 # coding: utf-8
-from db_engine import db
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
@@ -10,8 +9,7 @@ from settings import TOKEN_LIFETIME
 from datetime import datetime, timedelta
 
 
-@db
-def get(auth_user, id, session=None, type=None, limit=',0', text=None, is_online=None,
+def get(auth_user, id, session, type=None, limit=',0', text=None, is_online=None,
         is_person=None, **kwargs):
     subquery = session.query(UsersRels.partner_id).filter_by(user_id=id, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))

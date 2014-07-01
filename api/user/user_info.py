@@ -1,9 +1,8 @@
 from models import Users, Cities, Countries
-from db_engine import db
 from utils import need_authorization
 
 
-@db
+
 @need_authorization
 def get(auth_user, session=None):
     user = session.query(Users).filter_by(id=auth_user.id).first()
@@ -21,9 +20,9 @@ def get(auth_user, session=None):
     return result
 
 
-@db
+
 @need_authorization
-def put(auth_user, session=None, **kwargs):
+def put(auth_user, session, **kwargs):
     user = session.query(Users).filter_by(id=auth_user.id).first()
     if 'firstname' in kwargs:
         user.firstname = kwargs['firstname']

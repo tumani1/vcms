@@ -1,10 +1,9 @@
 
 from api.users.serializer import mUserShort
-from models import db, UsersMsgrThreads, Users
+from models import UsersMsgrThreads, Users
 from utils import need_authorization
 
 
-@db
 @need_authorization
 def get(user, session=None, **kwargs):
     result = []

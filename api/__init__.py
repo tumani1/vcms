@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from models import Users
-from db_engine import db
+
 from api.users import routing as users_routing
 from api.topics import routing as topics_routing
 from api.persons import routing as persons_routing
@@ -24,7 +24,6 @@ routes = {
 }
 
 
-@db
 def authorize(IPC_pack, session=None):
     if IPC_pack['api_group'] == 'auth':
         IPC_pack['query_params'].update({

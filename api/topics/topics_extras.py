@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from models import Extras
-from db_engine import db
 from models.extras.constants import APP_EXTRA_TYPE
 
 from utils.validation import validate_mLimit, validate_list_int
@@ -9,7 +8,6 @@ from utils.validation import validate_mLimit, validate_list_int
 __all__ = ['get_topic_extars']
 
 
-@db
 def get_topic_extars(auth_user, name,  session, **kwargs):
     # Params
     params = {

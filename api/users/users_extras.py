@@ -1,15 +1,13 @@
 # coding: utf-8
 from sqlalchemy.sql.expression import func
 
-from db_engine import db
 from models.users import Users, UsersExtras
 from models.extras import Extras
 from utils.exceptions import DoesNotExist
 from utils.validation import validate_mLimit
 
 
-@db
-def get(user_id, session=None, type=None, limit=',0', text=None, id=None, **kwargs):
+def get(user_id, session, type=None, limit=',0', text=None, id=None, **kwargs):
     user = session.query(Users).get(user_id)
     if not user:
         raise DoesNotExist

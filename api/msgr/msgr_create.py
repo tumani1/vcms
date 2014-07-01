@@ -1,6 +1,6 @@
 import datetime
 from api.users.serializer import mUserShort
-from models import db, MsgrThreads, UsersMsgrThreads, MsgrLog, Users
+from models import MsgrThreads, UsersMsgrThreads, MsgrLog, Users
 from utils import need_authorization
 
 

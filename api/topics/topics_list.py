@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from models import Topics
-from db_engine import db
 from models.topics.constants import TOPIC_TYPE
 
 from serializer import mTopicSerializer
@@ -11,7 +10,6 @@ from utils.validation import validate_mLimit
 __all__ = ['get_topics_list']
 
 
-@db
 def get_topics_list(auth_user, session, **kwargs):
     # Params
     params = {

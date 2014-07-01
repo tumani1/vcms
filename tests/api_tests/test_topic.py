@@ -6,10 +6,9 @@ import datetime
 
 from tests.create_test_user import create
 from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
-from db_engine import db, db_connect, create_session
+from utils.connection import db_connect, create_session
 
 
-@db
 def create_topic(session):
     list_topics = [
         Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
@@ -21,7 +20,6 @@ def create_topic(session):
     session.commit()
 
 
-@db
 def create_user_topic(session):
     list_uts = [
         UsersTopics(user_id=1, topic_name="test"),
@@ -33,7 +31,6 @@ def create_user_topic(session):
     session.commit()
 
 
-@db
 def create_cdn(session):
     list_cdn = [
         CDN(name="cdn1", description="test", has_mobile=False, has_auth=False, url="ya.ru", location_regxp="", cdn_type=""),
@@ -44,7 +41,6 @@ def create_cdn(session):
     session.commit()
 
 
-@db
 def create_extras(session):
     list_extras = [
         Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
@@ -59,7 +55,6 @@ def create_extras(session):
     session.commit()
 
 
-@db
 def create_topic_extras(session):
     list_te = [
         ExtrasTopics(extras_id=1, topic_name="test"),
@@ -75,20 +70,20 @@ def create_topic_extras(session):
     session.commit()
 
 
-
 def setUpModule():
     engine = db_connect().connect()
+    session = create_session(bind=engine)
 
     # Create table
     Base.metadata.create_all(bind=engine)
 
     # Fixture
-    create()
-    create_topic()
-    create_user_topic()
-    create_cdn()
-    create_extras()
-    create_topic_extras()
+    create(session)
+    create_topic(session)
+    create_user_topic(session)
+    create_cdn(session)
+    create_extras(session)
+    create_topic_extras(session)
 
     engine.close()
 
@@ -430,7 +425,6 @@ class TopicValuesTestCase(unittest.TestCase):
 
         self.cl = zerorpc.Client(timeout=300)
         self.cl.connect("tcp://127.0.0.1:4242")
-
 
     def test_echo(self):
         topic = "test"
