@@ -20,3 +20,21 @@ class Media(Base):
     release_date = Column(DateTime, nullable=True)
     poster = Column(Integer, nullable=True)
     duration = Column(Integer, nullable=True)
+
+
+    @classmethod
+    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None):
+        query = session.query(cls)
+
+        if not id is None:
+            if not isinstance(id, list):
+                id = [id]
+            query = query.filter(cls.id.in_(id))
+
+        if not text is None:
+            query = query.filter(cls.title == text)
+
+        if not releasedate is None:
+            query = query.filter(cls.release_date == releasedate)
+
+        return query

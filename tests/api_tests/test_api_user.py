@@ -3,7 +3,7 @@ import unittest
 from models import Base, SessionToken, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
+from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
 
 
