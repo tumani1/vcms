@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from fabric.api import local
 
 from admin.main import start_admin_application
-from zerorpcserver.server import start_zerorpc_service
+from zerorpcserver.service import start_zerorpc_service
 from models import Base
 from utils.connection import db_connect
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     admin_c.add_argument('--no-debug', dest='debug', action='store_false', help='Run admin without debug mode')
     admin_c.set_defaults(func=start_admin_application, debug=True)
 
-    local_db_reset_c = subparser.add_parser('local_db_reset', help='Сносит БД, создает пользователя и новую БД, добавляет прва пользователю на эту БД')
+    local_db_reset_c = subparser.add_parser('local_db_reset', help='Сносит БД, создает пользователя и новую БД, добавляет права пользователю на эту БД')
     local_db_reset_c.set_defaults(func=local_db_reset)
 
     syncdb_c = subparser.add_parser('syncdb', help='Create tabels')

@@ -40,6 +40,7 @@ class ZeroRpcService(object):
             response = api_method(session=self.session, **Auth_IPC_pack['query_params'])
         except Exception as e:
             print e
+            self.session.rollback()
         finally:
             return response
 
