@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from fabric.api import local
 
 from admin.main import start_admin_application
-from zerorpcserver.service import start_zerorpc_service
+from zerorpcserver.service import make_zerorpc
 from models import Base
 from utils.connection import db_connect
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
-    zerorpc_server_c.set_defaults(func=start_zerorpc_service)
+    zerorpc_server_c.set_defaults(func=make_zerorpc)
 
     options = parser.parse_args()
     dict_opt = vars(options)
