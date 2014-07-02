@@ -8,7 +8,7 @@ from zerorpcserver.service import make_zerorpc
 from models import Base
 from utils.connection import db_connect
 from zerorpcserver.service import ZeroRpcService
-
+from functools import partial
 
 def local_db_reset():
     '''Перезаписать локальную базу из репозитория
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
-    zerorpc_server_c.set_defaults(func=make_zerorpc(ZeroRpcService))
+    zerorpc_server_c.set_defaults(func=partial(make_zerorpc, ZeroRpcService))
 
     options = parser.parse_args()
     dict_opt = vars(options)
