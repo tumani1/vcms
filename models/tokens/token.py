@@ -1,4 +1,5 @@
 #coding: utf-8
+
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
 
@@ -10,9 +11,7 @@ import base64
 
 
 def token_gen(token_length):
-    def get_token():
-        return base64.b64encode(os.urandom(token_length), '00')
-    return get_token
+    return base64.b64encode(os.urandom(token_length), '00')
 
 
 class TokenMixin(Base):
