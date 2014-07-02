@@ -1,3 +1,4 @@
+#!/bin/bash
 for e in $(nosetests -v --collect-only $1 2>&1 | pyp "p.split('(')[1].split(')')[0]|list(set(pp))|p|'.'.join(p.split('.')[:-1]) +':'+p.split('.')[-1]");
    do
     echo "Running nosetests " $e
