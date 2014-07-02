@@ -14,6 +14,6 @@ class UsersMedia(Base):
     liked     = Column(DateTime)
     playlist  = Column(DateTime)
     play_pos  = Column(Integer)
-    watched   = Column(Integer)
+    watched   = Column(DateTime)
 
 
