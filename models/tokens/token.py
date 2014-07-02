@@ -2,9 +2,8 @@
 
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-
+from functools import partial
 from models import Base
-
 import datetime
 import os
 import base64
@@ -29,7 +28,7 @@ class TokenMixin(Base):
 
     @declared_attr
     def token(cls):
-        return Column('token', String(64), default=token_gen(cls.token_length), unique=True)
+        return Column('token', String(64), default=partial(token_gen, cls.token_length), unique=True)
 
     @declared_attr
     def created(cls):

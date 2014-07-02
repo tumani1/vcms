@@ -24,13 +24,11 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
 
     def test_echo_get(self):
         resp = self.req_sess.get(self.fullpath+'/test/echo?message=hello')
-        print(resp)
         self.assertEqual(resp.json(), {'message': 'hello'})
 
     def test_echo_put(self):
         data = {'message': 'hello'}
         resp = self.req_sess.put(self.fullpath+'/test/echo', data=data)
-        print(resp)
         self.assertEqual(resp.json(), data)
 
     def test_ws_echo_get(self):
