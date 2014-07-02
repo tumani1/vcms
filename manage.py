@@ -7,6 +7,7 @@ from admin.main import start_admin_application
 from zerorpcserver.service import make_zerorpc
 from models import Base
 from utils.connection import db_connect
+from zerorpcserver.service import ZeroRpcService
 
 
 def local_db_reset():
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
-    zerorpc_server_c.set_defaults(func=make_zerorpc)
+    zerorpc_server_c.set_defaults(func=make_zerorpc(ZeroRpcService))
 
     options = parser.parse_args()
     dict_opt = vars(options)
