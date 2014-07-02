@@ -2,7 +2,7 @@ global
     log /dev/log  haproxy.vsevi.com local0
 
     chroot /var/lib/haproxy
-    stats socket /tmp/haproxy
+    stats socket /var/run/haproxy.stat mode 777
 
     # Пользователь и группа, под которыми будет работать процесс haproxy
     user haproxy
@@ -14,12 +14,11 @@ global
     # Запускаемый процесс будет форкаться в бэкграунд
     daemon
 
-
 defaults
     log  global
     mode tcp
 
-    # Включаем логирование http-запросов
+    # Включаем логирование tcp-запросов
     option    tcplog
 
     # Не логируем пустые соединения
@@ -37,7 +36,6 @@ defaults
     errorfile 503 /etc/haproxy/errors/503.http
     errorfile 504 /etc/haproxy/errors/504.http
 
-
 listen zerorpc 0.0.0.0:1111
     # Режим работы
     mode tcp
@@ -45,13 +43,20 @@ listen zerorpc 0.0.0.0:1111
     # Опции
     option tcplog
 
+    # Тип балансировки
     balance roundrobin
-    retries 1
 
-    # Задаём максимальное количество одновременных подключений. При превышении этого значения новые соединения не устанавливаются
-    maxconn 16000
+    # Количество попыток
+    retries 3
+
+    # Задаём максимальное количество одновременных подключений.
+    # При превышении этого значения новые соединения не устанавливаются
+    maxconn 20000
 
     # Группа серверов
-    server backend_a 0.0.0.0:4242
-    server backend_b 0.0.0.0:4243
-    server backend_c 0.0.0.0:4244
+    default_backend zeronode_app
+
+backend zeronode_app
+    server backend_4245 0.0.0.0:4245
+    server backend_4246 0.0.0.0:4246
+    server backend_4247 0.0.0.0:4247
