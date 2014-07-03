@@ -5,12 +5,12 @@ from models import GlobalToken
 from utils.exceptions import NotAuthorizedException
 
 
-def post(user_id, email, password, session=None):
+def post(auth_user, session, email, password):
 
-    user = session.query(Users).filter(email=email)
+    user = session.query(Users).filter(Users.email==email)
 
     if verify_password(password, user.password):
-        return {'token': GlobalToken.generate_token(user_id, session)}
+        return {'token': GlobalToken.generate_token(user.id, session)}
     else:
         raise NotAuthorizedException
     
