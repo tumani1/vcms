@@ -6,6 +6,13 @@ postgresql:
   port: 5432
   database: next_tv
 
+mongodb:
+  db: next_tv
+  username: admin
+  password: admin
+  host: 127.0.0.1
+  port: !!int "27017"
+
 test:
   drivername: postgresql+psycopg2
   username: pgadmin

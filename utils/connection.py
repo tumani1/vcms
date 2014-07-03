@@ -1,5 +1,7 @@
 # coding: utf-8
 from settings import DEBUG, DATABASE
+
+from mongoengine import connect
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -21,3 +23,9 @@ def create_session(**kwargs):
 def get_session(**kwargs):
     engine = db_connect()
     return create_session(bind=engine, expire_on_commit=False)
+
+
+def mongo_connect(**kwargs):
+    mongo_settings = DATABASE['mongodb']
+    mongo_settings.update(kwargs)
+    return connect(**mongo_settings)
