@@ -1,34 +1,19 @@
 # coding: utf-8
+
 from api import routes
 from api import authorize
-from utils.connection import create_session, db_connect
 
-import zerorpc
-import yaml
-from raven import Client
-from settings import CONFIG_PATH, DEBUG
-from os.path import join
-
-
-def raven_report(func):
-    if DEBUG:
-        return func
-    else:
-        client = Client('http://5aec720be5594c3e8c4e456ec8f8523a:6d461d2eecce47c281c052cff0ec8a63@sentry.aaysm.com/3')
-
-        def rvwrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception:
-                client.captureException()
-        return rvwrapper
+from utils.connection import create_session, db_connect, mongo_connect
+from utils.service import make_zerorpc, raven_report
 
 
 class ZeroRpcService(object):
 
     def __init__(self):
         self.connect = db_connect()
+        self.mongodb_session = mongo_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
+
 
     @raven_report
     def route(self, IPC_pack):
@@ -48,19 +33,6 @@ class ZeroRpcService(object):
 
         return response
 
-    def __del__(self):
-        self.connect.dispose()
-
-
-def start_zerorpc_service():
-    with open(join(CONFIG_PATH, 'zerorpc_service.yaml')) as conf:
-        service = yaml.safe_load(conf)
-
-    server = zerorpc.Server(ZeroRpcService())
-    server.bind("{schema}://{host}:{port}".format(**service))
-    print("zerorpc server runnig on {host}:{port}".format(**service))
-    server.run()
-
 
 if __name__ == '__main__':
-    start_zerorpc_service()
+    make_zerorpc(ZeroRpcService)
