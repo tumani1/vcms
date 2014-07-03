@@ -42,6 +42,10 @@ class DefaultSerializer(object):
         if instance is None:
             raise ValueError('instance should be a queryset or other iterable with many=True')
 
+    # @classmethod
+    # @property
+    # def schema(cls):
+    #     return cls.__read_fields
 
     @property
     def data(self):
@@ -54,7 +58,6 @@ class DefaultSerializer(object):
                 self._data = self.to_native(obj)
 
         return self._data
-
 
     def to_native(self, obj):
         result = self._dict_class()
@@ -70,10 +73,11 @@ class DefaultSerializer(object):
 
         return result
 
+
 def sanitize_datetime(datadict):
 
     answer = {}
-    for key,value in datadict.items():
+    for key, value in datadict.items():
 
         if type(value) is datetime.datetime:
             answer[key] = time.mktime(value.timetuple())
@@ -86,8 +90,8 @@ def sanitize_datetime(datadict):
         
         
 def serialize(func):
-    def wrapper(*args,**kwargs):
-        result = func(*args,**kwargs)
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
         assert type(result) is dict
         return sanitize_datetime(result)
     return wrapper

@@ -9,6 +9,8 @@ from api.media_unit import routing as media_unit_routing
 from api.test import routes as test_routing
 from api.user import routing as user_routing
 from api.auth import auth
+from api.msgr import routing as msgr_routing
+from api.content import routing as content_routes
 
 from models import SessionToken, GlobalToken
 
@@ -20,7 +22,9 @@ routes = {
     'topics': topics_routing,
     'persons': persons_routing,
     'test': test_routing,
-    'auth': auth
+    'auth': auth,
+    'msgr': msgr_routing,    
+    'content': content_routes,
 }
 
 

@@ -1,4 +1,6 @@
 # coding: utf-8
+import time
+
 from m_users_short import mUserShort
 
 __all__ = ['mUser']
@@ -19,10 +21,10 @@ class mUser(mUserShort):
     }
 
     def transform_lastvisit(self, obj):
-        return obj.last_visit
+        return time.mktime(obj.last_visit.timetuple())
 
     def transform_regdate(self, obj):
-        return obj.created
+        return time.mktime(obj.created.timetuple())
 
     def transform_city(self, obj):
         return obj.city.name

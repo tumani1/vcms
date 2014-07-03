@@ -28,7 +28,7 @@ class mUserShort(DefaultSerializer):
         return obj.person.id
 
     def transform_relation(self, obj):
-        return UsersRels.get_reletion_status(self.user, obj.id, self.session)
+        return UsersRels.get_reletion_status(self.user.id, obj.id, self.session)
 
     def to_native(self, obj):
         if obj.person:

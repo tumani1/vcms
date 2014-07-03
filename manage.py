@@ -10,11 +10,13 @@ from utils.connection import db_connect
 from zerorpcserver.service import ZeroRpcService
 from functools import partial
 
+
 def local_db_reset():
     '''Перезаписать локальную базу из репозитория
     '''
     local('''echo "DROP DATABASE IF EXISTS next_tv;" | sudo  sudo -u postgres psql''')
     local('''echo "CREATE USER pgadmin WITH PASSWORD 'qwerty'; CREATE DATABASE next_tv; GRANT ALL PRIVILEGES ON DATABASE next_tv to pgadmin;" | sudo  sudo -u postgres psql''')
+
 
 def delete_tables(**options):
     Base.metadata.drop_all(bind=db_connect())

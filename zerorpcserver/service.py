@@ -3,7 +3,7 @@
 from api import routes
 from api import authorize
 
-from utils.connection import create_session, db_connect
+from utils.connection import create_session, db_connect, mongo_connect
 from utils.service import make_zerorpc, raven_report
 
 
@@ -11,6 +11,7 @@ class ZeroRpcService(object):
 
     def __init__(self):
         self.connect = db_connect()
+        self.mongodb_session = mongo_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
 
 
