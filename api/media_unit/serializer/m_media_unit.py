@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from utils.serializer import DefaultSerializer
-import time
+from utils.date_converter import detetime_to_unixtime as convert_date
 
 __all__ = ['mMediaUnitsSerializer']
 
@@ -38,10 +38,10 @@ class mMediaUnitsSerializer(DefaultSerializer):
         return instance.description
 
     def transform_releasedate(self, instance, **kwargs):
-        return self.datetime_to_unixtime(instance.release_date)
+        return convert_date(instance.release_date)
 
     def transform_enddate(self, instance, **kwargs):
-        return self.datetime_to_unixtime(instance.end_date)
+        return convert_date(instance.end_date)
 
     def transform_batch(self, instance, **kwargs):
         return instance.batch
@@ -57,10 +57,7 @@ class mMediaUnitsSerializer(DefaultSerializer):
         user_media_unit = instance.user_media_units
         if self.is_auth and not user_media_unit is None:
             if user_media_unit.subscribed:
-                relation.update(subscribed=self.datetime_to_unixtime(user_media_unit.subscribed))
+                relation.update(subscribed=convert_date(user_media_unit.subscribed))
             if user_media_unit.watched:
-                relation.update(watched=self.datetime_to_unixtime(user_media_unit.watched))
+                relation.update(watched=convert_date(user_media_unit.watched))
         return relation
-
-    def datetime_to_unixtime(self, datetime):
-        return time.mktime(datetime.timetuple())

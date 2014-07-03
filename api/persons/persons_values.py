@@ -7,9 +7,9 @@ from utils.validation import validate_list_string, validate_int
 __all__ = ['get_person_values']
 
 
-def get_person_values(auth_user, person, session, **kwargs):
+def get_person_values(auth_user, id, session, **kwargs):
     # Validation person value
-    person = validate_int(person, min_value=1)
+    person = validate_int(id, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 

@@ -70,7 +70,7 @@ class Persons(Base):
         # Set filter by topic
         if not topic is None:
             query = query.join(PersonsTopics).\
-                add_columns(PersonsTopics.topic_name, PersonsTopics.role, PersonsTopics.type).\
+                add_columns(PersonsTopics.role, PersonsTopics.type).\
                 filter(PersonsTopics.topic_name == topic)
 
             # Set filter by type

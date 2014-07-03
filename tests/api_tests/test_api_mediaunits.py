@@ -8,8 +8,8 @@ from tests.api_tests.fixtures import create_media_units, create_topic, create
 
 def setUpModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
+
     # Create table
     Base.metadata.create_all(bind=engine)
 

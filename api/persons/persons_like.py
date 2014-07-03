@@ -11,9 +11,9 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 
 
 @need_authorization
-def get_like(auth_user, person, session, **kwargs):
+def get_like(auth_user, id, session, **kwargs):
     # Validation person value
-    person = validate_int(person, min_value=1)
+    person = validate_int(id, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
@@ -32,9 +32,9 @@ def get_like(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-def post_like(auth_user, person, session, **kwargs):
+def post_like(auth_user, id, session, **kwargs):
     # Validation person value
-    person = validate_int(person, min_value=1)
+    person = validate_int(id, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
@@ -58,9 +58,9 @@ def post_like(auth_user, person, session, **kwargs):
 
 
 @need_authorization
-def delete_like(auth_user, person, session, **kwargs):
+def delete_like(auth_user, id, session, **kwargs):
     # Validation person value
-    person = validate_int(person, min_value=1)
+    person = validate_int(id, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 
