@@ -4,5 +4,6 @@ from users_rels import UsersRels
 from users_values import UsersValues
 from users_social import UsersSocial
 from users_extras import UsersExtras
+from users_stream import UsersStream
 
-__all__ = ['Users', 'UsersValues', 'UsersRels', 'UsersSocial', 'UsersExtras']
+__all__ = ['Users', 'UsersValues', 'UsersRels', 'UsersSocial', 'UsersExtras', 'UsersStream']

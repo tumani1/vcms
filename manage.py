@@ -4,9 +4,11 @@ from argparse import ArgumentParser
 from fabric.api import local
 
 from admin.main import start_admin_application
-from zerorpcserver.service import start_zerorpc_service
+from zerorpcserver.service import make_zerorpc
 from models import Base
 from utils.connection import db_connect
+from zerorpcserver.service import ZeroRpcService
+from functools import partial
 
 
 def local_db_reset():
@@ -14,6 +16,7 @@ def local_db_reset():
     '''
     local('''echo "DROP DATABASE IF EXISTS next_tv;" | sudo  sudo -u postgres psql''')
     local('''echo "CREATE USER pgadmin WITH PASSWORD 'qwerty'; CREATE DATABASE next_tv; GRANT ALL PRIVILEGES ON DATABASE next_tv to pgadmin;" | sudo  sudo -u postgres psql''')
+
 
 def delete_tables(**options):
     Base.metadata.drop_all(bind=db_connect())
@@ -52,7 +55,7 @@ if __name__ == '__main__':
     reset_c.set_defaults(func=db_reset)
 
     zerorpc_server_c = subparser.add_parser('zerorpcserver', help='Start ZeroRpcServer')
-    zerorpc_server_c.set_defaults(func=start_zerorpc_service)
+    zerorpc_server_c.set_defaults(func=partial(make_zerorpc, ZeroRpcService))
 
     options = parser.parse_args()
     dict_opt = vars(options)
