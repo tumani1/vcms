@@ -6,6 +6,7 @@ from models import Base
 from models.media.users_media import UsersMedia
 from models.media.media_in_unit import MediaInUnit
 from models.media.persons_media import PersonsMedia
+from models.persons.persons import Persons
 from models.media.media_units import MediaUnits
 from models.media.media_locations import MediaLocations
 
@@ -85,5 +86,20 @@ class Media(Base):
         return query
 
     @classmethod
-    def get_persons_by_media_id(cls, user, session, id, **kwargs):
-        pass
+    def get_persons_by_media_id(cls, user, session, id, limit=None, is_online=None, **kwargs):
+        person_ids = []
+        persons = session.query(PersonsMedia.person_id).filter(PersonsMedia.media_id.in_(id)).all()
+        for person in persons:
+            person_ids.append(person[0])
+        query = Persons.get_persons_list(session=session, id=person_ids, limit=limit, is_online=is_online)
+        query = query.join(PersonsMedia).add_columns(PersonsMedia.role, PersonsMedia.type)
+        return query
+
+    @classmethod
+    def get_units_by_media_id(cls, user, session, id, **kwargs):
+        media_unit_ids = []
+        media_units = session.query(MediaUnits.id).join(MediaInUnit).filter(MediaInUnit.media_id == id).all()
+        for mu in media_units:
+            media_unit_ids.append(mu[0])
+        query = MediaUnits.get_media_units_list(user, session, media_unit_ids)
+        return query

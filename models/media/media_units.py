@@ -38,7 +38,7 @@ class MediaUnits(Base):
         query = cls.tmpl_for_media_units(user, session)
 
         if not id is None:
-            query = query.filter(cls.id == id)
+            query = query.filter(cls.id.in_(id))
 
         if not text is None:
             query = query.filter(cls.title == text)

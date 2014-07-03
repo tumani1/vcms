@@ -4,6 +4,7 @@ from utils.serializer import DefaultSerializer
 
 from models.users.users import Users
 from models.persons.persons_users import UsersPersons
+from api.users.serializer import mUser
 
 __all__ = ['mPersonRoleSerializer']
 
@@ -22,7 +23,7 @@ class mPersonRoleSerializer(DefaultSerializer):
 
 
     def __init__(self, **kwargs):
-        keys = ['person', 'topic_name', 'role', 'type']
+        keys = ['person', 'role', 'type']
         kwargs['instance'] = [dict(zip(keys, item)) for item in kwargs['instance']]
 
         super(mPersonRoleSerializer, self).__init__(**kwargs)
@@ -76,29 +77,31 @@ class mPersonRoleSerializer(DefaultSerializer):
 
 
     def transform_type(self, instance, **kwargs):
-        return instance['type'].code
-
+        return instance['type'].code if not instance['type'] is None else ''
 
     def transform_user(self, instance, **kwargs):
-        user_id = instance.user_id
-        if not user_id is None:
-            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
-            if user_person:
-                pass
-                # return UserSerializer(user_person['user']).data
+        temp = instance['person']
+
+        if not temp is None:
+            user_id = temp.user_id
+            if not user_id is None:
+                return mUser(instance=temp.users, session=self.session, user=self.user).data
 
         return {}
 
 
     def transform_relation(self, instance, **kwargs):
-        user_id = instance.user_id
-        if self.is_auth and not user_id is None:
-            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
+        temp = instance['person']
 
-            if user_person:
-                return {
-                    'liked': UsersPersons.cls_check_liked(user_person['liked']),
-                    'subscribed': UsersPersons.cls_check_subscribed(user_person['subscribed']),
-                }
+        if not temp is None:
+            user_id = temp.user_id
+            if self.is_auth and not user_id is None:
+                user_person = self.up.get("{0}-{1}".format(temp.user_id, temp.id), False)
+
+                if user_person:
+                    return {
+                        'liked': UsersPersons.cls_check_liked(user_person['liked']),
+                        'subscribed': UsersPersons.cls_check_subscribed(user_person['subscribed']),
+                    }
 
         return {}
