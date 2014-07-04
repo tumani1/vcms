@@ -8,9 +8,9 @@ from utils.validation import validate_mLimit, validate_list_int, validate_int
 __all__ = ['get_person_extars']
 
 
-def get_person_extars(auth_user, person, session, **kwargs):
+def get_person_extars(auth_user, id, session, **kwargs):
     # Validation person value
-    person = validate_int(person, min_value=1)
+    person = validate_int(id, min_value=1)
     if type(person) == Exception:
         return {'code': 404}
 

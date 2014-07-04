@@ -8,8 +8,8 @@ from tests.api_tests.fixtures import create_media_units, create_topic, create
 
 def setUpModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
+
     # Create table
     Base.metadata.create_all(bind=engine)
 
@@ -49,10 +49,10 @@ class MediaUnitsTestCase(unittest.TestCase):
             'description': 'test2',
             'prev': 1,
             'next': 3,
-            'releasedate': 1325361600.0,
-            'enddate': 1391198400.0,
+            'releasedate': 1325376000.0,
+            'enddate': 1391212800.0,
             'batch': 'batch1',
-            'relation': {'watched': 1388520000.0},
+            'relation': {'watched': 1388534400.0},
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -72,8 +72,8 @@ class MediaUnitsTestCase(unittest.TestCase):
             'description': 'test3',
             'prev': 2,
             'next': None,
-            'releasedate': 1356984000.0,
-            'enddate': 1391198400.0,
+            'releasedate': 1356998400.0,
+            'enddate': 1391212800.0,
             'batch': 'batch1',
             'relation': {},
         }
@@ -95,10 +95,10 @@ class MediaUnitsTestCase(unittest.TestCase):
             'description': 'test2',
             'prev': 1,
             'next': 3,
-            'releasedate': 1325361600.0,
-            'enddate': 1391198400.0,
+            'releasedate': 1325376000.0,
+            'enddate': 1391212800.0,
             'batch': 'batch1',
-            'relation': {'watched': 1388520000.0},
+            'relation': {'watched': 1388534400.0},
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -118,10 +118,10 @@ class MediaUnitsTestCase(unittest.TestCase):
             'description': 'test1',
             'prev': None,
             'next': 2,
-            'releasedate': 1293829200.0,
-            'enddate': 1391198400.0,
+            'releasedate': 1293840000.0,
+            'enddate': 1391212800.0,
             'batch': 'batch1',
-            'relation': {'watched': 1388520000.0},
+            'relation': {'watched': 1388534400.0},
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp[0], temp)

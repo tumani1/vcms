@@ -3,6 +3,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT
 from models import Base
 
+
 class MediaLocations(Base):
     __tablename__ = 'media_locations'
     id = Column(Integer, primary_key=True)

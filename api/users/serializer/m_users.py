@@ -21,7 +21,7 @@ class mUser(mUserShort):
     }
 
     def transform_lastvisit(self, obj):
-        return time.mktime(obj.last_visit.timetuple())
+        return time.mktime(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
 
     def transform_regdate(self, obj):
         return time.mktime(obj.created.timetuple())
