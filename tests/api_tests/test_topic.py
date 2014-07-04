@@ -78,12 +78,12 @@ def setUpModule():
     Base.metadata.create_all(bind=engine)
 
     # Fixture
-    # create(session)
-    # create_topic(session)
-    # create_user_topic(session)
-    # create_cdn(session)
-    # create_extras(session)
-    # create_topic_extras(session)
+    create(session)
+    create_topic(session)
+    create_user_topic(session)
+    create_cdn(session)
+    create_extras(session)
+    create_topic_extras(session)
 
     engine.close()
 
