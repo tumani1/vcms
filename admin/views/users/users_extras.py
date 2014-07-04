@@ -1,9 +1,9 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.users import UsersExtras
 
 
-class UsersExtrasModelView(BaseModelView):
+class UsersExtrasModelView(SqlAlModelView):
     model = UsersExtras
     category = u'Пользователи'
     name = u'Дополнительные материалы'

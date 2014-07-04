@@ -1,10 +1,10 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 
 from models.contents import Countries
 
 
-class CountryModelView(BaseModelView):
+class CountryModelView(SqlAlModelView):
     model = Countries
     category = u'Локации'
     name = u'Страны'

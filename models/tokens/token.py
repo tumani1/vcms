@@ -57,8 +57,8 @@ class TokenMixin(Base):
             return gt.token
 
         else:
-            gt, = qr
-            gt.token = cls.token_gen(cls.token_length)
+            gt = qr
+            gt.token = token_gen(cls.token_length)
             session.add(gt)
             session.commit()
             return gt.token

@@ -1,12 +1,12 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
 from models.persons import Persons
 from models.persons.constants import APP_PERSONS_STATUS_TYPE
 
 
-class PersonsModelView(BaseModelView):
+class PersonsModelView(SqlAlModelView):
     model = Persons
     category = u'Персоны'
     name = u'Персоны'

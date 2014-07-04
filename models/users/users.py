@@ -21,12 +21,12 @@ class Users(Base):
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
-    password      = Column(String(128), nullable=False)
+    password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
     city_id       = Column(Integer, ForeignKey('cities.id'), nullable=False)
     city          = relationship("Cities", backref='users')
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
-    email         = Column(EmailType())
+    email         = Column(EmailType(), unique=True)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
     bio           = Column(Text)
@@ -109,7 +109,6 @@ class Users(Base):
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
-
 
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)

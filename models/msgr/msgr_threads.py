@@ -15,5 +15,17 @@ class MsgrThreads(Base):
     # msg_logs           = relationship('MsgrLog', backref='msgr_threads')
     # users_msgr_threads = relationship("UsersMsgrThreads", backref='msgr_threads')
 
+    @classmethod
+    def tmpl_for_msgr_threads(cls, session):
+        query = session.query(cls)
+
+        return query
+
+    @classmethod
+    def get_msgr_threads_by_id(cls, session, msgr_threads_id):
+        query = cls.tmpl_for_msgr_threads(session).filter_by(id=msgr_threads_id)
+
+        return query
+
     def __repr__(self):
         return "<MsgrThreads([{}] {})>".format(self.id, self.msg_cnt)

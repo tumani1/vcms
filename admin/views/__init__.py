@@ -1,8 +1,5 @@
 # coding: utf-8
-
 from flask.ext.admin import Admin
-
-from utils.connection import db_connect, create_session
 
 from users import UsersRelsModelView, UsersModelView, UsersValuesModelView,\
     UsersSocialModelView, UsersExtrasModelView
@@ -14,74 +11,79 @@ from topics import TopicsModelView, PersonsTopicsModelView, UsersTopicsModelView
 from cdn import CdnModelView
 from chats import ChatsModelView, UsersChatModelView
 from contents import CountryModelView, CitieModelView
+from stream import StreamModelView
 
 admin = Admin(name='NextTV')
-
-session = create_session(bind=db_connect(), expire_on_commit=False)
 
 ###############################################################################
 # Users
 
-admin.add_view(UsersModelView(session))
-admin.add_view(UsersRelsModelView(session))
-admin.add_view(UsersSocialModelView(session))
-admin.add_view(UsersValuesModelView(session))
-admin.add_view(UsersExtrasModelView(session))
-admin.add_view(UsersTopicsModelView(session))
+admin.add_view(UsersModelView())
+admin.add_view(UsersRelsModelView())
+admin.add_view(UsersSocialModelView())
+admin.add_view(UsersValuesModelView())
+admin.add_view(UsersExtrasModelView())
+admin.add_view(UsersTopicsModelView())
 ###############################################################################
 
 ###############################################################################
 # Token
 
-admin.add_view(SessionTokenModelView(session))
-admin.add_view(GlobalTokenModelView(session))
+admin.add_view(SessionTokenModelView())
+admin.add_view(GlobalTokenModelView())
 ###############################################################################
 
 ###############################################################################
 # Persons
 
-admin.add_view(PersonsModelView(session))
-admin.add_view(PersonsUsersModelView(session))
-admin.add_view(PersonsValuesModelView(session))
-admin.add_view(PersonsExtrasModelView(session))
-admin.add_view(PersonsTopicsModelView(session))
+admin.add_view(PersonsModelView())
+admin.add_view(PersonsUsersModelView())
+admin.add_view(PersonsValuesModelView())
+admin.add_view(PersonsExtrasModelView())
+admin.add_view(PersonsTopicsModelView())
 ###############################################################################
 
 ###############################################################################
 # Extras
 
-admin.add_view(ExtrasModelView(session))
+admin.add_view(ExtrasModelView())
 ###############################################################################
 
 ###############################################################################
 # Scheme
 
-admin.add_view(SchemeModelView(session))
+admin.add_view(SchemeModelView())
 ###############################################################################
 
 ###############################################################################
 # Topics
 
-admin.add_view(TopicsModelView(session))
-admin.add_view(TopicsExtrasModelView(session))
+admin.add_view(TopicsModelView())
+admin.add_view(TopicsExtrasModelView())
 ###############################################################################
 
 ###############################################################################
 # CDN
 
-admin.add_view(CdnModelView(session))
+admin.add_view(CdnModelView())
+###############################################################################
+
+###############################################################################
+# Stream
+
+admin.add_view(StreamModelView())
 ###############################################################################
 
 ###############################################################################
 # Chats
 
-admin.add_view(ChatsModelView(session))
-admin.add_view(UsersChatModelView(session))
+admin.add_view(ChatsModelView())
+admin.add_view(UsersChatModelView())
 ###############################################################################
 
 ###############################################################################
 # Contents
 
-admin.add_view(CitieModelView(session))
-admin.add_view(CountryModelView(session))
+admin.add_view(CitieModelView())
+admin.add_view(CountryModelView())
 ###############################################################################
