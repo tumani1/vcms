@@ -9,11 +9,11 @@ phonenumbers
 passlib
 zerorpc
 raven
-wtforms-html5
 fabric
 nose
 requests
 websocket-client
 mongoengine
 blinker
-flask-mongoengine
+git+git://github.com/MongoEngine/flask-mongoengine.git
+wtforms-html5
