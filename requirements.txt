@@ -1,5 +1,5 @@
 flask
-flask-admin
+git+git://github.com/mrjoes/flask-admin.git
 SQLAlchemy
 sqlalchemy-utils
 pyyaml
