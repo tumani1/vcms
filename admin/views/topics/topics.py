@@ -1,12 +1,12 @@
 # coding: utf-8
 from flask.ext.admin.form import fields
 
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.topics import Topics
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 
-class TopicsModelView(BaseModelView):
+class TopicsModelView(SqlAlModelView):
     model = Topics
     category = u'Топики'
     name = u'Топик'

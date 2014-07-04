@@ -1,5 +1,5 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 from wtforms.fields import PasswordField, StringField
 from wtforms_html5 import EmailField
@@ -10,7 +10,7 @@ from models.users import Users
 from models.users.constants import APP_USERS_TYPE_GENDER
 
 
-class UsersModelView(BaseModelView):
+class UsersModelView(SqlAlModelView):
     model = Users
     category = u'Пользователи'
     name = u'Пользователи'
@@ -38,8 +38,8 @@ class UsersModelView(BaseModelView):
                          password=u'Пароль', )
 
     column_list = ('id', 'firstname', 'lastname', 'gender', 'city', 'address',
-                   'password', 'bio', 'birthdate', 'phone', 'time_zone',
-                   'created', 'last_visit')
+                   'bio', 'birthdate', 'phone', 'time_zone', 'created',
+                   'last_visit', 'email')
 
     column_choices = dict(
         gender=APP_USERS_TYPE_GENDER,

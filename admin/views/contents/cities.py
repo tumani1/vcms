@@ -1,12 +1,12 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
 from models.contents import Cities
 from pytz import common_timezones
 
 
-class CitieModelView(BaseModelView):
+class CitieModelView(SqlAlModelView):
     model = Cities
     category = u'Локации'
     name = u'Города'

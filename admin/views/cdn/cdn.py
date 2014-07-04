@@ -1,11 +1,11 @@
 # coding: utf-8
 from wtforms.fields import StringField
 
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.cdn import CDN
 
 
-class CdnModelView(BaseModelView):
+class CdnModelView(SqlAlModelView):
     model = CDN
 
     category = u'CDN'

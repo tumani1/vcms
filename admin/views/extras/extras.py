@@ -1,12 +1,12 @@
 # coding: utf-8
 from flask.ext.admin.form import fields
 
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.extras import Extras
 from models.extras.constants import APP_EXTRA_TYPE
 
 
-class ExtrasModelView(BaseModelView):
+class ExtrasModelView(SqlAlModelView):
     model = Extras
 
     category = u'Дополнительно'

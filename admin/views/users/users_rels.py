@@ -1,12 +1,12 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE
 
 
-class UsersRelsModelView(BaseModelView):
+class UsersRelsModelView(SqlAlModelView):
     model = UsersRels
     category = u'Пользователи'
     name = u'Отношения пользователей'

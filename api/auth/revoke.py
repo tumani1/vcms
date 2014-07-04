@@ -7,7 +7,7 @@ def revoke(auth_user, x_token, token, session):
     Revoking access for users Global Token by deleting it
     '''
 
-    gt = session.query(GlobalToken).filter(token = token).first()
+    gt = session.query(GlobalToken).filter(token=token).first()
 
     session.delete(gt)
     session.commit()

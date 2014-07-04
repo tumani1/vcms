@@ -28,7 +28,7 @@ class mStraemElement(DefaultSerializer):
         return obj.unixtime
 
     def transform_id(self, obj):
-        return str(obj.id)
+        return obj.id
 
     def transform_user(self, obj):
         ret_value = {}

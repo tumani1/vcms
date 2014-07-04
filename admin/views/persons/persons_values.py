@@ -1,11 +1,11 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.persons import PersonsValues
 
 from wtforms.fields import TextField
 
 
-class PersonsValuesModelView(BaseModelView):
+class PersonsValuesModelView(SqlAlModelView):
     model = PersonsValues
     category = u'Персоны'
     name = u'Дополнительная информация'

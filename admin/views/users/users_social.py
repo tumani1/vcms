@@ -1,12 +1,12 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
 from models.users import UsersSocial
 from models.users.constants import APP_USERSOCIAL_TYPE
 
 
-class UsersSocialModelView(BaseModelView):
+class UsersSocialModelView(SqlAlModelView):
     model = UsersSocial
     category = u'Пользователи'
     name = u'Социальные сети'
