@@ -6,10 +6,11 @@ from constant import APP_STREAM_TYPE
 
 
 class Stream(Document):
+    id          = IntField(verbose_name=u'ID', min_value=1, primary_key=True)
     created     = DateTimeField(verbose_name=u'Дата создания', default=datetime.datetime.utcnow)
     type        = StringField(verbose_name=u'Тип', max_length=10, choices=APP_STREAM_TYPE, )
-    object     = DictField(verbose_name=u'Объект')
-    text       = StringField(verbose_name=u'Текст', default=None)
+    object      = DictField(verbose_name=u'Объект')
+    text        = StringField(verbose_name=u'Текст', default=None)
     user_id     = IntField(verbose_name=u'Пользователь')
     attachments = BinaryField(verbose_name=u'Приложение объекта')
 
@@ -17,6 +18,24 @@ class Stream(Document):
     def pre_save(cls, sender, document, **kwargs):
         if 'created' in kwargs and kwargs['created']:
             document.id = cls.objects.count() + 1
+
+    @classmethod
+    def mLimitId(cls, elements, limit):
+        if limit:
+            if limit['id_dwn'] != 0 and limit['id_top'] != 0:
+                elements = elements.filter(id__lte=limit['id_top'], id_gte=['id_dwn'])
+            elif limit['id_dwn'] != 0:
+                elements = elements.filter(id_gte=['id_dwn'])
+            else:
+                elements = elements.filter(id_lte=['id_top'])
+            top, down = limit['top'], limit['limit']
+            if top and down:
+                elements = elements[top:down]
+            elif top:
+                elements = elements[top:]
+            else:
+                elements = elements[:down]
+        return elements
 
     def __repr__(self):
         return u'<Stream([{}]:type={},user={})>'.format(self.id, self.type, self.user_id)
