@@ -9,7 +9,7 @@ class UsersMedia(Base):
 
     id        = Column(Integer, primary_key=True)
     media_id  = Column(Integer, ForeignKey('media.id'), nullable=False)
-    user_id   = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    user_id   = Column(Integer, ForeignKey('users.id'), nullable=False)
     views_cnt = Column(Integer)
     liked     = Column(DateTime)
     playlist  = Column(DateTime)

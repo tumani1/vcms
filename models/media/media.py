@@ -103,3 +103,8 @@ class Media(Base):
             media_unit_ids.append(mu[0])
         query = MediaUnits.get_media_units_list(user, session, media_unit_ids)
         return query
+
+    @classmethod
+    def get_users_media_by_media(cls, user,  session, id, **kwargs):
+        users_media = session.query(UsersMedia).filter(and_(UsersMedia.user_id == user.id, UsersMedia.media_id == id)).first()
+        return users_media
