@@ -16,3 +16,4 @@ requests
 websocket-client
 mongoengine
 blinker
+flask-mongoengine
