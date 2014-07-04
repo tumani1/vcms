@@ -1,11 +1,11 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 
 from models.chats import UsersChat
 from models.chats.constants import APP_USERSCHAT_TYPE
 
 
-class UsersChatModelView(BaseModelView):
+class UsersChatModelView(SqlAlModelView):
     model = UsersChat
     category = u'Чат'
     name = u'Чаты пользователя'

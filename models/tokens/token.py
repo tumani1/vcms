@@ -48,17 +48,17 @@ class TokenMixin(Base):
         '''
         (Re)Generate token for given user_id
         '''
-        found_user = session.query(cls).filter(cls.user_id == user_id).first()
+        qr = session.query(cls).filter(cls.user_id == user_id).first()
 
-        if found_user is None:
-            token_object = cls(user_id=user_id)
-            session.add(token_object)
+        if qr is None:
+            gt = cls(user_id=user_id)
+            session.add(gt)
             session.commit()
-            return token_object.token
+            return gt.token
 
         else:
-            token_object, = found_user
-            token_object.token = cls.token_gen(cls.token_length)
-            session.add(token_object)
+            gt = qr
+            gt.token = token_gen(cls.token_length)
+            session.add(gt)
             session.commit()
-            return token_object.token
+            return gt.token

@@ -1,10 +1,10 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 
 from models.chats import Chats
 
 
-class ChatsModelView(BaseModelView):
+class ChatsModelView(SqlAlModelView):
     model = Chats
     category = u'Чат'
     name = u'Чаты'

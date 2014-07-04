@@ -1,12 +1,12 @@
 # coding: utf-8
 from flask.ext.admin.form import fields
 
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.scheme import Scheme
 from models.scheme.constants import KLASS_TYPE
 
 
-class SchemeModelView(BaseModelView):
+class SchemeModelView(SqlAlModelView):
     model = Scheme
     category = u'Схема'
     name = u'Схема'

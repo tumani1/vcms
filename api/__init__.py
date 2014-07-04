@@ -12,6 +12,7 @@ from api.auth import auth
 from api.msgr import routing as msgr_routing
 from api.media import routing as media_routing
 from api.content import routing as content_routes
+from api.stream import routing as stream_routes
 
 from models import SessionToken, GlobalToken
 
@@ -27,6 +28,7 @@ routes = {
     'media': media_routing,
     'msgr': msgr_routing,    
     'content': content_routes,
+    'stream': stream_routes,
 }
 
 
