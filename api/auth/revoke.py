@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from models import GlobalToken
 
 
@@ -10,5 +11,3 @@ def revoke(auth_user, x_token, token, session, **kwargs):
 
     session.delete(gt)
     session.commit()
-
-    
