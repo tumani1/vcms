@@ -5,12 +5,8 @@ from models.content import Content
 class mContentSerializer(object):
 
     def __init__(self, content):
-        """
-        В content нужно подавать либо экземпляр модели, либо список экземпляров.
-        content проверяется на то, что он - модель/ли Content.
-        """
         if content is None:
-            raise TypeError("attr must be Content instance")
+            raise TypeError("attr must not be None")
 
         self.content = content
         self.is_list = isinstance(content, list)
@@ -21,7 +17,7 @@ class mContentSerializer(object):
                 raise TypeError("list has obj is not Content instance")
         else:
             if not isinstance(content, Content):
-                raise TypeError("content is not Content instance")
+                raise TypeError("attr is not Content instance")
 
     def get_data(self):
         if self.is_list:

@@ -46,7 +46,7 @@ def authorize(IPC_pack, session=None):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
     user = None
     if user_id:
-        user = session.query(Users).filter_by(id=user_id).first()
+        user = session.query(Users).get(user_id)
 
     IPC_pack['query_params'].update({'auth_user': user})
 
