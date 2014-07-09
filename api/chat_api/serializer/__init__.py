@@ -1,1 +1,0 @@
-from m_chat import mChatSerializer

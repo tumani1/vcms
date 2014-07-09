@@ -13,7 +13,7 @@ from api.msgr import routing as msgr_routing
 from api.media import routing as media_routing
 from api.content import routing as content_routes
 from api.stream import routing as stream_routes
-
+from api.chat import routing as chat_routes
 from models import SessionToken, GlobalToken
 
 
@@ -29,6 +29,7 @@ routes = {
     'msgr': msgr_routing,    
     'content': content_routes,
     'stream': stream_routes,
+    'chat': chat_routes
 }
 
 
