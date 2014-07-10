@@ -18,4 +18,3 @@ from extras import *
 from tags import *
 from content import *
 from tokens import *
-from doc_exmp import *
