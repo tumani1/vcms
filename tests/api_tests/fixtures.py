@@ -129,6 +129,7 @@ def create_msgr_threads(session):
     session.add(msgr_threads)
     session.commit()
 
+
 def create_msgr_log(session):
     msgr_log = MsgrLog(msgr_threads_id=1, user_id=1, created=datetime.datetime(2014,1,1,0,0,0,0), text='text')
     session.add(msgr_log)
