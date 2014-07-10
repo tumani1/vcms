@@ -117,4 +117,4 @@ function run_server(host, port) {  // якобы общепринятое пра
 }
 
 var conf = load_conf('node_service.yaml');
-run_server(conf["rest_serv"]["host"], conf["rest_serv"]["port"]);
+run_server(conf["rest_ws_serv"]["host"], conf["rest_ws_serv"]["port"]);

@@ -37,7 +37,7 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
-    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
+    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete, delete-orphan', passive_deletes=True)
     social        = relationship('UsersSocial', backref='user', cascade='all, delete')
     users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
     users_values  = relationship('UsersValues', backref='user', cascade='all, delete')

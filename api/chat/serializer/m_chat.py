@@ -14,4 +14,4 @@ class mChatSerializer(object):
         self.chat = chat
 
     def get_data(self):
-        return dict(id=self.chat.id, title=self.chat.description)
+        return dict(id=self.chat.id, description=self.chat.description)

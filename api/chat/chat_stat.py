@@ -1,3 +1,4 @@
+# coding=utf-8
 from models import Users, SessionToken, Persons, UsersChat
 from api.persons.serializer import mPersonSerializer as mP
 

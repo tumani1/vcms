@@ -3,7 +3,6 @@ import datetime
 from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
-from utils import hash_password
 
 
 def create_media_units(session):
@@ -86,11 +85,11 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test", lastname="Test", password=hash_password.hash_pass('Test'))
+    user = Users(city=city, firstname="Test", lastname="Test", password='Test')
     session.add(user)
     session.commit()
-    user2 = Users(city=city, firstname="Test1", lastname="Test1", password=hash_password.hash_pass('Test1'))
-    user3 = Users(city=city, firstname="Test2", lastname="Test2", password=hash_password.hash_pass('Test2'))
+    user2 = Users(city=city, firstname="Test1", lastname="Test1", password='Test1')
+    user3 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2')
     session.add_all([user2, user3])
     session.commit()
 
