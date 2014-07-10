@@ -1,6 +1,7 @@
 # coding: utf-8
 import datetime
-from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues
+from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues, \
+    UsersMsgrThreads, MsgrThreads, MsgrLog
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils import hash_password
@@ -114,4 +115,22 @@ def create_users_rels(session):
     user_rels1 = UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
     user_rels2 = UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND)
     session.add_all([user_rels1, user_rels2])
+    session.commit()
+
+
+def create_users_msgr_threads(session):
+    users_msgr_threads1 = UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0), last_visit=datetime.datetime(2014,1,1,0,0,0,0), new_msgs=1)
+    users_msgr_threads2 = UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0), last_visit=datetime.datetime(2014,1,1,0,0,0,0), new_msgs=1)
+    session.add_all([users_msgr_threads1, users_msgr_threads2])
+    session.commit()
+
+
+def create_msgr_threads(session):
+    msgr_threads = MsgrThreads(msg_cnt=2)
+    session.add(msgr_threads)
+    session.commit()
+
+def create_msgr_log(session):
+    msgr_log = MsgrLog(msgr_threads_id=1, user_id=1, created=datetime.datetime(2014,1,1,0,0,0,0), text='text')
+    session.add(msgr_log)
     session.commit()
