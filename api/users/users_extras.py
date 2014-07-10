@@ -7,30 +7,34 @@ from utils.exceptions import DoesNotExist
 from utils.validation import validate_mLimit
 
 
-def get(user_id, session, type=None, limit=',0', text=None, id=None, **kwargs):
+def get(user_id, session, **kwargs):
     user = session.query(Users).get(user_id)
     if not user:
         raise DoesNotExist
     query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
-    if not id is None:
-        if isinstance(id, int):
-            id = [id]
-        query = query.filter(Extras.id.in_(id))
-    if not type is None:
-        query = query.filter(Extras.type == type)
-    if not text is None:
-        query = query.filter(func.to_tsvector(Extras.description).match(text))
+    if 'id' in kwargs:
+        if isinstance(kwargs['id'], int):
+            id_ = [kwargs['id']]
+        else:
+            id_ = kwargs['id']
+        query = query.filter(Extras.id.in_(id_))
 
-    limit = validate_mLimit(limit)
-     # Set limit and offset filter
-    if not limit is None:
-        # Set Limit
-        if limit[0]:
-            query = query.limit(limit[0])
+    if 'type' in kwargs:
+        query = query.filter(Extras.type == kwargs['type'])
+    if 'text' in kwargs:
+        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['text']))
 
-        # Set Offset
-        if not limit[0] is None:
-            query = query.offset(limit[1])
+    if 'limit' in kwargs:
+        limit = validate_mLimit(kwargs['limit'])
+         # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if not limit[0] is None:
+                query = query.offset(limit[1])
 
     ret_list = []
     for extra in query:

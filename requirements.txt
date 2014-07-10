@@ -1,5 +1,5 @@
 flask
-flask-admin
+git+git://github.com/mrjoes/flask-admin.git@438b8ecc2a418d75799a2b82a490b3f9f59e5243
 SQLAlchemy
 sqlalchemy-utils
 pyyaml
@@ -9,10 +9,11 @@ phonenumbers
 passlib
 zerorpc
 raven
-wtforms-html5
 fabric
 nose
 requests
 websocket-client
 mongoengine
 blinker
+git+git://github.com/MongoEngine/flask-mongoengine.git@4f7c4c88d4af8b28c6063687bd136e15705f945b
+wtforms-html5

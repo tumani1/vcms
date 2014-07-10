@@ -1,16 +1,14 @@
 # coding: utf-8
-from models import Users
-from utils.hash_password import verify_password
-from models import GlobalToken
+
+from models.users import Users
+from models.tokens import GlobalToken
 from utils.exceptions import NotAuthorizedException
 
 
-def post(user_id, email, password, session=None):
+def post(auth_user, session, email, password, **kwargs):
+    user = session.query(Users).filter(Users.email == email).first()
 
-    user = session.query(Users).filter(email=email)
-
-    if verify_password(password, user.password):
-        return {'token': GlobalToken.generate_token(user_id, session)}
+    if user.password == str(password):
+        return {'token': GlobalToken.generate_token(user.id, session)}
     else:
         raise NotAuthorizedException
-    

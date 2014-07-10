@@ -1,6 +1,5 @@
 # coding: utf-8
 from models import Countries, Cities, Users
-from utils import hash_password
 
 
 def create(session):
@@ -12,7 +11,7 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test", lastname="Test", password=hash_password.hash_pass('Test'))
+    user = Users(city=city, firstname="Test", lastname="Test", password='Test')
     session.add(user)
     session.commit()
 

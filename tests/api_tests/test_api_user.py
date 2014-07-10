@@ -3,13 +3,13 @@ import unittest
 from models import Base, SessionToken, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
+from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
 
 
 def setUpModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -111,7 +111,7 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {'limit': '4'}
         }
         resp = self.cl.route(IPC_pack)
-        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': None}
+        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': False}
         self.assertDictEqual(resp[0], temp)
 
     def test_password_put(self):

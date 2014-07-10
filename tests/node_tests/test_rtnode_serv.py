@@ -15,7 +15,7 @@ class RestTemplateNodeServiceTestCase(unittest.TestCase):
     def setUp(self):
         with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
             conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_serv']['host'], conf['rest_serv']['port']
+        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))

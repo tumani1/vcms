@@ -1,9 +1,9 @@
 # coding: utf-8
-from admin.views.base import BaseModelView
+from admin.views.base import SqlAlModelView
 from models.tokens import GlobalToken
 
 
-class GlobalTokenModelView(BaseModelView):
+class GlobalTokenModelView(SqlAlModelView):
     model = GlobalToken
     category = u'Токены пользователя'
     name = u'Токен пользователя'

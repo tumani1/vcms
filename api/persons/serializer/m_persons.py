@@ -1,4 +1,5 @@
 # coding: utf-8
+from api.users.serializer import mUser
 
 from utils.serializer import DefaultSerializer
 
@@ -75,10 +76,9 @@ class mPersonSerializer(DefaultSerializer):
     def transform_user(self, instance, **kwargs):
         user_id = instance.user_id
         if not user_id is None:
-            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
+            user_person = self.up.get("{0}-{1}".format(instance.user_id, instance.id), False)
             if user_person:
-                pass
-                # return UserSerializer(user_person['user']).data
+                return mUser(instance=user_person['user'], session=self.session, user=self.user).data
 
         return {}
 
@@ -86,7 +86,7 @@ class mPersonSerializer(DefaultSerializer):
     def transform_relation(self, instance, **kwargs):
         user_id = instance.user_id
         if self.is_auth and not user_id is None:
-            user_person = self.up.get("{0}-{1}".format(instance.id, instance.user_id), False)
+            user_person = self.up.get("{0}-{1}".format(instance.user_id, instance.id), False)
 
             if user_person:
                 return {

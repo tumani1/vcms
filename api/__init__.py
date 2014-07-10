@@ -10,8 +10,10 @@ from api.test import routes as test_routing
 from api.user import routing as user_routing
 from api.auth import auth
 from api.msgr import routing as msgr_routing
+from api.media import routing as media_routing
 from api.content import routing as content_routes
-
+from api.stream import routing as stream_routes
+from api.chat import routing as chat_routes
 from models import SessionToken, GlobalToken
 
 
@@ -23,8 +25,11 @@ routes = {
     'persons': persons_routing,
     'test': test_routing,
     'auth': auth,
+    'media': media_routing,
     'msgr': msgr_routing,    
     'content': content_routes,
+    'stream': stream_routes,
+    'chat': chat_routes
 }
 
 
@@ -42,7 +47,7 @@ def authorize(IPC_pack, session=None):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
     user = None
     if user_id:
-        user = session.query(Users).filter_by(id=user_id).first()
+        user = session.query(Users).get(user_id)
 
     IPC_pack['query_params'].update({'auth_user': user})
 

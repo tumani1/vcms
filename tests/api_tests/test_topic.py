@@ -126,7 +126,7 @@ class TopicInfoTestCase(unittest.TestCase):
             'title': 'test',
             'title_orig': None,
             'description': 'test test',
-            'releasedate': 1388520000.0,
+            'releasedate': 1388534400.0,
             'type': 'news',
             'relation': {
                 'subscribed': False,
@@ -337,7 +337,7 @@ class TopicExtrasTestCase(unittest.TestCase):
         temp = [
             {
                 'description': 'test test',
-                'created': 1388520000.0,
+                'created': 1388534400.0,
                 'title': 'test',
                 'title_orig': 'test',
                 'location': 'russia',
@@ -345,7 +345,7 @@ class TopicExtrasTestCase(unittest.TestCase):
                 'id': 1
             }, {
                 'description': 'test1 test',
-                'created': 1388520000.0,
+                'created': 1388534400.0,
                 'title': 'test1',
                 'title_orig': 'test1',
                 'location': 'russia',
@@ -392,7 +392,7 @@ class TopicListTestCase(unittest.TestCase):
             {
                 'description': 'test test',
                 'title': 'test1',
-                'releasedate': 1388520000.0,
+                'releasedate': 1388534400.0,
                 'relation': {},
                 'title_orig': None,
                 'type': 'news',
@@ -400,7 +400,7 @@ class TopicListTestCase(unittest.TestCase):
             }, {
                 'description': 'test test',
                 'title': 'test',
-                'releasedate': 1388520000.0,
+                'releasedate': 1388534400.0,
                 'relation': {},
                 'title_orig': None,
                 'type': 'news',
@@ -508,7 +508,7 @@ class TopicPersonsTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
-        temp = {}
+        temp = []
 
         self.assertEqual(temp, resp)
 

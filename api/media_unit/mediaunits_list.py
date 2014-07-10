@@ -1,6 +1,7 @@
 # coding: utf-8
 from models import MediaUnits
 from api.media_unit.serializer import mMediaUnitsSerializer
+from utils.validation import validate_list_int
 
 
 def get(auth_user=None, session=None, **kwargs):
@@ -15,7 +16,7 @@ def get(auth_user=None, session=None, **kwargs):
     }
 
     if 'id' in kwargs:
-        params['id'] = str(kwargs['id']).strip()
+        params['id'] = validate_list_int(kwargs['id'])
 
     if 'text' in kwargs:
         params['text'] = str(kwargs['text']).strip()

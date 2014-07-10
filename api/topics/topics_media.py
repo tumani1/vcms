@@ -1,9 +1,9 @@
 # coding: utf-8
 
-from api.persons.persons_list import get_person_list
+from api.media.media_list import get as get_media_list
 
 __all__ = ['get_topic_media']
 
 
 def get_topic_media(auth_user, name, **kwargs):
-    return get_person_list(user=auth_user, topic=name, **kwargs)
+    return get_media_list(auth_user=auth_user, topic=name, **kwargs)

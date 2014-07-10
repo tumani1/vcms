@@ -11,14 +11,14 @@ def validate_mLimit(limit, **kwargs):
     elif len(result) == 2:
         # Check limit
         if not len(result[0]):
-            limit = None
+            limit = None  # TODO: можно заменить на - 0
         else:
             try:
                 limit = int(result[0])
                 if limit < 0:
                     raise Exception("Значение меньше {0}".format(limit))
             except Exception, e:
-                limit = None
+                limit = None  # TODO: можно заменить на - 0
 
         # Check top
         try:
