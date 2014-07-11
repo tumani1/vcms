@@ -10,7 +10,7 @@ class Chats(Base):
 
     id = Column(Integer, primary_key=True)
     description = Column(String(128), nullable=False)
-    users_chats = relationship('UsersChat', backref='chat', cascade='all, delete, delete-orphan', passive_deletes=True)
+    users_chats = relationship('UsersChat', backref='chat')
 
 
     @classmethod

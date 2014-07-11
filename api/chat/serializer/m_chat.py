@@ -1,15 +1,16 @@
 # coding=utf-8
 from models.chats import Chats
+from utils.exceptions import RequestErrorException
 
 
 class mChatSerializer(object):
 
     def __init__(self, chat):
         if chat is None:
-            raise TypeError("attr must not be None")
+            raise RequestErrorException("attr must not be None")
 
         if not isinstance(chat, Chats):
-            raise TypeError("attr is not Chats instance")
+            raise RequestErrorException("attr is not Chats instance")
 
         self.chat = chat
 
