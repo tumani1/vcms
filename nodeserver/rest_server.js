@@ -89,7 +89,6 @@ function run_server(host, port) {  // якобы общепринятое пра
                     response.end();
                 }
                 else {  //TODO: сделать структурный возврат ошибок с HTTP кодами
-                    console.log(res);
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.end(JSON.stringify(res));
                 }

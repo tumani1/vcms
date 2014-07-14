@@ -2,7 +2,7 @@
 from models.content import Content
 from serializer import mContentSerializer
 from utils.validation import validate_list_int, validate_int, validate_string
-from operator import contains as cn
+
 
 class RequiredParams(Exception):
     pass
@@ -17,8 +17,8 @@ def get_content_list(auth_user, session, **kwargs):
     if 'obj_type' in kwargs:
         params['obj_type'] = validate_string(kwargs['obj_type'])
 
-        keys = kwargs.keys()
-        if not all([cn(o, keys) for o in 'obj_id', 'obj_name']):
+        keys = set(kwargs.keys())
+        if not keys.intersection({'obj_id', 'obj_name'}):
             raise RequiredParams('request must contain obj_id or obj_name params')
 
         if 'obj_id' in kwargs:
