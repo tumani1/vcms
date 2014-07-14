@@ -1,4 +1,5 @@
 # coding: utf-8
+from models.comments.constants import OBJECT_TYPES
 
 def validate_mLimit(limit, **kwargs):
     result = limit.split(',', 1)
@@ -129,3 +130,10 @@ def validate_int(value, min_value=None, max_value=None, **kwargs):
        return Exception("Значение не является целым")
 
    return value
+
+def validate_obj_type(value, **kwargs):
+    try:
+        obj_type = str(value).strip()
+
+    except Exception, e:
+        pass
