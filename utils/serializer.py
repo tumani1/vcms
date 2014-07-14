@@ -42,10 +42,10 @@ class DefaultSerializer(object):
         if instance is None:
             raise ValueError('instance should be a queryset or other iterable with many=True')
 
-    # @classmethod
-    # @property
-    # def schema(cls):
-    #     return cls.__read_fields
+    @classmethod
+    @property
+    def schema(cls):
+        return cls.__read_fields
 
     @property
     def data(self):

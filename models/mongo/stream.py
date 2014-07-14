@@ -1,5 +1,5 @@
 # coding: utf-8
-from mongoengine import Document, DateTimeField, StringField, IntField, BinaryField, DictField, SequenceField, signals
+from mongoengine import Document, DateTimeField, StringField, IntField, BinaryField, DictField, SequenceField
 import datetime
 
 from constant import APP_STREAM_TYPE
@@ -15,22 +15,22 @@ class Stream(Document):
     attachments = BinaryField(verbose_name=u'Приложение объекта')
 
     @classmethod
-    def mLimitId(cls, elements, limit):
+    def mLimitId(cls, query, limit):
         if limit:
             if limit['id_dwn'] != 0 and limit['id_top'] != 0:
-                elements = elements.filter(id__lte=limit['id_top'], id_gte=['id_dwn'])
+                query = query.filter(id__lte=limit['id_top'], id_gte=['id_dwn'])
             elif limit['id_dwn'] != 0:
-                elements = elements.filter(id_gte=['id_dwn'])
+                query = query.filter(id_gte=['id_dwn'])
             else:
-                elements = elements.filter(id_lte=['id_top'])
+                query = query.filter(id_lte=['id_top'])
             top, down = limit['top'], limit['limit']
             if top and down:
-                elements = elements[top:down]
+                query = query[top:down]
             elif top:
-                elements = elements[top:]
+                query = query[top:]
             else:
-                elements = elements[:down]
-        return elements
+                query = query[:down]
+        return query
 
     def __repr__(self):
         return u'<Stream([{}]:type={},user={})>'.format(self.id, self.type, self.user_id)

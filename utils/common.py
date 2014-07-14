@@ -1,4 +1,6 @@
 # coding: utf-8
+from multiprocessing import Process, Manager
+
 
 # Возвращает массив состоящий из значений всех полей key
 # в двумерном массиве или в массиве объектов list
@@ -43,3 +45,31 @@ def group_by(list, key, objects=False):
         result_dict[k_value].append(item)
 
     return result_dict
+
+
+# Возвращает OrderedDict уровень-ключь
+def get_lvls_for_dict(item, lvls=None, lvl=0):
+    if lvls is None:
+        lvls = {}
+    if lvl not in lvls:
+        lvls[lvl] = set()
+    if isinstance(item, dict):
+        keys = item.keys()
+        lvls[lvl] |= set(keys)
+        for key in keys:
+            if isinstance(item[key], dict):
+                get_lvls_for_dict(item[key], lvls, lvl+1)
+    else:
+        lvls[lvl] += item
+
+    return lvls
+
+
+def compare_to_dict(d1, d2):
+    ret_value_1 = get_lvls_for_dict(d1)
+    ret_value_2 = get_lvls_for_dict(d2)
+
+    for i, j in zip(ret_value_1, ret_value_2):
+        if ret_value_1[i] - ret_value_2[j]:
+            return False
+    return True
