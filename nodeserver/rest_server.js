@@ -76,8 +76,14 @@ function run_server(host, port) {  // якобы общепринятое пра
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
             lb_client.invoke("route", IPC_pack, function(error, res, more) {
-                response.writeHead(200, {"Content-Type": "text/plain"});
-                response.end(JSON.stringify(res));
+                if (error) {
+                    console.error(error);
+                    response.end();
+                }
+                else {  //TODO: сделать структурный возврат ошибок с HTTP кодами
+                    response.writeHead(200, {"Content-Type": "text/plain"});
+                    response.end(JSON.stringify(res));
+                }
             });
         }
 
