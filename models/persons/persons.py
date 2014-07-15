@@ -84,7 +84,7 @@ class Persons(Base):
                 query = query.limit(limit[0])
 
             # Set Offset
-            if not limit[0] is None:
+            if limit[1]:
                 query = query.offset(limit[1])
 
         return query

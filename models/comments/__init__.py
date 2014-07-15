@@ -1,4 +1,4 @@
 from comments import Comments
-from users_comments import UserComments
+from models.comments.users_comments import UsersComments
 
-__all__ = ['Comments', 'UserComments']
+__all__ = ['Comments', 'UsersComments']

@@ -1,7 +1,7 @@
 # coding: utf-8
 from api.comments.serializer.m_comment import mCommentSerializer
 from models.comments.comments import Comments
-from utils.validation import validate_list_int, validate_int, validate_mLimitId, validate_string, validate_obj_type
+from utils.validation import validate_list_int, validate_mLimitId, validate_string, validate_obj_type
 
 
 def get(auth_user=None, session=None, **kwargs):
@@ -13,7 +13,8 @@ def get(auth_user=None, session=None, **kwargs):
         'obj_id': None,
         'obj_name': None,
         'user_id': None,
-        'limit': None,
+        'with_obj': None,
+        'limit': validate_mLimitId('10'),
     }
 
     if 'id' in kwargs:
@@ -32,14 +33,19 @@ def get(auth_user=None, session=None, **kwargs):
         params['limit'] = validate_mLimitId(kwargs['limit'])
 
     if 'obj_type' in kwargs:
-        params['obj_type'] = validate_obj_type(kwargs['obj_typy'])
+        params['obj_type'] = validate_obj_type(kwargs['obj_type'])
 
-    instance = Comments.get_comments_list(**params).all()
+    if 'with_obj' in kwargs:
+        params['with_obj'] = kwargs['with_obj']
+
+    instance = Comments.get_comments_list(**params)
+    instance = Comments.mLimitId(instance, params['limit'])
     if not instance is None:
         serializer_params = {
             'user': auth_user,
             'session': session,
-            'instance': instance,
+            'instance': instance.all(),
+            'with_obj': params['with_obj']
         }
         data = mCommentSerializer(**serializer_params).data
     return data

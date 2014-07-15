@@ -3,7 +3,7 @@ from models import Base
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 
 
-class UserComments(Base):
+class UsersComments(Base):
     __tablename__ = 'users_comments'
     id          = Column(Integer, primary_key=True)
     user_id     = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
