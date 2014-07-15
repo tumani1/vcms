@@ -20,16 +20,17 @@ class Stream(Document):
             if limit['id_dwn'] != 0 and limit['id_top'] != 0:
                 query = query.filter(id__lte=limit['id_top'], id_gte=['id_dwn'])
             elif limit['id_dwn'] != 0:
-                query = query.filter(id_gte=['id_dwn'])
-            else:
-                query = query.filter(id_lte=['id_top'])
-            top, down = limit['top'], limit['limit']
-            if top and down:
-                query = query[top:down]
-            elif top:
-                query = query[top:]
-            else:
-                query = query[:down]
+                query = query.filter(id_gte=limit['id_dwn'])
+            elif 'id_top' in limit:
+                query = query.filter(id_lte=limit['id_top'])
+            if 'top' in limit and 'limit' in limit:
+                top, down = limit['top'], limit['limit']
+                if top and down:
+                    query = query[top:down]
+                elif top:
+                    query = query[top:]
+                else:
+                    query = query[:down]
         return query
 
     def __repr__(self):

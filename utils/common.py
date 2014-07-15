@@ -1,5 +1,5 @@
 # coding: utf-8
-from multiprocessing import Process, Manager
+import time
 
 
 # Возвращает массив состоящий из значений всех полей key
@@ -73,3 +73,7 @@ def compare_to_dict(d1, d2):
         if ret_value_1[i] - ret_value_2[j]:
             return False
     return True
+
+
+def convert_to_utc(time_to_utc):
+    return time.mktime(time_to_utc.timetuple())

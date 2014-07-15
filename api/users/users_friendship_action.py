@@ -7,9 +7,9 @@ from utils import need_authorization
 
 @need_authorization
 def get(auth_user, id, session, *args, **kwargs):
-    status = session.query(UsersRels.urStatus).filter_by(user_id=auth_user, partner_id=id).first()[0]
+    status = session.query(UsersRels.urStatus).filter_by(user_id=auth_user.id, partner_id=id).first()
     if status:
-        return status.code
+        return status[0].code
     else:
         return APP_USERSRELS_TYPE_UNDEF
 

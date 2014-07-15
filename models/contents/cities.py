@@ -14,7 +14,7 @@ class Cities(Base):
     country_id  = Column(Integer, ForeignKey('countries.id', ondelete='CASCADE'), nullable=False)
     name        = Column(String(256), nullable=False)
     name_orig   = Column(String(256), nullable=False)
-    time_zone   = Column(TimezoneType(backend='pytz'), nullable=False)
+    time_zone   = Column(TimezoneType(backend='pytz'), nullable=False, default=u'UTC')
     description = Column(Text)
 
     country     = relationship('Countries', backref='cities')

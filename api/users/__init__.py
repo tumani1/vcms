@@ -4,6 +4,7 @@ import users_values
 import users_friends
 import users_extras
 import users_stream
+import users_list
 
 friendship = {'get': users_friendship_action.get,
               'post': users_friendship_action.post,
@@ -30,8 +31,13 @@ stream = {
     'get': users_stream.get
 }
 
+list = {
+    'get': users_list.get,
+}
+
 routing = { 'friendship': friendship,
             'info': info,
+            'list': list,
             'values': values,
             'friends': friends,
             'extras': extras,
