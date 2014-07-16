@@ -3,7 +3,7 @@ import datetime
 
 from sqlalchemy.sql.expression import func
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, relation, backref
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
@@ -48,6 +48,12 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
+
+    user_comments = relation('Comments',
+                     backref=backref('users',
+                                     cascade='all,delete-orphan',
+                                     single_parent=True),
+                     secondary='users_comments')
 
     @classmethod
     def tmpl_for_users(cls, session):

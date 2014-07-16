@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey
 from sqlalchemy_utils import ChoiceType
 from constants import OBJECT_TYPES
 
+
 class Comments(Base):
     __tablename__ = 'comments'
     id          = Column(Integer, primary_key=True)
@@ -17,7 +18,7 @@ class Comments(Base):
     obj_id      = Column(Integer, nullable=True)
     obj_name    = Column(String, nullable=True)
 
-    users = relation(Users,
+    comment_users = relation('Users',
                      backref=backref('comments',
                                      cascade='all,delete-orphan',
                                      single_parent=True),
