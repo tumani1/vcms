@@ -6,7 +6,6 @@ from models.tokens import SessionToken
 __all__ = ['mUserShort']
 
 
-# TODO online
 class mUserShort(DefaultSerializer):
 
     __read_fields = {
