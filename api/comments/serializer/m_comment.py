@@ -36,7 +36,7 @@ class mCommentSerializer(DefaultSerializer):
             'c': (Content, mContentSerializer),
             's': (Stream, mStraemElement),
         }
-        self.with_obj = kwargs['with_obj']
+        self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
         self.fields = self.__read_fields
         super(mCommentSerializer, self).__init__(**kwargs)
         self.users_ids, self.comment_ids = self.get_users_and_comment_ids_by_comments(self.instance)

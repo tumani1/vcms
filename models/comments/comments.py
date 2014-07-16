@@ -1,5 +1,6 @@
 # coding: utf-8
-from models import Base
+from sqlalchemy.orm import relation, backref
+from models import Base, Users
 from sqlalchemy.event import listen
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey
 from sqlalchemy_utils import ChoiceType
@@ -13,8 +14,14 @@ class Comments(Base):
     created     = Column(DateTime, nullable=False)
     parent_id   = Column(Integer, nullable=True)
     obj_type    = Column(ChoiceType(OBJECT_TYPES), nullable=False)
-    obj_id      = Column(Integer, nullable=False)
+    obj_id      = Column(Integer, nullable=True)
     obj_name    = Column(String, nullable=True)
+
+    users = relation(Users,
+                     backref=backref('comments',
+                                     cascade='all,delete-orphan',
+                                     single_parent=True),
+                     secondary='users_comments')
 
 
     @classmethod
@@ -35,6 +42,11 @@ class Comments(Base):
             if not obj_name is None:
                 query = query.filter(cls.obj_name == obj_name)
 
+        return query
+
+    @classmethod
+    def get_comment_by_id(cls, user, session, id):
+        query = session.query(cls).filter(cls.id == id)
         return query
 
     @classmethod
@@ -67,6 +79,6 @@ class Comments(Base):
 
 
 def validate_object(mapper, connect, target):
-    target.validate_values()
+    target.validate_obj()
 
 listen(Comments, 'before_insert', validate_object)
