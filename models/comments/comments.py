@@ -5,12 +5,12 @@ from sqlalchemy.event import listen
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey
 from sqlalchemy_utils import ChoiceType
 from constants import OBJECT_TYPES
-
+from sqlalchemy.orm import relationship
 
 class Comments(Base):
     __tablename__ = 'comments'
     id          = Column(Integer, primary_key=True)
-    user_id     = Column(Integer,  ForeignKey('users.id'), nullable=False)
+    user_id     = Column(Integer, nullable=False)
     text        = Column(Text, nullable=False)
     created     = Column(DateTime, nullable=False)
     parent_id   = Column(Integer, nullable=True)
@@ -18,11 +18,7 @@ class Comments(Base):
     obj_id      = Column(Integer, nullable=True)
     obj_name    = Column(String, nullable=True)
 
-    comment_users = relation('Users',
-                     backref=backref('comments',
-                                     cascade='all,delete-orphan',
-                                     single_parent=True),
-                     secondary='users_comments')
+    comment_users = relationship('UsersComments', backref='comments', cascade='all, delete')
 
 
     @classmethod

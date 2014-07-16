@@ -49,11 +49,7 @@ class Users(Base):
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
 
-    user_comments = relation('Comments',
-                     backref=backref('users',
-                                     cascade='all,delete-orphan',
-                                     single_parent=True),
-                     secondary='users_comments')
+    user_comments = relationship('UsersComments', backref='user', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):
