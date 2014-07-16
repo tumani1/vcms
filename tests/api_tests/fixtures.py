@@ -113,7 +113,9 @@ def create_users_values(session):
 def create_users_rels(session):
     user_rels1 = UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
     user_rels2 = UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    session.add_all([user_rels1, user_rels2])
+    user_rels3 = UsersRels(user_id=2, partner_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND)
+    user_rels4 = UsersRels(user_id=3, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
+    session.add_all([user_rels1, user_rels2, user_rels3, user_rels4])
     session.commit()
 
 

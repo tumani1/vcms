@@ -1,3 +1,4 @@
+# coding: utf-8
 import zerorpc
 import unittest
 from models import Base, SessionToken

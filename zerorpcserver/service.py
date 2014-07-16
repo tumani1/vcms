@@ -27,7 +27,7 @@ class ZeroRpcService(object):
             response = api_method(session=session, **Auth_IPC_pack['query_params'])
         except Exception as e:
             session.rollback()
-            raise e
+            response = {'error': e.message}  # TODO: определить формат ошибок
         finally:
             session.close()
 

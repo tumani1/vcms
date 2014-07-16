@@ -1,6 +1,5 @@
 # coding: utf-8
-import time
-
+from utils.common import convert_to_utc
 from m_users_short import mUserShort
 
 __all__ = ['mUser']
@@ -21,10 +20,10 @@ class mUser(mUserShort):
     }
 
     def transform_lastvisit(self, obj):
-        return time.mktime(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
+        return convert_to_utc(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
 
     def transform_regdate(self, obj):
-        return time.mktime(obj.created.timetuple())
+        return convert_to_utc(obj.created)
 
     def transform_city(self, obj):
         return obj.city.name

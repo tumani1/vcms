@@ -1,3 +1,4 @@
+# coding: utf-8
 import zerorpc
 import unittest
 from models import Base, SessionToken, Users, UsersValues
@@ -22,13 +23,12 @@ def setUpModule():
     create_users_values(session)
 
 
-
 def tearDownModule():
     engine = db_connect()
     #engine.execute("drop schema public cascade; create schema public;")
 
 
-class UsersTestCase(unittest.TestCase):
+class UserTestCase(unittest.TestCase):
 
     def setUp(self):
         self.engine = db_connect()
