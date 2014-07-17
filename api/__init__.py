@@ -38,23 +38,21 @@ routes = {
 
 
 def authorize(IPC_pack, session=None):
-    user = session.query(Users).get(61)
+    if IPC_pack['api_group'] == 'auth':
+        IPC_pack['query_params'].update({
+            'x_token': IPC_pack['x_token'] if 'x_token' in IPC_pack else None,
+            'token': IPC_pack['token'],
+        })
+
+    user_id = None
+    if 'x_token' in IPC_pack and IPC_pack['x_token']:
+        user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
+    elif 'token' in IPC_pack and IPC_pack['token']:
+        user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
+    user = None
+    if user_id:
+        user = session.query(Users).get(user_id)
+
     IPC_pack['query_params'].update({'auth_user': user})
-    # if IPC_pack['api_group'] == 'auth':
-    #     IPC_pack['query_params'].update({
-    #         'x_token': IPC_pack['x_token'] if 'x_token' in IPC_pack else None,
-    #         'token': IPC_pack['token'],
-    #     })
-    #
-    # user_id = None
-    # if 'x_token' in IPC_pack and IPC_pack['x_token']:
-    #     user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
-    # elif 'token' in IPC_pack and IPC_pack['token']:
-    #     user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
-    # user = None
-    # if user_id:
-    #     user = session.query(Users).get(user_id)
-    #
-    # IPC_pack['query_params'].update({'auth_user': user})
 
     return IPC_pack
