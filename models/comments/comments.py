@@ -43,7 +43,7 @@ class Comments(Base):
 
     @classmethod
     def get_comment_by_id(cls, user, session, id):
-        query = session.query(cls).filter(cls.id == id)
+        query = session.query(cls).filter(cls.id == id).first()
         return query
 
     @classmethod

@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, String, Boolean
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -16,6 +17,6 @@ class CDN(Base):
     location_regxp = Column(String)
     cdn_type       = Column(String)
 
-
+    cdn_medias = relationship('MediaLocations', backref='cdn', cascade='all, delete')
     def __repr__(self):
         return u'<CDN(name={0})>'.format(self.name)

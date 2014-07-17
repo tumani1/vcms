@@ -15,6 +15,7 @@ from api.content import routing as content_routes
 from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
+from api.obj_comments import routing as obj_comments_routing
 from models import SessionToken, GlobalToken
 
 
@@ -31,12 +32,13 @@ routes = {
     'content': content_routes,
     'stream': stream_routes,
     'chat': chat_routes,
-    'comments': comments_routing
+    'comments': comments_routing,
+    'obj-comments': obj_comments_routing,
 }
 
 
 def authorize(IPC_pack, session=None):
-    user = session.query(Users).get(1)
+    user = session.query(Users).get(61)
     IPC_pack['query_params'].update({'auth_user': user})
     # if IPC_pack['api_group'] == 'auth':
     #     IPC_pack['query_params'].update({

@@ -54,7 +54,10 @@ class mCommentSerializer(DefaultSerializer):
         return instance.id
 
     def transform_user(self, instance, **kwargs):
-        return mUserShort(user=self.user, session=self.session, instance=self.users_dict[instance.user_id]).data
+        if instance.user_id in self.users_dict.keys():
+            return mUserShort(user=self.user, session=self.session, instance=self.users_dict[instance.user_id]).data
+        else:
+            return u'removed user'
 
     def transform_text(self, instance, **kwargs):
         return instance.text
