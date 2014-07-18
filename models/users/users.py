@@ -25,7 +25,7 @@ class Users(Base):
     city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'), nullable=False)
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
-    email         = Column(EmailType(), unique=True)
+    email         = Column(EmailType(), unique=True, nullable=False)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
     bio           = Column(Text)

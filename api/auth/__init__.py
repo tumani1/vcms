@@ -2,7 +2,8 @@
 
 from api.auth.login import post
 from api.auth.revoke import revoke
-from api.auth.session import get,delete
+from api.auth.session import get, delete
+from api.auth.registration import post as register
 
 
 auth = {
@@ -15,5 +16,9 @@ auth = {
     },
     'revoke': {
         'get': revoke,
+    },
+    'register': {
+        'post': register,
     }
+
 }
