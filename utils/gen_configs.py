@@ -2,6 +2,7 @@
 from ConfigParser import ConfigParser as CP
 from os import curdir, makedirs
 from os.path import exists, abspath, join
+from sys import executable
 import argparse
 import yaml
 
@@ -97,7 +98,7 @@ if __name__ == '__main__':
                         help='путь корня проекта')
     parser.add_argument('--port_pool', dest='pool', nargs=2, type=int, default=[6600, 6608], metavar='<port>',
                         help='два значения - начало и конец промежутка портов, напр. --port_pool 6000 6008')
-    parser.add_argument('--python', dest='python', type=path, default=curdir, metavar='<path>',
+    parser.add_argument('--python', dest='python', type=path, default=executable, metavar='<path>',
                         help='путь и имя исполняемого файла питона из виртуального окружения')
     parser.add_argument('--destination', dest='dest', type=path, default='generated_configs', metavar='<path>',
                         help='путь выгрузки сгенерированных конфигов')
