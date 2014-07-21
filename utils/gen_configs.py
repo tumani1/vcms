@@ -1,18 +1,21 @@
 # coding=utf-8
 from ConfigParser import ConfigParser as CP
-from os.path import exists
+from os import curdir, makedirs
+from os.path import exists, abspath, join
 import argparse
 import yaml
 
 
 def path(string):
+    r_string = abspath(string)
     if not exists(string):
-        raise Exception('no such directory')
+        makedirs(r_string)
+        print('directory created - ' + str(r_string))
 
-    return string
+    return abspath(string)
 
 
-def main(h, ha_port, pool, python, project):
+def main(h, ha_port, pool, python, project, dest):
     try:
         # генерация групп для zerorpc служб
         pool = range(pool[0], pool[1])
@@ -25,7 +28,7 @@ def main(h, ha_port, pool, python, project):
             cp.set(sec, 'command', command)
             cp.set(sec, 'directory', project)
 
-            with open(config_name+'.conf', 'w') as config:
+            with open(join(dest, config_name+'.conf'), 'w') as config:
                 cp.write(config)
 
         # генерация основной части конфига группы listen
@@ -57,7 +60,7 @@ backend zeronodes\n""".format(host=h, port=ha_port)
         for p in pool:
             template += '\tserver backend_{N} {host}:{port}\n'.format(N=p, host=h, port=p)
 
-        with open('haproxy.conf', 'w') as config:
+        with open(join(dest, 'haproxy.conf'), 'w') as config:
             config.write(template)
 
         # генерация группы haproxy
@@ -66,7 +69,7 @@ backend zeronodes\n""".format(host=h, port=ha_port)
         cp.add_section(sec)
         cp.set(sec, 'command', 'haproxy -f {project}/configs/haproxy.conf'.format(project=project))
 
-        with open('pr_haproxy.conf', 'w') as config:
+        with open(join(dest, 'pr_haproxy.conf'), 'w') as config:
                 cp.write(config)
 
         # генерация конфига для node служб
@@ -79,21 +82,24 @@ backend zeronodes\n""".format(host=h, port=ha_port)
                     'port': 9902}}
         conf['render_serv']['haproxy'] = {'host':h, 'port':ha_port}
         conf['rest_ws_serv']['haproxy'] = {'host':h, 'port':ha_port}
-        with open('node_service.yaml', 'w') as config:
+
+        with open(join(dest, 'node_service.yaml'), 'w') as config:
             yaml.dump(conf, config)
     except Exception as e:
         raise e
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--host', dest='h', required=True, metavar='')
-    parser.add_argument('--ha_port', dest='ha_port', required=True, type=int, metavar='')
-    parser.add_argument('--port_pool', dest='pool', nargs=2, type=int, required=True, metavar='',
-                        help='два значения - начало и конец промежутка портов, напр. --port_pool 6000 6008')
-    parser.add_argument('--python', dest='python', type=path, default='.', metavar='',
-                        help='путь и имя исполняемого файла питона из виртуального окружения')
-    parser.add_argument('--project', dest='project', type=path, default='.', metavar='',
+    parser = argparse.ArgumentParser(description='генератор конфигов')
+    parser.add_argument('--host', dest='h', default='127.0.0.1', metavar='<host>')
+    parser.add_argument('--ha_port', dest='ha_port', type=int, default=6700, metavar='<port>')
+    parser.add_argument('--project', dest='project', type=path, default=curdir, metavar='<path>',
                         help='путь корня проекта')
+    parser.add_argument('--port_pool', dest='pool', nargs=2, type=int, default=[6600, 6608], metavar='<port>',
+                        help='два значения - начало и конец промежутка портов, напр. --port_pool 6000 6008')
+    parser.add_argument('--python', dest='python', type=path, default=curdir, metavar='<path>',
+                        help='путь и имя исполняемого файла питона из виртуального окружения')
+    parser.add_argument('--destination', dest='dest', type=path, default='generated_configs', metavar='<path>',
+                        help='путь выгрузки сгенерированных конфигов')
     namespace = parser.parse_args()
     main(**vars(namespace))
