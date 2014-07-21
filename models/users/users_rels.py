@@ -4,7 +4,7 @@ from sqlalchemy_utils import ChoiceType
 
 import datetime
 
-from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_UNDEF
+from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_UNDEF, APP_USERS_TYPE_BLOCKED
 from models import Base
 from models.users import Users
 
@@ -17,6 +17,7 @@ class UsersRels(Base):
     partner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE), nullable=False)
     updated    = Column(DateTime, onupdate=datetime.datetime.utcnow, default=datetime.datetime.now)
+    blocked    = Column(ChoiceType(APP_USERS_TYPE_BLOCKED))
 
     def __repr__(self):
         return u"<UsersRels({}-{}:{})>".format(self.user_id, self.partner_id,
