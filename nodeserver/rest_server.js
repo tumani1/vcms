@@ -39,10 +39,10 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024,
-        lb_conf = settings.conf('zerorpc_service.yaml'),
+        //lb_conf = settings.conf('zerorpc_service.yaml'),
         lb_client = new zerorpc.Client();  // клиент к балансировщику
 
-    lb_client.connect(lb_conf["schema"]+"://"+lb_conf["host"]+":"+lb_conf["port"]);
+    lb_client.connect("tcp://"+conf["rest_ws_serv"]["haproxy"]["host"]+":"+conf["rest_ws_serv"]["haproxy"]["port"]);
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,

@@ -1,10 +1,9 @@
 # coding: utf-8
-
+import argparse
 from api import routes
 from api import authorize
-
 from utils.connection import create_session, db_connect, mongo_connect
-from utils.service import make_zerorpc, raven_report
+from zerorpcservice.additional import run_zerorpc, raven_report
 
 
 class ZeroRpcService(object):
@@ -17,7 +16,6 @@ class ZeroRpcService(object):
 
     @raven_report
     def route(self, IPC_pack):
-        response = {}
         session = create_session(bind=self.connect, expire_on_commit=False)
 
         try:
@@ -35,4 +33,10 @@ class ZeroRpcService(object):
 
 
 if __name__ == '__main__':
-    make_zerorpc(ZeroRpcService)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', dest='host', default='127.0.0.1')
+    parser.add_argument('--port', dest='port', default=6600)
+    namespace = parser.parse_args()
+    service_conf = vars(namespace)
+
+    run_zerorpc(ZeroRpcService, service_conf)
