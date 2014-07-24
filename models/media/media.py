@@ -27,8 +27,10 @@ class Media(Base):
     poster = Column(Integer, nullable=True)
     duration = Column(Integer, nullable=True)
 
-    users_media = relationship('UsersMedia', backref='media', uselist=False)
-    media_locations = relationship('MediaLocations', backref='media')
+    users_media = relationship('UsersMedia', backref='media', cascade='all, delete')
+    media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
+    medias_units = relationship('MediaInUnit', backref='media', cascade='all, delete')
+    media_persons = relationship('PersonsMedia', backref='media', cascade='all, delete')
 
     @classmethod
     def tmpl_for_media(cls, user, session):

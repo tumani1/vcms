@@ -1,24 +1,19 @@
 # config: utf-8
-
-from os.path import join
-
 import yaml
 import zerorpc
-
+from os.path import join
 from raven import Client
 from settings import CONFIG_PATH, DEBUG
 
 
-def make_zerorpc(cls, service=None):
-    if service is None:
+def run_zerorpc(cls, service_conf=None):
+    if service_conf is None:
         with open(join(CONFIG_PATH, 'zerorpc_service.yaml')) as conf:
-            service = yaml.safe_load(conf)
+            service_conf = yaml.safe_load(conf)
 
     server = zerorpc.Server(cls())
-    server.bind("{schema}://{host}:{port}".format(**service))
-
-    print "ZeroRPC: Starting {0} at {host}:{port}".format(cls.__name__, **service)
-
+    server.bind("tcp://{host}:{port}".format(**service_conf))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(cls.__name__, **service_conf))
     server.run()
 
 

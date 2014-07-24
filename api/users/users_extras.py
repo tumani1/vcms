@@ -3,6 +3,7 @@ from sqlalchemy.sql.expression import func
 
 from models.users import Users, UsersExtras
 from models.extras import Extras
+from utils.common import convert_to_utc
 from utils.exceptions import DoesNotExist
 from utils.validation import validate_mLimit
 
@@ -37,15 +38,15 @@ def get(user_id, session, **kwargs):
                 query = query.offset(limit[1])
 
     ret_list = []
-    for extra in query:
+    for extra in query.all():
         ret_list.append({
             'id': extra.id,
-            'type': extra.type,
+            'type': extra.type.code,
             'title': extra.title,
             'title_orig': extra.title_orig,
             'description': extra.description,
             'location': extra.location,
-            'created': extra.created,
+            'created': convert_to_utc(extra.created),
         })
 
     return ret_list

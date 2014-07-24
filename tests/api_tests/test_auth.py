@@ -30,8 +30,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         
         
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
-        variable = create(self.session)
-        self.user_id = variable
+        user = create(self.session)
+        self.user_id = user.id
         self.token = get_token_by_id(self.user_id, session=self.session)
 
     def test_echo(self):

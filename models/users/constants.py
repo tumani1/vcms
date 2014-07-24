@@ -11,6 +11,13 @@ APP_USERS_TYPE_GENDER = (
     (APP_USERS_GENDER_UNDEF, u'Не установлен'),
 )
 
+APP_USERS_TYPE_BLOCKED = (
+    (0, u'нет блокировки'),
+    (1, u'блокировка партнёра'),
+    (2, u'блокировка от партнёра'),
+    (3, u'обоюдная блокировка'),
+)
+
 ##############################################################
 APP_USERSRELS_TYPE_UNDEF = u'u'
 APP_USERSRELS_TYPE_FRIEND = u'f'

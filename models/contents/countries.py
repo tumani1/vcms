@@ -10,7 +10,7 @@ class Countries(Base):
     __table_args__ = {'extend_existing': True}
 
     id          = Column(Integer, primary_key=True)
-    name        = Column(String(256), nullable=False)
+    name        = Column(String(256), unique=True, nullable=False)
     name_orig   = Column(String(256), nullable=False)
     description = Column(Text)
 

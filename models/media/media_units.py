@@ -19,7 +19,8 @@ class MediaUnits(Base):
     end_date = Column(Date, nullable=True)
     batch = Column(String, nullable=True)
 
-    user_media_units = relationship('UsersMediaUnits', backref='media_units', uselist=False)
+    user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
+    unit_medias = relationship('MediaInUnit', backref='media_units', cascade='all, delete')
 
 
     @classmethod

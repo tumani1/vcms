@@ -3,7 +3,7 @@ import datetime
 
 from sqlalchemy.sql.expression import func
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, relation, backref
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
@@ -22,11 +22,10 @@ class Users(Base):
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
     password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
-    city_id       = Column(Integer, ForeignKey('cities.id'), nullable=False)
-    city          = relationship("Cities", backref='users')
+    city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'), nullable=False)
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
-    email         = Column(EmailType(), unique=True)
+    email         = Column(EmailType(), unique=True, nullable=False)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
     bio           = Column(Text)
@@ -37,7 +36,8 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
-    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete, delete-orphan', passive_deletes=True)
+    city          = relationship("Cities", backref='users')
+    users_chat    = relationship('UsersChat', backref='user')
     social        = relationship('UsersSocial', backref='user', cascade='all, delete')
     users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
     users_values  = relationship('UsersValues', backref='user', cascade='all, delete')
@@ -48,6 +48,12 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
+
+    user_comments = relationship('UsersComments', backref='users', cascade='all, delete')
+    user_medias   = relationship('UsersMedia', backref='users', cascade='all, delete')
+    user_units    = relationship('UsersMediaUnits', backref='users', cascade='all, delete')
+    user_msgr_thread_= relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
+    user_msgr_logs = relationship('MsgrLog', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):

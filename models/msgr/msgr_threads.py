@@ -12,8 +12,8 @@ class MsgrThreads(Base):
     id       = Column(Integer, primary_key=True)
     msg_cnt  = Column(Integer, default=0)
 
-    # msg_logs           = relationship('MsgrLog', backref='msgr_threads')
-    # users_msgr_threads = relationship("UsersMsgrThreads", backref='msgr_threads')
+    # msgr_thread_users = relationship('UsersMsgrThreads', backref='msgr_threads', cascade='all, delete')
+    msgr_thread_logs = relationship('MsgrLog', backref='msgr_threads', cascade='all, delete')
 
     @classmethod
     def tmpl_for_msgr_threads(cls, session):

@@ -3,7 +3,7 @@
 import argparse
 
 import settings as conf
-from utils.service import make_zerorpc
+from zerorpcserver.additional import run_zerorpc
 from zerorpcserver.service import ZeroRpcService
 
 
@@ -16,4 +16,4 @@ if args.test:
     conf.DATABASE['postgresql'] = conf.DATABASE['test']
 
 # Start ZeroRPC Service
-make_zerorpc(ZeroRpcService, conf.SERVICE)
+run_zerorpc(ZeroRpcService, conf.SERVICE)

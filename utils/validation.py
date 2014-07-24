@@ -1,4 +1,7 @@
 # coding: utf-8
+from models.comments.constants import OBJECT_TYPES
+import re
+
 
 def validate_mLimit(limit, **kwargs):
     result = limit.split(',', 1)
@@ -65,13 +68,13 @@ def validate_mLimitId(limit):
         else:
             result['id_dwn'] = 0
 
-    else:
+    if len(mas) == 2:
         if mas[1] != '':
             result['top'] = int(mas[1])
         else:
             result['top'] = 0
 
-    if result['limit'] or result['top'] or result['id_dwn'] or result['id_top'] < 0:
+    if result['limit'] < 0 or result['top'] < 0 or result['id_dwn'] < 0 or result['id_top'] < 0:
         raise Exception("Значение меньше 0")
     return result
 
@@ -129,3 +132,23 @@ def validate_int(value, min_value=None, max_value=None, **kwargs):
        return Exception("Значение не является целым")
 
    return value
+
+def validate_obj_type(value, **kwargs):
+    try:
+        obj_type = str(value).strip()
+        for item in OBJECT_TYPES:
+            if obj_type in item:
+                return obj_type
+        raise Exception
+
+    except Exception, e:
+        pass
+
+
+def validate_email(value, **kwargs):
+        email = value.strip()
+        email_reg = re.compile(r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$")
+        if email_reg.match(email):
+            return email
+        else:
+            raise Exception(u"Некорректный e-mail!")

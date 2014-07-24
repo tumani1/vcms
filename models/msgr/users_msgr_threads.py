@@ -23,7 +23,7 @@ class UsersMsgrThreads(Base):
     last_visit      = Column(DateTime)
     new_msgs        = Column(Integer)
 
-    msgr_threads = relationship('MsgrThreads', backref='msgr_threads')
+    msgr_threads = relationship('MsgrThreads', backref='users_msgr_threads', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users_msgr_threads(cls, session):
