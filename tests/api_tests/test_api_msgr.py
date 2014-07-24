@@ -53,6 +53,7 @@ class MsgrTestCase(unittest.TestCase):
             'x_token': self.session_token[1],
             'query_params': {'id': 1}
         }
+        resp = self.cl.route(IPC_pack)
 
     def test_stat_get(self):
         IPC_pack = {
