@@ -38,7 +38,7 @@ def path(string):
     return abspath(string)
 
 
-def main(h, ha_port, pool, python, project, dest):
+def main(h, ha_port, ha_stat_port, pool, python, project, dest):
     try:
         # генерация группы для zerorpc служб
         pool = range(pool[0], pool[1])
@@ -77,7 +77,7 @@ defaults
     timeout client 30000
     timeout server 30000
 
-listen haproxy {host}:{port}
+listen haproxy {host}:{ha_port}
     mode tcp
     option tcplog
     balance roundrobin
@@ -85,7 +85,18 @@ listen haproxy {host}:{port}
     maxconn 20000
     default_backend zeronodes
 
-backend zeronodes\n""".format(host=get_lan_ip(), port=ha_port)
+listen stats {host}:{ha_stat_port}
+    mode http
+    balance
+    timeout client 5000
+    timeout connect 4000
+    timeout server 30000
+
+    stats uri /haproxy_stats
+    stats realm HAProxy\ Statistics
+    stats admin if TRUE
+
+backend zeronodes\n""".format(host=get_lan_ip(), ha_port=ha_port, ha_stat_port=ha_stat_port)
 
         for p in pool:
             template += '\tserver backend_{N} {host}:{port}\n'.format(N=p, host=h, port=p)
@@ -151,6 +162,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='генератор конфигов')
     parser.add_argument('--host', dest='h', default='127.0.0.1', metavar='<host>')
     parser.add_argument('--ha_port', dest='ha_port', type=int, default=6700, metavar='<port>')
+    parser.add_argument('--ha_stat_port', dest='ha_stat_port', type=int, default=6710, metavar='<port>')
     parser.add_argument('--project', dest='project', type=path, default=curdir, metavar='<path>',
                         help='путь корня проекта')
     parser.add_argument('--port_pool', dest='pool', nargs=2, type=int, default=[6600, 6608], metavar='<port>',
