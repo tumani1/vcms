@@ -91,10 +91,11 @@ def setUpModule():
     engine.close()
 
 
-# def tearDownModule():
-#     pass
-#
-#
+def tearDownModule():
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
+
+
 # ###################################################################################
 # class TopicInfoTestCase(unittest.TestCase):
 #
