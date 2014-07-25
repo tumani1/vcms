@@ -42,7 +42,7 @@ def main(h, ha_port, pool, python, project, dest):
     try:
         # генерация группы для zerorpc служб
         pool = range(pool[0], pool[1])
-        with open(join(dest, 'zerorpc_services.NODE'), 'w') as config:
+        with open(join(dest, 'zerorpc_services.conf'), 'w') as config:
 
             programs = []
             for N, p in enumerate(pool, start=1):
@@ -90,16 +90,16 @@ backend zeronodes\n""".format(host=get_lan_ip(), port=ha_port)
         for p in pool:
             template += '\tserver backend_{N} {host}:{port}\n'.format(N=p, host=h, port=p)
 
-        with open(join(dest, 'haproxy.NODE'), 'w') as config:
+        with open(join(dest, 'haproxy.conf'), 'w') as config:
             config.write(template)
 
         # генерация группы haproxy
         section = 'program:haproxy'
         cp = CP()
         cp.add_section(section)
-        cp.set(section, 'command', 'haproxy -f /etc/haproxy/haproxy.NODE')
+        cp.set(section, 'command', 'haproxy -f /etc/haproxy/haproxy.conf')
 
-        with open(join(dest, 'pr_haproxy.NODE'), 'w') as config:
+        with open(join(dest, 'pr_haproxy.conf'), 'w') as config:
                 cp.write(config)
 
         # генерация конфига для node служб
@@ -136,17 +136,15 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 serverurl=unix:///var/run/supervisor.sock
 
 [include]
-files = /etc/supervisor/NODE.d/*.NODE
+files = /etc/supervisor/conf.d/*.conf
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface""".format(host=get_lan_ip())
-        with open(join(dest, 'supervisord.NODE'), 'w') as config:
+        with open(join(dest, 'supervisord.conf'), 'w') as config:
             config.write(template)
 
     except Exception as e:
         raise e
-
-
 
 
 if __name__ == '__main__':
