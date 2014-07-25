@@ -5,6 +5,11 @@ from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create_media_units, create_topic, create
+from settings import CONFIG_PATH
+from os.path import join
+import yaml
+import requests
+import json
 
 
 def setUpModule():
@@ -22,18 +27,22 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 class MediaUnitsTestCase(unittest.TestCase):
 
     def setUp(self):
+        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
+            conf = yaml.safe_load(file)
+        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+        self.req_sess = requests.Session()
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+        token_str = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        self.token = json.loads(token_str)['token']
 
     def test_info(self):
         IPC_pack = {'api_group': 'mediaunits',
