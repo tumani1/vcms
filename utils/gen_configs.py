@@ -147,8 +147,6 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
         raise e
 
 
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='генератор конфигов')
     parser.add_argument('--host', dest='h', default='127.0.0.1', metavar='<host>')
