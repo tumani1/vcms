@@ -86,11 +86,11 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test", lastname="Test", password='Test')
+    user = Users(city=city, firstname="Test", lastname="Test", password='Test', email='test1@test.ru')
     session.add(user)
     session.commit()
-    user2 = Users(city=city, firstname="Test1", lastname="Test1", password='Test1')
-    user3 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2')
+    user2 = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test2@test.ru')
+    user3 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test3@test.ru')
     session.add_all([user2, user3])
     session.commit()
 
