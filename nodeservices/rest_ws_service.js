@@ -39,10 +39,9 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
 function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024,
-        //lb_conf = settings.conf('zerorpc_service.yaml'),
         lb_client = new zerorpc.Client();  // клиент к балансировщику
 
-    lb_client.connect("tcp://"+conf["rest_ws_serv"]["haproxy"]["host"]+":"+conf["rest_ws_serv"]["haproxy"]["port"]);
+    lb_client.connect("tcp://"+NODE["rest_ws_serv"]["backend"]["host"]+":"+NODE["rest_ws_serv"]["backend"]["port"]);
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,
@@ -114,5 +113,5 @@ function run_server(host, port) {  // якобы общепринятое пра
     });
 }
 
-var conf = settings.conf('node_service.yaml');
-run_server(conf["rest_ws_serv"]["host"], conf["rest_ws_serv"]["port"]);
+var NODE = settings.NODE;
+run_server(NODE["rest_ws_serv"]["host"], NODE["rest_ws_serv"]["port"]);
