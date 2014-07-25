@@ -5,6 +5,4 @@ var path = require('path'),
 
 var PROJECT_PATH = __dirname;
 exports.TEMPLATES_PATH = path.join(PROJECT_PATH, 'templates');
-exports.conf = function(filename) {
-    return yaml.safeLoad(fs.readFileSync(path.join(exports.PROJECT_PATH, 'nodeservices', filename), 'utf8'));
-};
+exports.NODE = yaml.safeLoad(fs.readFileSync(path.join(PROJECT_PATH, 'nodeservices', 'node_service.yaml'), 'utf8'));
