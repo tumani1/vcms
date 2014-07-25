@@ -4,7 +4,7 @@ import requests
 import zerorpc
 import unittest
 import datetime
-from settings import CONFIG_PATH
+from settings import NODE
 from os.path import join
 
 from tests.create_test_user import create
@@ -151,9 +151,7 @@ def tearDownModule():
 class TopicLikeTestCase(unittest.TestCase):
 
     def setUp(self):
-        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
-            conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         db_sess = get_session()
