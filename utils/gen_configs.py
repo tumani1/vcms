@@ -1,10 +1,32 @@
 # coding=utf-8
+import argparse
+import yaml
+import socket
+import fcntl
+import struct
 from ConfigParser import ConfigParser as CP
 from os import curdir, makedirs
 from os.path import exists, abspath, join
 from sys import executable
-import argparse
-import yaml
+
+
+def get_lan_ip():
+
+    def get_interface_ip(ifname):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s',
+                                ifname[:15]))[20:24])
+
+    ip = socket.gethostbyname(socket.gethostname())
+    if ip.startswith("127."):
+        interfaces = ["eth0", "eth1", "eth2", "wlan0", "wlan1", "wifi0","ath0", "ath1", "ppp0"]
+        for ifname in interfaces:
+            try:
+                ip = get_interface_ip(ifname)
+                break
+            except IOError:
+                pass
+    return ip
 
 
 def path(string):
@@ -18,21 +40,27 @@ def path(string):
 
 def main(h, ha_port, pool, python, project, dest):
     try:
-        # генерация групп для zerorpc служб
+        # генерация группы для zerorpc служб
         pool = range(pool[0], pool[1])
-        for N, p in enumerate(pool, start=1):
-            config_name = 'zerorpc_service_{N}'.format(N=N)
-            sec = 'program:{name}'.format(name=config_name)
-            command = '{python} -m zerorpcservice.service --host={host} --port={port}'.format(python=python, host=h, port=p)
-            cp = CP()
-            cp.add_section(sec)
-            cp.set(sec, 'command', command)
-            cp.set(sec, 'directory', project)
+        with open(join(dest, 'zerorpc_services.conf'), 'w') as config:
 
-            with open(join(dest, config_name+'.conf'), 'w') as config:
+            programs = []
+            for N, p in enumerate(pool, start=1):
+                config_name = 'zerorpc_service_{N}'.format(N=N)
+                section = 'program:{name}'.format(name=config_name)
+                command = '{python} -m zerorpcservice.service --host={host} --port={port}'.format(python=python, host=h, port=p)
+                cp = CP()
+                cp.add_section(section)
+                cp.set(section, 'command', command)
+                cp.set(section, 'directory', project)
                 cp.write(config)
+                programs.append(config_name)
 
-        # генерация основной части конфига группы listen
+            cp= CP()
+            section = 'group:zerorpc_services'
+            cp.add_section(section)
+            cp.set(section, 'programs', ', '.join(programs))
+            cp.write(config)
 
         # генерация части haproxy конфига для группы backend
         template = """global
@@ -57,7 +85,8 @@ listen haproxy {host}:{port}
     maxconn 20000
     default_backend zeronodes
 
-backend zeronodes\n""".format(host=h, port=ha_port)
+backend zeronodes\n""".format(host=get_lan_ip(), port=ha_port)
+
         for p in pool:
             template += '\tserver backend_{N} {host}:{port}\n'.format(N=p, host=h, port=p)
 
@@ -65,10 +94,10 @@ backend zeronodes\n""".format(host=h, port=ha_port)
             config.write(template)
 
         # генерация группы haproxy
-        sec = 'program:haproxy'
+        section = 'program:haproxy'
         cp = CP()
-        cp.add_section(sec)
-        cp.set(sec, 'command', 'haproxy -f {project}/configs/haproxy.conf'.format(project=project))
+        cp.add_section(section)
+        cp.set(section, 'command', 'haproxy -f /etc/haproxy/haproxy.conf')
 
         with open(join(dest, 'pr_haproxy.conf'), 'w') as config:
                 cp.write(config)
@@ -81,13 +110,43 @@ backend zeronodes\n""".format(host=h, port=ha_port)
                 'rest_ws_serv': {
                     'host': '127.0.0.1',
                     'port': 9902}}
-        conf['render_serv']['haproxy'] = {'host':h, 'port':ha_port}
-        conf['rest_ws_serv']['haproxy'] = {'host':h, 'port':ha_port}
+        conf['render_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
+        conf['rest_ws_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
 
         with open(join(dest, 'node_service.yaml'), 'w') as config:
             yaml.dump(conf, config)
+
+        #геренерация главного конфига супервизора
+        template = """[unix_http_server]
+file=/var/run/supervisor.sock
+chmod=0700
+
+[inet_http_server]
+port={host}:9001
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+childlogdir=/var/log/supervisor
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface""".format(host=get_lan_ip())
+        with open(join(dest, 'supervisord.conf'), 'w') as config:
+            config.write(template)
+
     except Exception as e:
         raise e
+
+
 
 
 if __name__ == '__main__':

@@ -1,9 +1,11 @@
 # coding: utf-8
 import argparse
+import zerorpc
+import settings as conf
 from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
-from zerorpcservice.additional import run_zerorpc, raven_report
+from zerorpcservice.additional import raven_report
 
 
 class ZeroRpcService(object):
@@ -36,7 +38,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', dest='host', default='127.0.0.1')
     parser.add_argument('--port', dest='port', default=6600)
+    parser.add_argument('--testdb', dest='testdb', action='store_true', default=False,
+                    help='использование тестовой БД')
     namespace = parser.parse_args()
-    service_conf = vars(namespace)
 
-    run_zerorpc(ZeroRpcService, service_conf)
+    if namespace.testdb:
+        conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
+
+    server = zerorpc.Server(ZeroRpcService)
+    server.bind("tcp://{host}:{port}".format(**vars(namespace)))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcService.__name__, **vars(namespace)))
+    server.run()

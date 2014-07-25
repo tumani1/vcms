@@ -3,8 +3,8 @@
 import argparse
 
 import settings as conf
-from zerorpcserver.additional import run_zerorpc
-from zerorpcserver.service import ZeroRpcService
+from zerorpcservice.additional import run_zerorpc
+from zerorpcservice.service import ZeroRpcService
 
 
 parser = argparse.ArgumentParser(description='Start NextTV service')

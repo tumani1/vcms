@@ -42,7 +42,7 @@ function run_server(host, port) {  // якобы общепринятое пра
         //lb_conf = settings.conf('zerorpc_service.yaml'),
         lb_client = new zerorpc.Client();  // клиент к балансировщику
 
-    lb_client.connect("tcp://"+conf["rest_ws_serv"]["haproxy"]["host"]+":"+conf["rest_ws_serv"]["haproxy"]["port"]);
+    lb_client.connect("tcp://"+conf["rest_ws_serv"]["backend"]["host"]+":"+conf["rest_ws_serv"]["backend"]["port"]);
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,
