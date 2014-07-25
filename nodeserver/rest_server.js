@@ -56,7 +56,7 @@ function run_server(host, port) {  // якобы общепринятое пра
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
-            form.maxFields = 3;
+            form.maxFields = 6;
             form.parse(request, function(error, fields, files) {
                 for (var property in fields) {
                         if (!IPC_pack["query_params"].hasOwnProperty(property)) {
