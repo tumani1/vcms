@@ -8,7 +8,7 @@ from websocket import create_connection
 from utils.connection import get_session
 
 
-class RestTemplateNodeServiceTestCase(unittest.TestCase):
+class RestWsNodeServiceTestCase(unittest.TestCase):
 
     def setUp(self):
         self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
