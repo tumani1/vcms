@@ -1,22 +1,18 @@
 # coding: utf-8
-import zerorpc
+
 import unittest
-from models import Base, SessionToken, Users, UsersValues
+from models import Base, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
-from settings import CONFIG_PATH
-from os.path import join
-import yaml
+from settings import NODE
 import requests
 import json
-from utils.connection import get_session
 
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -37,9 +33,7 @@ def tearDownModule():
 class UserTestCase(unittest.TestCase):
 
     def setUp(self):
-        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
-            conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         self.engine = db_connect()

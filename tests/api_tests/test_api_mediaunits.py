@@ -1,19 +1,17 @@
 # coding: utf-8
-import zerorpc
 import unittest
-from models import Base, SessionToken
+from models import Base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create_media_units, create_topic, create
-from settings import CONFIG_PATH
-from os.path import join
-import yaml
+from settings import NODE
 import requests
 import json
 
 
 def setUpModule():
     engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -33,9 +31,7 @@ def tearDownModule():
 class MediaUnitsTestCase(unittest.TestCase):
 
     def setUp(self):
-        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
-            conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         self.engine = db_connect()
@@ -45,50 +41,18 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.token = json.loads(token_str)['token']
 
     def test_info(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {
-                        'id': 2}}
-        temp = {
-            'id': 2,
-            'title': 'mu2',
-            'title_orig': 2,
-            'description': 'test2',
-            'prev': 1,
-            'next': 3,
-            'releasedate': 1325376000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
-            'relation': {'watched': 1388534400.0},
-        }
-        resp = self.cl.route(IPC_pack)
-        self.assertDictEqual(resp, temp)
+        data = {'id': 2}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/info', headers={'token': self.token}, params=data)
+        temp = '{"releasedate":1325361600,"next":3,"title_orig":2,"description":"test2","title":"mu2",' \
+               '"enddate":1391198400,"prev":1,"id":2,"relation":{"watched":1388520000},"batch":"batch1"}'
+        self.assertEqual(resp.content, temp)
 
     def test_next(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'next',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'id': 2,}
-                    }
-        temp = {
-            'id': 3,
-            'title': 'mu3',
-            'title_orig': 3,
-            'description': 'test3',
-            'prev': 2,
-            'next': None,
-            'releasedate': 1356998400.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
-            'relation': {},
-        }
-        resp = self.cl.route(IPC_pack)
-        self.assertDictEqual(resp, temp)
+        data = {'id': 2}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/next', headers={'token': self.token}, params=data)
+        temp = '{"releasedate":1356984000,"next":null,"title_orig":3,"description":"test3","title":"mu3",' \
+               '"enddate":1391198400,"prev":2,"id":3,"relation":{},"batch":"batch1"}'
+        self.assertEqual(resp.content, temp)
 
     def test_prev(self):
         IPC_pack = {'api_group': 'mediaunits',
@@ -137,5 +101,4 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp[0], temp)
 
     def tearDown(self):
-        self.cl.close()
         self.session.remove()
