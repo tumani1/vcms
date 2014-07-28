@@ -3,7 +3,7 @@ var http = require("http"),
     querystring = require("querystring"),
     zerorpc = require("zerorpc"),
     formidable = require("formidable"),
-    settings = require("../settings.js");
+    settings = require("../settings"),
     ws = require('ws');
 
 function validate(vurl) {
