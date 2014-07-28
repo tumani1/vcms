@@ -11,7 +11,7 @@ import json
 
 def setUpModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -25,7 +25,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class MediaUnitsTestCase(unittest.TestCase):
@@ -55,50 +55,18 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertEqual(resp.content, temp)
 
     def test_prev(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'prev',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'id': 3,}
-                    }
-        temp = {
-            'id': 2,
-            'title': 'mu2',
-            'title_orig': 2,
-            'description': 'test2',
-            'prev': 1,
-            'next': 3,
-            'releasedate': 1325376000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
-            'relation': {'watched': 1388534400.0},
-        }
-        resp = self.cl.route(IPC_pack)
-        self.assertDictEqual(resp, temp)
+        data = {'id': 3}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/prev', headers={'token': self.token}, params=data)
+        temp = '{"releasedate":1325361600,"next":3,"title_orig":2,"description":"test2",' \
+               '"title":"mu2","enddate":1391198400,"prev":1,"id":2,"relation":{"watched":1388520000},"batch":"batch1"}'
+        self.assertEqual(resp.content, temp)
 
     def test_list(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'list',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'text': 'mu1',}
-                    }
-        temp = {
-            'id': 1,
-            'title': 'mu1',
-            'title_orig': 1,
-            'description': 'test1',
-            'prev': None,
-            'next': 2,
-            'releasedate': 1293840000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
-            'relation': {'watched': 1388534400.0},
-        }
-        resp = self.cl.route(IPC_pack)
-        self.assertDictEqual(resp[0], temp)
+        data = {'text': 'mu1'}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/list', headers={'token': self.token}, params=data)
+        temp = '[{"releasedate":1293829200,"next":2,"title_orig":1,"description":"test1","title":"mu1",' \
+               '"enddate":1391198400,"prev":null,"id":1,"relation":{"watched":1388520000},"batch":"batch1"}]'
+        self.assertEqual(resp.content, temp)
 
     def tearDown(self):
         self.session.remove()
