@@ -3,8 +3,7 @@ var path = require('path'),
     yaml = require("js-yaml"),
     PROJECT_PATH = __dirname;
 
-exports.CONFIG_PATH = path.join(PROJECT_PATH, 'configs');
+exports.DEBUG = true;
 exports.TEMPLATES_PATH = path.join(PROJECT_PATH, 'templates');
-exports.conf = function(filename) {
-    return yaml.safeLoad(fs.readFileSync(path.join(exports.CONFIG_PATH, filename), 'utf8'));
-};
+exports.NODE = yaml.safeLoad(fs.readFileSync(path.join(PROJECT_PATH, 'nodeservices', 'node_service.yaml'), 'utf8'));
+exports.HEARTBEAT = 100000; //собственное значение, нужен при локальной разработке

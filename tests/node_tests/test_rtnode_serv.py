@@ -1,21 +1,17 @@
 # coding=utf-8
 import unittest
-import yaml
 import requests
 import json
-from settings import CONFIG_PATH
-from os.path import join
+from settings import NODE
 from tests.create_test_user import create
 from websocket import create_connection
 from utils.connection import get_session
 
 
-class RestTemplateNodeServiceTestCase(unittest.TestCase):
+class RestWsNodeServiceTestCase(unittest.TestCase):
 
     def setUp(self):
-        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
-            conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))

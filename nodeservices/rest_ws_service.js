@@ -37,12 +37,14 @@ function form_ipc_pack(directives, headers, method, query_params) {
             query_params: qp};
 }
 
-function run_server(host, port) {  // якобы общепринятое правило прятать всё в функцию
-    var max_KB = 4 * 1024,
-        //lb_conf = settings.conf('zerorpc_service.yaml'),
-        lb_client = new zerorpc.Client();  // клиент к балансировщику
+function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы общепринятое правило прятать всё в функцию
+    var max_KB = 4 * 1024;
+    var backend_client = new zerorpc.Client({timeout: 3});  // клиент к балансировщику
+//    if (!heartbeat) {
+    //var backend_client = new zerorpc.Client(heartbeat == undefined?{}:{heartbeatInterval: heartbeat})
+//    }
 
-    lb_client.connect("tcp://"+conf["rest_ws_serv"]["haproxy"]["host"]+":"+conf["rest_ws_serv"]["haproxy"]["port"]);
+    backend_client.connect("tcp://"+bck_host+":"+bck_port);
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,
@@ -56,14 +58,14 @@ function run_server(host, port) {  // якобы общепринятое пра
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
-            form.maxFields = 3;
+            form.maxFields = 6;
             form.parse(request, function(error, fields, files) {
                 for (var property in fields) {
                         if (!IPC_pack["query_params"].hasOwnProperty(property)) {
                             IPC_pack["query_params"][property] = fields[property];
                         }
                     }
-                lb_client.invoke("route", IPC_pack, function(error, res, more) {
+                backend_client.invoke("route", IPC_pack, function(error, res, more) {
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.end(JSON.stringify(res));
                 });
@@ -75,7 +77,7 @@ function run_server(host, port) {  // якобы общепринятое пра
 
         else if (directives != null) {
             IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
-            lb_client.invoke("route", IPC_pack, function(error, res, more) {
+            backend_client.invoke("route", IPC_pack, function(error, res, more) {
                 if (error) {
                     console.error(error);
                     response.end();
@@ -100,7 +102,7 @@ function run_server(host, port) {  // якобы общепринятое пра
     ws_server.on('connection', function(socket){
         socket.on("message", function(message){
             IPC_pack = JSON.parse(message);
-            lb_client.invoke("route", IPC_pack, function(error, res, more) {
+            backend_client.invoke("route", IPC_pack, function(error, res, more) {
                 if (error){
                     console.error(error);
                     return;
@@ -114,5 +116,15 @@ function run_server(host, port) {  // якобы общепринятое пра
     });
 }
 
-var conf = settings.conf('node_service.yaml');
-run_server(conf["rest_ws_serv"]["host"], conf["rest_ws_serv"]["port"]);
+var host = settings.NODE["rest_ws_serv"]["host"],
+    port = settings.NODE["rest_ws_serv"]["port"],
+    bck_host = settings.NODE["rest_ws_serv"]["backend"]["host"],
+    bck_port = settings.NODE["rest_ws_serv"]["backend"]["port"],
+    heartbeat = settings.HEARTBEAT;
+
+if (settings.DEBUG) {
+    run_server(host, port, bck_host, bck_port, heartbeat);
+}
+else {
+    run_server(host, port, bck_host, bck_port);
+}

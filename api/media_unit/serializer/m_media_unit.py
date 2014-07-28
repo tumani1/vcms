@@ -55,9 +55,9 @@ class mMediaUnitsSerializer(DefaultSerializer):
     def transform_relation(self, instance, **kwargs):
         relation = {}
         user_media_unit = instance.user_media_units
-        if self.is_auth and not user_media_unit is None:
-            if user_media_unit.subscribed:
-                relation.update(subscribed=convert_date(user_media_unit.subscribed))
-            if user_media_unit.watched:
-                relation.update(watched=convert_date(user_media_unit.watched))
+        if self.is_auth and user_media_unit:
+            if user_media_unit[0].subscribed:               # [0] тк как существует только один обект связи одного юнита и юзера
+                relation.update(subscribed=convert_date(user_media_unit[0].subscribed))
+            if user_media_unit[0].watched:
+                relation.update(watched=convert_date(user_media_unit[0].watched))
         return relation

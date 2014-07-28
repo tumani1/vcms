@@ -6,5 +6,5 @@ from media_units import MediaUnits
 from media_in_unit import MediaInUnit
 from users_media_units import UsersMediaUnits
 
-__all__ = ['Media', 'PersonsMedia', 'UsersMedia', 'MediaLocations', 'MediaUnits', 'UsersMediaUnits']
+__all__ = ['Media', 'PersonsMedia', 'UsersMedia', 'MediaLocations', 'MediaUnits', 'UsersMediaUnits', 'MediaInUnit']
 

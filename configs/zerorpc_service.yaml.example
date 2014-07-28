@@ -1,9 +1,0 @@
-resp_api:
-  host : 127.0.0.1
-  port : 4242
-  schema : tcp
-
-cdn_api:
-  host : 127.0.0.1
-  port : 4243
-  schema : tcp

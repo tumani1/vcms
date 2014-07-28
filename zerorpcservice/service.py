@@ -1,9 +1,11 @@
 # coding: utf-8
 import argparse
+import zerorpc
+import settings as conf
 from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
-from zerorpcservice.additional import run_zerorpc, raven_report
+from zerorpcservice.additional import raven_report
 
 
 class ZeroRpcRestApiService(object):
@@ -47,6 +49,8 @@ if __name__ == '__main__':
     api_service = subparser.add_parser('api_service', help='Start API zerorpc service')
     api_service.add_argument('--host', dest='host', default='127.0.0.1')
     api_service.add_argument('--port', dest='port', default=6600)
+    parser.add_argument('--testdb', dest='testdb', action='store_true', default=False,
+                    help='использование тестовой БД')
     api_service.set_defaults(obj=ZeroRpcRestApiService)
 
     # CDN zerorpc service
@@ -56,6 +60,13 @@ if __name__ == '__main__':
     cdn_service.set_defaults(obj=ZeroRpcCdnApiService)
 
     namespace = parser.parse_args()
-    service_conf = vars(namespace)
+    server_config = vars(namespace)
+    obj_server = server_config.pop('obj')
 
-    run_zerorpc(service_conf['obj'], service_conf)
+    if namespace.testdb:
+        conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
+
+    server = zerorpc.Server(obj_server)
+    server.bind("tcp://{host}:{port}".format(**server_config))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(namespace.obj.__name__, **server_config))
+    server.run()

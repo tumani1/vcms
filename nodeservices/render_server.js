@@ -40,5 +40,5 @@ function run_server(host, port) {
     console.log("["+(new Date())+"]"+" render server runnig on "+host+":"+port);
 }
 
-var conf = settings.conf('node_service.yaml');
-run_server(conf["render_serv"]["host"], conf["render_serv"]["port"]);
+var NODE = settings.NODE('node_service.yaml');
+run_server(NODE["render_serv"]["host"], NODE["render_serv"]["port"]);

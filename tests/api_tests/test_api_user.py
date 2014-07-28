@@ -1,16 +1,18 @@
 # coding: utf-8
-import zerorpc
+
 import unittest
-from models import Base, SessionToken, Users, UsersValues
+from models import Base, Users, UsersValues
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
+from settings import NODE
+import requests
+import json
 
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -25,106 +27,63 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class UserTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+        self.req_sess = requests.Session()
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        self.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+        token_str = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        self.token = json.loads(token_str)['token']
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
 
     def test_info_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {}
-        }
-        temp = {
-                'city': 'Test',
-                'userpic': 'Test',
-                'firstname': 'Test',
-                'country': 'Test',
-                'time_zone': 'UTC',
-                'lastname': 'Test',
-                'id': 1
-        }
-        resp = self.cl.route(IPC_pack)
-        self.assertDictEqual(resp, temp)
+        resp = self.req_sess.get(self.fullpath+'/user/info', headers={'token': self.token})
+        self.assertEqual(resp.content, '{"city":"Test","userpic":"Test1","firstname":"Test1","lastname":"Test1","time_zone":"UTC","country":"Test","id":1}')
 
     def test_info_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'info',
-                    'http_method': 'put',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'firstname': 'Ivan', 'lastname': 'Ivanov'}
-        }
-        resp = self.cl.route(IPC_pack)
+        data = {'firstname': 'Ivan', 'lastname': 'Ivanov'}
+        resp = self.req_sess.put(self.fullpath+'/user/info', headers={'token': self.token}, data=data)
         test_user = self.session.query(Users).filter_by(id=self.user_id).first()
-        self.assertEqual(test_user.firstname, IPC_pack['query_params']['firstname'])
-        self.assertEqual(test_user.lastname, IPC_pack['query_params']['lastname'])
+        self.assertEqual(test_user.firstname, data['firstname'])
+        self.assertEqual(test_user.lastname, data['lastname'])
 
     def test_values_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'values',
-                    'http_method': 'put',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'name': ['shm1', 'shm2'], 'topic': 'test1', 'value': [23, 'str']}
-        }
-        resp = self.cl.route(IPC_pack)
+        data = {'name': ['shm1', 'shm2'], 'topic': 'test1', 'value': [23, 'str']}
+        resp = self.req_sess.put(self.fullpath+'/user/values', headers={'token': self.token}, data=data)
         user_val = self.session.query(UsersValues).all()
-        self.assertEqual(user_val[0].value_int, IPC_pack['query_params']['value'][0])
+        self.assertEqual(user_val[0].value_int, data['value'][0])
         self.assertEqual(user_val[0].scheme_id, 1)
-        self.assertEqual(user_val[1].value_string, IPC_pack['query_params']['value'][1])
+        self.assertEqual(user_val[1].value_string, data['value'][1])
         self.assertEqual(user_val[1].scheme_id, 2)
 
     def test_values_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'values',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'topic': 'test1'}
-        }
-        resp = self.cl.route(IPC_pack)
-        temp = {'id': 1, 'value': 777}
-        self.assertDictEqual(temp, resp[0])
+        data = {'topic': 'test1'}
+        resp = self.req_sess.get(self.fullpath+'/user/values', headers={'token': self.token}, params=data)
+        temp = '[{"id":1,"value":777}]'
+        self.assertEqual(temp, resp.content)
 
     def test_friends_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'friends',
-                    'http_method': 'get',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'limit': '4'}
-        }
-        resp = self.cl.route(IPC_pack)
-        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': False}
-        self.assertDictEqual(resp[0], temp)
+        data = {'limit': '4'}
+        resp = self.req_sess.get(self.fullpath+'/user/friends', headers={'token': self.token}, params=data)
+        temp = '[{"lastname":"Test2","relation":"f","id":2,"firstname":"Test2","is_online":false}]'
+        self.assertEqual(resp.content, temp)
 
     def test_password_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'password',
-                    'http_method': 'put',
-                    'api_format': 'json',
-                    'x_token': self.session_token[1],
-                    'query_params': {'password': 'testtest'+ str(random.randint(1,100))}
-        }
-        old_pass = self.session.query(Users).filter_by(id=self.user_id).first().password
-        resp = self.cl.route(IPC_pack)
+        old_pass = self.session.query(Users).filter_by(id=2).first().password
+        data = {'password': 'testtest'+ str(random.randint(1,100))}
+        token_str = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test2@test.ru', 'password': 'Test2'}).content
+        self.token = json.loads(token_str)['token']
+        resp = self.req_sess.put(self.fullpath+'/user/password', headers={'token': self.token}, data=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        new_pass = self.session.query(Users).filter_by(id=self.user_id).first().password
+        new_pass = self.session.query(Users).filter_by(id=2).first().password
         self.assertNotEqual(old_pass, new_pass)
