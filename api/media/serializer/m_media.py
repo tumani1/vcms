@@ -36,7 +36,8 @@ class mMediaSerializer(DefaultSerializer):
         return instance.description
 
     def transform_releasedate(self, instance, **kwargs):
-        return convert_date(instance.release_date)
+        if instance.release_date:
+            return convert_date(instance.release_date)
 
     def transform_duration(self, instance, **kwargs):
         return instance.duration
@@ -48,10 +49,10 @@ class mMediaSerializer(DefaultSerializer):
         relation = {}
         users_media = instance.users_media
         if self.is_auth and not users_media is None:
-            if users_media.watched:
-                relation.update(watched=convert_date(users_media.watched))
-            if users_media.liked:
-                relation.update(liked=convert_date(users_media.liked))
-            if users_media.play_pos:
-                relation.update(pos=users_media.play_pos)
+            if users_media[0].watched:
+                relation.update(watched=convert_date(users_media[0].watched))
+            if users_media[0].liked:
+                relation.update(liked=convert_date(users_media[0].liked))
+            if users_media[0].play_pos:
+                relation.update(pos=users_media[0].play_pos)
         return relation
