@@ -11,7 +11,7 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test", lastname="Test", password='Test')
+    user = Users(city=city, firstname="Test", lastname="Test", password='Test', email='test1@test.ru')
     session.add(user)
     session.commit()
 

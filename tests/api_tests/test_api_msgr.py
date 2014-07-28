@@ -1,19 +1,19 @@
 # coding: utf-8
-import yaml
+
 import requests
 import unittest
-import json
 from models import Base
-from os.path import join
 from utils.connection import db_connect, create_session
 from fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
-from settings import CONFIG_PATH
+from settings import NODE
 from websocket import create_connection
-from utils.connection import get_session
+
 
 
 def setUpModule():
+
     engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -25,72 +25,94 @@ def setUpModule():
     create_msgr_log(session)
 
 
+def tearDownModule():
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
+
 
 class MsgrTestCase(unittest.TestCase):
 
     def setUp(self):
-        with open(join(CONFIG_PATH, 'node_service.yaml')) as file:
-            conf = yaml.safe_load(file)
-        self.h, self.p = conf['rest_ws_serv']['host'], conf['rest_ws_serv']['port']
+        self.engine = db_connect().connect()
+        self.session = create_session(bind=self.engine, expire_on_commit=False)
+
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+
         self.req_sess = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))
-        db_sess = get_session()
-        create(db_sess)
+
         self.user_id = 1
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
+        self.token = resp.json()['token']
 
     def tearDown(self):
         self.ws.close()
 
-    def test_info_get(self):
+    def test_stream_get(self):
         data = {
-            'firstname': 'test',
-            'lastname': 'test',
-            'email': 'test@mail.ru',
-            'pswd1': '123',
-            'pswd2': '123',
-            'city_id': 1
+            'id': 1
         }
-        self.req_sess.post(self.fullpath + '/auth/register', data=data)
-        login = self.req_sess.post(self.fullpath+'/auth/login', data={
-            'email': 'tumany1@yandex.ru',
-            'password': '123'
-        })
-        token = json.loads(login.text)['token']
-        resp = self.req_sess.get(self.fullpath+'/msgr/1/info', headers={'token': token})
-        print resp
+        resp = self.req_sess.get(self.fullpath+'/msgr/stream', headers={'token': self.token}, params=data)
+        result = {
+            u'thread': 1,
+            u'created': u'2014-01-01',
+            u'text': u'text',
+            u'attach': None,
+            u'user': {
+                u'lastname': u'Test1',
+                u'relation': u'u',
+                u'id': 1,
+                u'firstname': u'Test1',
+                u'is_online': False
+            },
+            u'id': 1
+        }
+        self.assertDictEqual(resp.json()[0], result)
 
-    # def test_stat_get(self):
-    #     IPC_pack = {
-    #         'api_group': 'msgr',
-    #         'api_method': 'stat',
-    #         'http_method': 'get',
-    #         'api_format': 'json',
-    #         'x_token': self.session_token[1],
-    #         'query_params': {}
-    #     }
-    #     resp = self.cl.route(IPC_pack)
-    #     param = {'new_msgs': 1}
-    #     self.assertDictEqual(resp, param)
-    #
-    # def test_create_put(self):
-    #     IPC_pack = {
-    #         'api_group': 'msgr',
-    #         'api_method': 'create',
-    #         'http_method': 'put',
-    #         'api_format': 'json',
-    #         'x_token': self.session_token[1],
-    #         'query_params': {'user_ids': [1, 2], 'text': 'test'}
-    #     }
-    #     resp = self.cl.route(IPC_pack)
-    #
-    # def test_list_get(self):
-    #     IPC_pack = {
-    #         'api_group': 'msgr',
-    #         'api_method': 'list',
-    #         'http_method': 'get',
-    #         'api_format': 'json',
-    #         'x_token': self.session_token[1],
-    #         'query_params': {'user_author': [1, 2]}
-    #     }
-    #     resp = self.cl.route(IPC_pack)
+    def test_stat_get(self):
+        resp = self.req_sess.get(self.fullpath+'/msgr/stat', headers={'token': self.token})
+        param = {'new_msgs': 1}
+        self.assertDictEqual(resp.json(), param)
+
+    def test_create_put(self):
+        data = {
+            'user_ids': [1, 2],
+            'text': 'test'
+        }
+        resp = self.req_sess.put(self.fullpath+'/msgr/create', headers={'token': self.token}, data=data)
+        result = {
+            u'msgr_cnt': 1,
+            u'id': 2,
+            u'users': [{
+                u'lastname': u'Test1',
+                u'id': 1,
+                u'firstname': u'Test1',
+                u'is_online': False,
+                u'relation': u'u'
+            },
+            {
+                u'lastname': u'Test2',
+                u'id': 2,
+                u'firstname': u'Test2',
+                u'is_online': False,
+                u'relation': u'u'
+            }]
+        }
+        self.assertDictEqual(resp.json(), result)
+
+    def test_list_get(self):
+        result = {
+            u'msgr_cnt': 2,
+            u'id': 1,
+            u'users': {
+                u'lastname': u'Test1',
+                u'id': 1,
+                u'firstname': u'Test1',
+                u'is_online': False,
+                u'relation': u'u'
+            }
+        }
+        resp = self.req_sess.get(self.fullpath+'/msgr/list', headers={'token': self.token})
+        self.assertListEqual(resp.json(), [result])
