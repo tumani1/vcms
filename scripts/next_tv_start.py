@@ -3,8 +3,8 @@
 import argparse
 
 import settings as conf
-from zerorpcserver.additional import run_zerorpc
-from zerorpcserver.service import ZeroRpcService
+from zerorpcservice.additional import run_zerorpc
+from zerorpcservice.service import ZeroRpcRestApiService
 
 
 parser = argparse.ArgumentParser(description='Start NextTV service')
@@ -16,4 +16,4 @@ if args.test:
     conf.DATABASE['postgresql'] = conf.DATABASE['test']
 
 # Start ZeroRPC Service
-run_zerorpc(ZeroRpcService, conf.SERVICE)
+run_zerorpc(ZeroRpcRestApiService, conf.REST_SERVICE)

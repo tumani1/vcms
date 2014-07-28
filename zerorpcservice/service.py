@@ -6,13 +6,12 @@ from utils.connection import create_session, db_connect, mongo_connect
 from zerorpcservice.additional import run_zerorpc, raven_report
 
 
-class ZeroRpcService(object):
+class ZeroRpcRestApiService(object):
 
     def __init__(self):
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
-
 
     @raven_report
     def route(self, IPC_pack):
@@ -32,11 +31,31 @@ class ZeroRpcService(object):
         return response
 
 
+class ZeroRpcCdnApiService(object):
+
+    def media_play(self, user_token, media_id):
+        return 200
+
+    def media_play_done(self, user_token, media_id):
+        return 200
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--host', dest='host', default='127.0.0.1')
-    parser.add_argument('--port', dest='port', default=6600)
+    parser = argparse.ArgumentParser(usage='python -m service subcommand [options] [args]')
+
+    subparser = parser.add_subparsers(title='Commands')
+    # API zerorpc service
+    api_service = subparser.add_parser('api_service', help='Start API zerorpc service')
+    api_service.add_argument('--host', dest='host', default='127.0.0.1')
+    api_service.add_argument('--port', dest='port', default=6600)
+    api_service.set_defaults(obj=ZeroRpcRestApiService)
+
+    # CDN zerorpc service
+    cdn_service = subparser.add_parser('cdn_service', help='Startc CDN zerorpc service')
+    cdn_service.add_argument('--host', dest='host', default='127.0.0.1')
+    cdn_service.add_argument('--port', dest='port', default=6601)
+    cdn_service.set_defaults(obj=ZeroRpcCdnApiService)
+
     namespace = parser.parse_args()
     service_conf = vars(namespace)
 
-    run_zerorpc(ZeroRpcService, service_conf)
+    run_zerorpc(service_conf['obj'], service_conf)
