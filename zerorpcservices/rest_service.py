@@ -5,7 +5,7 @@ import settings as conf
 from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
-from zerorpcservice.additional import raven_report
+from zerorpcservices.additional import raven_report
 
 
 class ZeroRpcRestApiService(object):

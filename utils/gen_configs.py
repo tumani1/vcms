@@ -49,7 +49,7 @@ def main(h, ha_port, ha_stat_port, pool, python, project, dest):
             for N, p in enumerate(pool, start=1):
                 config_name = 'zerorpc_service_{N}'.format(N=N)
                 section = 'program:{name}'.format(name=config_name)
-                command = '{python} -m zerorpcservice.service --host={host} --port={port}'.format(python=python, host=h, port=p)
+                command = '{python} -m zerorpcservices.rest_service --host={host} --port={port}'.format(python=python, host=h, port=p)
                 cp = CP()
                 cp.add_section(section)
                 cp.set(section, 'command', command)

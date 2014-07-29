@@ -16,7 +16,7 @@ class ZeroRpcCdnApiService(object):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', dest='host', default='127.0.0.1')
-    parser.add_argument('--port', dest='port', default=6601)
+    parser.add_argument('--port', dest='port', default=6500)
     parser.add_argument('--testdb', dest='testdb', action='store_true', default=False,
                     help='использование тестовой БД')
     namespace = parser.parse_args()
