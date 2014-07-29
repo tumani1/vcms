@@ -1,11 +1,14 @@
 # coding: utf-8
-import zerorpc
+import json
+
+import requests
 import unittest
 import datetime
+from settings import NODE
 
 from tests.create_test_user import create
 from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
-from utils.connection import db_connect, create_session
+from utils.connection import db_connect, create_session, get_session
 
 
 def create_topic(session):
@@ -71,6 +74,7 @@ def create_topic_extras(session):
 
 def setUpModule():
     engine = db_connect().connect()
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -88,7 +92,8 @@ def setUpModule():
 
 
 def tearDownModule():
-    pass
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 ###################################################################################
@@ -98,46 +103,36 @@ class TopicInfoTestCase(unittest.TestCase):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
 
-        self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.req_sess = requests.Session()
 
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
     def test_echo(self):
         topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "info",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
-        }
+        resp = self.req_sess.get(self.fullpath + '/topics/info', headers={'token': self.token}, params={'name': topic})
 
-        resp = self.cl.route(IPC_pack)
         temp = {
-            'name': 'test',
-            'title': 'test',
-            'title_orig': None,
-            'description': 'test test',
-            'releasedate': 1388534400.0,
-            'type': 'news',
-            'relation': {
-                'subscribed': False,
-                'liked': 0,
+            u'name': u'test',
+            u'title': u'test',
+            u'title_orig': None,
+            u'description': u'test test',
+            u'releasedate': 1388520000,
+            u'type': u'news',
+            u'relation': {
+                u'subscribed': False,
+                u'liked': 0,
             }
         }
 
-        self.assertDictEqual(temp, resp)
-
+        self.assertDictEqual(temp, resp.json())
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
@@ -149,47 +144,28 @@ class TopicLikeTestCase(unittest.TestCase):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
 
+        self.req_sess = requests.Session()
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
+
 
 
     def test_echo_get(self):
-        topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+        resp = self.req_sess.get(self.fullpath + '/topics/like', headers={'token': self.token}, params={'name': 'test'})
+        temp = {
+            'liked': 0
         }
-
-        resp = self.cl.route(IPC_pack)
-        temp = {'liked': 0}
-
-        self.assertDictEqual(temp, resp)
+        self.assertDictEqual(temp, resp.json())
 
 
     def test_echo_post(self):
         topic = "test1"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "name": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.req_sess.post(self.fullpath + '/topics/like', headers={'token': self.token}, data={'name': topic})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -199,19 +175,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test2"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                "name": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.req_sess.delete(self.fullpath + '/topics/like', headers={'token': self.token}, params={'name': topic})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -220,59 +184,39 @@ class TopicLikeTestCase(unittest.TestCase):
 
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
 
-###################################################################################
+# ###################################################################################
 class TopicSubscribeTestCase(unittest.TestCase):
 
     def setUp(self):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
 
+        self.req_sess = requests.Session()
         self.user_id = 1
-        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
 
     def test_echo_get(self):
         topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
-        }
+        resp = self.req_sess.get(self.fullpath + '/topics/subscribe', headers={'token': self.token}, params={'name': topic})
 
-        resp = self.cl.route(IPC_pack)
         temp = {'subscribed': 0}
 
-        self.assertDictEqual(temp, resp)
+        self.assertDictEqual(temp, resp.json())
 
 
     def test_echo_post(self):
         topic = "test2"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "name": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        resp = self.req_sess.post(self.fullpath + '/topics/subscribe', headers={'token': self.token}, data={'name': topic})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -282,19 +226,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test1"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
-            "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                "name": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        resp = self.req_sess.delete(self.fullpath + '/topics/subscribe', headers={'token': self.token}, params={'name': topic})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -303,7 +235,6 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
@@ -315,28 +246,23 @@ class TopicExtrasTestCase(unittest.TestCase):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+
+        self.req_sess = requests.Session()
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
 
     def test_echo(self):
         topic = 'test'
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "extras",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
+        resp = self.req_sess.get(self.fullpath + '/topics/extras', headers={'token': self.token}, params={'name': topic})
 
         temp = [
             {
                 'description': 'test test',
-                'created': 1388534400.0,
+                'created': 1388520000,
                 'title': 'test',
                 'title_orig': 'test',
                 'location': 'russia',
@@ -344,7 +270,7 @@ class TopicExtrasTestCase(unittest.TestCase):
                 'id': 1
             }, {
                 'description': 'test1 test',
-                'created': 1388534400.0,
+                'created': 1388520000,
                 'title': 'test1',
                 'title_orig': 'test1',
                 'location': 'russia',
@@ -353,10 +279,9 @@ class TopicExtrasTestCase(unittest.TestCase):
             }
         ]
 
-        self.assertListEqual(temp, resp)
+        self.assertListEqual(temp, resp.json())
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
@@ -368,24 +293,18 @@ class TopicListTestCase(unittest.TestCase):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
 
+        self.req_sess = requests.Session()
+        self.user_id = 1
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
     def test_echo(self):
         topic = 'news'
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "list",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "type": topic,
-            }
-        }
-
-        resp = self.cl.route(IPC_pack)
-        self.assertEqual(len(resp), 2)
+        resp = self.req_sess.get(self.fullpath + '/topics/list', headers={'token': self.token}, params={'name': topic})
 
         temp = [
             {
@@ -406,11 +325,10 @@ class TopicListTestCase(unittest.TestCase):
                 'name': 'test'
             }
         ]
-        self.assertListEqual(temp, resp)
+        self.assertListEqual(temp, resp.json())
 
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
@@ -422,96 +340,83 @@ class TopicValuesTestCase(unittest.TestCase):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+
+        self.req_sess = requests.Session()
+        self.user_id = 1
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
     def test_echo(self):
         topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "values",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-                "scheme_name": "t",
-            }
-        }
+        resp = self.req_sess.get(self.fullpath + '/topics/values', headers={'token': self.token}, params={'name': topic, 'scheme_name': 't'})
 
-        resp = self.cl.route(IPC_pack)
         temp = []
 
-        self.assertEqual(temp, resp)
+        self.assertEqual(temp, resp.json())
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
 
-###################################################################################
+##################################################################################
 class TopicMediaTestCase(unittest.TestCase):
 
     def setUp(self):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+
+        self.req_sess = requests.Session()
+        self.user_id = 1
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
 
     def test_echo(self):
         topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "media",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
-        }
+        resp = self.req_sess.get(self.fullpath + '/topics/media', headers={'token': self.token}, params={'name': topic})
 
-        resp = self.cl.route(IPC_pack)
         temp = []
 
-        self.assertEqual(temp, resp)
+        self.assertListEqual(temp, resp.json())
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()
 
 
-###################################################################################
+##################################################################################
 class TopicPersonsTestCase(unittest.TestCase):
 
     def setUp(self):
         self.engine = db_connect().connect()
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
-        self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        self.fullpath = 'http://{}:{}'.format(self.h, self.p)
+
+        self.req_sess = requests.Session()
+        self.user_id = 1
+
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test'})
+        self.token = resp.json()['token']
 
 
     def test_echo(self):
         topic = "test"
-        IPC_pack = {
-            "api_group": "topics",
-            "api_method": "persons",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
-        }
+        resp = self.req_sess.get(self.fullpath + '/topics/persons', headers={'token': self.token}, params={'name': topic})
 
-        resp = self.cl.route(IPC_pack)
         temp = []
 
-        self.assertEqual(temp, resp)
+        self.assertListEqual(temp, resp.json())
 
     def tearDown(self):
-        self.cl.close()
         self.session.close()
         self.engine.close()

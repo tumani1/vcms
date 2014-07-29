@@ -35,6 +35,11 @@ class MsgrLog(Base):
         return query
 
     @classmethod
+    def get_msgr_log_by_msgr_thread_id_and_user_id(cls, session, msgr_thread_id, user_id):
+        query = cls.tmpl_for_msgr_log(session).filter(and_(cls.msgr_threads_id==msgr_thread_id, cls.user_id==user_id))
+        return query
+
+    @classmethod
     def get_msgr_log_by_msgr_thread_id_limit(cls, session, msgr_thread_id, limit):
         if limit['id_dwn'] != 0 and limit['id_top'] != 0:
             query = cls.tmpl_for_msgr_log(session).filter(and_(limit['id_top'] >= cls.id, cls.id>=limit['id_dwn']), cls.msgr_threads_id==msgr_thread_id)
