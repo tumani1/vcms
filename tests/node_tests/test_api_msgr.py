@@ -2,7 +2,7 @@
 
 import requests
 import unittest
-from models import Base
+from models import Base, MsgrLog
 from utils.connection import db_connect, create_session
 from fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
 from settings import NODE
@@ -116,3 +116,13 @@ class MsgrTestCase(unittest.TestCase):
         }
         resp = self.req_sess.get(self.fullpath+'/msgr/list', headers={'token': self.token})
         self.assertListEqual(resp.json(), [result])
+
+    def test_send_put(self):
+        data = {
+            u'text': u'Hi',
+            u'id': 1
+        }
+        resp = self.req_sess.put(self.fullpath+'/msgr/send', headers={'token': self.token}, data=data)
+        msgr_log = MsgrLog.get_msgr_log_by_msgr_thread_id_and_user_id(self.session, 1, 1).all()
+        self.assertEqual(data['text'], msgr_log[1].text)
+
