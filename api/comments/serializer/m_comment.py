@@ -85,12 +85,15 @@ class mCommentSerializer(DefaultSerializer):
     def transform_relation(self, instance, **kwargs):
         relation = {}
         if instance.id in self.rel_dict.keys():
-            relation = {'liked': convert_date(self.rel_dict[instance.id].liked)}
+            if self.rel_dict[instance.id].liked:
+                relation = {'liked': convert_date(self.rel_dict[instance.id].liked)}
         return relation
 
     def get_users_and_comment_ids_by_comments(self, comments):
         users_ids = []
         com_ids = []
+        if not isinstance(comments, list):
+            comments = [comments]
         for com in comments:
             users_ids.append(com.user_id)
             com_ids.append(com.id)

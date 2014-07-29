@@ -31,7 +31,7 @@ def tearDownModule():
     # engine.execute("drop schema public cascade; create schema public;")
 
 
-class MediaUnitsTestCase(unittest.TestCase):
+class MediaTestCase(unittest.TestCase):
 
     def setUp(self):
         self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
@@ -46,30 +46,63 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_info(self):
         data = {'id': 1}
         resp = self.req_sess.get(self.fullpath+'/media/info', headers={'token': self.token}, params=data)
-        temp = '{"releasedate":null,"title_orig":"test_media1","description":"test_desc1",' \
-               '"title":"тест_медиа1","duration":null,"relation":{"watched":1356984000,"liked":1388520000,"pos":50},"id":1,"locations":[]}'
-        self.assertEqual(resp.content, temp)
+        temp = {
+            u'description': u'test_desc1',
+            u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01',
+            u'locations': [],
+            u'releasedate': None,
+            u'title_orig': u'test_media1',
+            u'duration': None,
+            u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50},
+            u'id': 1
+        }
+        self.assertDictEqual(resp.json(), temp)
 
     def test_list(self):
         data = {'text': u'тест_медиа1'}
         resp = self.req_sess.get(self.fullpath+'/media/list', headers={'token': self.token}, params=data)
-        temp = '[{"releasedate":null,"title_orig":"test_media1","description":"test_desc1","title":"тест_медиа1",' \
-               '"duration":null,"relation":{"watched":1356984000,"liked":1388520000,"pos":50},"id":1,"locations":[]}]'
-        self.assertEqual(resp.content, temp)
+        temp = [{
+                    u'description': u'test_desc1',
+                    u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01',
+                    u'locations': [],
+                    u'releasedate': None,
+                    u'title_orig': u'test_media1',
+                    u'duration': None,
+                    u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50},
+                    u'id': 1
+                }]
+        self.assertListEqual(resp.json(), temp)
 
     def test_media_persons(self):
         data = {'id': 1}
         resp = self.req_sess.get(self.fullpath+'/media/persons', headers={'token': self.token}, params=data)
-        temp = '[{"firstname":"test","lastname":"testov","role":"actor","user":{"lastvisit":"","city":"Test","country":"Test","firstname":"Test1","gender":"n",' \
-               '"lastname":"Test1","is_online":false,"id":1,"regdate":1325361600},"relation":{},"type":"","id":1}]'
-        self.assertEqual(resp.content, temp)
+        temp = [{
+                    u'firstname': u'test',
+                    u'lastname': u'testov',
+                    u'relation': {},
+                    u'user': {u'lastvisit': u'', u'city': u'Test', u'firstname': u'Test1', u'gender': u'n', u'is_online': False, u'regdate': 1325361600, u'lastname': u'Test1', u'country': u'Test', u'id': 1},
+                    u'role': u'actor',
+                    u'type': u'',
+                    u'id': 1
+                }]
+        self.assertListEqual(resp.json(), temp)
 
     def test_media_units(self):
         data = {'id': 1}
-        resp = self.req_sess.get(self.fullpath+'/media/persons', headers={'token': self.token}, params=data)
-        temp = '[{"firstname":"test","lastname":"testov","role":"actor","user":{"lastvisit":"","city":"Test","country":"Test","firstname":"Test1","gender":"n","lastname":"Test1",' \
-               '"is_online":false,"id":1,"regdate":1325361600},"relation":{},"type":"","id":1}]'
-        self.assertEqual(resp.content, temp)
+        resp = self.req_sess.get(self.fullpath+'/media/units', headers={'token': self.token}, params=data)
+        temp = [{
+                    u'enddate': 1391198400,
+                    u'description': u'test2',
+                    u'title': u'mu2',
+                    u'batch': u'batch1',
+                    u'next': 3,
+                    u'releasedate': 1325361600,
+                    u'title_orig': 2,
+                    u'relation': {u'watched': 1388520000},
+                    u'prev': 1,
+                    u'id': 2
+                }]
+        self.assertListEqual(resp.json(), temp)
 
     def test_media_like_get(self):
         data = {'id': 3}

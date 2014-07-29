@@ -27,8 +27,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect("tcp://127.0.0.1:4242")
-        
-        
+
+
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
         user = create(self.session)
         self.user_id = user.id
@@ -45,7 +45,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         auth_resp = self.cl.route(Auth_IPC_pack)
 
         session_token = auth_resp['session_token']
-        
+
         IPC_pack = {
             'api_group': 'test',
             'api_method': 'echo_auth',
@@ -79,7 +79,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
             'token': None
         }
         auth_resp = self.cl.route(Del_IPC_pack)
-        
+
         IPC_pack = {
             'api_group': 'test',
             'api_method': 'echo_auth',

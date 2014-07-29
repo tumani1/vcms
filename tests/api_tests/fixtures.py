@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues, \
-    UsersMsgrThreads, MsgrThreads, MsgrLog, Media, UsersMedia, MediaInUnit, Persons, PersonsMedia
+    UsersMsgrThreads, MsgrThreads, MsgrLog, Media, UsersMedia, MediaInUnit, Persons, PersonsMedia, Comments, UsersComments
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 
@@ -36,6 +36,13 @@ def create_persons(session):
     session.add_all([person1, ])
     session.commit()
 
+def create_comments(session):
+    com1 = Comments(user_id=1, text='Test', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='m', obj_id=1)
+    com2 = Comments(user_id=1, text='Test2', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='mu', obj_id=1)
+    com3 = Comments(user_id=1, text='Test3', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='mu', obj_id=1)
+    user_com1 = UsersComments(user_id=1, comment_id=3, liked=datetime.datetime(2014,1,1,0,0,0,0))
+    session.add_all([com1, com2, com3, user_com1])
+    session.commit()
 
 def create_topic(session):
     list_topics = [

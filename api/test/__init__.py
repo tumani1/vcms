@@ -16,7 +16,7 @@ def echo_auth(auth_user, **kwargs):
 
 routes = {'echo': {'put': put,
                    'get': get},
-          'echo_auth': {'get': echo_auth}
+          'echoauth': {'get': echo_auth}
     }
 
 

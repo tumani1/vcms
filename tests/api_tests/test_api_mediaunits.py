@@ -43,30 +43,70 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_info(self):
         data = {'id': 2}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/info', headers={'token': self.token}, params=data)
-        temp = '{"releasedate":1325361600,"next":3,"title_orig":2,"description":"test2","title":"mu2",' \
-               '"enddate":1391198400,"prev":1,"id":2,"relation":{"watched":1388520000},"batch":"batch1"}'
-        self.assertEqual(resp.content, temp)
+        temp = {
+            u'enddate': 1391198400,
+            u'description': u'test2',
+            u'title': u'mu2',
+            u'batch': u'batch1',
+            u'next': 3,
+            u'releasedate': 1325361600,
+            u'title_orig': 2,
+            u'relation': {u'watched': 1388520000},
+            u'prev': 1,
+            u'id': 2
+        }
+        self.assertDictEqual(resp.json(), temp)
 
     def test_next(self):
         data = {'id': 2}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/next', headers={'token': self.token}, params=data)
-        temp = '{"releasedate":1356984000,"next":null,"title_orig":3,"description":"test3","title":"mu3",' \
-               '"enddate":1391198400,"prev":2,"id":3,"relation":{},"batch":"batch1"}'
-        self.assertEqual(resp.content, temp)
+        temp = {
+            u'enddate': 1391198400,
+            u'description': u'test3',
+            u'title': u'mu3',
+            u'batch': u'batch1',
+            u'next': None,
+            u'releasedate': 1356984000,
+            u'title_orig': 3,
+            u'relation': {},
+            u'prev': 2,
+            u'id': 3
+        }
+        self.assertDictEqual(resp.json(), temp)
 
     def test_prev(self):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/prev', headers={'token': self.token}, params=data)
-        temp = '{"releasedate":1325361600,"next":3,"title_orig":2,"description":"test2",' \
-               '"title":"mu2","enddate":1391198400,"prev":1,"id":2,"relation":{"watched":1388520000},"batch":"batch1"}'
-        self.assertEqual(resp.content, temp)
+        temp = {
+            u'enddate': 1391198400,
+            u'description': u'test2',
+            u'title': u'mu2',
+            u'batch': u'batch1',
+            u'next': 3,
+            u'releasedate': 1325361600,
+            u'title_orig': 2,
+            u'relation': {u'watched': 1388520000},
+            u'prev': 1,
+            u'id': 2
+        }
+        self.assertDictEqual(resp.json(), temp)
 
     def test_list(self):
         data = {'text': 'mu1'}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/list', headers={'token': self.token}, params=data)
-        temp = '[{"releasedate":1293829200,"next":2,"title_orig":1,"description":"test1","title":"mu1",' \
-               '"enddate":1391198400,"prev":null,"id":1,"relation":{"watched":1388520000},"batch":"batch1"}]'
-        self.assertEqual(resp.content, temp)
+        temp = [{
+                    u'enddate': 1391198400,
+                    u'description': u'test1',
+                    u'title': u'mu1',
+                    u'batch': u'batch1',
+                    u'next': 2,
+                    u'releasedate': 1293829200,
+                    u'title_orig': 1,
+                    u'relation': {u'watched': 1388520000},
+                    u'prev': None,
+                    u'id': 1
+                }]
+        self.assertListEqual(resp.json(), temp)
 
     def tearDown(self):
         self.session.remove()
