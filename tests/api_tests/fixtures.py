@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues, \
-    UsersMsgrThreads, MsgrThreads, MsgrLog, Media, UsersMedia, MediaInUnit, Persons, PersonsMedia, Comments, UsersComments
+    UsersMsgrThreads, MsgrThreads, MsgrLog
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 
@@ -15,34 +15,6 @@ def create_media_units(session):
     session.add_all([mu1, mu2, mu3, user_mu1, user_mu2])
     session.commit()
 
-
-def create_media(session):
-    media1 = Media(title='тест_медиа1', title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0))
-    media2 = Media(title='тест_медиа2', title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0))
-    media3 = Media(title='тест_медиа3', title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0))
-    media4 = Media(title='тест_медиа4', title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0))
-    m_in_u1 = MediaInUnit(media_id=1, media_unit_id=2)
-    m_in_u2 = MediaInUnit(media_id=2, media_unit_id=1)
-    user_m1 = UsersMedia(media_id=1, user_id=1, views_cnt=5, play_pos=50, playlist=datetime.datetime(2013,2,1,0,0,0,0),liked =datetime.datetime(2014,1,1,0,0,0,0),  watched=datetime.datetime(2013,1,1,0,0,0,0))
-    user_m2 = UsersMedia(media_id=2, user_id=1, views_cnt=10, watched=datetime.datetime(2014,1,1,0,0,0,0))
-    user_m3 = UsersMedia(media_id=3, user_id=1, views_cnt=10, play_pos=20, playlist=datetime.datetime(2014,2,1,0,0,0,0), watched=datetime.datetime(2014,1,1,0,0,0,0))
-    user_m4 = UsersMedia(media_id=4, user_id=1, views_cnt=5, play_pos=50, playlist=datetime.datetime(2013,2,1,0,0,0,0),liked =datetime.datetime(2014,1,1,0,0,0,0),  watched=datetime.datetime(2013,1,1,0,0,0,0))
-    pers_m1 = PersonsMedia(media_id=1, person_id=1, role='actor')
-    session.add_all([media1, media2, media3,media4, m_in_u1, m_in_u2, user_m1, user_m2, user_m3, user_m4, pers_m1])
-    session.commit()
-
-def create_persons(session):
-    person1 = Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio')
-    session.add_all([person1, ])
-    session.commit()
-
-def create_comments(session):
-    com1 = Comments(user_id=1, text='Test', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='m', obj_id=1)
-    com2 = Comments(user_id=1, text='Test2', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='mu', obj_id=1)
-    com3 = Comments(user_id=1, text='Test3', created=datetime.datetime(2014,1,1,0,0,0,0), obj_type='mu', obj_id=1)
-    user_com1 = UsersComments(user_id=1, comment_id=3, liked=datetime.datetime(2014,1,1,0,0,0,0))
-    session.add_all([com1, com2, com3, user_com1])
-    session.commit()
 
 def create_topic(session):
     list_topics = [
@@ -114,11 +86,11 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test1@test.ru', created=datetime.datetime(2012,1,1,0,0,0,0))
+    user = Users(city=city, firstname="Test", lastname="Test", password='Test')
     session.add(user)
     session.commit()
-    user2 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test2@test.ru', created=datetime.datetime(2012,2,1,0,0,0,0))
-    user3 = Users(city=city, firstname="Test3", lastname="Test3", password='Test3', email='test3@test.ru', created=datetime.datetime(2012,3,1,0,0,0,0))
+    user2 = Users(city=city, firstname="Test1", lastname="Test1", password='Test1')
+    user3 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2')
     session.add_all([user2, user3])
     session.commit()
 
@@ -141,9 +113,7 @@ def create_users_values(session):
 def create_users_rels(session):
     user_rels1 = UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
     user_rels2 = UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels3 = UsersRels(user_id=2, partner_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels4 = UsersRels(user_id=3, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    session.add_all([user_rels1, user_rels2, user_rels3, user_rels4])
+    session.add_all([user_rels1, user_rels2])
     session.commit()
 
 

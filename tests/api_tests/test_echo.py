@@ -1,4 +1,4 @@
-# coding: utf-8
+#
 import zerorpc
 import unittest
 from tests.create_test_user import create
