@@ -3,7 +3,7 @@ var http = require("http"),
     querystring = require("querystring"),
     zerorpc = require("zerorpc"),
     formidable = require("formidable"),
-    settings = require("../settings.js");
+    settings = require("../settings"),
     ws = require('ws');
 
 function validate(vurl) {
@@ -39,10 +39,7 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
 function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы общепринятое правило прятать всё в функцию
     var max_KB = 4 * 1024;
-    var backend_client = new zerorpc.Client({timeout: 3});  // клиент к балансировщику
-//    if (!heartbeat) {
-    //var backend_client = new zerorpc.Client(heartbeat == undefined?{}:{heartbeatInterval: heartbeat})
-//    }
+    var backend_client = new zerorpc.Client(heartbeat == undefined? {}: {heartbeatInterval: heartbeat})
 
     backend_client.connect("tcp://"+bck_host+":"+bck_port);
     var server = http.createServer(function(request, response) {

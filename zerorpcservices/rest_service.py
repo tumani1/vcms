@@ -5,16 +5,15 @@ import settings as conf
 from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
-from zerorpcservice.additional import raven_report
+from zerorpcservices.additional import raven_report
 
 
-class ZeroRpcService(object):
+class ZeroRpcRestApiService(object):
 
     def __init__(self):
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
-
 
     @raven_report
     def route(self, IPC_pack):
@@ -45,7 +44,7 @@ if __name__ == '__main__':
     if namespace.testdb:
         conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
 
-    server = zerorpc.Server(ZeroRpcService())
+    server = zerorpc.Server(ZeroRpcRestApiService)
     server.bind("tcp://{host}:{port}".format(**vars(namespace)))
-    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcService.__name__, **vars(namespace)))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcRestApiService.__name__, **vars(namespace)))
     server.run()

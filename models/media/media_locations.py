@@ -6,6 +6,7 @@ from models import Base
 
 class MediaLocations(Base):
     __tablename__ = 'media_locations'
+
     id = Column(Integer, primary_key=True)
     cdn_name = Column(String, ForeignKey('cdn.name'), nullable=False)
     media_id = Column(Integer, ForeignKey('media.id'), nullable=False)

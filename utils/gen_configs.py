@@ -11,7 +11,7 @@ from sys import executable
 
 
 def get_lan_ip():
-
+    """возвращает строку с IP адресом, используя низкоуровневую магию"""
     def get_interface_ip(ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         return socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, struct.pack('256s',
@@ -30,6 +30,7 @@ def get_lan_ip():
 
 
 def path(string):
+    """Удобный пользовательский тип для значений аргументов, которые обозначают директорию."""
     r_string = abspath(string)
     if not exists(string):
         makedirs(r_string)
@@ -48,7 +49,7 @@ def main(h, ha_port, ha_stat_port, pool, python, project, dest):
             for N, p in enumerate(pool, start=1):
                 config_name = 'zerorpc_service_{N}'.format(N=N)
                 section = 'program:{name}'.format(name=config_name)
-                command = '{python} -m zerorpcservice.service --host={host} --port={port}'.format(python=python, host=h, port=p)
+                command = '{python} -m zerorpcservices.rest_service --host={host} --port={port}'.format(python=python, host=h, port=p)
                 cp = CP()
                 cp.add_section(section)
                 cp.set(section, 'command', command)
@@ -159,14 +160,19 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='генератор конфигов')
-    parser.add_argument('--host', dest='h', default='127.0.0.1', metavar='<host>')
-    parser.add_argument('--ha_port', dest='ha_port', type=int, default=6700, metavar='<port>')
-    parser.add_argument('--ha_stat_port', dest='ha_stat_port', type=int, default=6710, metavar='<port>')
+    parser = argparse.ArgumentParser(description='ГЕНЕРИРУЕТ КОНФИГИ ДЛЯ ZERORPC СЛУЖБ, NODEJS_REST_WS, HAPROXY, SUPERVISOR.'
+                                                 ' ВСЕ ПАРАМЕТРЫ ИМЕЮТ ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ. ')
+    parser.add_argument('--host', dest='h', default='127.0.0.1', metavar='<host>',
+                        help='адрес, на котором будут запускаться большинство служб')
+    parser.add_argument('--ha_port', dest='ha_port', type=int, default=6700, metavar='<port>',
+                        help='порт для балансировщика')
+    parser.add_argument('--ha_stat_port', dest='ha_stat_port', type=int, default=6710, metavar='<port>',
+                        help='порт, на котором будет запущен веб-интерфейс балансировщика')
     parser.add_argument('--project', dest='project', type=path, default=curdir, metavar='<path>',
                         help='путь корня проекта')
     parser.add_argument('--port_pool', dest='pool', nargs=2, type=int, default=[6600, 6608], metavar='<port>',
-                        help='два значения - начало и конец промежутка портов, напр. --port_pool 6000 6008')
+                        help='два значения - начало и конец промежутка портов, напр. --port_pool 6000 6008. '
+                             'По ним генерируется количество ZeroRPC служб')
     parser.add_argument('--python', dest='python', type=path, default=executable, metavar='<path>',
                         help='путь и имя исполняемого файла питона из виртуального окружения')
     parser.add_argument('--destination', dest='dest', type=path, default='generated_configs', metavar='<path>',

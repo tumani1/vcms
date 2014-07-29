@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import os
 import yaml
 
@@ -34,7 +33,7 @@ DATABASE = {
 }
 
 NODE = {}
-with open(os.path.join(BASE_PATH, 'nodeservices/node_service.yaml')) as conf:
+with open(os.path.join(BASE_PATH, 'nodeservices', 'node_service.yaml')) as conf:
     NODE = yaml.safe_load(conf)
 
 TOKEN_LIFETIME = 15

@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship, contains_eager
 
 class MediaUnits(Base):
     __tablename__ = 'media_units'
+
     id = Column(Integer, primary_key=True)
     topic_name = Column(String, ForeignKey('topics.name'), nullable=False)
     title = Column(String, nullable=True)
