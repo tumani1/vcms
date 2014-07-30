@@ -2,6 +2,7 @@
 
 import zerorpc
 import unittest
+
 from zerorpc.exceptions import RemoteError
 
 from utils.connection import create_session, db_connect
