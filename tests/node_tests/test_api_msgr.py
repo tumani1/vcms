@@ -13,7 +13,7 @@ from websocket import create_connection
 def setUpModule():
 
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    #engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -27,7 +27,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    #engine.execute("drop schema public cascade; create schema public;")
 
 
 class MsgrTestCase(unittest.TestCase):
@@ -49,6 +49,8 @@ class MsgrTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.ws.close()
+        self.req_sess.close()
+        self.session.close()
 
     def test_stream_get(self):
         data = {
