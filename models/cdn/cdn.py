@@ -18,5 +18,6 @@ class CDN(Base):
     cdn_type       = Column(String)
 
     cdn_medias = relationship('MediaLocations', backref='cdn', cascade='all, delete')
+
     def __repr__(self):
         return u'<CDN(name={0})>'.format(self.name)

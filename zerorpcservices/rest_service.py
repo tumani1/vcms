@@ -44,7 +44,7 @@ if __name__ == '__main__':
     if namespace.testdb:
         conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
 
-    server = zerorpc.Server(ZeroRpcRestApiService)
+    server = zerorpc.Server(ZeroRpcRestApiService())
     server.bind("tcp://{host}:{port}".format(**vars(namespace)))
     print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcRestApiService.__name__, **vars(namespace)))
     server.run()
