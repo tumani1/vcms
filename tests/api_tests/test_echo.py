@@ -3,13 +3,14 @@ import zerorpc
 import unittest
 from tests.create_test_user import create
 from utils.connection import db_connect, create_session
+from tests.constants import ZERORPC_SERVICE_URI
 
 
 class ZeroRpcServiceTestCase(unittest.TestCase):
 
     def setUp(self):
         self.cl = zerorpc.Client()
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
         engine = db_connect()
         session = create_session(bind=engine)
         create(session)

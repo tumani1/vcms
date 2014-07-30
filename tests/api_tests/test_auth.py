@@ -10,7 +10,6 @@ from tests.create_test_user import create, clear
 from models import GlobalToken
 from tests.constants import ZERORPC_SERVICE_URI
 
-
 def get_token_by_id(user_id, session):
     gt = session.query(GlobalToken).filter(GlobalToken.user_id == user_id)
 
@@ -51,7 +50,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         
         IPC_pack = {
             'api_group': 'test',
-            'api_method': 'echo_auth',
+            'api_method': 'echoauth',
             'http_method': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}
@@ -85,7 +84,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         
         IPC_pack = {
             'api_group': 'test',
-            'api_method': 'echo_auth',
+            'api_method': 'echoauth',
             'http_method': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}
