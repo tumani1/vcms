@@ -1,7 +1,6 @@
 # coding: utf-8
 
-from models.users import Users
-from models.tokens import GlobalToken
+from models import GlobalToken, Users
 from utils.exceptions import NotAuthorizedException
 
 

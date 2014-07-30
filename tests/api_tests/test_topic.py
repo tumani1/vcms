@@ -5,73 +5,15 @@ import unittest
 import datetime
 
 from tests.create_test_user import create
-from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
+from tests.fixtures import create_topic, create_user_topic, create_cdn, create_extras, create_topic_extras
+
+from models import Base, SessionToken, UsersTopics, Users
 from utils.connection import db_connect, create_session
-
-
-def create_topic(session):
-    list_topics = [
-        Topics(name="test", title="test", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
-        Topics(name="test1", title="test1", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="news"),
-        Topics(name="test2", title="test2", description="test test", releasedate=datetime.datetime(2014,1,1,0,0,0,0), status="a", type="show"),
-    ]
-
-    session.add_all(list_topics)
-    session.commit()
-
-
-def create_user_topic(session):
-    list_uts = [
-        UsersTopics(user_id=1, topic_name="test"),
-        UsersTopics(user_id=1, topic_name="test1", subscribed=datetime.datetime(2014,1,1,0,0,0,0)),
-        UsersTopics(user_id=1, topic_name="test2", liked=datetime.datetime(2014,1,1,0,0,0,0)),
-    ]
-
-    session.add_all(list_uts)
-    session.commit()
-
-
-def create_cdn(session):
-    list_cdn = [
-        CDN(name="cdn1", description="test", has_mobile=False, has_auth=False, url="ya.ru", location_regxp="", cdn_type=""),
-        CDN(name="cdn2", description="test", has_mobile=False, has_auth=True, url="google.com", location_regxp="", cdn_type=""),
-    ]
-
-    session.add_all(list_cdn)
-    session.commit()
-
-
-def create_extras(session):
-    list_extras = [
-        Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
-        Extras(cdn_name='cdn1', type="v", location="russia", description="test1 test", title="test1", title_orig="test1", created=datetime.datetime(2014,1,1,0,0,0,0)),
-        Extras(cdn_name='cdn1', type="a", location="russia", description="test2 test", title="test2", title_orig="test2", created=datetime.datetime(2014,1,1,0,0,0,0)),
-        Extras(cdn_name='cdn1', type="a", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0)),
-        Extras(cdn_name='cdn2', type="v", location="russia", description="test1 test", title="test1", title_orig="test1", created=datetime.datetime(2014,1,1,0,0,0,0)),
-        Extras(cdn_name='cdn2', type="v", location="russia", description="test2 test", title="test2", title_orig="test2", created=datetime.datetime(2014,1,1,0,0,0,0)),
-    ]
-
-    session.add_all(list_extras)
-    session.commit()
-
-
-def create_topic_extras(session):
-    list_te = [
-        ExtrasTopics(extras_id=1, topic_name="test"),
-        ExtrasTopics(extras_id=1, topic_name="test1"),
-        ExtrasTopics(extras_id=1, topic_name="test2"),
-        ExtrasTopics(extras_id=2, topic_name="test"),
-        ExtrasTopics(extras_id=3, topic_name="test1"),
-        ExtrasTopics(extras_id=4, topic_name="test2"),
-    ]
-
-
-    session.add_all(list_te)
-    session.commit()
 
 
 def setUpModule():
     engine = db_connect().connect()
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -89,7 +31,8 @@ def setUpModule():
 
 
 def tearDownModule():
-    pass
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 ###################################################################################
@@ -101,7 +44,7 @@ class TopicInfoTestCase(unittest.TestCase):
 
 
         self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect("tcp://127.0.0.1:6600")
 
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)

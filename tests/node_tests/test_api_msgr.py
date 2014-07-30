@@ -1,13 +1,14 @@
 # coding: utf-8
 
-import requests
 import unittest
-from models import Base, MsgrLog
-from utils.connection import db_connect, create_session
-from fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
-from settings import NODE
+
+import requests
 from websocket import create_connection
 
+from models import Base, MsgrLog
+from utils.connection import db_connect, create_session
+from tests.fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
+from settings import NODE
 
 
 def setUpModule():

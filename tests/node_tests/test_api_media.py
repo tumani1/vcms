@@ -4,7 +4,7 @@ from models import Base, UsersMedia
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from tests.api_tests.fixtures import create_media_units, create_topic, create, create_media, create_persons
+from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons
 from settings import NODE
 import requests
 import json

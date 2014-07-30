@@ -3,8 +3,7 @@ import unittest
 from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
-from settings import SERVICE as s
+from tests.fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
 
 
 def setUpModule():
@@ -19,10 +18,6 @@ def setUpModule():
     create_msgr_threads(session)
     create_users_msgr_threads(session)
     create_msgr_log(session)
-
-
-
-
 
 
 def tearDownModule():
