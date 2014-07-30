@@ -1,8 +1,12 @@
 #
+
 import zerorpc
 import unittest
-from tests.create_test_user import create
+
 from utils.connection import db_connect, create_session
+from tests.constants import ZERORPC_SERVICE_URI
+
+from tests.create_test_user import create
 from tests.constants import ZERORPC_SERVICE_URI
 
 
@@ -15,6 +19,7 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
         session = create_session(bind=engine)
         create(session)
 
+
     def test_echo(self):
         IPC_pack = {'api_group': 'test',
                     'api_method': 'echo',
@@ -23,6 +28,7 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
                     'query_params': {'message': 'hello'}}
         resp = self.cl.route(IPC_pack)
         self.assertEqual(IPC_pack['query_params'], resp)
+
 
     def tearDown(self):
         self.cl.close()

@@ -93,7 +93,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         try:
             self.cl.route(IPC_pack)
         except RemoteError, re:
-            self.assertEqual(re.name,  "NotAuthorizedException")
+            self.assertEqual(re.name, "NotAuthorizedException")
 
     def tearDown(self):
         clear(self.session)

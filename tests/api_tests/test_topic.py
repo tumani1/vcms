@@ -4,6 +4,7 @@ import zerorpc
 import unittest
 import datetime
 
+from tests.constants import ZERORPC_SERVICE_URI
 from tests.create_test_user import create
 from tests.fixtures import create_topic, create_user_topic, create_cdn, create_extras, create_topic_extras
 
@@ -44,7 +45,7 @@ class TopicInfoTestCase(unittest.TestCase):
 
 
         self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:6600")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
@@ -94,7 +95,7 @@ class TopicLikeTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
@@ -177,7 +178,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
@@ -260,7 +261,7 @@ class TopicExtrasTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
 
     def test_echo(self):
@@ -313,7 +314,7 @@ class TopicListTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
 
     def test_echo(self):
@@ -367,7 +368,7 @@ class TopicValuesTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
     def test_echo(self):
         topic = "test"
@@ -401,7 +402,7 @@ class TopicMediaTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
 
     def test_echo(self):
@@ -435,7 +436,7 @@ class TopicPersonsTestCase(unittest.TestCase):
         self.session = create_session(bind=self.engine, expire_on_commit=False)
 
         self.cl = zerorpc.Client(timeout=300)
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect(ZERORPC_SERVICE_URI)
 
 
     def test_echo(self):
