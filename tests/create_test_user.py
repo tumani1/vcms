@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import Countries, Cities, Users, GlobalToken
+from models import Countries, Cities, Users, GlobalToken, SessionToken
 
 
 def create(session):
@@ -19,8 +19,11 @@ def create(session):
 
 
 def clear(session):
-    session.query(Countries).delete()
-    session.query(Cities).delete()
+
     session.query(GlobalToken).delete()
+    session.commit()
+    session.query(SessionToken).delete()
     session.query(Users).delete()
+    session.query(Cities).delete()
+    session.query(Countries).delete()
     session.commit()

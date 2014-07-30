@@ -5,8 +5,9 @@ import unittest
 from zerorpc.exceptions import RemoteError
 
 from utils.connection import create_session, db_connect
-from tests.create_test_user import create
+from tests.create_test_user import create, clear
 from models import GlobalToken
+
 
 
 def get_token_by_id(user_id, session):
@@ -26,13 +27,14 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
     def setUp(self):
         self.cl = zerorpc.Client()
-        self.cl.connect("tcp://127.0.0.1:4242")
+        self.cl.connect("tcp://127.0.0.1:6600")
         
         
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
+        clear(self.session)
         variable = create(self.session)
-        self.user_id = variable
-        self.token = get_token_by_id(self.user_id, session=self.session)
+        self.user = variable
+        self.token = self.user.global_token.token
 
     def test_echo(self):
         Auth_IPC_pack = {'api_group': 'auth',
@@ -94,4 +96,5 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
             self.assertEqual(re.name,  "NotAuthorizedException")
 
     def tearDown(self):
+        clear(self.session)
         self.cl.close()
