@@ -6,6 +6,7 @@ from api import routes
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
 from zerorpcservices.additional import raven_report
+from utils.exceptions import APIException
 
 
 class ZeroRpcRestApiService(object):
@@ -24,6 +25,9 @@ class ZeroRpcRestApiService(object):
             mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
             api_method = self.mashed_routes[mashed_key]
             response = api_method(session=session, **Auth_IPC_pack['query_params'])
+        except APIException:
+            session.rollback()
+            return {'error' : e.code}
         except Exception as e:
             session.rollback()
             response = {'error': e.message}  # TODO: определить формат ошибок
