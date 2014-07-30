@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 
 import argparse
 
@@ -24,7 +24,7 @@ if args.isyes or result in ('y', 'Y', 'yes', 'Yes'):
     if not args.type in settings.DATABASE.keys():
         raise Exception(u'Необходим ключ из конфига базы данных')
 
-    print u'Идет очистка базы данных...'
+    print 'Идет очистка базы данных...'
     session = create_session(bind=db_connect(type=args.type))
     session.connection().connection.set_isolation_level(0)
     session.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
