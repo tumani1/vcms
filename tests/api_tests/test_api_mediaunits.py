@@ -4,6 +4,7 @@ from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create_media_units, create_topic, create
+from tests.constants import ZERORPC_SERVICE_URI
 
 
 def setUpModule():
@@ -30,7 +31,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
+        self.cl.connect(ZERORPC_SERVICE_URI, )
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 

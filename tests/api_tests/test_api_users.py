@@ -12,6 +12,7 @@ from models.contents import Cities
 from models.tokens import SessionToken
 from utils.connection import get_session, db_connect, create_session
 from utils.common import convert_to_utc
+from tests.constants import ZERORPC_SERVICE_URI
 
 
 def setUpModule():
@@ -40,7 +41,7 @@ class UsersTestCase(unittest.TestCase):
     def setUp(self):
         self.session = get_session()
         self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.zero_client.connect("tcp://127.0.0.1:4242")
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
         self.ipc_pack = {
             'api_group': 'users',
             'api_method': '',

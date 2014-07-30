@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
 from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
+from tests.constants import ZERORPC_SERVICE_URI
 
 
 def setUpModule():
@@ -34,7 +35,7 @@ class UsersTestCase(unittest.TestCase):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         self.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
+        self.cl.connect(ZERORPC_SERVICE_URI, )
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 

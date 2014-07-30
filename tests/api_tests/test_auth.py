@@ -7,7 +7,7 @@ from zerorpc.exceptions import RemoteError
 from utils.connection import create_session, db_connect
 from tests.create_test_user import create, clear
 from models import GlobalToken
-
+from tests.constants import ZERORPC_SERVICE_URI
 
 
 def get_token_by_id(user_id, session):
@@ -27,7 +27,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
     def setUp(self):
         self.cl = zerorpc.Client()
-        self.cl.connect("tcp://127.0.0.1:6600")
+        self.cl.connect(ZERORPC_SERVICE_URI)
         
         
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
