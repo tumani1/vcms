@@ -5,6 +5,7 @@ import users_friends
 import users_extras
 import users_stream
 import users_list
+import users_black_list_action
 
 friendship = {'get': users_friendship_action.get,
               'post': users_friendship_action.post,
@@ -35,6 +36,11 @@ list = {
     'get': users_list.get,
 }
 
+blacklist = {
+    'post': users_black_list_action.post,
+    'delete': users_black_list_action.delete,
+}
+
 routing = { 'friendship': friendship,
             'info': info,
             'list': list,
@@ -42,4 +48,5 @@ routing = { 'friendship': friendship,
             'friends': friends,
             'extras': extras,
             'stream': stream,
+            'blacklist': blacklist,
 }
