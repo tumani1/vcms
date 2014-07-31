@@ -64,10 +64,10 @@ class Users(Base):
 
     @classmethod
     def get_user_by_person(cls, user_id, person_id, session, **kwargs):
-        if not hasattr(user_id, '__iter__'):
+        if not isinstance(user_id, list):
             user_id = []
 
-        if not hasattr(person_id, '__iter__'):
+        if not isinstance(person_id, list):
             person_id = []
 
         query = cls.tmpl_for_users(session).filter(cls.id.in_(user_id)).\
