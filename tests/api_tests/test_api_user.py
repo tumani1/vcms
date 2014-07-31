@@ -31,7 +31,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class UsersTestCase(unittest.TestCase):
@@ -58,11 +58,11 @@ class UsersTestCase(unittest.TestCase):
         }
         temp = {
                 'city': 'Test',
-                'userpic': 'Test',
-                'firstname': 'Test',
+                'userpic': 'Test1',
+                'firstname': 'Test1',
                 'country': 'Test',
                 'time_zone': 'UTC',
-                'lastname': 'Test',
+                'lastname': 'Test1',
                 'id': 1
         }
         resp = self.cl.route(IPC_pack)
@@ -117,7 +117,7 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {'limit': '4'}
         }
         resp = self.cl.route(IPC_pack)
-        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': False}
+        temp = {'lastname': 'Test2', 'relation': 'f', 'id': 2, 'firstname': 'Test2', 'is_online': False}
         self.assertDictEqual(resp[0], temp)
 
     def test_password_put(self):

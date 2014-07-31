@@ -1,4 +1,5 @@
 # coding: utf-8
+from sqlalchemy import and_
 from models import UsersRels
 from models.users.constants import APP_USERSRELS_BLOCK_TYPE_UNDEF, APP_USERSRELS_BLOCK_TYPE_SEND,\
     APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_MATUALLY

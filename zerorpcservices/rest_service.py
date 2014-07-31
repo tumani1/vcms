@@ -25,7 +25,7 @@ class ZeroRpcRestApiService(object):
             mashed_key = (Auth_IPC_pack['api_group'], Auth_IPC_pack['api_method'], Auth_IPC_pack['http_method'])
             api_method = self.mashed_routes[mashed_key]
             response = api_method(session=session, **Auth_IPC_pack['query_params'])
-        except APIException:
+        except APIException as e:
             session.rollback()
             return {'error' : e.code}
         except Exception as e:

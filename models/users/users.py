@@ -2,7 +2,7 @@
 import datetime
 
 from sqlalchemy.sql.expression import func
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event
 from sqlalchemy.orm import relationship, sessionmaker, relation, backref
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
@@ -30,7 +30,7 @@ class Users(Base):
     address       = Column(Text)
     bio           = Column(Text)
     last_visit    = Column(DateTime)
-    birthdate     = Column(Date)
+    birthdate     = Column(DateTime)
     userpic_type  = Column(String(1))
     userpic_id    = Column(Integer)
     # status      = Column(ChoiceType(TYPE_STATUS))

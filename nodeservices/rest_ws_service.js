@@ -47,7 +47,6 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
             vurl = parsed.pathname, query_params = parsed.query,
             meth = request.method.toLowerCase(),
             directives = validate(vurl),
-            IPC_pack;
             headers = request.headers;
 
         if (["post", "put"].indexOf(meth)>-1 && directives != null) {

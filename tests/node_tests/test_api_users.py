@@ -2,10 +2,11 @@
 import requests
 import unittest
 
-from fixtures import create, create_users_rels, create_scheme, create_topic, \
+from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
     create_users_values
 from models import Base
 from models.users import Users, UsersRels, UsersExtras
+from models.users.constants import APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_SEND
 from models.extras import Extras
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
 from models.contents import Cities
@@ -16,7 +17,7 @@ from utils.common import convert_to_utc
 
 def setUpModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -32,7 +33,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class UsersTestCase(unittest.TestCase):
@@ -142,3 +143,19 @@ class UsersTestCase(unittest.TestCase):
         for resp_dict in resp_dicts:
             extra_dict = filter(lambda i: i['id'] == resp_dict['id'], extras_dict)[0]
             self.assertDictEqual(resp_dict, extra_dict)
+
+    def test_users_blacklist_post(self):
+        data = {'id': 2}
+        resp = self.req_sess.post(self.fullpath + '/users/blacklist', headers={'token': self.token}, params=data)
+        user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=data['id']).first()
+        partner_rels = self.session.query(UsersRels).filter_by(user_id=data['id'], partner_id=self.user_id).first()
+        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
+        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+
+    def test_users_blacklist_delete(self):
+        data = {'id': 3}
+        resp = self.req_sess.delete(self.fullpath + '/users/blacklist', headers={'token': self.token}, params=data)
+        user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=data['id']).first()
+        partner_rels = self.session.query(UsersRels).filter_by(user_id=data['id'], partner_id=self.user_id).first()
+        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
