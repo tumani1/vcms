@@ -1,7 +1,8 @@
 # coding: utf-8
 import datetime
 from models import Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics, MediaUnits, UsersMediaUnits, Countries, Cities, Scheme, UsersValues, \
-    UsersMsgrThreads, MsgrThreads, MsgrLog, Media, UsersMedia, MediaInUnit, Persons, PersonsMedia, Comments, UsersComments
+    UsersMsgrThreads, MsgrThreads, MsgrLog, Media, UsersMedia, MediaInUnit, Persons, PersonsMedia, Comments, UsersComments, \
+    Chats, UsersChat
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 
@@ -163,4 +164,16 @@ def create_msgr_threads(session):
 def create_msgr_log(session):
     msgr_log = MsgrLog(msgr_threads_id=1, user_id=1, created=datetime.datetime(2014,1,1,0,0,0,0), text='text')
     session.add(msgr_log)
+    session.commit()
+
+
+def create_chat(session):
+    c = Chats(description='chat for testing')
+    session.add(c)
+    session.commit()
+
+
+def create_users_chat(session):
+    uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
+    session.add(uc)
     session.commit()

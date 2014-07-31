@@ -2,10 +2,7 @@ var user = {
     user: 'admin',
     pwd: 'admin',
     roles: [
-        {
-        role: "userAdmin",
-        db: "next_tv"
-      }
+        {role: "dbOwner", db: "next_tv"}
     ]
 };
 
