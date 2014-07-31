@@ -57,12 +57,12 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {}
         }
         temp = {
-                'city': 'Test',
-                'userpic': 'Test1',
-                'firstname': 'Test1',
-                'country': 'Test',
-                'time_zone': 'UTC',
-                'lastname': 'Test1',
+                'city': u'Test',
+                'userpic': u'Test1',
+                'firstname': u'Test1',
+                'country': u'Test',
+                'time_zone': u'UTC',
+                'lastname': u'Test1',
                 'id': 1
         }
         resp = self.cl.route(IPC_pack)
