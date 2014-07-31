@@ -7,8 +7,8 @@ import datetime
 from settings import NODE
 
 from tests.create_test_user import create
-from models import Base, Topics, SessionToken, UsersTopics, Users, CDN, Extras, ExtrasTopics
-from utils.connection import db_connect, create_session, get_session
+from models import Base, Topics, UsersTopics, Users, CDN, Extras, ExtrasTopics
+from utils.connection import db_connect, create_session
 
 
 def create_topic(session):
@@ -135,6 +135,8 @@ class TopicInfoTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
+
 
 
 ###################################################################################
@@ -186,6 +188,7 @@ class TopicLikeTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 # ###################################################################################
@@ -237,6 +240,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 ###################################################################################
@@ -284,6 +288,7 @@ class TopicExtrasTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 ###################################################################################
@@ -331,6 +336,7 @@ class TopicListTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 ###################################################################################
@@ -360,6 +366,7 @@ class TopicValuesTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 ##################################################################################
@@ -390,6 +397,7 @@ class TopicMediaTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()
 
 
 ##################################################################################
@@ -420,3 +428,4 @@ class TopicPersonsTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.engine.close()
+        self.req_sess.close()

@@ -28,7 +28,7 @@ class ChatInfoTestCase(unittest.TestCase):
         cls.session.commit()
 
     def test_get_info(self):
-        resp = requests.get(URL+'/chat/1/info')
+        resp = self.req_sess.get(URL+ '/topics/info')
         resp = resp.json()
         self.assertEqual(resp['description'], 'chat for testing')
 
