@@ -163,7 +163,7 @@ def create_users_rels(session):
 
 
 def create_users_msgr_threads(session):
-    users_msgr_threads1 = UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0).utctimetuple(), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1)
+    users_msgr_threads1 = UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0,tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1)
     users_msgr_threads2 = UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1)
 
     session.add_all([users_msgr_threads1, users_msgr_threads2])
