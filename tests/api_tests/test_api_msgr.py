@@ -1,8 +1,13 @@
 import zerorpc
 import unittest
-from models import Base, SessionToken
+
 from sqlalchemy.orm import sessionmaker, scoped_session
+
+from models import Base, SessionToken
+
 from utils.connection import db_connect, create_session
+
+from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
 
 
@@ -31,7 +36,7 @@ class MsgrTestCase(unittest.TestCase):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         self.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.cl.connect("{}://{}:{}".format(s['schema'], s['host'], s['port']), )
+        self.cl.connect(ZERORPC_SERVICE_URI)
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 

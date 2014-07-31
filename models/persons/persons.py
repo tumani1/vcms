@@ -6,6 +6,8 @@ from sqlalchemy_utils import ChoiceType
 
 from models import Base
 from models.topics.topics_persons import PersonsTopics
+# from models.tokens import SessionToken
+# from models.users import Users
 
 from constants import APP_PERSONS_STATUS_TYPE
 
@@ -50,6 +52,7 @@ class Persons(Base):
         # Set filter which check that person online
         if not is_online is None:
             pass
+            # query = SessionToken.filter_users_is_online(is_online=is_online, query=query.join(Users))
 
         # Set filter by ids
         if not id is None:

@@ -34,7 +34,10 @@ class UsersPersons(Base):
         if not user is None:
             user_id = user.id
 
-        query = cls.tmpl_for_user_person(session).filter(cls.user_id == user_id, cls.person_id == person_id)
+        if not isinstance(person_id, list):
+            person_id = [person_id]
+
+        query = cls.tmpl_for_user_person(session).filter(cls.user_id == user_id, cls.person_id.in_(person_id))
         return query
 
 

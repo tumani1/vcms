@@ -37,8 +37,12 @@ def create_media(session):
 
 def create_persons(session):
     person1 = Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio')
+    person2 = Persons(user_id=2, firstname='test2', lastname='testov2', bio='test_bio')
+    person3 = Persons(firstname='test3', lastname='testov3', bio='test_bio')
+    person4 = Persons(user_id=3, firstname='test4', lastname='testov4', bio='test_bio')
+    person5 = Persons(firstname='test5', lastname='testov5', bio='test_bio')
 
-    session.add_all([person1, ])
+    session.add_all([person1, person2,  person3,  person4,  person5])
     session.commit()
 
 def create_comments(session):
