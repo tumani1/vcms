@@ -1,5 +1,10 @@
+# coding: utf-8
+
 from api.users.serializer import mUserShort
-from models import MsgrLog, Users
+
+from models.msgr import MsgrLog
+from models.users import Users
+
 from utils import need_authorization
 from utils.validation import validate_mLimitId
 

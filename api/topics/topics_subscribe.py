@@ -3,7 +3,7 @@
 import datetime
 
 from utils import need_authorization
-from models import UsersTopics
+from models.topics import UsersTopics
 
 __all__ = ['get_subscribe', 'post_subscribe', 'delete_subscribe']
 

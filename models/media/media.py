@@ -1,8 +1,11 @@
 # coding: utf-8
+
 import datetime
+
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_
 from sqlalchemy.orm import relationship, contains_eager
-from models import Base
+
+from models.base import Base
 from models.media.users_media import UsersMedia
 from models.media.media_in_unit import MediaInUnit
 from models.media.persons_media import PersonsMedia

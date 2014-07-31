@@ -6,7 +6,7 @@ from sqlalchemy_utils import ChoiceType
 import datetime
 
 from constants import APP_USERSCHAT_TYPE
-from models import Base
+from models.base import Base
 
 
 class UsersChat(Base):

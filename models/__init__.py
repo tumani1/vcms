@@ -1,9 +1,6 @@
 # coding: utf-8
 
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
+from base import Base
 from users import *
 from msgr import *
 from contents import *

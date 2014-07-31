@@ -8,7 +8,7 @@ from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, Password
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
-from models import Base
+from models.base import Base
 from models.contents import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken

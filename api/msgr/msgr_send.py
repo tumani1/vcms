@@ -1,5 +1,7 @@
+# coding: utf-8
+
 import datetime
-from models import MsgrLog, UsersMsgrThreads, MsgrThreads
+from models.msgr import MsgrLog, UsersMsgrThreads, MsgrThreads
 from utils import need_authorization
 
 

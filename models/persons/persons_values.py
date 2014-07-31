@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.event import listens_for, listen
 from sqlalchemy.dialects.postgresql import BYTEA
 
-from models import Base
+from models.base import Base
 from models.scheme import Scheme
 
 

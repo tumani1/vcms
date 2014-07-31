@@ -2,7 +2,7 @@
 
 import datetime
 
-from models import UsersPersons
+from models.persons import UsersPersons
 
 from utils import need_authorization
 from utils.validation import validate_int
@@ -19,7 +19,7 @@ def get_like(auth_user, id, session, **kwargs):
 
     params = {
         'user': auth_user,
-        'person': person,
+        'person_id': person,
         'session': session,
     }
 
@@ -40,7 +40,7 @@ def post_like(auth_user, id, session, **kwargs):
 
     params = {
         'user': auth_user,
-        'person': person,
+        'person_id': person,
         'session': session,
     }
 
@@ -66,7 +66,7 @@ def delete_like(auth_user, id, session, **kwargs):
 
     params = {
         'user': auth_user,
-        'person': person,
+        'person_id': person,
         'session': session,
     }
 

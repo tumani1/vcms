@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import UsersRels
+from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF, APP_USERSRELS_TYPE_FRIEND,\
     APP_USERSRELS_TYPE_SEND_TO, APP_USERSRELS_TYPE_RECIEVE_USER
 from utils import need_authorization

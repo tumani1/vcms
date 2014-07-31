@@ -1,5 +1,11 @@
 # coding:utf-8
-from models import Users, SessionToken, Persons, UsersChat, ChatMessages
+
+from models.users import Users
+from models.tokens import SessionToken
+from models.persons import Persons
+from models.chats import UsersChat
+from models.mongo import ChatMessages
+
 from api.persons.serializer import mPersonSerializer as mP
 
 

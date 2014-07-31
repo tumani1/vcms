@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 
-from models import Base
+from models.base import Base
 
 
 class UsersPersons(Base):

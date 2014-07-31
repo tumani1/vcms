@@ -8,7 +8,7 @@ from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
 
-from models import Base
+from models.base import Base
 from models.extras.extras_topics import ExtrasTopics
 from models.extras.extras_persons import PersonsExtras
 

@@ -1,5 +1,5 @@
 # coding: utf-8
-from models import Persons
+from models.persons import Persons
 from api.persons.serializer import mPersonSerializer
 
 from utils.validation import validate_int
