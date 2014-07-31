@@ -30,6 +30,8 @@ def setUpModule():
 def tearDownModule():
     engine = db_connect()
     # engine.execute("drop schema public cascade; create schema public;")
+
+
 class CommentsTestCase(unittest.TestCase):
 
     def setUp(self):

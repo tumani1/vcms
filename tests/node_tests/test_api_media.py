@@ -1,13 +1,15 @@
 # coding: utf-8
 import unittest
-from models import Base, UsersMedia
+import json
+
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker, scoped_session
+import requests
+
+from models import Base, UsersMedia
 from utils.connection import db_connect, create_session
 from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons
 from settings import NODE
-import requests
-import json
 
 
 def setUpModule():
