@@ -17,4 +17,3 @@ mongoengine
 blinker
 git+git://github.com/MongoEngine/flask-mongoengine.git@4f7c4c88d4af8b28c6063687bd136e15705f945b
 wtforms-html5
-pytz
