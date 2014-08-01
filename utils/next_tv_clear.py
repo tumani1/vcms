@@ -13,7 +13,7 @@ parser.add_argument('-y', '--always-yes', dest='isyes', action='store_true', def
 
 args = parser.parse_args()
 
-result = False
+result = ''
 if not args.isyes:
     result = raw_input(u'Вы уверенны, что хотите очистить базу данных?(Yes/No)')
 
