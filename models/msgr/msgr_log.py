@@ -1,8 +1,9 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Binary, ForeignKey, DateTime, and_
-import datetime
 
-from models import Base
+import datetime
+from sqlalchemy import Column, Integer, String, Binary, ForeignKey, DateTime, and_
+
+from models.base import Base
 
 
 class MsgrLog(Base):

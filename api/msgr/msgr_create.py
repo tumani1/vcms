@@ -1,6 +1,11 @@
+# coding: utf-8
+
 import datetime
+
+from models.msgr import MsgrThreads, UsersMsgrThreads, MsgrLog
+from models.users import Users
+
 from api.users.serializer import mUserShort
-from models import MsgrThreads, UsersMsgrThreads, MsgrLog, Users
 from utils import need_authorization
 
 

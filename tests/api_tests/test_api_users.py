@@ -104,14 +104,14 @@ class UsersTestCase(unittest.TestCase):
         user = self.session.query(Users).get(1)
         user_dict = {
             'id': user.id,
-            'firstname': user.firstname,
-            'lastname': user.lastname,
+            'firstname': str(user.firstname),
+            'lastname': str(user.lastname),
             'is_online': False,
-            'gender': user.gender.code,
+            'gender': str(user.gender.code),
             'regdate': convert_to_utc(user.created),
             'lastvisit': convert_to_utc(user.last_visit) if user.last_visit else '',
-            'city': user.city.name,
-            'country': user.city.country.name,
+            'city': str(user.city.name),
+            'country': str(user.city.country.name),
         }
         self.assertDictEqual(resp_dict, user_dict)
 

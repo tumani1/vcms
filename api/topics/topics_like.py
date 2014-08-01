@@ -2,7 +2,7 @@
 
 import datetime
 
-from models import UsersTopics
+from models.topics import UsersTopics
 from utils import need_authorization
 
 __all__ = ['get_like', 'post_like', 'delete_like']

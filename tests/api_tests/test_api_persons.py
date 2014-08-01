@@ -16,10 +16,9 @@ from utils.common import convert_to_utc
 from utils.connection import get_session, db_connect, create_session
 
 
-
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -36,9 +35,10 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
+##################################################################################
 class PersonInfoTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -110,6 +110,7 @@ class PersonInfoTestCase(unittest.TestCase):
         self.assertDictEqual(temp, resp)
 
 
+##################################################################################
 class PersonListTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -141,81 +142,169 @@ class PersonListTestCase(unittest.TestCase):
         self.assertEqual(5, len(resp))
 
 
-###################################################################################
-# class PersonLikeTestCase(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.engine = db_connect().connect()
-#         self.session = create_session(bind=self.engine, expire_on_commit=False)
-#
-#         self.cl = zerorpc.Client(timeout=300)
-#         self.cl.connect(ZERORPC_SERVICE_URI)
-#
-#         self.user_id = 1
-#         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
-#
-#
-#     def test_echo_get(self):
-#         person = 2
-#         IPC_pack = {
-#             "api_group": "persons",
-#             "api_method": "like",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "get",
-#             "query_params": {
-#                 "id": person,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         temp = {'liked': 0}
-#
-#         self.assertDictEqual(temp, resp)
-#
-#
-#     def test_echo_post(self):
-#         person = 2
-#         IPC_pack = {
-#             "api_group": "persons",
-#             "api_method": "like",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "post",
-#             "query_params": {
-#                  "id": person,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         self.assertEqual(resp, None)
-#
-#         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
-#
-#         topic = UsersPersons.get_user_topic(user=user, name=topic, session=self.session).first()
-#         self.assertNotEqual(topic.liked, None)
-#
-#
-#     def test_echo_delete(self):
-#         person = 2
-#         IPC_pack = {
-#             "api_group": "persons",
-#             "api_method": "like",
-#             "api_format": "json",
-#             "x_token": self.session_token[1],
-#             "http_method": "delete",
-#             "query_params": {
-#                  "id": person,
-#             }
-#         }
-#
-#         resp = self.cl.route(IPC_pack)
-#         self.assertEqual(resp, None)
-#
-#         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
-#
-#         topic = UsersPersons.get_user_topic(user=user, name=topic, session=self.session).first()
-#         self.assertEqual(topic.liked, None)
-#
+##################################################################################
+class PersonLikeTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.session = get_session()
+
+        self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
 
+    def tearDown(self):
+        self.session.close()
+        self.zero_client.close()
+
+
+    def test_echo_get(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "like",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "get",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        temp = {'liked': 0}
+
+        self.assertDictEqual(temp, resp)
+
+
+    def test_echo_post(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "like",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "post",
+            "query_params": {
+                 "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
+
+        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
+        self.assertEqual(1, len(person))
+        person = person[0]
+
+        self.assertNotEqual(person.liked, None)
+
+
+    def test_echo_delete(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "like",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "delete",
+            "query_params": {
+                 "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
+
+        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
+        self.assertEqual(0, len(person))
+
+
+##################################################################################
+class PersonSubscribeTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.session = get_session()
+
+        self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+
+    def tearDown(self):
+        self.session.close()
+        self.zero_client.close()
+
+
+    def test_echo_get(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "get",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        temp = {'subscribed': 0}
+
+        self.assertDictEqual(temp, resp)
+
+
+    def test_echo_post(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "post",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
+
+        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
+        self.assertEqual(1, len(person))
+        person = person[0]
+
+        self.assertNotEqual(person.subscribed, None)
+
+
+    def test_echo_delete(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "delete",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertEqual(resp, None)
+
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
+
+        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
+        self.assertEqual(0, len(person))

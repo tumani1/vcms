@@ -7,7 +7,7 @@ from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
 
-from models import Base
+from models.base import Base
 from topics_users import UsersTopics
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 

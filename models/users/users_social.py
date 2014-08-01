@@ -1,11 +1,12 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy_utils import ChoiceType
 
 import datetime
 
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy_utils import ChoiceType
+
 from constants import APP_USERSOCIAL_TYPE
-from models import Base
+from models.base import Base
 
 
 class UsersSocial(Base):

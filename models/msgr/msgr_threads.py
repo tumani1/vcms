@@ -1,8 +1,9 @@
 # coding: utf-8
+
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
 
-from models import Base
+from models.base import Base
 
 
 class MsgrThreads(Base):

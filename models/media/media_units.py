@@ -1,9 +1,10 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT, Text, and_, DateTime
-from models import Base
-from models.media.users_media_units import UsersMediaUnits
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, and_
 from sqlalchemy.orm import relationship, contains_eager
+
+from models.base import Base
+from models.media.users_media_units import UsersMediaUnits
 
 
 class MediaUnits(Base):

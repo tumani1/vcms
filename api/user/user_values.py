@@ -1,6 +1,12 @@
-from models import UsersValues, Scheme
-from utils import need_authorization
+# coding: utf-8
+
 from sqlalchemy import and_, not_, update
+
+from models.users import UsersValues
+from models.scheme import Scheme
+
+from utils import need_authorization
+
 from api.users.users_values import get as users_get
 
 

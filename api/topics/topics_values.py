@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from models import TopicsValues
+from models.topics import TopicsValues
 from utils.validation import validate_list_string
 
 __all__ = ['get_topic_values']

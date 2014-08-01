@@ -1,12 +1,14 @@
 #coding: utf-8
 
-from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-from functools import partial
-from models import Base
-import datetime
 import os
 import base64
+import datetime
+from functools import partial
+
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
+
+from models.base import Base
 
 
 def token_gen(token_length):

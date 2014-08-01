@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import Users
+from models.users import Users
+from models.tokens import SessionToken, GlobalToken
 
 from api.users import routing as users_routing
 from api.topics import routing as topics_routing
@@ -16,7 +17,6 @@ from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
-from models import SessionToken, GlobalToken
 
 
 routes = {

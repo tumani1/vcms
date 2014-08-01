@@ -1,12 +1,13 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from sqlalchemy_utils import ChoiceType
 
 import datetime
 
-from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_BLOCKED, APP_USERSRELS_BLOCK_TYPE_UNDEF, APP_USERSRELS_TYPE_UNDEF
-from models import Base
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy_utils import ChoiceType
+
+from models.base import Base
 from models.users import Users
+from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_BLOCKED, APP_USERSRELS_BLOCK_TYPE_UNDEF, APP_USERSRELS_TYPE_UNDEF
 
 
 class UsersRels(Base):

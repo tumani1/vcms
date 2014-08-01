@@ -1,5 +1,7 @@
+# coding: utf-8
+
 from api.users.serializer import mUserShort
-from models import UsersMsgrThreads, MsgrThreads
+from models.msgr import UsersMsgrThreads, MsgrThreads
 from utils import need_authorization
 
 

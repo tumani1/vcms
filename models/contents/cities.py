@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import TimezoneType
 
-from models import Base
+from models.base import Base
 
 
 class Cities(Base):

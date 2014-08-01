@@ -1,6 +1,10 @@
+# coding: utf-8
+
+from models.users import Users
+from models.msgr import UsersMsgrThreads
 
 from api.users.serializer import mUserShort
-from models import UsersMsgrThreads, Users
+
 from utils import need_authorization
 
 
