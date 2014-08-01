@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from models.topics import TopicsValues
+from api.users.serializer import mValue
 from utils.validation import validate_list_string
 
 __all__ = ['get_topic_values']
@@ -18,8 +19,8 @@ def get_topic_values(auth_user, session, name, **kwargs):
         params['scheme_name'] = validate_list_string(kwargs['scheme_name'])
 
     if params['scheme_name'] is None:
-        return {'code': 404}
+        raise Exception(u'Empty scheme name')
 
     query = TopicsValues.get_values_through_schema(**params).all()
 
-    return TopicsValues.data(query)
+    return mValue(instance=query, session=session).data

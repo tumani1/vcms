@@ -2,10 +2,12 @@
 
 import datetime
 import pytz
+
 from models import *
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_BLOCK_TYPE_MATUALLY
 
 UTC = pytz.utc
+
 def create_media_units(session):
     mu1 = MediaUnits(topic_name='test1', title='mu1', title_orig=1, description='test1', next_unit=2, release_date=datetime.datetime(2011,1,1,0,0,0,tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
     mu2 = MediaUnits(topic_name='test1', title='mu2', title_orig=2, description='test2', previous_unit=1, next_unit=3, release_date=datetime.datetime(2012,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
@@ -36,13 +38,15 @@ def create_media(session):
     session.commit()
 
 def create_persons(session):
-    person1 = Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio')
-    person2 = Persons(user_id=2, firstname='test2', lastname='testov2', bio='test_bio')
-    person3 = Persons(firstname='test3', lastname='testov3', bio='test_bio')
-    person4 = Persons(user_id=3, firstname='test4', lastname='testov4', bio='test_bio')
-    person5 = Persons(firstname='test5', lastname='testov5', bio='test_bio')
+    persons = [
+        Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio'),
+        Persons(user_id=2, firstname='test2', lastname='testov2', bio='test_bio'),
+        Persons(firstname='test3', lastname='testov3', bio='test_bio'),
+        Persons(user_id=3, firstname='test4', lastname='testov4', bio='test_bio'),
+        Persons(firstname='test5', lastname='testov5', bio='test_bio'),
+    ]
 
-    session.add_all([person1, person2,  person3,  person4,  person5])
+    session.add_all(persons)
     session.commit()
 
 def create_comments(session):
@@ -149,10 +153,12 @@ def create(session):
 
 
 def create_scheme(session):
-    shm1 = Scheme(topic_name='test1', name='shm1', internal=False)
-    shm2 = Scheme(topic_name='test1', name='shm2', internal=False)
+    shms = [
+        Scheme(topic_name='test1', name='shm1', internal=False),
+        Scheme(topic_name='test1', name='shm2', internal=False)
+    ]
 
-    session.add_all([shm1, shm2])
+    session.add_all(shms)
     session.commit()
 
 
@@ -164,22 +170,25 @@ def create_users_values(session):
 
 
 def create_users_rels(session):
-    user_rels1 = UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels2 = UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels3 = UsersRels(user_id=2, partner_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels4 = UsersRels(user_id=3, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND)
-    user_rels5 = UsersRels(user_id=1, partner_id=3, blocked=APP_USERSRELS_BLOCK_TYPE_MATUALLY)
-    user_rels6 = UsersRels(user_id=3, partner_id=1, blocked=APP_USERSRELS_BLOCK_TYPE_MATUALLY)
-
-    session.add_all([user_rels1, user_rels2, user_rels3, user_rels4, user_rels5, user_rels6])
+    user_rels = [
+        UsersRels(user_id=1, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND),
+        UsersRels(user_id=2, partner_id=3, urStatus=APP_USERSRELS_TYPE_FRIEND),
+        UsersRels(user_id=2, partner_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND),
+        UsersRels(user_id=3, partner_id=2, urStatus=APP_USERSRELS_TYPE_FRIEND),
+        UsersRels(user_id=1, partner_id=3, blocked=APP_USERSRELS_BLOCK_TYPE_MATUALLY),
+        UsersRels(user_id=3, partner_id=1, blocked=APP_USERSRELS_BLOCK_TYPE_MATUALLY),
+    ]
+    session.add_all(user_rels)
     session.commit()
 
 
 def create_users_msgr_threads(session):
-    users_msgr_threads1 = UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0,tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1)
-    users_msgr_threads2 = UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1)
+    users_msgr = [
+        UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0,tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1),
+        UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1),
+    ]
 
-    session.add_all([users_msgr_threads1, users_msgr_threads2])
+    session.add_all(users_msgr)
     session.commit()
 
 
@@ -194,4 +203,32 @@ def create_msgr_log(session):
     msgr_log = MsgrLog(msgr_threads_id=1, user_id=1, created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), text='text')
 
     session.add(msgr_log)
+    session.commit()
+
+
+def create_persons_values(session):
+    list_pev = [
+        PersonsValues(scheme_id=1, person_id=1, value_int=777),
+        PersonsValues(scheme_id=2, person_id=1, value_int=777),
+        PersonsValues(scheme_id=1, person_id=2, value_int=777),
+        PersonsValues(scheme_id=2, person_id=2, value_int=777),
+        PersonsValues(scheme_id=1, person_id=2, value_string='test'),
+        PersonsValues(scheme_id=1, person_id=2, value_text='test'),
+    ]
+
+    session.add_all(list_pev)
+    session.commit()
+
+
+def create_topic_values(session):
+    list_tov = [
+        TopicsValues(scheme_id=1, topic_name="test", value_int=777),
+        TopicsValues(scheme_id=2, topic_name="test", value_int=777),
+        TopicsValues(scheme_id=1, topic_name="test1", value_int=777),
+        TopicsValues(scheme_id=2, topic_name="test1", value_int=777),
+        TopicsValues(scheme_id=1, topic_name="test1", value_string='test'),
+        TopicsValues(scheme_id=1, topic_name="test1", value_text='test'),
+    ]
+
+    session.add_all(list_tov)
     session.commit()

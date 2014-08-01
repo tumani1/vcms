@@ -6,7 +6,8 @@ import datetime
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.create_test_user import create
-from tests.fixtures import create_topic, create_user_topic, create_cdn, create_extras, create_topic_extras
+from tests.fixtures import create_topic, create_user_topic, create_cdn, \
+    create_extras, create_topic_extras, create_topic_values, create_scheme
 
 from models import Base, SessionToken, UsersTopics, Users
 from utils.connection import db_connect, create_session
@@ -14,7 +15,7 @@ from utils.connection import db_connect, create_session
 
 def setUpModule():
     engine = db_connect().connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -25,15 +26,17 @@ def setUpModule():
     create_topic(session)
     create_user_topic(session)
     create_cdn(session)
+    create_scheme(session)
     create_extras(session)
     create_topic_extras(session)
+    create_topic_values(session)
 
     engine.close()
 
 
 def tearDownModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 ###################################################################################
@@ -379,12 +382,20 @@ class TopicValuesTestCase(unittest.TestCase):
             "http_method": "get",
             "query_params": {
                 "name": topic,
-                "scheme_name": "t",
+                "scheme_name": ['shm1', 'shm2'],
             }
         }
 
         resp = self.cl.route(IPC_pack)
-        temp = []
+        temp = [
+            {
+                'name': 1,
+                'value': 777
+            }, {
+                'name': 2,
+                'value': 777
+            }
+        ]
 
         self.assertEqual(temp, resp)
 

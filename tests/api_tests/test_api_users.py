@@ -67,7 +67,7 @@ class UsersTestCase(unittest.TestCase):
             'user_id': 1
         }
         resp = self.zero_client.route(self.ipc_pack)
-        self.assertDictEqual(resp[0], {'id': 1, 'value': 777})
+        self.assertDictEqual(resp[0], {'name': 1, 'value': 777})
 
     def test_test_users_list_get(self):
         self.ipc_pack['api_method'] = 'list'
