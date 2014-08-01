@@ -5,7 +5,8 @@ import unittest
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create, create_scheme, create_topic, create_cdn, \
-    create_users_values, create_persons, create_person_extras, create_extras
+    create_users_values, create_persons, create_person_extras, create_extras, \
+    create_persons_values, create_media, create_media_units
 
 from models import Base, Users,\
     Extras, Cities, SessionToken, Persons, UsersPersons
@@ -30,6 +31,9 @@ def setUpModule():
     create_extras(session)
     create_persons(session)
     create_person_extras(session)
+    create_persons_values(session)
+    create_media_units(session)
+    create_media(session)
     session.close()
 
 
@@ -427,9 +431,66 @@ class PersonValuesTestCase(unittest.TestCase):
             "http_method": "get",
             "query_params": {
                 'id': person,
-                "scheme_name": "t",
+                'name': ['shm1', 'shm2'],
+                'value': '777',
             }
         }
 
-        resp = self.cl.route(IPC_pack)
-        temp = []
+        resp = self.zero_client.route(IPC_pack)
+        temp = [
+            {
+                'name': 3,
+                'value': 777
+            }, {
+                'name': 4,
+                'value': 777
+            }
+        ]
+        self.assertEqual(temp, resp)
+
+
+##################################################################################
+class PersonMediaTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.session = get_session()
+
+        self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+
+    def tearDown(self):
+        self.session.close()
+        self.zero_client.close()
+
+
+    def test_echo(self):
+        person = 1
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "media",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                'id': person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        temp = [
+            {
+                'description': 'test_desc1',
+                'title': 'media1',
+                'locations': [],
+                'releasedate': None,
+                'title_orig': 'test_media1',
+                'duration': None,
+                'relation': {},
+                'id': 1
+            }
+        ]
+
+        self.assertEqual(temp, resp)
