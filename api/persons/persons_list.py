@@ -4,7 +4,7 @@ from models.persons import Persons
 from models.topics.constants import TOPIC_TYPE
 
 from utils.validation import validate_list_int, validate_mLimit, validate_string
-from api.persons.serializer import mPersonSerializer, mPersonRoleSerializer
+from api.serializers import mPersonSerializer, mPersonRoleSerializer
 
 __all__ = ['get_person_list']
 

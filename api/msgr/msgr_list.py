@@ -3,7 +3,7 @@
 from models.users import Users
 from models.msgr import UsersMsgrThreads
 
-from api.users.serializer import mUserShort
+from api.serializers import mUserShort
 
 from utils import need_authorization
 

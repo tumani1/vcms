@@ -9,12 +9,8 @@ from models.persons import Persons
 from models.content import Content
 from models.mongo import Stream
 
-from api.media_unit.serializer.m_media_unit import mMediaUnitsSerializer
-from api.media.serializer.m_media import mMediaSerializer
-from api.persons.serializer.m_persons import mPersonSerializer
-from api.content.serializer.m_content import mContentSerializer
-from api.stream.serizalizer.m_stream_element import mStraemElement
-from api.users.serializer.m_users_short import mUserShort
+from api.serializers import mMediaUnitsSerializer, mMediaSerializer, \
+    mPersonSerializer, mContentSerializer, mStraemElement, mUserShort
 
 from utils.date_converter import detetime_to_unixtime as convert_date
 from utils.serializer import DefaultSerializer

@@ -1,5 +1,6 @@
 # coding: utf-8
-from api.comments.serializer.m_comment import mCommentSerializer
+
+from api.serializers import mCommentSerializer
 from models.comments.comments import Comments
 from utils.validation import validate_list_int, validate_mLimitId, validate_string, validate_obj_type
 

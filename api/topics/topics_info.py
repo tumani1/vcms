@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from models.topics import Topics
-from serializer import mTopicSerializer
+from api.serializers import mTopicSerializer
 
 __all__ = ['get_topic_info']
 

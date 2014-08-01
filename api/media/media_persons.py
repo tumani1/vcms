@@ -1,7 +1,8 @@
 # coding: utf-8
+
 from utils.validation import validate_list_int, validate_mLimit
 from models.media.media import Media
-from api.persons.serializer import mPersonRoleSerializer
+from api.serializers import mPersonRoleSerializer
 
 
 def get(auth_user, session, **kwargs):

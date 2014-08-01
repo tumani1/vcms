@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from api.users.serializer import mUser
+from api.serializers import mUser
 
 from utils.serializer import DefaultSerializer
 
