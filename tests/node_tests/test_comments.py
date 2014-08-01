@@ -68,7 +68,7 @@ class CommentsTestCase(unittest.TestCase):
         resp = self.req_sess.get(self.fullpath+'/comments/list', headers={'token': self.token}, params=data)
         temp = {
             u'text': u'Test',
-            u'object': {u'description': u'test_desc1', u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01', u'locations': [], u'releasedate': None, u'title_orig': u'test_media1', u'duration': None, u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50}, u'id': 1},
+            u'object': {u'description': u'test_desc1', u'title': u'media1', u'locations': [], u'releasedate': None, u'title_orig': u'test_media1', u'duration': None, u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50}, u'id': 1},
             u'relation': {},
             u'id': 1,
             u'user': {u'firstname': u'Test1', u'lastname': u'Test1', u'relation': u'u', u'is_online': False, u'person_id': 1, u'id': 1}
