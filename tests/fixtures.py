@@ -18,10 +18,10 @@ def create_media_units(session):
 
 
 def create_media(session):
-    media1 = Media(title='тест_медиа1', title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
-    media2 = Media(title='тест_медиа2', title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media3 = Media(title='тест_медиа3', title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media4 = Media(title='тест_медиа4', title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media1 = Media(title='media1', title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    media2 = Media(title='media2', title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media3 = Media(title='media3', title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media4 = Media(title='media4', title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
 
     m_in_u1 = MediaInUnit(media_id=1, media_unit_id=2)
     m_in_u2 = MediaInUnit(media_id=2, media_unit_id=1)

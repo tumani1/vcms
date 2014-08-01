@@ -50,27 +50,27 @@ class MediaTestCase(unittest.TestCase):
         resp = self.req_sess.get(self.fullpath+'/media/info', headers={'token': self.token}, params=data)
         temp = {
             u'description': u'test_desc1',
-            u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01',
+            u'title': u'media1',
             u'locations': [],
             u'releasedate': None,
             u'title_orig': u'test_media1',
             u'duration': None,
-            u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50},
+            u'relation': {u'watched': 1356998400, u'liked': 1388534400, u'pos': 50},
             u'id': 1
         }
         self.assertDictEqual(resp.json(), temp)
 
     def test_list(self):
-        data = {'text': u'тест_медиа1'}
+        data = {'text': u'media1'}
         resp = self.req_sess.get(self.fullpath+'/media/list', headers={'token': self.token}, params=data)
         temp = [{
                     u'description': u'test_desc1',
-                    u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01',
+                    u'title': u'media1',
                     u'locations': [],
                     u'releasedate': None,
                     u'title_orig': u'test_media1',
                     u'duration': None,
-                    u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50},
+                    u'relation': {u'watched': 1356998400, u'liked': 1388534400, u'pos': 50},
                     u'id': 1
                 }]
         self.assertListEqual(resp.json(), temp)
@@ -82,7 +82,7 @@ class MediaTestCase(unittest.TestCase):
                     u'firstname': u'test',
                     u'lastname': u'testov',
                     u'relation': {},
-                    u'user': {u'lastvisit': u'', u'city': u'Test', u'firstname': u'Test1', u'gender': u'n', u'is_online': False, u'regdate': 1325361600, u'lastname': u'Test1', u'country': u'Test', u'id': 1},
+                    u'user': {u'lastvisit': u'', u'city': u'Test', u'firstname': u'Test1', u'gender': u'n', u'is_online': False, u'regdate': 1325376000, u'lastname': u'Test1', u'country': u'Test', u'id': 1},
                     u'role': u'actor',
                     u'type': u'',
                     u'id': 1
@@ -93,14 +93,14 @@ class MediaTestCase(unittest.TestCase):
         data = {'id': 1}
         resp = self.req_sess.get(self.fullpath+'/media/units', headers={'token': self.token}, params=data)
         temp = [{
-                    u'enddate': 1391198400,
+                    u'enddate': 1391212800,
                     u'description': u'test2',
                     u'title': u'mu2',
                     u'batch': u'batch1',
                     u'next': 3,
-                    u'releasedate': 1325361600,
+                    u'releasedate': 1325376000,
                     u'title_orig': 2,
-                    u'relation': {u'watched': 1388520000},
+                    u'relation': {u'watched': 1388534400},
                     u'prev': 1,
                     u'id': 2
                 }]
@@ -127,8 +127,8 @@ class MediaTestCase(unittest.TestCase):
     def test_media_playlist_get(self):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/media/playlist', headers={'token': self.token}, params=data)
-        temp = '{"in_playlist":1391198400}'
-        self.assertEqual(resp.content, temp)
+        temp = {"in_playlist":1391212800}
+        self.assertEqual(resp.json(), temp)
 
     def test_media_playlist_post(self):
         data = {'id': 2}
@@ -145,8 +145,8 @@ class MediaTestCase(unittest.TestCase):
     def test_media_state_get(self):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/media/state', headers={'token': self.token}, params=data)
-        temp = '{"watched":1388520000,"pos":20}'
-        self.assertEqual(resp.content, temp)
+        temp = {"watched":1388534400,"pos":20}
+        self.assertEqual(resp.json(), temp)
 
     def test_media_state_post(self):
         data = {'id': 2, 'pos': 20}

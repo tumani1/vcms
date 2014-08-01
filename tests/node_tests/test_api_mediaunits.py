@@ -44,14 +44,14 @@ class MediaUnitsTestCase(unittest.TestCase):
         data = {'id': 2}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/info', headers={'token': self.token}, params=data)
         temp = {
-            u'enddate': 1391198400,
+            u'enddate': 1391212800,
             u'description': u'test2',
             u'title': u'mu2',
             u'batch': u'batch1',
             u'next': 3,
-            u'releasedate': 1325361600,
+            u'releasedate': 1325376000,
             u'title_orig': 2,
-            u'relation': {u'watched': 1388520000},
+            u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
         }
@@ -61,12 +61,12 @@ class MediaUnitsTestCase(unittest.TestCase):
         data = {'id': 2}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/next', headers={'token': self.token}, params=data)
         temp = {
-            u'enddate': 1391198400,
+            u'enddate': 1391212800,
             u'description': u'test3',
             u'title': u'mu3',
             u'batch': u'batch1',
             u'next': None,
-            u'releasedate': 1356984000,
+            u'releasedate': 1356998400,
             u'title_orig': 3,
             u'relation': {},
             u'prev': 2,
@@ -78,14 +78,14 @@ class MediaUnitsTestCase(unittest.TestCase):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/prev', headers={'token': self.token}, params=data)
         temp = {
-            u'enddate': 1391198400,
+            u'enddate': 1391212800,
             u'description': u'test2',
             u'title': u'mu2',
             u'batch': u'batch1',
             u'next': 3,
-            u'releasedate': 1325361600,
+            u'releasedate': 1325376000,
             u'title_orig': 2,
-            u'relation': {u'watched': 1388520000},
+            u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
         }
@@ -95,14 +95,14 @@ class MediaUnitsTestCase(unittest.TestCase):
         data = {'text': 'mu1'}
         resp = self.req_sess.get(self.fullpath+'/mediaunits/list', headers={'token': self.token}, params=data)
         temp = [{
-                    u'enddate': 1391198400,
+                    u'enddate': 1391212800,
                     u'description': u'test1',
                     u'title': u'mu1',
                     u'batch': u'batch1',
                     u'next': 2,
-                    u'releasedate': 1293829200,
+                    u'releasedate': 1293840000,
                     u'title_orig': 1,
-                    u'relation': {u'watched': 1388520000},
+                    u'relation': {u'watched': 1388534400},
                     u'prev': None,
                     u'id': 1
                 }]
