@@ -379,7 +379,7 @@ class PersonExtrasTestCase(unittest.TestCase):
         temp = [
             {
                 'description': 'test test',
-                'created': 1388520000.0,
+                'created': 1388534400.0,
                 'title': 'test',
                 'title_orig': 'test',
                 'location': 'russia',
@@ -387,7 +387,7 @@ class PersonExtrasTestCase(unittest.TestCase):
                 'id': 1
             }, {
                 'description': 'test2 test',
-                'created': 1388520000.0,
+                'created': 1388534400.0,
                 'title': 'test2',
                 'title_orig': 'test2',
                 'location': 'russia',
@@ -419,4 +419,17 @@ class PersonValuesTestCase(unittest.TestCase):
 
 
     def test_echo(self):
-        pass
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "values",
+            "api_format": "json",
+            "http_method": "get",
+            "query_params": {
+                'id': person,
+                "scheme_name": "t",
+            }
+        }
+
+        resp = self.cl.route(IPC_pack)
+        temp = []
