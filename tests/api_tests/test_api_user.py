@@ -105,7 +105,7 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {'topic': 'test1'}
         }
         resp = self.cl.route(IPC_pack)
-        temp = {'id': 1, 'value': 777}
+        temp = {'name': 1, 'value': 777}
         self.assertDictEqual(temp, resp[0])
 
     def test_friends_get(self):
