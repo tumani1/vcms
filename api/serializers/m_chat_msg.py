@@ -1,4 +1,4 @@
-from api.users.serializer import mUserShort
+from api.serializers import mUserShort
 
 
 class mChatMsgSerializer(object):

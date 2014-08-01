@@ -5,7 +5,7 @@ from models.users import Users, UsersValues
 from models.scheme import Scheme
 from models.topics import Topics
 from utils.exceptions import RequestErrorException
-from serializer import mValue
+from api.serializers import mValue
 
 
 def get(user_id, session, **kwargs):

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from models.topics import TopicsValues
-from api.users.serializer import mValue
+from api.serializers import mValue
 from utils.validation import validate_list_string
 
 __all__ = ['get_topic_values']
