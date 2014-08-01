@@ -5,7 +5,8 @@ import unittest
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create, create_scheme, create_topic, create_cdn, \
-    create_users_values, create_persons, create_person_extras, create_extras
+    create_users_values, create_persons, create_person_extras, create_extras, \
+    create_persons_values
 
 from models import Base, Users,\
     Extras, Cities, SessionToken, Persons, UsersPersons
@@ -30,6 +31,7 @@ def setUpModule():
     create_extras(session)
     create_persons(session)
     create_person_extras(session)
+    create_persons_values(session)
     session.close()
 
 
@@ -427,9 +429,41 @@ class PersonValuesTestCase(unittest.TestCase):
             "http_method": "get",
             "query_params": {
                 'id': person,
-                "scheme_name": "t",
+                'name': ['shm1', 'shm2'],
+                'value': '777',
             }
         }
 
-        resp = self.cl.route(IPC_pack)
-        temp = []
+        resp = self.zero_client.route(IPC_pack)
+        temp = [
+            {
+                'name': 3,
+                'value': 777
+            }, {
+                'name': 4,
+                'value': 777
+            }
+        ]
+        self.assertEqual(temp, resp)
+
+
+##################################################################################
+# class PersonMediaTestCase(unittest.TestCase):
+#
+#     def setUp(self):
+#         self.session = get_session()
+#
+#         self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+#         self.zero_client.connect(ZERORPC_SERVICE_URI)
+#
+#         self.user_id = 1
+#         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+#
+#
+#     def tearDown(self):
+#         self.session.close()
+#         self.zero_client.close()
+#
+#
+#     def test_echo(self):
+#         pass

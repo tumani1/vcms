@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from models.persons import PersonsValues
+from api.users.serializer import mValue
 
 from utils.validation import validate_list_string, validate_int
 
@@ -10,8 +11,6 @@ __all__ = ['get_person_values']
 def get_person_values(auth_user, id, session, **kwargs):
     # Validation person value
     person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
 
     # Params
     params = {
@@ -47,11 +46,11 @@ def get_person_values(auth_user, id, session, **kwargs):
             params['value'] = clean_value
 
     if params['name'] is None:
-        return {'code': 404}
+        raise Exception(u"Empty name")
 
     if params['value'] is None:
-        return {'code': 404}
+        raise Exception(u"Empty value")
 
     query = PersonsValues.get_person_values(**params).all()
 
-    return PersonsValues.data(query)
+    return mValue(instance=query, session=session).data
