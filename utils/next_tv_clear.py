@@ -13,16 +13,13 @@ parser.add_argument('-y', '--always-yes', dest='isyes', action='store_true', def
 
 args = parser.parse_args()
 
-
+result = False
 if not args.isyes:
     result = raw_input(u'Вы уверенны, что хотите очистить базу данных?(Yes/No)')
 
-else:
-    result = 'N'
-
-if args.isyes or result in ('y', 'Y', 'yes', 'Yes'):
+if args.isyes or result.lower() in ('y', 'yes'):
     if not args.type in settings.DATABASE.keys():
-        raise Exception(u'Необходим ключ из конфига базы данных')
+        raise Exception('Необходим ключ из конфига базы данных')
 
     print 'Идет очистка базы данных...'
     session = create_session(bind=db_connect(type=args.type))
