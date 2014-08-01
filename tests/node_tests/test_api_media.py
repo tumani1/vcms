@@ -109,8 +109,8 @@ class MediaTestCase(unittest.TestCase):
     def test_media_like_get(self):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/media/like', headers={'token': self.token}, params=data)
-        temp = '{"liked":0}'
-        self.assertEqual(resp.content, temp)
+        temp = {"liked":0}
+        self.assertDictEqual(resp.json(), temp)
 
     def test_media_like_post(self):
         data = {'id': 2}
@@ -128,7 +128,7 @@ class MediaTestCase(unittest.TestCase):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/media/playlist', headers={'token': self.token}, params=data)
         temp = {"in_playlist":1391212800}
-        self.assertEqual(resp.json(), temp)
+        self.assertDictEqual(resp.json(), temp)
 
     def test_media_playlist_post(self):
         data = {'id': 2}
@@ -146,7 +146,7 @@ class MediaTestCase(unittest.TestCase):
         data = {'id': 3}
         resp = self.req_sess.get(self.fullpath+'/media/state', headers={'token': self.token}, params=data)
         temp = {"watched":1388534400,"pos":20}
-        self.assertEqual(resp.json(), temp)
+        self.assertDictEqual(resp.json(), temp)
 
     def test_media_state_post(self):
         data = {'id': 2, 'pos': 20}
