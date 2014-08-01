@@ -33,7 +33,7 @@ routes = {
     'stream': stream_routes,
     'chat': chat_routes,
     'comments': comments_routing,
-    'obj-comments': obj_comments_routing,
+    'obj_comments': obj_comments_routing,
 }
 
 
