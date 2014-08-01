@@ -218,3 +218,17 @@ def create_persons_values(session):
 
     session.add_all(list_pev)
     session.commit()
+
+
+def create_topic_values(session):
+    list_tov = [
+        TopicsValues(scheme_id=1, topic_name="test", value_int=777),
+        TopicsValues(scheme_id=2, topic_name="test", value_int=777),
+        TopicsValues(scheme_id=1, topic_name="test1", value_int=777),
+        TopicsValues(scheme_id=2, topic_name="test1", value_int=777),
+        TopicsValues(scheme_id=1, topic_name="test1", value_string='test'),
+        TopicsValues(scheme_id=1, topic_name="test1", value_text='test'),
+    ]
+
+    session.add_all(list_tov)
+    session.commit()

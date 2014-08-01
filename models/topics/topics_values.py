@@ -37,32 +37,6 @@ class TopicsValues(Base):
         return query
 
 
-    @classmethod
-    def data(cls, data):
-        if isinstance(data, list):
-            data = [item.to_native() for item in data]
-        else:
-            data = data.to_native()
-
-        return data
-
-
-    def to_native(self):
-        result = {
-            'name': self.topic_name
-        }
-
-        value = None
-        for item in ['value_int', 'value_text', 'value_string']:
-           if not getattr(self, item) is None:
-               value = getattr(self, item)
-               break
-
-        result['value'] = value
-
-        return result
-
-
     # value_int, value_text, value_string - обязательно одни из
     def validate_values(self):
         count = 0
