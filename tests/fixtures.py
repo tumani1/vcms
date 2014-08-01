@@ -113,6 +113,19 @@ def create_topic_extras(session):
     session.add_all(list_te)
     session.commit()
 
+def create_person_extras(session):
+    list_pe = [
+        PersonsExtras(extras_id=1, person_id=1),
+        PersonsExtras(extras_id=1, person_id=2),
+        PersonsExtras(extras_id=1, person_id=3),
+        PersonsExtras(extras_id=2, person_id=1),
+        PersonsExtras(extras_id=3, person_id=2),
+        PersonsExtras(extras_id=4, person_id=3),
+    ]
+
+    session.add_all(list_pe)
+    session.commit()
+
 
 def create(session):
     country = Countries(name='Test', name_orig="Test")

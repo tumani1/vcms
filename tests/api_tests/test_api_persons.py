@@ -4,13 +4,11 @@ import zerorpc
 import unittest
 
 from tests.constants import ZERORPC_SERVICE_URI
-from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
-    create_users_values, create_persons
+from tests.fixtures import create, create_scheme, create_topic, create_cdn, \
+    create_users_values, create_persons, create_person_extras, create_extras
 
-from models import Base, Users, UsersRels, UsersExtras, \
+from models import Base, Users,\
     Extras, Cities, SessionToken, Persons, UsersPersons
-
-from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
 
 from utils.common import convert_to_utc
 from utils.connection import get_session, db_connect, create_session
@@ -25,11 +23,13 @@ def setUpModule():
 
     # Fixture
     create(session)
-    create_users_rels(session)
     create_topic(session)
     create_scheme(session)
     create_users_values(session)
+    create_cdn(session)
+    create_extras(session)
     create_persons(session)
+    create_person_extras(session)
     session.close()
 
 
@@ -204,6 +204,23 @@ class PersonLikeTestCase(unittest.TestCase):
         self.assertNotEqual(person.liked, None)
 
 
+    def test_fail_echo_post(self):
+        person = 1
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "post",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertTrue('error' in resp)
+
+
     def test_echo_delete(self):
         person = 2
         IPC_pack = {
@@ -263,6 +280,23 @@ class PersonSubscribeTestCase(unittest.TestCase):
         self.assertDictEqual(temp, resp)
 
 
+    def test_fail_echo_post(self):
+        person = 1
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "subscribe",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "post",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        self.assertTrue('error' in resp)
+
+
     def test_echo_post(self):
         person = 2
         IPC_pack = {
@@ -308,3 +342,81 @@ class PersonSubscribeTestCase(unittest.TestCase):
 
         person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
         self.assertEqual(0, len(person))
+
+
+##################################################################################
+class PersonExtrasTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.session = get_session()
+
+        self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+
+    def tearDown(self):
+        self.session.close()
+        self.zero_client.close()
+
+
+    def test_echo(self):
+        person = 2
+        IPC_pack = {
+            "api_group": "persons",
+            "api_method": "extras",
+            "api_format": "json",
+            "x_token": self.session_token[1],
+            "http_method": "get",
+            "query_params": {
+                "id": person,
+            }
+        }
+
+        resp = self.zero_client.route(IPC_pack)
+        temp = [
+            {
+                'description': 'test test',
+                'created': 1388520000.0,
+                'title': 'test',
+                'title_orig': 'test',
+                'location': 'russia',
+                'type': 'v',
+                'id': 1
+            }, {
+                'description': 'test2 test',
+                'created': 1388520000.0,
+                'title': 'test2',
+                'title_orig': 'test2',
+                'location': 'russia',
+                'type': 'a',
+                'id': 3
+            }
+        ]
+
+        self.assertEqual(2, len(resp))
+        self.assertListEqual(temp, resp)
+
+
+##################################################################################
+class PersonValuesTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.session = get_session()
+
+        self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
+
+        self.user_id = 1
+        self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
+
+
+    def tearDown(self):
+        self.session.close()
+        self.zero_client.close()
+
+
+    def test_echo(self):
+        pass

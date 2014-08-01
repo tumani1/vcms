@@ -12,8 +12,6 @@ __all__ = ['get_person_extars']
 def get_person_extars(auth_user, id, session, **kwargs):
     # Validation person value
     person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
 
     # Params
     params = {
@@ -29,10 +27,7 @@ def get_person_extars(auth_user, id, session, **kwargs):
         params['id'] = validate_list_int(kwargs['id'])
 
     if 'text' in kwargs:
-        try:
-            params['text'] = str(kwargs['text']).strip()
-        except:
-            pass
+        params['text'] = str(kwargs['text']).strip()
 
     if 'type' in kwargs:
         if kwargs['type'] in dict(APP_EXTRA_TYPE).keys():
