@@ -52,8 +52,11 @@ class UsersTestCase(unittest.TestCase):
         }
 
     def tearDown(self):
+        self.session.query(SessionToken).delete()
+        self.session.commit()
         self.session.close()
         self.zero_client.close()
+        
 
     def test_users_values_get(self):
         self.ipc_pack['api_method'] = 'values'
