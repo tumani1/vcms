@@ -1,3 +1,4 @@
+# coding: utf-8
 import zerorpc
 import unittest
 from models import Base, SessionToken, Comments
@@ -9,7 +10,7 @@ from tests.fixtures import create_media_units, create_topic, create, create_medi
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -48,7 +49,7 @@ class ObjCommentsTestCase(unittest.TestCase):
                 'query_params': {'type': 'm', 'id': 1}
         }
         temp = [{
-                    'text': 'Test',
+                    'text': 'Тест',
                     'object': None,
                     'relation': {},
                     'id': 1,
