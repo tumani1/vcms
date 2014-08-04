@@ -5,7 +5,7 @@ import datetime
 from models.msgr import MsgrThreads, UsersMsgrThreads, MsgrLog
 from models.users import Users
 
-from api.users.serializer import mUserShort
+from api.serializers import mUserShort
 from utils import need_authorization
 
 

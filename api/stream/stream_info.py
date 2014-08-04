@@ -1,6 +1,6 @@
 # coding: utf-8
 from models.mongo import Stream
-from api.stream.serizalizer import mStraemElement
+from api.serializers import mStraemElement
 
 from utils.exceptions import RequestErrorException
 

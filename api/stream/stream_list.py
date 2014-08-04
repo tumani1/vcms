@@ -1,6 +1,8 @@
 # coding: utf-8
+
+from api.serializers import mStraemElement
+
 from utils.exceptions import RequestErrorException
-from .serizalizer import mStraemElement
 from utils.validation import validate_mLimitId
 from models.mongo import Stream
 

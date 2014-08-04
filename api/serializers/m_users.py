@@ -1,6 +1,7 @@
 # coding: utf-8
+
 from utils.common import convert_to_utc
-from m_users_short import mUserShort
+from api.serializers.m_users_short import mUserShort
 
 __all__ = ['mUser']
 

@@ -6,7 +6,7 @@ from models.persons import Persons
 from models.chats import UsersChat
 from models.mongo import ChatMessages
 
-from api.persons.serializer import mPersonSerializer as mP
+from api.serializers import mPersonSerializer as mP
 
 
 def get_chat_stat(auth_user, session, **kwargs):

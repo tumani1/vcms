@@ -3,7 +3,7 @@
 from models.topics import Topics
 from models.topics.constants import TOPIC_TYPE
 
-from serializer import mTopicSerializer
+from api.serializers import mTopicSerializer
 
 from utils.validation import validate_mLimit
 

@@ -1,4 +1,4 @@
-from serializer import mChatSerializer
+from api.serializers import mChatSerializer
 from models.chats import Chats
 
 

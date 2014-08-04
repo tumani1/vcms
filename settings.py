@@ -6,31 +6,13 @@ DEBUG = False
 
 BASE_PATH = os.path.dirname(__file__)
 
+# Base path for configs folder
+CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
+
 # Parse DB Config
-DATABASE = {
-    'postgresql': {
-        'drivername': 'postgresql+psycopg2',
-        'username': 'pgadmin',
-        'password': 'qwerty',
-        'host': 'localhost',
-        'port': 5432,
-        'database': 'next_tv'},
-
-    'test': {
-        'drivername': 'postgresql+psycopg2',
-        'username': 'pgadmin',
-        'password': 'qwerty',
-        'host': 'localhost',
-        'port': 5432,
-        'database': 'test_next_tv'},
-
-    'mongodb': {
-        'db': 'next_tv',
-        'username': 'admin',
-        'password': 'admin',
-        'host': '127.0.0.1',
-        'port': 27017}
-}
+DATABASE = {}
+with open(os.path.join(CONFIG_PATH, 'db.yaml'), 'r') as file:
+    DATABASE = yaml.load(file, Loader=yaml.loader.Loader)
 
 NODE = {}
 with open(os.path.join(BASE_PATH, 'nodeservices', 'node_service.yaml')) as conf:

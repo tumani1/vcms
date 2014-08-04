@@ -1,5 +1,5 @@
 from models.mongo import ChatMessages
-from serializer import mChatMsgSerializer
+from api.serializers import mChatMsgSerializer
 from utils.validation import validate_mLimit
 
 

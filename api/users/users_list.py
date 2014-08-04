@@ -2,7 +2,7 @@
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from utils.validation import validate_mLimit
-from serializer import mUser
+from api.serializers import mUser
 
 
 def get(auth_user, session, **kwargs):

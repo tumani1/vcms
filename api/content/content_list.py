@@ -1,6 +1,7 @@
 # coding=utf-8
+
 from models.content import Content
-from serializer import mContentSerializer
+from api.serializers import mContentSerializer
 from utils.validation import validate_list_int, validate_int, validate_string
 
 

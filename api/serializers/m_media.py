@@ -2,7 +2,8 @@
 
 from utils.serializer import DefaultSerializer
 from utils.date_converter import detetime_to_unixtime as convert_date
-from m_localion import mLocationSerializer
+from api.serializers.m_localion import mLocationSerializer
+
 __all__ = ['mMediaSerializer']
 
 

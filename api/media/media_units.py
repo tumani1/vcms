@@ -1,5 +1,6 @@
 # coding: utf-8
-from api.media_unit.serializer import mMediaUnitsSerializer
+
+from api.serializers import mMediaUnitsSerializer
 from models.media.media import Media
 
 

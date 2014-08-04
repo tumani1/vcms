@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from api.users.serializer import mUserShort
+from api.serializers import mUserShort
 
 from models.msgr import MsgrLog
 from models.users import Users

@@ -1,5 +1,5 @@
 # coding: utf-8
-from api.media.serializer.m_media import mMediaSerializer
+from api.serializers.m_media import mMediaSerializer
 from models.media.media import Media
 from utils.validation import validate_list_int
 

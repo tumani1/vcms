@@ -3,7 +3,7 @@ from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
 from utils.validation import validate_mLimit
-from serializer import mUserShort
+from api.serializers import mUserShort
 from settings import TOKEN_LIFETIME
 
 from datetime import datetime, timedelta

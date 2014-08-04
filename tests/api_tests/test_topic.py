@@ -5,8 +5,7 @@ import unittest
 import datetime
 
 from tests.constants import ZERORPC_SERVICE_URI
-from tests.create_test_user import create
-from tests.fixtures import create_topic, create_user_topic, create_cdn, \
+from tests.fixtures import create, create_topic, create_user_topic, create_cdn, \
     create_extras, create_topic_extras, create_topic_values, create_scheme
 
 from models import Base, SessionToken, UsersTopics, Users

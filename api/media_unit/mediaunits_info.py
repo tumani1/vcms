@@ -1,6 +1,7 @@
 # coding: utf-8
+
 from models.media.media_units import MediaUnits
-from serializer import mMediaUnitsSerializer
+from api.serializers import mMediaUnitsSerializer
 
 
 def get(auth_user, session, id, **kwargs):

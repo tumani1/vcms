@@ -2,7 +2,7 @@
 from models.users import Users
 from utils.exceptions import DoesNotExist
 
-from serializer import mUser
+from api.serializers import mUser
 
 
 def get(auth_user, id, session, **kwargs):
