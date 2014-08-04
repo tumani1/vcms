@@ -3,5 +3,4 @@ from models.cdn import CDN
 
 
 def cdn_list(session, **kwargs):
-    cdns = session.query(CDN.url).all()
-    return cdns
+    return session.query(CDN.url).all()

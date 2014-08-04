@@ -10,7 +10,7 @@ from api.serializers import mPersonSerializer as mP
 
 
 def get_chat_stat(auth_user, session, **kwargs):
-    chat = kwargs['chat']
+    chat = kwargs['query']['chat']
 
     users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id==chat)
     on_users = SessionToken.filter_users_is_online(True, users)

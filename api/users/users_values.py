@@ -15,24 +15,24 @@ def get(user_id, session, **kwargs):
 
     query = session.query(UsersValues).filter(UsersValues.user_id==user.id)
 
-    if 'id' in kwargs:
-        if isinstance(kwargs['id'], int):
-            ids = [kwargs['id']]
+    if 'id' in kwargs['query']:
+        if isinstance(kwargs['query']['id'], int):
+            ids = [kwargs['query']['id']]
         else:
-            ids = kwargs['id']
+            ids = kwargs['query']['id']
         query = query.join(Scheme).filter(Scheme.id.in_(ids))
 
-    if 'name' in kwargs:
-        if not isinstance(kwargs['name'], list):
-            name = [kwargs['name']]
+    if 'name' in kwargs['query']:
+        if not isinstance(kwargs['query']['name'], list):
+            name = [kwargs['query']['name']]
         else:
-            name = kwargs['name']
+            name = kwargs['query']['name']
         query = query.join(Scheme).filter(Scheme.name.in_(name))
 
-    if 'topic' in kwargs:
-        query = query.join(Scheme).filter(Scheme.topic_name == kwargs['topic'])
+    if 'topic' in kwargs['query']:
+        query = query.join(Scheme).filter(Scheme.topic_name == kwargs['query']['topic'])
 
-    if 'text' in kwargs:
-        query = query.join(Scheme).join(Topics).filter(func.to_tsvector(Topics.description).match(kwargs['text']))
+    if 'text' in kwargs['query']:
+        query = query.join(Scheme).join(Topics).filter(func.to_tsvector(Topics.description).match(kwargs['query']['text']))
 
     return mValue(instance=query.all(), session=session).data

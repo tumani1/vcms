@@ -17,9 +17,13 @@ def get(auth_user, session, **kwargs):
     auth_user.last_visit = datetime.datetime.utcnow()
     session.add(auth_user)
     session.commit()
-    result = {'id': sid,
-              'session_token': token,
-              'expire': created + datetime.timedelta(minutes=TOKEN_LIFETIME)}
+
+    result = {
+        'id': sid,
+        'session_token': token,
+        'expire': created + datetime.timedelta(minutes=TOKEN_LIFETIME)
+    }
+
     return result
 
 

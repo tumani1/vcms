@@ -8,16 +8,20 @@ from models.mongo import Stream
 
 
 def get(auth_user, session, **kwargs):
+    query = kwargs['query']
     stream_el = Stream.objects.all()
-    if 'type' in kwargs and 'objects' in kwargs:
-        if 'objects' in kwargs:
-            types = [obj[0] for obj in kwargs['objects']]
-            ids = [obj[1] for obj in kwargs['objects']]
+
+    if 'type' in query and 'objects' in query:
+        if 'objects' in query:
+            types = [obj[0] for obj in query['objects']]
+            ids = [obj[1] for obj in query['objects']]
             stream_el = stream_el.filter(type__in=types, id__in=ids)
-        elif 'type' in kwargs:
-            types = type if isinstance(kwargs['type'], list) else [kwargs['type']]
+
+        elif 'type' in query:
+            types = type if isinstance(query['type'], list) else [query['type']]
             stream_el = stream_el.filter(type__in=types)
-    if 'limit' in kwargs:
+
+    if 'limit' in query:
         try:
             limit = validate_mLimitId(kwargs['limit'])
             stream_el = Stream.mLimitId(stream_el, limit)

@@ -18,26 +18,27 @@ def get(auth_user=None, session=None, **kwargs):
         'limit': validate_mLimitId('10'),
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'user_id' in kwargs:
-        params['user_id'] = validate_list_int(kwargs['user_id'])
+    if 'user_id' in query:
+        params['user_id'] = validate_list_int(query['user_id'])
 
-    if 'obj_id' in kwargs:
-        params['obj_id'] = validate_list_int(kwargs['obj_id'])
+    if 'obj_id' in query:
+        params['obj_id'] = validate_list_int(query['obj_id'])
 
-    if 'obj_name' in kwargs:
-        params['obj_name'] = validate_string(kwargs['obj_name'])
+    if 'obj_name' in query:
+        params['obj_name'] = validate_string(query['obj_name'])
 
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimitId(kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimitId(query['limit'])
 
-    if 'obj_type' in kwargs:
-        params['obj_type'] = validate_obj_type(kwargs['obj_type'])
+    if 'obj_type' in query:
+        params['obj_type'] = validate_obj_type(query['obj_type'])
 
-    if 'with_obj' in kwargs:
-        params['with_obj'] = kwargs['with_obj']
+    if 'with_obj' in query:
+        params['with_obj'] = query['with_obj']
 
     instance = Comments.get_comments_list(**params)
     instance = Comments.mLimitId(instance, params['limit'])

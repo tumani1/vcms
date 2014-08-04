@@ -19,21 +19,22 @@ def get_topic_extars(name, auth_user,  session, **kwargs):
         'session': session,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'text' in kwargs:
+    if 'text' in query:
         try:
             params['text'] = str(kwargs['text']).strip()
         except:
             pass
 
-    if 'type' in kwargs:
-        if kwargs['type'] in dict(APP_EXTRA_TYPE).keys():
-            params['_type'] = kwargs['type']
+    if 'type' in query:
+        if query['type'] in dict(APP_EXTRA_TYPE).keys():
+            params['_type'] = query['type']
 
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimit(limit=kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimit(limit=query['limit'])
 
     result = Extras.get_extras_by_topics(**params).all()
 

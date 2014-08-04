@@ -13,14 +13,15 @@ def get(auth_user, session, **kwargs):
         'session': session,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'is_online' in kwargs and kwargs['is_online']:
-        params['is_online'] = kwargs['is_online']
+    if 'is_online' in query and query['is_online']:
+        params['is_online'] = query['is_online']
 
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimit(kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimit(query['limit'])
 
     instance = Media.get_persons_by_media_id(auth_user, **params)
 

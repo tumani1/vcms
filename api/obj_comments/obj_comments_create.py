@@ -9,9 +9,12 @@ def post(type, id, auth_user, session, text, **kwargs):
         'obj_type': type,
         'text': text
     }
-    if 'id' in kwargs:
+
+    query = kwargs['query']
+    if 'id' in query:
         params.update(obj_id=id)
         return create_comments(**params)
-    elif 'name' in kwargs:
-        params.update(obj_name=kwargs['name'])
+
+    elif 'name' in query:
+        params.update(obj_name=query['name'])
         return create_comments(**params)

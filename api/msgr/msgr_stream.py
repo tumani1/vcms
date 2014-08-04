@@ -17,8 +17,8 @@ def get(id, auth_user, session, **kwargs):
         'session': session,
         'instance': ''
     }
-    if 'limit' in kwargs:
-        limit = validate_mLimitId(kwargs['limit'])
+    if 'limit' in kwargs['query']:
+        limit = validate_mLimitId(kwargs['query']['limit'])
         msgr_log = MsgrLog.get_msgr_log_by_msgr_thread_id_limit(session, id, limit).all()
     else:
         msgr_log = MsgrLog.get_msgr_log_by_msgr_thread_id(session, id).all()

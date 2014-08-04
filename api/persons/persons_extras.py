@@ -23,18 +23,19 @@ def get_person_extars(person_id, auth_user, session, **kwargs):
         'session': session,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'text' in kwargs:
-        params['text'] = str(kwargs['text']).strip()
+    if 'text' in query:
+        params['text'] = str(query['text']).strip()
 
-    if 'type' in kwargs:
-        if kwargs['type'] in dict(APP_EXTRA_TYPE).keys():
-            params['_type'] = kwargs['type']
+    if 'type' in query:
+        if query['type'] in dict(APP_EXTRA_TYPE).keys():
+            params['_type'] = query['type']
 
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimit(limit=kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimit(limit=query['limit'])
 
 
     result = Extras.get_extras_by_person(**params).all()

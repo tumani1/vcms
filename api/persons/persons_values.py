@@ -21,17 +21,18 @@ def get_person_values(person_id, auth_user, session, **kwargs):
         'value': None,
     }
 
-    if 'name' in kwargs:
-        params['name'] = validate_list_string(kwargs['name'])
+    query = kwargs['query']
+    if 'name' in query:
+        params['name'] = validate_list_string(query['name'])
 
-    if 'topic' in kwargs:
+    if 'topic' in query:
         try:
-            params['topic'] = str(kwargs['topic']).strip()
+            params['topic'] = str(query['topic']).strip()
         except Exception, e:
             pass
 
-    if 'value' in kwargs:
-        value = kwargs['value']
+    if 'value' in query:
+        value = query['value']
         if not isinstance(value, list):
             value = [value]
 

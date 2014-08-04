@@ -15,8 +15,9 @@ def get_topic_values(name, auth_user, session, **kwargs):
         'scheme_name': None,
     }
 
-    if 'scheme_name' in kwargs:
-        params['scheme_name'] = validate_list_string(kwargs['scheme_name'])
+    query = kwargs['query']
+    if 'scheme_name' in query:
+        params['scheme_name'] = validate_list_string(query['scheme_name'])
 
     if params['scheme_name'] is None:
         raise Exception(u'Empty scheme name')

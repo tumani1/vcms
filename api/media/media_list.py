@@ -15,23 +15,24 @@ def get(auth_user=None, session=None, **kwargs):
         'persons': None,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'topic' in kwargs:
-        params['topic'] = str(kwargs['topic']).strip()
+    if 'topic' in query:
+        params['topic'] = str(query['topic']).strip()
 
-    if 'text' in kwargs:
-        params['text'] = str(kwargs['text']).strip()
+    if 'text' in query:
+        params['text'] = str(query['text']).strip()
 
-    if 'units' in kwargs:
-        params['units'] = validate_list_int(kwargs['units'])
+    if 'units' in query:
+        params['units'] = validate_list_int(query['units'])
 
-    if 'releasedate' in kwargs:
-        params['releasedate'] = validate_list_int(kwargs['releasedate'])
+    if 'releasedate' in query:
+        params['releasedate'] = validate_list_int(query['releasedate'])
 
-    if 'persons' in kwargs:
-        params['persons'] = validate_list_int(kwargs['persons'])
+    if 'persons' in query:
+        params['persons'] = validate_list_int(query['persons'])
 
     instance = Media.get_media_list(**params).all()
     if not instance is None:
@@ -41,4 +42,5 @@ def get(auth_user=None, session=None, **kwargs):
             'instance': instance,
         }
         data = mMediaSerializer(**serializer_params).data
+
     return data
