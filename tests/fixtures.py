@@ -50,9 +50,9 @@ def create_persons(session):
     session.commit()
 
 def create_comments(session):
-    com1 = Comments(user_id=1, text='Тест', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='m', obj_id=1)
-    com2 = Comments(user_id=1, text='Тест2', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='mu', obj_id=1)
-    com3 = Comments(user_id=1, text='Тест3', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='mu', obj_id=1)
+    com1 = Comments(user_id=1, text=u'Тест', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='m', obj_id=1)
+    com2 = Comments(user_id=1, text=u'Тест2', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='mu', obj_id=1)
+    com3 = Comments(user_id=1, text=u'Тест3', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='mu', obj_id=1)
     user_com1 = UsersComments(user_id=1, comment_id=3, liked=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
 
     session.add_all([com1, com2, com3, user_com1])

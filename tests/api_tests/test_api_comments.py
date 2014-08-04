@@ -51,7 +51,7 @@ class CommentsTestCase(unittest.TestCase):
                     'query_params': {'id': 1}
         }
         temp = {
-            'text': 'Тест',
+            'text': u'Тест',
             'object': None,
             'relation': {},
             'id': 1,
@@ -70,7 +70,7 @@ class CommentsTestCase(unittest.TestCase):
                 'query_params': {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
         }
         temp = [{
-                    'text': 'Тест',
+                    'text': u'Тест',
                     'object': {'description': 'test_desc1', 'title': 'media1', 'locations': [], 'releasedate': None, 'title_orig': 'test_media1', 'duration': None, 'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'pos': 50}, 'id': 1},
                     'relation': {},
                     'id': 1,
