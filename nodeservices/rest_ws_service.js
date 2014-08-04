@@ -6,35 +6,15 @@ var http = require("http"),
     settings = require("../settings"),
     ws = require('ws');
 
-function validate(vurl) {
-    // user/friends
-    // topics/{name}/info
-    // persons/{id}/values
-    var re = new RegExp("^\/([a-z]{4,10})(\/[0-9]+|\/[a-z0-9]+)?\/([a-z]{4,10})$");
-    return re.exec(vurl);  // длинна массива соотвествует количеству групп в regexp +1
-}
 
-function form_ipc_pack(directives, headers, method, query_params) {
-    /*Список групп методов API проекта:
-     [auth, user, topics,
-      media, content, persons,
-      stream, chat, users,
-      mediaunits, msgr]
-    Хитро формируем параметр из первой и второй групп регулярного выражения, удаляя начальный слэш у второй группы
-    и последнюю букву s у первой группы, если она присутствует. Это необходимо для правльной передачи в API методы.
-    */
-    var qp = querystring.parse(query_params);
-    if (directives[2]) {
-        var k = directives[1].match('(.*[^s])')[0];
-        qp[k] = directives[2].slice(1);
-    }
+function form_ipc_pack(pathname, headers, http_method, query_params) {
+    var query_params = querystring.parse(query_params);
 
-    return {api_group: directives[1],
-            api_method: directives[3],
-            http_method: method,
+    return {api_method: pathname,
+            api_type: http_method,
             token: headers['token'],
             x_token: headers['x-token'],
-            query_params: qp};
+            query_params: query_params};
 }
 
 function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы общепринятое правило прятать всё в функцию
@@ -43,24 +23,24 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
 
     backend_client.connect("tcp://"+bck_host+":"+bck_port);
     var server = http.createServer(function(request, response) {
-        var parsed = url.parse(request.url),
-            vurl = parsed.pathname, query_params = parsed.query,
-            meth = request.method.toLowerCase(),
-            directives = validate(vurl),
+        var parsed_url = url.parse(request.url),
+            pathname = parsed_url.pathname,
+            query_params = parsed_url.query,
+            http_method = request.method.toLowerCase(),
             headers = request.headers;
 
-        if (["post", "put"].indexOf(meth)>-1 && directives != null) {
-            var form = new formidable.IncomingForm();
-            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+        if (["post", "put"].indexOf(http_method)>-1) {
+            var form = new formidable.IncomingForm(),
+                IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
             form.maxFields = 6;
             form.parse(request, function(error, fields, files) {
-                for (var property in fields) {
-                        if (!IPC_pack["query_params"].hasOwnProperty(property)) {
-                            IPC_pack["query_params"][property] = fields[property];
+                for (var field in fields) {
+                        if (!IPC_pack["query_params"].hasOwnProperty(field)) {
+                            IPC_pack["query_params"][field] = fields[field];
                         }
-                    }
+                }
                 backend_client.invoke("route", IPC_pack, function(error, res, more) {
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.end(JSON.stringify(res));
@@ -71,8 +51,8 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
             });
         }
 
-        else if (directives != null) {
-            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+        else {
+            var IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
             backend_client.invoke("route", IPC_pack, function(error, res, more) {
                 if (error) {
                     console.error(error);
@@ -84,12 +64,7 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
                 }
             });
         }
-
-        else {
-            response.writeHead(404, {"Content-Type": "text/plain"});
-            response.end("invalid url");
-        }
-        });
+    });
     server.listen(port, host, function() {
        console.log("rest server runnig on "+host+":"+port);
     });
