@@ -1,8 +1,6 @@
 # coding: utf-8
-
 import datetime
 import pytz
-
 from models import *
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_BLOCK_TYPE_MATUALLY
 
