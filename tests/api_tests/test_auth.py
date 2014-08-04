@@ -37,9 +37,9 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         self.token = self.user.global_token.token
 
     def test_echo(self):
-        Auth_IPC_pack = {'api_group': 'auth',
-                    'api_method': 'session',
-                    'http_method': 'get',
+        Auth_IPC_pack = {
+                    'api_method': 'auth/session',
+                    'api_type': 'get',
                     'token': self.token,
                     'x_token': None,
                     'query_params':{}}
@@ -49,9 +49,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         session_token = auth_resp['session_token']
         
         IPC_pack = {
-            'api_group': 'test',
-            'api_method': 'echoauth',
-            'http_method': 'get',
+            'api_method': 'test/echoauth',
+            'api_type': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}
         }
@@ -62,9 +61,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
     def test_revoke(self):
         Auth_IPC_pack = {
-            'api_group': 'auth',
-            'api_method': 'session',
-            'http_method': 'get',
+            'api_method': 'auth/session',
+            'api_type': 'get',
             'token': self.token,
             'x_token': None,
             'query_params': {}
@@ -73,9 +71,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
         session_token = auth_resp['session_token']
         Del_IPC_pack = {
-            'api_group': 'auth',
-            'api_method': 'session',
-            'http_method': 'delete',
+            'api_method': 'auth/session',
+            'api_type': 'delete',
             'x_token': session_token,
             'query_params': {},
             'token': None
@@ -83,9 +80,8 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         auth_resp = self.cl.route(Del_IPC_pack)
         
         IPC_pack = {
-            'api_group': 'test',
-            'api_method': 'echoauth',
-            'http_method': 'get',
+            'api_method': 'test/echoauth',
+            'api_type': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}
         }
