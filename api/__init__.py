@@ -38,7 +38,7 @@ routes = {
 
 
 def authorize(IPC_pack, session=None):
-    if IPC_pack['api_group'] == 'auth':
+    if IPC_pack['api_method'].startswith('auth'):
         IPC_pack['query_params'].update({
             'x_token': IPC_pack['x_token'] if 'x_token' in IPC_pack else None,
             'token': IPC_pack['token'],

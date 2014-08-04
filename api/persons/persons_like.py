@@ -11,7 +11,7 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 
 
 @need_authorization
-def get_like(auth_user, id, session, **kwargs):
+def get_like(id, auth_user, session, **kwargs):
     # Validation person value
     person = validate_int(id, min_value=1)
     if type(person) == Exception:

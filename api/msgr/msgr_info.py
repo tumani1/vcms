@@ -6,7 +6,7 @@ from utils import need_authorization
 
 
 @need_authorization
-def get(auth_user, session, id):
+def get(id, auth_user, session):
     users_msgr_threads = UsersMsgrThreads.get_users_msgr_threads_by_msgr_thread_id(session, id).first()
     params = {
         'user': auth_user,

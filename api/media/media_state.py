@@ -9,7 +9,7 @@ from utils.date_converter import detetime_to_unixtime as convert_date
 from utils.validation import validate_int
 
 
-def get(auth_user, session, id, **kwargs):
+def get(id, auth_user, session, **kwargs):
     data = {
         'watched': 0,
         'pos': None
@@ -25,7 +25,7 @@ def get(auth_user, session, id, **kwargs):
     return data
 
 
-def post(auth_user, session, id, watched=None, pos=None, **kwargs):
+def post(id, auth_user, session, watched=None, pos=None, **kwargs):
     date = datetime.datetime.utcnow()
     params = {
         'user_id': auth_user.id,
@@ -50,7 +50,7 @@ def post(auth_user, session, id, watched=None, pos=None, **kwargs):
         session.commit()
 
 
-def delete(auth_user, session, id, **kwargs):
+def delete(id, auth_user, session, **kwargs):
     users_media = Media.get_users_media_by_media(auth_user, session, id)
     if not users_media is None:
         users_media.watched = None

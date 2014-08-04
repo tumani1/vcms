@@ -4,7 +4,7 @@ from models.media import MediaUnits
 from api.serializers import mMediaUnitsSerializer
 
 
-def get(auth_user, session, id, **kwargs):
+def get(id, auth_user, session, **kwargs):
     instance = MediaUnits.get_prev_media_unit(auth_user, session, id)
     data = {}
     if not instance is None:

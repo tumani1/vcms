@@ -8,7 +8,7 @@ from utils.validation import validate_int
 __all__ = ['get_person_info']
 
 
-def get_person_info(auth_user, id, session, **kwargs):
+def get_person_info(id, auth_user, session, **kwargs):
     # Validation person value
     person = validate_int(id, min_value=1)
     if type(person) == Exception:

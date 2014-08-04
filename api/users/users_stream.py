@@ -8,7 +8,7 @@ from utils.exceptions import RequestErrorException
 from models.mongo import Stream
 
 
-def get(auth_user, session, id, **kwargs):
+def get(id, auth_user, session, **kwargs):
     try:
         stream_el = Stream.objects.filter(user_id=id)
         if 'type' in kwargs:
