@@ -10,7 +10,7 @@ from utils import need_authorization
 
 
 @need_authorization
-def post(auth_user, session, id, **kwargs):
+def post(id, auth_user, session, **kwargs):
     user_rels = session.query(UsersRels).filter_by(user_id=auth_user.id, partner_id=id).first()
     partner_rels = session.query(UsersRels).filter_by(user_id=id, partner_id=auth_user.id).first()
     if user_rels and partner_rels:
@@ -28,7 +28,7 @@ def post(auth_user, session, id, **kwargs):
 
 
 @need_authorization
-def delete(auth_user, session, id, **kwargs):
+def delete(id, auth_user, session, **kwargs):
     user_rels = session.query(UsersRels).filter_by(user_id=auth_user.id, partner_id=id).first()
     partner_rels = session.query(UsersRels).filter_by(user_id=id, partner_id=auth_user.id).first()
     if user_rels and partner_rels:

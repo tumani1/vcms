@@ -8,7 +8,7 @@ from utils.validation import validate_mLimit, validate_list_int
 __all__ = ['get_topic_extars']
 
 
-def get_topic_extars(auth_user, name,  session, **kwargs):
+def get_topic_extars(name, auth_user,  session, **kwargs):
     # Params
     params = {
         'id': None,

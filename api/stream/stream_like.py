@@ -4,7 +4,7 @@ from models.users import UsersStream
 
 
 @need_authorization
-def get(auth_user, session, id, **kwargs):
+def get(id, auth_user, session, **kwargs):
     unixtime = 0
     stream_el = session.query(UsersStream).filter_by(user_id=auth_user.id, stream_id=id)
     if stream_el:
@@ -14,14 +14,14 @@ def get(auth_user, session, id, **kwargs):
 
 
 @need_authorization
-def post(auth_user, session, id, **kwargs):
+def post(id, auth_user, session, **kwargs):
     stream_el = UsersStream(user_id=auth_user.id, stream_id=id)
     session.add(stream_el)
     session.commit()
 
 
 @need_authorization
-def delete(auth_user, session, id, **kwargs):
+def delete(id, auth_user, session, **kwargs):
     stream_el = session.query(UsersStream).filter_by(user_id=auth_user.id, stream_id=id)
     if stream_el:
         session.delete(stream_el)
