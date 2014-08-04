@@ -11,23 +11,33 @@ function validate(vurl) {
     // topics/{name}/info
     // persons/{id}/values
     // obj_comments/{type}/{id}/list
-    var re = new RegExp("^\/([a-z_]{4,12})(\/[a-z]{4,12})?(\/[0-9]+|\/[a-z0-9]+)?\/([a-z]{4,10})$");
+    // obj_comments/{type}/{name}/list
+    var re = new RegExp("^\/([a-z_]{4,12})(\/[a-z]{4,12})?(\/[0-9]+|\/[a-z0-9\-\.]+)?\/([a-z]{4,10})$");
     return re.exec(vurl);  // длинна массива соотвествует количеству групп в regexp +1
 }
 
-function form_ipc_pack(directives, headers, method, query_params) {
+function form_ipc_pack(directives, headers, http_method, query_params) {
     /*Список групп методов API проекта:
      [auth, user, topics,
       media, content, persons,
       stream, chat, users,
       mediaunits, msgr, comments, obj_comments]
-    Хитро формируем параметр из первой и второй групп регулярного выражения, удаляя начальный слэш у второй группы
-    и последнюю букву s у первой группы, если она присутствует. Это необходимо для правльной передачи в API методы.
+    Формируем параметры query_params из структуры ссылки и параметров http метода
     */
     var qp = querystring.parse(query_params);
-    if (directives[3] && !directives[2]) {
+    if (directives[3] && directives[2]) { // присутствует тип и идентификатор
+        if (directives[3].match('[a-z\-\.]')) {
+            var param_name = 'obj_name';
+        }
+        else {
+            var param_name = 'obj_id';
+        }
+        qp[param_name] = directives[3].slice(1);
+        qp['obj_type'] = directives[2];
+    }
+    else if (directives[3] && !directives[2]) { // присутствует только идентификатор
         var param_name = directives[1].match('(.*[^s])')[0];
-        if (param_name.match('[a-z]')) {
+        if (param_name.match('[a-z\-\.]')) {
             param_name += '_name';
         }
         else {
@@ -35,9 +45,9 @@ function form_ipc_pack(directives, headers, method, query_params) {
         }
         qp[param_name] = directives[3].slice(1);
     }
-    if (directives[3] && directives[2]) {
+    else if (directives[2] && !directives[3]) { // идентификатор попал во вторую группу
         var param_name = directives[1].match('(.*[^s])')[0];
-        if (param_name.match('[a-z]')) {
+        if (param_name.match('[a-z\-\.]')) {
             param_name += '_name';
         }
         else {
@@ -48,7 +58,7 @@ function form_ipc_pack(directives, headers, method, query_params) {
 
     return {api_group: directives[1],
             api_method: directives[4],
-            http_method: method,
+            http_method: http_method,
             token: headers['token'],
             x_token: headers['x-token'],
             query_params: qp};
@@ -62,13 +72,13 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
     var server = http.createServer(function(request, response) {
         var parsed = url.parse(request.url),
             vurl = parsed.pathname, query_params = parsed.query,
-            meth = request.method.toLowerCase(),
+            http_method = request.method.toLowerCase(),
             directives = validate(vurl),
             headers = request.headers;
 
-        if (["post", "put"].indexOf(meth)>-1 && directives != null) {
+        if (["post", "put"].indexOf(http_method)>-1 && directives != null) {
             var form = new formidable.IncomingForm();
-            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+            IPC_pack = form_ipc_pack(directives, headers, http_method, query_params);
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
             form.maxFields = 6;
@@ -89,7 +99,7 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
         }
 
         else if (directives != null) {
-            IPC_pack = form_ipc_pack(directives, headers, meth, query_params);
+            IPC_pack = form_ipc_pack(directives, headers, http_method, query_params);
             backend_client.invoke("route", IPC_pack, function(error, res, more) {
                 if (error) {
                     console.error(error);
