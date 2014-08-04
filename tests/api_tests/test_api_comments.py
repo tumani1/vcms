@@ -12,7 +12,7 @@ from tests.fixtures import create_media_units, create_topic, create, create_medi
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -51,7 +51,7 @@ class CommentsTestCase(unittest.TestCase):
                     'query_params': {'id': 1}
         }
         temp = {
-            'text': u'Тест',
+            'text': 'Тест',
             'object': None,
             'relation': {},
             'id': 1,
@@ -70,7 +70,7 @@ class CommentsTestCase(unittest.TestCase):
                 'query_params': {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
         }
         temp = [{
-                    'text': u'Тест',
+                    'text': 'Тест',
                     'object': {'description': 'test_desc1', 'title': 'media1', 'locations': [], 'releasedate': None, 'title_orig': 'test_media1', 'duration': None, 'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'pos': 50}, 'id': 1},
                     'relation': {},
                     'id': 1,
