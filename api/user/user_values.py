@@ -25,11 +25,13 @@ def put(auth_user, name, value, topic=None, session=None):
                 kwargs = {'value_string': val}
             else:
                 kwargs = {'value_text': val}
+
         user_val_obj = session.query(UsersValues).filter(and_(UsersValues.__getattribute__(UsersValues, kwargs.keys()[0]).isnot(None), UsersValues.user_id == auth_user.id)).first()
         if user_val_obj:
             setattr(user_val_obj, kwargs.keys()[0], kwargs[kwargs.keys()[0]])
         else:
             user_values.append(UsersValues(user_id=auth_user.id, scheme_id=schema.id, **kwargs))
+
     session.add_all(user_values)
     if session.new or session.dirty:
         session.commit()

@@ -11,15 +11,13 @@ __all__ = ['get_like', 'post_like', 'delete_like']
 
 
 @need_authorization
-def get_like(id, auth_user, session, **kwargs):
+def get_like(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
+    person_id = validate_int(person_id, min_value=1)
 
     params = {
         'user': auth_user,
-        'person_id': person,
+        'person_id': person_id,
         'session': session,
     }
 
@@ -32,15 +30,13 @@ def get_like(id, auth_user, session, **kwargs):
 
 
 @need_authorization
-def post_like(auth_user, id, session, **kwargs):
+def post_like(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
+    person_id = validate_int(person_id, min_value=1)
 
     params = {
         'user': auth_user,
-        'person_id': person,
+        'person_id': person_id,
         'session': session,
     }
 
@@ -49,7 +45,7 @@ def post_like(auth_user, id, session, **kwargs):
     up = UsersPersons.get_user_person(**params).first()
 
     if up is None:
-        up = UsersPersons(user_id=auth_user.id, person_id=person, liked=date)
+        up = UsersPersons(user_id=auth_user.id, person_id=person_id, liked=date)
         session.add(up)
     else:
         up.liked = date
@@ -58,15 +54,13 @@ def post_like(auth_user, id, session, **kwargs):
 
 
 @need_authorization
-def delete_like(auth_user, id, session, **kwargs):
+def delete_like(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
+    person_id = validate_int(person_id, min_value=1)
 
     params = {
         'user': auth_user,
-        'person_id': person,
+        'person_id': person_id,
         'session': session,
     }
 

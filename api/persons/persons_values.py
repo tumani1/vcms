@@ -8,13 +8,13 @@ from utils.validation import validate_list_string, validate_int
 __all__ = ['get_person_values']
 
 
-def get_person_values(id, auth_user, session, **kwargs):
+def get_person_values(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
+    person_id = validate_int(person_id, min_value=1)
 
     # Params
     params = {
-        'person': person,
+        'person': person_id,
         'session': session,
         'name': None,
         'topic': None,

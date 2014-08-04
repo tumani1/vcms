@@ -9,9 +9,9 @@ from utils.validation import validate_mLimit, validate_list_int, validate_int
 __all__ = ['get_person_extars']
 
 
-def get_person_extars(id, auth_user, session, **kwargs):
+def get_person_extars(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
+    person_id = validate_int(person_id, min_value=1)
 
     # Params
     params = {
@@ -19,7 +19,7 @@ def get_person_extars(id, auth_user, session, **kwargs):
         'text': None,
         '_type': None,
         'limit': None,
-        'person': person,
+        'person': person_id,
         'session': session,
     }
 

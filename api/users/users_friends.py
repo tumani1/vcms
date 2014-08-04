@@ -9,8 +9,8 @@ from settings import TOKEN_LIFETIME
 from datetime import datetime, timedelta
 
 
-def get(auth_user, id, session, **kwargs):
-    subquery = session.query(UsersRels.partner_id).filter_by(user_id=id, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
+def get(user_id, auth_user, session, **kwargs):
+    subquery = session.query(UsersRels.partner_id).filter_by(user_id=user_id, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
     query = session.query(Users).filter(Users.id.in_(subquery))
 
     if 'is_online' in kwargs:
@@ -24,7 +24,8 @@ def get(auth_user, id, session, **kwargs):
 
     if 'limit' in kwargs:
         limit = validate_mLimit(kwargs['limit'])
-         # Set limit and offset filter
+
+        # Set limit and offset filter
         if not limit is None:
             # Set Limit
             if limit[0]:
