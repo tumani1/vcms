@@ -11,7 +11,12 @@ class ZeroRpcCdnApiService(object):
     def on_play(self, user_token, media_id):
         session = get_session()
         try:
-            statuc_code = on_play(session)
+            params = {
+                'auth_user': user_token,
+                'session': session,
+                'media_id': media_id,
+            }
+            statuc_code = on_play(**params)
         except Exception as e:
             statuc_code = 500
 
@@ -20,20 +25,16 @@ class ZeroRpcCdnApiService(object):
     def on_done(self, user_token, media_id):
         session = get_session()
         try:
-            statuc_code = on_done(session)
+            params = {
+                'auth_user': user_token,
+                'session': session,
+                'media_id': media_id,
+            }
+            statuc_code = on_done(**params)
         except Exception as e:
             statuc_code = 500
 
         return statuc_code
-
-    def cdn_list(self):
-        session = get_session()
-        try:
-            cdns = cdn_list(session)
-        except Exception as e:
-            cdns = []
-
-        return cdns
 
 
 if __name__ == '__main__':
