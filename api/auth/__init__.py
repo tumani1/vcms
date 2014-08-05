@@ -6,7 +6,7 @@ from api.auth.session import get, delete
 from api.auth.registration import post as register
 
 
-auth = {
+routing = {
     'login': {
         'post': post,
     },
@@ -20,5 +20,4 @@ auth = {
     'register': {
         'post': register,
     }
-
 }

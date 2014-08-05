@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from utils.serializer import DefaultSerializer
-from utils.date_converter import detetime_to_unixtime as convert_date
+from utils.common import detetime_to_unixtime as convert_date
 
 __all__ = ['mMediaUnitsSerializer']
 

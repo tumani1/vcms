@@ -9,7 +9,7 @@ from api.persons import routing as persons_routing
 from api.media_unit import routing as media_unit_routing
 from api.test import routes as test_routing
 from api.user import routing as user_routing
-from api.auth import auth
+from api.auth import routing as auth_routing
 from api.msgr import routing as msgr_routing
 from api.media import routing as media_routing
 from api.content import routing as content_routes
@@ -17,6 +17,7 @@ from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
+from api.cdn import routing as cdn_routing
 
 
 routes = {
@@ -26,7 +27,7 @@ routes = {
     'topics': topics_routing,
     'persons': persons_routing,
     'test': test_routing,
-    'auth': auth,
+    'auth': auth_routing,
     'media': media_routing,
     'msgr': msgr_routing,    
     'content': content_routes,
@@ -34,6 +35,7 @@ routes = {
     'chat': chat_routes,
     'comments': comments_routing,
     'obj_comments': obj_comments_routing,
+    'int-api': cdn_routing,
 }
 
 

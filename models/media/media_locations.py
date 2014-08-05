@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT
 from models.base import Base
 
@@ -11,5 +10,5 @@ class MediaLocations(Base):
     cdn_name = Column(String, ForeignKey('cdn.name'), nullable=False)
     media_id = Column(Integer, ForeignKey('media.id'), nullable=False)
     quality = Column(String, nullable=True)
-    access_level = Column(SMALLINT, nullable=True)
+    access_level = Column(SMALLINT, default=4420)
     value = Column(String, nullable=True)

@@ -15,13 +15,13 @@ args = parser.parse_args()
 
 result = ''
 if not args.isyes:
-    result = raw_input(u'Вы уверенны, что хотите очистить базу данных?(Yes/No)')
+    result = raw_input(u'Вы уверенны, что хотите очистить базу данных?(Yes/No): '.encode('utf-8'))
 
-if args.isyes or result.lower() in ('y', 'yes'):
+if args.isyes or result.lower() in ('y', 'yes', 'Yes', 'Y'):
     if not args.type in settings.DATABASE.keys():
-        raise Exception('Необходим ключ из конфига базы данных')
+        raise Exception(u'Необходим ключ из конфига базы данных')
 
-    print 'Идет очистка базы данных...'
+    print u'Идет очистка базы данных...'
     session = create_session(bind=db_connect(type=args.type))
     session.connection().connection.set_isolation_level(0)
     session.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
