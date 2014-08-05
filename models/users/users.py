@@ -2,13 +2,13 @@
 import datetime
 
 from sqlalchemy.sql.expression import func
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Date, and_, event
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event
 from sqlalchemy.orm import relationship, sessionmaker, relation, backref
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
-from models import Base
+from models.base import Base
 from models.contents import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
@@ -30,7 +30,7 @@ class Users(Base):
     address       = Column(Text)
     bio           = Column(Text)
     last_visit    = Column(DateTime)
-    birthdate     = Column(Date)
+    birthdate     = Column(DateTime)
     userpic_type  = Column(String(1))
     userpic_id    = Column(Integer)
     # status      = Column(ChoiceType(TYPE_STATUS))
@@ -64,10 +64,10 @@ class Users(Base):
 
     @classmethod
     def get_user_by_person(cls, user_id, person_id, session, **kwargs):
-        if not hasattr(user_id, '__iter__'):
+        if not isinstance(user_id, list):
             user_id = []
 
-        if not hasattr(person_id, '__iter__'):
+        if not isinstance(person_id, list):
             person_id = []
 
         query = cls.tmpl_for_users(session).filter(cls.id.in_(user_id)).\

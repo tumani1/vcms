@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from models import GlobalToken
+from models.tokens import GlobalToken
 
 
 def revoke(auth_user, x_token, token, session, **kwargs):

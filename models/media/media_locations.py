@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT
-from models import Base
+from models.base import Base
 
 
 class MediaLocations(Base):

@@ -1,9 +1,11 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PrimaryKeyConstraint
+
 import time
 import datetime
 
-from models import Base
+from sqlalchemy import Column, Integer, DateTime, String, ForeignKey, PrimaryKeyConstraint
+
+from models.base import Base
 
 
 class UsersStream(Base):

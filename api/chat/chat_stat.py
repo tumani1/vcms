@@ -1,10 +1,16 @@
 # coding:utf-8
-from models import Users, SessionToken, Persons, UsersChat, ChatMessages
-from api.persons.serializer import mPersonSerializer as mP
+
+from models.users import Users
+from models.tokens import SessionToken
+from models.persons import Persons
+from models.chats import UsersChat
+from models.mongo import ChatMessages
+
+from api.serializers import mPersonSerializer as mP
 
 
 def get_chat_stat(auth_user, session, **kwargs):
-    chat = kwargs['chat']
+    chat = kwargs['query']['chat']
 
     users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id==chat)
     on_users = SessionToken.filter_users_is_online(True, users)

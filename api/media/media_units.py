@@ -1,9 +1,10 @@
 # coding: utf-8
-from api.media_unit.serializer import mMediaUnitsSerializer
+
+from api.serializers import mMediaUnitsSerializer
 from models.media.media import Media
 
 
-def get(auth_user, session, id,  **kwargs):
+def get(id, auth_user, session, **kwargs):
     data = {}
     instance = Media.get_units_by_media_id(auth_user, session, id).all()
     if not instance is None:

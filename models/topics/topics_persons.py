@@ -3,7 +3,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy_utils import ChoiceType
 
-from models import Base
+from models.base import Base
 from models.topics.constants import PERSON_TOPIC_TYPE
 
 

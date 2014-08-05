@@ -1,46 +1,54 @@
 # coding: utf-8
-class RequestErrorException(Exception):
+
+
+class APIException(Exception):
+    """
+    Generic API exception
+    """
+
+    code = 404
+
+
+class RequestErrorException(APIException):
     """
     400
     """
-    pass
+    code = 400
 
 
-class SessionExpiredException(Exception):
+class SessionExpiredException(APIException):
     """
     401
     """
-    pass
+    code = 401
 
 
-class NotAuthorizedException(Exception):
+class NotAuthorizedException(APIException):
     """
     403
     """
+    code = 403
+
     def __str__(self):
         return "Not authorized access"
 
 
-class NoSuchMethodException(Exception):
+class NoSuchMethodException(APIException):
     """
     404
     """
-    pass
+    code = 404
 
 
-class WrongHTTPMethod(Exception):
+class WrongHTTPMethod(APIException):
     """
     405
     """
-    pass
+    code = 405
 
 
-class Http404(Exception):
+class Http404(APIException):
     """
     404 error
     """
-
-
-class DoesNotExist(Exception):
-    """Object does not exist"""
-    pass
+    code = 404

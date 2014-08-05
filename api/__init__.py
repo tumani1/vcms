@@ -1,6 +1,7 @@
 # coding: utf-8
 
-from models import Users
+from models.users import Users
+from models.tokens import SessionToken, GlobalToken
 
 from api.users import routing as users_routing
 from api.topics import routing as topics_routing
@@ -16,7 +17,6 @@ from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
-from models import SessionToken, GlobalToken
 
 
 routes = {
@@ -33,26 +33,24 @@ routes = {
     'stream': stream_routes,
     'chat': chat_routes,
     'comments': comments_routing,
-    'obj-comments': obj_comments_routing,
+    'obj_comments': obj_comments_routing,
 }
 
 
 def authorize(IPC_pack, session=None):
-    if IPC_pack['api_group'] == 'auth':
+    if IPC_pack['api_method'].startswith('auth'):
         IPC_pack['query_params'].update({
-            'x_token': IPC_pack['x_token'] if 'x_token' in IPC_pack else None,
-            'token': IPC_pack['token'],
+            'x_token': IPC_pack.get('x_token'),
+            'token'  : IPC_pack.get('token')
         })
 
     user_id = None
-    if 'x_token' in IPC_pack and IPC_pack['x_token']:
+    if  IPC_pack.get('x_token'):
         user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
-    elif 'token' in IPC_pack and IPC_pack['token']:
+    elif IPC_pack.get('token'):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
     user = None
     if user_id:
         user = session.query(Users).get(user_id)
 
-    IPC_pack['query_params'].update({'auth_user': user})
-
-    return IPC_pack
+    return user

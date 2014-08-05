@@ -1,38 +1,38 @@
 # coding: utf-8
 
-from models import PersonsValues
+from models.persons import PersonsValues
+from api.serializers import mValue
 
 from utils.validation import validate_list_string, validate_int
 
 __all__ = ['get_person_values']
 
 
-def get_person_values(auth_user, id, session, **kwargs):
+def get_person_values(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
+    person_id = validate_int(person_id, min_value=1)
 
     # Params
     params = {
-        'person': person,
+        'person': person_id,
         'session': session,
         'name': None,
         'topic': None,
         'value': None,
     }
 
-    if 'name' in kwargs:
-        params['name'] = validate_list_string(kwargs['name'])
+    query = kwargs['query']
+    if 'name' in query:
+        params['name'] = validate_list_string(query['name'])
 
-    if 'topic' in kwargs:
+    if 'topic' in query:
         try:
-            params['topic'] = str(kwargs['topic']).strip()
+            params['topic'] = str(query['topic']).strip()
         except Exception, e:
             pass
 
-    if 'value' in kwargs:
-        value = kwargs['value']
+    if 'value' in query:
+        value = query['value']
         if not isinstance(value, list):
             value = [value]
 
@@ -47,11 +47,11 @@ def get_person_values(auth_user, id, session, **kwargs):
             params['value'] = clean_value
 
     if params['name'] is None:
-        return {'code': 404}
+        raise Exception(u"Empty name")
 
     if params['value'] is None:
-        return {'code': 404}
+        raise Exception(u"Empty value")
 
     query = PersonsValues.get_person_values(**params).all()
 
-    return PersonsValues.data(query)
+    return mValue(instance=query, session=session).data

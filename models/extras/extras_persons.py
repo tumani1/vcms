@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, Integer, String, ForeignKey
 
-from models import Base
+from models.base import Base
 
 
 class PersonsExtras(Base):

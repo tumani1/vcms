@@ -10,12 +10,17 @@ APP_USERS_TYPE_GENDER = (
     (APP_USERS_GENDER_WOMAN, u'Женский'),
     (APP_USERS_GENDER_UNDEF, u'Не установлен'),
 )
+##############################################################
+APP_USERSRELS_BLOCK_TYPE_UNDEF = u'0'
+APP_USERSRELS_BLOCK_TYPE_SEND = u'1'
+APP_USERSRELS_BLOCK_TYPE_RECIEVE = u'2'
+APP_USERSRELS_BLOCK_TYPE_MATUALLY = u'3'
 
-APP_USERS_TYPE_BLOCKED = (
-    (0, u'нет блокировки'),
-    (1, u'блокировка партнёра'),
-    (2, u'блокировка от партнёра'),
-    (3, u'обоюдная блокировка'),
+APP_USERSRELS_TYPE_BLOCKED = (
+    (APP_USERSRELS_BLOCK_TYPE_UNDEF, u'нет блокировки'),
+    (APP_USERSRELS_BLOCK_TYPE_SEND, u'блокировка партнёра'),
+    (APP_USERSRELS_BLOCK_TYPE_RECIEVE, u'блокировка от партнёра'),
+    (APP_USERSRELS_BLOCK_TYPE_MATUALLY, u'обоюдная блокировка'),
 )
 
 ##############################################################

@@ -1,17 +1,18 @@
 # coding: utf-8
+
 import zerorpc
 import unittest
 
-from fixtures import create, create_users_rels, create_scheme, create_topic, \
-    create_users_values
-from models import Base
-from models.users import Users, UsersRels, UsersExtras
-from models.extras import Extras
+
+from models import Base, Users, UsersRels, UsersExtras, Extras, Cities,SessionToken
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
-from models.contents import Cities
-from models.tokens import SessionToken
+
 from utils.connection import get_session, db_connect, create_session
 from utils.common import convert_to_utc
+
+from tests.constants import ZERORPC_SERVICE_URI
+from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
+    create_users_values
 
 
 def setUpModule():
@@ -32,7 +33,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class UsersTestCase(unittest.TestCase):
@@ -40,7 +41,7 @@ class UsersTestCase(unittest.TestCase):
     def setUp(self):
         self.session = get_session()
         self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.zero_client.connect("tcp://127.0.0.1:4242")
+        self.zero_client.connect(ZERORPC_SERVICE_URI)
         self.ipc_pack = {
             'api_group': 'users',
             'api_method': '',
@@ -51,10 +52,13 @@ class UsersTestCase(unittest.TestCase):
         }
 
     def tearDown(self):
+        self.session.query(SessionToken).delete()
+        self.session.commit()
         self.session.close()
         self.zero_client.close()
+        
 
-    def users_values_get(self):
+    def test_users_values_get(self):
         self.ipc_pack['api_method'] = 'values'
         self.ipc_pack['http_method'] = 'get'
         self.ipc_pack['query_params'] = {
@@ -63,9 +67,9 @@ class UsersTestCase(unittest.TestCase):
             'user_id': 1
         }
         resp = self.zero_client.route(self.ipc_pack)
-        self.assertDictEqual(resp[0], {'id': 1, 'value': 777})
+        self.assertDictEqual(resp[0], {'name': 1, 'value': 777})
 
-    def users_list_get(self):
+    def test_test_users_list_get(self):
         self.ipc_pack['api_method'] = 'list'
         self.ipc_pack['http_method'] = 'get'
         self.ipc_pack['query_params'] = {
@@ -92,7 +96,7 @@ class UsersTestCase(unittest.TestCase):
             user_d = filter(lambda i: i['id'] == resp_dict['id'], users_dict)[0]
             self.assertDictEqual(resp_dict, user_d)
 
-    def users_info_get(self):
+    def test_users_info_get(self):
         self.ipc_pack['api_method'] = 'info'
         self.ipc_pack['http_method'] = 'get'
 
@@ -103,18 +107,18 @@ class UsersTestCase(unittest.TestCase):
         user = self.session.query(Users).get(1)
         user_dict = {
             'id': user.id,
-            'firstname': user.firstname,
-            'lastname': user.lastname,
+            'firstname': str(user.firstname),
+            'lastname': str(user.lastname),
             'is_online': False,
-            'gender': user.gender.code,
+            'gender': str(user.gender.code),
             'regdate': convert_to_utc(user.created),
             'lastvisit': convert_to_utc(user.last_visit) if user.last_visit else '',
-            'city': user.city.name,
-            'country': user.city.country.name,
+            'city': str(user.city.name),
+            'country': str(user.city.country.name),
         }
         self.assertDictEqual(resp_dict, user_dict)
 
-    def users_friendship_get(self):
+    def test_users_friendship_get(self):
         self.ipc_pack['api_method'] = 'friendship'
         self.ipc_pack['http_method'] = 'get'
         self.ipc_pack['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
@@ -129,7 +133,7 @@ class UsersTestCase(unittest.TestCase):
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_UNDEF)
 
-    def users_friends_get(self):
+    def test_users_friends_get(self):
         self.ipc_pack['api_method'] = 'friends'
         self.ipc_pack['http_method'] = 'get'
         self.ipc_pack['query_params'] = {
@@ -150,7 +154,7 @@ class UsersTestCase(unittest.TestCase):
             user_dict = filter(lambda i: i['id'] == resp_dict['id'], users_dict)[0]
             self.assertDictEqual(resp_dict, user_dict)
 
-    def users_extras_get(self):
+    def test_users_extras_get(self):
         self.ipc_pack['api_method'] = 'extras'
         self.ipc_pack['http_method'] = 'get'
         self.ipc_pack['query_params'] = {

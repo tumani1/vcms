@@ -4,8 +4,9 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
-from models import Base
-from models.topics.topics_persons import PersonsTopics
+from models.base import Base
+from models.topics import PersonsTopics
+from models.tokens import SessionToken
 
 from constants import APP_PERSONS_STATUS_TYPE
 
@@ -49,7 +50,8 @@ class Persons(Base):
 
         # Set filter which check that person online
         if not is_online is None:
-            pass
+            from models.users import Users
+            query = SessionToken.filter_users_is_online(is_online=is_online, query=query.join(Users))
 
         # Set filter by ids
         if not id is None:

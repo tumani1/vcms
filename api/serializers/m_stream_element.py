@@ -1,8 +1,9 @@
 # coding: utf-8
+
 import time
 
 from utils.serializer import DefaultSerializer
-from api.users.serializer import mUserShort
+from api.serializers import mUserShort
 from models.users import UsersStream, Users
 
 
