@@ -1,8 +1,7 @@
 # coding: utf-8
-
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_, ForeignKey
 from sqlalchemy.orm import relationship, contains_eager
 
 from models.base import Base
@@ -30,6 +29,7 @@ class Media(Base):
     release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
+    owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
 
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
