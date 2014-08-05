@@ -25,7 +25,7 @@ class Media(Base):
     allow_anon = Column(Boolean, default=False)
     description = Column(Text, nullable=True)
     created = Column(DateTime, default=datetime.datetime.utcnow)
-    views_cnt = Column(Integer, nullable=True)
+    views_cnt = Column(Integer, default=0)
     release_date = Column(DateTime, nullable=True)
     poster = Column(Integer, nullable=True)
     duration = Column(Integer, nullable=True)
@@ -34,6 +34,7 @@ class Media(Base):
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
     medias_units = relationship('MediaInUnit', backref='media', cascade='all, delete')
     media_persons = relationship('PersonsMedia', backref='media', cascade='all, delete')
+    media_type = relationship('MediaType', backref='media', cascade='all, delete')
 
     @classmethod
     def tmpl_for_media(cls, user, session):
