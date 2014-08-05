@@ -13,14 +13,12 @@ class Type(Base):
     __tablename__ = 'type'
 
     type         = Column(ChoiceType(APP_MEDIA_TYPE), primary_key=True)
-    access_level = Column(SMALLINT, default=4420)
+    access_level = Column(SMALLINT, default=None, nullable=True)
 
     media_type = relationship('MediaType', backref='type', cascade='all, delete')
 
-create_rows = DDL("""
-INSERT INTO "type" VALUES('{audio}', 4420), ('{video}', 4420), ('{picture}', 4420);""".
-    format(audio=APP_MEDIA_TYPE_AUDIO, video=APP_MEDIA_TYPE_VIDEO,
-           picture=APP_MEDIA_TYPE_PICTURE)
-)
 
+create_rows = DDL("""INSERT INTO "type" VALUES('{audio}', NULL), ('{video}', NULL), ('{picture}', NULL);""".
+                  format(audio=APP_MEDIA_TYPE_AUDIO, video=APP_MEDIA_TYPE_VIDEO,
+                         picture=APP_MEDIA_TYPE_PICTURE))
 listen(Type.__table__, 'after_create', create_rows)
