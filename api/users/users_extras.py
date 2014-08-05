@@ -4,14 +4,14 @@ from sqlalchemy.sql.expression import func
 from models.users import Users, UsersExtras
 from models.extras import Extras
 from utils.common import convert_to_utc
-from utils.exceptions import DoesNotExist
+from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit
 
 
 def get(user_id, session, **kwargs):
     user = session.query(Users).get(user_id)
     if not user:
-        raise DoesNotExist
+        raise RequestErrorException
     query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
 
     if 'id' in kwargs['query']:

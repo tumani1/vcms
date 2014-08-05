@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from api.serializers import mStraemElement
 
 from utils.validation import validate_mLimitId
