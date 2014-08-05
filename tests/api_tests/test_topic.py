@@ -56,14 +56,10 @@ class TopicInfoTestCase(unittest.TestCase):
     def test_echo(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "info",
-            "api_format": "json",
+            "api_method": "/topics/%s/info" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -106,14 +102,10 @@ class TopicLikeTestCase(unittest.TestCase):
     def test_echo_get(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/topics/%s/like" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -125,14 +117,10 @@ class TopicLikeTestCase(unittest.TestCase):
     def test_echo_post(self):
         topic = "test1"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/topics/%s/like" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -147,14 +135,10 @@ class TopicLikeTestCase(unittest.TestCase):
     def test_echo_delete(self):
         topic = "test2"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/topics/%s/like" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "delete",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -189,14 +173,10 @@ class TopicSubscribeTestCase(unittest.TestCase):
     def test_echo_get(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/topics/%s/subscribe" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -208,14 +188,10 @@ class TopicSubscribeTestCase(unittest.TestCase):
     def test_echo_post(self):
         topic = "test2"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/topics/%s/subscribe" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -230,14 +206,10 @@ class TopicSubscribeTestCase(unittest.TestCase):
     def test_echo_delete(self):
         topic = "test1"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/topics/%s/subscribe" % (topic),
             "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                "name": topic,
-            }
+            "api_type": "delete",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -269,13 +241,9 @@ class TopicExtrasTestCase(unittest.TestCase):
     def test_echo(self):
         topic = 'test'
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "extras",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_method": "/topics/%s/extras" % (topic),
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -322,10 +290,8 @@ class TopicListTestCase(unittest.TestCase):
     def test_echo(self):
         topic = 'news'
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "list",
-            "api_format": "json",
-            "http_method": "get",
+            "api_method": "/topics/list",
+            "api_type": "get",
             "query_params": {
                 "type": topic,
             }
@@ -375,12 +341,9 @@ class TopicValuesTestCase(unittest.TestCase):
     def test_echo(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "values",
-            "api_format": "json",
-            "http_method": "get",
+            "api_method": "/topics/%s/values" % (topic),
+            "api_type": "get",
             "query_params": {
-                "name": topic,
                 "scheme_name": ['shm1', 'shm2'],
             }
         }
@@ -418,13 +381,9 @@ class TopicMediaTestCase(unittest.TestCase):
     def test_echo(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "media",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_method": "/topics/%s/media" % (topic),
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -452,13 +411,9 @@ class TopicPersonsTestCase(unittest.TestCase):
     def test_echo(self):
         topic = "test"
         IPC_pack = {
-            "api_group": "topics",
-            "api_method": "persons",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                "name": topic,
-            }
+            "api_method": "/topics/%s/persons" % (topic),
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)

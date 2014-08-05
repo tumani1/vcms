@@ -1,6 +1,5 @@
 # coding: utf-8
-
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, and_
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, and_, SMALLINT
 from sqlalchemy.orm import relationship, contains_eager
 
 from models.base import Base
@@ -10,16 +9,17 @@ from models.media.users_media_units import UsersMediaUnits
 class MediaUnits(Base):
     __tablename__ = 'media_units'
 
-    id = Column(Integer, primary_key=True)
-    topic_name = Column(String, ForeignKey('topics.name'), nullable=False)
-    title = Column(String, nullable=True)
-    title_orig = Column(Integer, nullable=True)
-    description = Column(Text, nullable=True)
+    id            = Column(Integer, primary_key=True)
+    topic_name    = Column(String, ForeignKey('topics.name'), nullable=False)
+    title         = Column(String, nullable=True)
+    title_orig    = Column(Integer, nullable=True)
+    description   = Column(Text, nullable=True)
     previous_unit = Column(Integer, nullable=True)
-    next_unit = Column(Integer, nullable=True)
-    release_date = Column(DateTime, nullable=True)
-    end_date = Column(DateTime, nullable=True)
-    batch = Column(String, nullable=True)
+    next_unit     = Column(Integer, nullable=True)
+    release_date  = Column(DateTime, nullable=True)
+    end_date      = Column(DateTime, nullable=True)
+    batch         = Column(String, nullable=True)
+    access_level  = Column(SMALLINT, default=None, nullable=True)
 
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
     unit_medias = relationship('MediaInUnit', backref='media_units', cascade='all, delete')

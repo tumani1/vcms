@@ -4,7 +4,7 @@ from models.msgr import UsersMsgrThreads
 
 
 @need_authorization
-def get(auth_user, session=None):
+def get(auth_user, session=None, **kwargs):
     users_msgr_threads = session.query(UsersMsgrThreads).filter(UsersMsgrThreads.user_id==auth_user.id).first()
     result = {
         'new_msgs': users_msgr_threads.new_msgs,

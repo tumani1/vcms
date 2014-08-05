@@ -10,7 +10,7 @@ from tests.fixtures import create_media_units, create_topic, create
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -38,13 +38,13 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
     def test_info(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                    'api_method': '/mediaunits/%s/info' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {
-                        'id': 2}}
+                    'query_params': {}
+        }
         temp = {
             'id': 2,
             'title': 'mu2',
@@ -61,12 +61,12 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_next(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'next',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                    'api_method': '/mediaunits/%s/next' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 2,}
+                    'query_params': {}
                     }
         temp = {
             'id': 3,
@@ -84,12 +84,12 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_prev(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'prev',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 3
+        IPC_pack = {
+                    'api_method': '/mediaunits/%s/prev' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 3,}
+                    'query_params': {}
                     }
         temp = {
             'id': 2,
@@ -107,10 +107,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_list(self):
-        IPC_pack = {'api_group': 'mediaunits',
-                    'api_method': 'list',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/mediaunits/list',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {'text': 'mu1',}
                     }

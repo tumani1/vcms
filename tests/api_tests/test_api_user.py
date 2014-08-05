@@ -15,7 +15,7 @@ from tests.fixtures import create, create_scheme, create_users_values, create_to
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -49,10 +49,9 @@ class UsersTestCase(unittest.TestCase):
         self.session.close()
 
     def test_info_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/info',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {}
         }
@@ -69,10 +68,9 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_info_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'info',
-                    'http_method': 'put',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/info',
+                    'api_type': 'put',
                     'x_token': self.session_token[1],
                     'query_params': {'firstname': 'Ivan', 'lastname': 'Ivanov'}
         }
@@ -82,10 +80,9 @@ class UsersTestCase(unittest.TestCase):
         self.assertEqual(test_user.lastname, IPC_pack['query_params']['lastname'])
 
     def test_values_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'values',
-                    'http_method': 'put',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/values',
+                    'api_type': 'put',
                     'x_token': self.session_token[1],
                     'query_params': {'name': ['shm1', 'shm2'], 'topic': 'test1', 'value': [23, 'str']}
         }
@@ -97,10 +94,9 @@ class UsersTestCase(unittest.TestCase):
         self.assertEqual(user_val[1].scheme_id, 2)
 
     def test_values_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'values',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/values',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {'topic': 'test1'}
         }
@@ -109,10 +105,9 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(temp, resp[0])
 
     def test_friends_get(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'friends',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/friends',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {'limit': '4'}
         }
@@ -121,10 +116,9 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp[0], temp)
 
     def test_password_put(self):
-        IPC_pack = {'api_group': 'user',
-                    'api_method': 'password',
-                    'http_method': 'put',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/user/password',
+                    'api_type': 'put',
                     'x_token': self.session_token[1],
                     'query_params': {'password': 'testtest'+ str(random.randint(1,100))}
         }

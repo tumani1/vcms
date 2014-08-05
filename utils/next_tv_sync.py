@@ -1,5 +1,4 @@
 #coding: utf-8
-
 import argparse
 
 import settings
@@ -42,7 +41,6 @@ if args.create:
 print u'Creating tables'
 Base.metadata.create_all(bind=db_connect(type=args.database))
 
-# Здесь должен быть код для запуска миграций alembic
-pass
+# TODO: Здесь должен быть код для запуска миграций alembic
 
 print u'Finished setting up database'

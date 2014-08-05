@@ -11,7 +11,18 @@ from api.users.users_values import get as users_get
 
 
 @need_authorization
-def put(auth_user, name, value, topic=None, session=None):
+def put(auth_user, session=None, **kwargs):
+    query = kwargs['query']
+    if 'name' in query:
+        name = query['name']
+    if 'value' in query:
+        value = query['value']
+    if 'topic' in query:
+        topic = query['topic']
+    else:
+        topic = None
+    if not query['name'] or not query['value']:
+        raise Exception(u"Empty name")
     shema_val = dict(zip(name, value))
     schemes = session.query(Scheme).filter(and_(Scheme.name.in_(name), Scheme.topic_name == topic)).all()
     user_values = []
@@ -39,4 +50,4 @@ def put(auth_user, name, value, topic=None, session=None):
 
 @need_authorization
 def get(auth_user, session, **kwargs):
-    return users_get(user_id=auth_user.id, session=session, **kwargs)
+    return users_get(id=auth_user.id, session=session, **kwargs)

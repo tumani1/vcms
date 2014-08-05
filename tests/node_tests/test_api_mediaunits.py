@@ -11,7 +11,7 @@ import json
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -77,8 +77,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp.json(), temp)
 
     def test_prev(self):
-        data = {'id': 3}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/prev', headers={'token': self.token}, params=data)
+        data = {}
+        id = 3
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/prev' % (id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',

@@ -28,9 +28,9 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         self.assertEqual(resp.json(), data)
 
     def test_ws_echo_get(self):
-        IPC_pack = {'api_group': 'test',
-                    'api_method': 'echo',
-                    'http_method': 'get',
+        IPC_pack = {
+                    'api_method': '/test/echo',
+                    'api_type': 'get',
                     'query_params': {'text': 'FROM TEST'}}
         self.ws.send(json.dumps(IPC_pack))
         resp = self.ws.recv()

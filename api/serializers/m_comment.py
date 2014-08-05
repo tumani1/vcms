@@ -12,7 +12,7 @@ from models.mongo import Stream
 from api.serializers import mMediaUnitsSerializer, mMediaSerializer, \
     mPersonSerializer, mContentSerializer, mStraemElement, mUserShort
 
-from utils.date_converter import detetime_to_unixtime as convert_date
+from utils.common import detetime_to_unixtime as convert_date
 from utils.serializer import DefaultSerializer
 
 __all__ = ['mCommentSerializer']

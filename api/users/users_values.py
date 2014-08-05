@@ -8,8 +8,8 @@ from utils.exceptions import RequestErrorException
 from api.serializers import mValue
 
 
-def get(user_id, session, **kwargs):
-    user = session.query(Users).get(user_id)
+def get(id, session, **kwargs):
+    user = session.query(Users).get(id)
     if user is None:
         raise RequestErrorException()
 

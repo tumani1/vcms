@@ -41,7 +41,8 @@ class MediaTestCase(unittest.TestCase):
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
     def test_info(self):
-        IPC_pack = {'api_method': 'media/1/info',
+        id = 1
+        IPC_pack = {'api_method': '/media/%s/info'  % (id),
                     'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {}
@@ -60,10 +61,9 @@ class MediaTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_list(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'list',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {
+                    'api_method': '/media/list',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
                     'query_params': {'text': u'media1'}
         }
@@ -81,12 +81,12 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp, temp)
 
     def test_media_persons(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'persons',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 1
+        IPC_pack = {
+                    'api_method': '/media/%s/persons' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 1}
+                    'query_params': {}
         }
         temp = [{
                     'firstname': 'test',
@@ -101,12 +101,12 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp, temp)
 
     def test_media_units(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'units',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 1
+        IPC_pack = {
+                    'api_method': '/media/%s/units' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 1}
+                    'query_params': {}
         }
         temp = [{
                     'enddate': 1391212800.0,
@@ -124,111 +124,111 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp, temp)
 
     def test_media_like_get(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'like',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 3
+        IPC_pack = {
+                    'api_method': '/media/%s/like' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 3}
+                    'query_params': {}
         }
         temp = {"liked":0}
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
 
     def test_media_like_post(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'like',
-                    'http_method': 'post',
-                    'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                    'api_method': '/media/%s/like' % (id),
+                    'api_type': 'post',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 2}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertTrue(um.liked)
 
     def test_media_like_delete(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'like',
-                    'http_method': 'delete',
-                    'api_format': 'json',
+        id = 4
+        IPC_pack = {
+                    'api_method': '/media/%s/like' % (id),
+                    'api_type': 'delete',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 4}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.liked)
 
     def test_media_playlist_get(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'playlist',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 3
+        IPC_pack = {
+                    'api_method': '/media/%s/playlist' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 3}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         temp = {"in_playlist":1391212800}
         self.assertDictEqual(resp, temp)
 
     def test_media_playlist_post(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'playlist',
-                    'http_method': 'post',
-                    'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                    'api_method': '/media/%s/playlist' % (id),
+                    'api_type': 'post',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 2}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertTrue(um.playlist)
 
     def test_media_playlist_delete(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'playlist',
-                    'http_method': 'delete',
-                    'api_format': 'json',
+        id = 4
+        IPC_pack = {
+                    'api_method': '/media/%s/playlist' % (id),
+                    'api_type': 'delete',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 4}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.playlist)
 
     def test_media_state_get(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'state',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 3
+        IPC_pack = {
+                    'api_method': '/media/%s/state' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 3}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         temp = {"watched":1388534400,"pos":20}
         self.assertDictEqual(resp, temp)
 
     def test_media_state_post(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'state',
-                    'http_method': 'post',
-                    'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                    'api_method': '/media/%s/state' % (id),
+                    'api_type': 'post',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 2, 'pos': 20}
+                    'query_params': {'pos': 20}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertEqual(um.play_pos, IPC_pack['query_params']['pos'])
 
     def test_media_state_delete(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'state',
-                    'http_method': 'delete',
-                    'api_format': 'json',
+        id = 4
+        IPC_pack = {
+                    'api_method': '/media/%s/state' % (id),
+                    'api_type': 'delete',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 4}
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==IPC_pack['query_params']['id'])).first()
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.watched)
         self.assertFalse(um.play_pos)
 

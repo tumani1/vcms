@@ -4,8 +4,11 @@ from utils.validation import validate_int, validate_string, validate_obj_type
 import datetime
 
 
-def post(auth_user, session, text, **kwargs):
-    text = validate_string(text)
+def post(auth_user, session, **kwargs):
+    if 'text' in kwargs['query']:
+        text = validate_string(kwargs['query']['text'])
+    else:
+        raise Exception(u"Empty name")
     date = datetime.datetime.now()
     params = {
         'user_id': auth_user.id,

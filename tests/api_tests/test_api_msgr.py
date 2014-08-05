@@ -13,7 +13,7 @@ from tests.fixtures import create, create_msgr_threads, create_users_msgr_thread
 
 def setUpModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -45,22 +45,19 @@ class MsgrTestCase(unittest.TestCase):
         self.session.close()
 
     def test_info_get(self):
+        id = 1
         IPC_pack = {
-            'api_group': 'msgr',
-            'api_method': 'info',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_method': '/msgr/%s/info' % (id),
+            'api_type': 'get',
             'x_token': self.session_token[1],
-            'query_params': {'id': 1}
+            'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
 
     def test_stat_get(self):
         IPC_pack = {
-            'api_group': 'msgr',
-            'api_method': 'stat',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_method': '/msgr/stat',
+            'api_type': 'get',
             'x_token': self.session_token[1],
             'query_params': {}
         }
@@ -70,10 +67,8 @@ class MsgrTestCase(unittest.TestCase):
 
     def test_create_put(self):
         IPC_pack = {
-            'api_group': 'msgr',
-            'api_method': 'create',
-            'http_method': 'put',
-            'api_format': 'json',
+            'api_method': '/msgr/create',
+            'api_type': 'put',
             'x_token': self.session_token[1],
             'query_params': {'user_ids': [1, 2], 'text': 'test'}
         }
@@ -81,10 +76,8 @@ class MsgrTestCase(unittest.TestCase):
 
     def test_list_get(self):
         IPC_pack = {
-            'api_group': 'msgr',
-            'api_method': 'list',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_method': '/msgr/list',
+            'api_type': 'get',
             'x_token': self.session_token[1],
             'query_params': {'user_author': [1, 2]}
         }

@@ -2,18 +2,22 @@
 from api.comments.comments_list import get as get_comments_list
 
 
-def get(auth_user, session, type, **kwargs):
+def get(type, name_or_id, auth_user, session,  **kwargs):
+    id, name = None, None
+    try:
+        id = int(name_or_id)
+    except ValueError:
+        name = name_or_id
     params = {
         'auth_user': auth_user,
         'session': session,
-        'obj_type': type
+        'query': {'obj_type': type}
     }
 
-    query = kwargs['query']
-    if 'id' in query:
-        params.update(obj_id=query['id'])
+    if id:
+        params['query'].update(obj_id=id)
         return get_comments_list(**params)
 
-    elif 'name' in query:
-        params.update(obj_name=query['name'])
+    elif name:
+        params['query'].update(obj_name=name)
         return get_comments_list(**params)

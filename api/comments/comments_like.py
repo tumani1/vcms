@@ -5,7 +5,7 @@ from models.comments.users_comments import UsersComments
 from utils.validation import validate_int
 
 
-def put(auth_user, session, id, **kwargs):
+def put(id, auth_user, session, **kwargs):
     comment_id = validate_int(id)
     u_comment = UsersComments.get_user_comments(auth_user.id, session, comment_id)
     date = datetime.datetime.utcnow()
@@ -18,7 +18,7 @@ def put(auth_user, session, id, **kwargs):
         session.commit()
 
 
-def delete(auth_user, session, id, **kwargs):
+def delete(id, auth_user, session, **kwargs):
     comment_id = validate_int(id)
     u_comment = UsersComments.get_user_comments(auth_user.id, session, comment_id)
     if not u_comment is None:
