@@ -39,7 +39,6 @@ class ZeroRpcRestApiService(object):
         except Exception as e:
             session.rollback()
             response = {'error': e.message}  # TODO: определить формат ошибок
-
         finally:
             session.close()
 

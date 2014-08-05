@@ -4,7 +4,7 @@ from utils.serializer import DefaultSerializer
 
 from models.users.users import Users
 from models.persons.persons_users import UsersPersons
-from api.users.serializer import mUser
+from api.serializers import mUser
 
 __all__ = ['mPersonRoleSerializer']
 

@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.event import listens_for, listen
 from sqlalchemy.dialects.postgresql import BYTEA
 
-from models import Base
+from models.base import Base
 from models.scheme import Scheme
 
 
@@ -35,32 +35,6 @@ class TopicsValues(Base):
             filter(cls.topic_name == name, Scheme.name.in_(scheme_name))
 
         return query
-
-
-    @classmethod
-    def data(cls, data):
-        if isinstance(data, list):
-            data = [item.to_native() for item in data]
-        else:
-            data = data.to_native()
-
-        return data
-
-
-    def to_native(self):
-        result = {
-            'name': self.topic_name
-        }
-
-        value = None
-        for item in ['value_int', 'value_text', 'value_string']:
-           if not getattr(self, item) is None:
-               value = getattr(self, item)
-               break
-
-        result['value'] = value
-
-        return result
 
 
     # value_int, value_text, value_string - обязательно одни из

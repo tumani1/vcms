@@ -1,8 +1,10 @@
 # coding: utf-8
+
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, and_
 from sqlalchemy.orm import relationship, contains_eager
 from sqlalchemy_utils import ChoiceType
-from models import Base
+
+from models.base import Base
 from models.msgr import MsgrThreads
 
 

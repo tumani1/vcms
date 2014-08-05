@@ -1,6 +1,7 @@
 # coding: utf-8
-from models import Base
+
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, and_
+from models.base import Base
 
 
 class UsersComments(Base):

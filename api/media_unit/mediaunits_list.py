@@ -1,6 +1,7 @@
 # coding: utf-8
-from models import MediaUnits
-from api.media_unit.serializer import mMediaUnitsSerializer
+
+from models.media import MediaUnits
+from api.serializers import mMediaUnitsSerializer
 from utils.validation import validate_list_int
 
 
@@ -15,17 +16,18 @@ def get(auth_user=None, session=None, **kwargs):
         'topic': None,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'text' in kwargs:
-        params['text'] = str(kwargs['text']).strip()
+    if 'text' in query:
+        params['text'] = str(query['text']).strip()
 
-    if 'batch' in kwargs:
-        params['batch'] = str(kwargs['batch']).strip()
+    if 'batch' in query:
+        params['batch'] = str(query['batch']).strip()
 
-    if 'topic' in kwargs:
-        params['topic'] = str(kwargs['topic']).strip()
+    if 'topic' in query:
+        params['topic'] = str(query['topic']).strip()
 
     instance = MediaUnits.get_media_units_list(**params).all()
     if not instance is None:

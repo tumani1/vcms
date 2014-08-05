@@ -13,20 +13,22 @@ def get(user_id, session, **kwargs):
     if not user:
         raise DoesNotExist
     query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
-    if 'id' in kwargs:
-        if isinstance(kwargs['id'], int):
-            id_ = [kwargs['id']]
+
+    if 'id' in kwargs['query']:
+        if isinstance(kwargs['query']['id'], int):
+            id_ = [kwargs['query']['id']]
         else:
-            id_ = kwargs['id']
+            id_ = kwargs['query']['id']
         query = query.filter(Extras.id.in_(id_))
 
-    if 'type' in kwargs:
-        query = query.filter(Extras.type == kwargs['type'])
-    if 'text' in kwargs:
-        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['text']))
+    if 'type' in kwargs['query']:
+        query = query.filter(Extras.type == kwargs['query']['type'])
 
-    if 'limit' in kwargs:
-        limit = validate_mLimit(kwargs['limit'])
+    if 'text' in kwargs['query']:
+        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['query']['text']))
+
+    if 'limit' in kwargs['query']:
+        limit = validate_mLimit(kwargs['query']['limit'])
          # Set limit and offset filter
         if not limit is None:
             # Set Limit

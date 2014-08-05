@@ -4,7 +4,7 @@ from models import Base, Comments, UsersComments
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from tests.api_tests.fixtures import create_media_units, create_topic, create, create_media, create_persons, create_comments
+from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons, create_comments
 from settings import NODE
 import requests
 import json
@@ -12,7 +12,7 @@ import json
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -30,6 +30,8 @@ def setUpModule():
 def tearDownModule():
     engine = db_connect()
     # engine.execute("drop schema public cascade; create schema public;")
+
+
 class CommentsTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -46,7 +48,7 @@ class CommentsTestCase(unittest.TestCase):
         data = {'id': 1}
         resp = self.req_sess.get(self.fullpath+'/comments/info', headers={'token': self.token}, params=data)
         temp = {
-            u'text': u'Test',
+            u'text': u'Тест',
             u'object': None,
             u'relation': {},
             u'id': 1,
@@ -59,19 +61,19 @@ class CommentsTestCase(unittest.TestCase):
                 u'id': 1
             }
         }
-        self.assertDictEqual(resp.json(), temp)
+        self.assertDictEqual(json.loads(resp.content), temp)
 
     def test_comments_list(self):
         data = {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
         resp = self.req_sess.get(self.fullpath+'/comments/list', headers={'token': self.token}, params=data)
         temp = {
-            u'text': u'Test',
-            u'object': {u'description': u'test_desc1', u'title': u'\xd1\x82\xd0\xb5\xd1\x81\xd1\x82_\xd0\xbc\xd0\xb5\xd0\xb4\xd0\xb8\xd0\xb01', u'locations': [], u'releasedate': None, u'title_orig': u'test_media1', u'duration': None, u'relation': {u'watched': 1356984000, u'liked': 1388520000, u'pos': 50}, u'id': 1},
+            u'text': u'Тест',
+            u'object': {u'description': u'test_desc1', u'title': u'media1', u'locations': [], u'releasedate': None, u'title_orig': u'test_media1', u'duration': None, u'relation': {u'watched': 1356998400, u'liked': 1388534400, u'pos': 50}, u'id': 1},
             u'relation': {},
             u'id': 1,
             u'user': {u'firstname': u'Test1', u'lastname': u'Test1', u'relation': u'u', u'is_online': False, u'person_id': 1, u'id': 1}
         }
-        self.assertDictEqual(resp.json()[0], temp)
+        self.assertDictEqual(json.loads(resp.content)[0], temp)
 
     def test_comments_create(self):
         data = {'text': 'test_create', 'obj_type': 'mu', 'obj_id': 2}

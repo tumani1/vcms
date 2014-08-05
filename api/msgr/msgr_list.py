@@ -1,6 +1,10 @@
+# coding: utf-8
 
-from api.users.serializer import mUserShort
-from models import UsersMsgrThreads, Users
+from models.users import Users
+from models.msgr import UsersMsgrThreads
+
+from api.serializers import mUserShort
+
 from utils import need_authorization
 
 
@@ -13,9 +17,10 @@ def get(auth_user, session=None, **kwargs):
         'instance': ''
         }
 
-    if 'user_author' in kwargs:
-        params['instance'] = Users.get_users_by_id(session, kwargs['user_author']).all()
-        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session, user_author=kwargs['user_author']).all()
+    query = kwargs['query']
+    if 'user_author' in query:
+        params['instance'] = Users.get_users_by_id(session, query['user_author']).all()
+        msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session, user_author=query['user_author']).all()
     else:
         msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session).all()
         params['instance'] = auth_user
@@ -29,6 +34,7 @@ def get(auth_user, session=None, **kwargs):
 
             }
             result.append(m_msgr_thread)
+
     return result
 
 

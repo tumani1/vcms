@@ -1,8 +1,12 @@
 # coding: utf-8
-from models import SessionToken
-from utils import need_authorization
-from settings import TOKEN_LIFETIME
+
 import datetime
+
+from models.tokens import SessionToken
+
+from settings import TOKEN_LIFETIME
+
+from utils import need_authorization
 from utils.serializer import serialize
 
 
@@ -13,9 +17,13 @@ def get(auth_user, session, **kwargs):
     auth_user.last_visit = datetime.datetime.utcnow()
     session.add(auth_user)
     session.commit()
-    result = {'id': sid,
-              'session_token': token,
-              'expire': created + datetime.timedelta(minutes=TOKEN_LIFETIME)}
+
+    result = {
+        'id': sid,
+        'session_token': token,
+        'expire': created + datetime.timedelta(minutes=TOKEN_LIFETIME)
+    }
+
     return result
 
 

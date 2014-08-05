@@ -1,10 +1,10 @@
 # coding: utf-8
 
-from models import Persons
+from models.persons import Persons
 from models.topics.constants import TOPIC_TYPE
 
 from utils.validation import validate_list_int, validate_mLimit, validate_string
-from api.persons.serializer import mPersonSerializer, mPersonRoleSerializer
+from api.serializers import mPersonSerializer, mPersonRoleSerializer
 
 __all__ = ['get_person_list']
 
@@ -22,27 +22,28 @@ def get_person_list(auth_user, session, **kwargs):
         'session': session,
     }
 
-    if 'id' in kwargs:
-        params['id'] = validate_list_int(kwargs['id'])
+    query = kwargs['query']
+    if 'id' in query:
+        params['id'] = validate_list_int(query['id'])
 
-    if 'text' in kwargs:
-        params['text'] = validate_string(kwargs['text'])
+    if 'text' in query:
+        params['text'] = validate_string(query['text'])
 
-    if 'is_online' in kwargs and kwargs['is_online']:
-        params['is_online'] = kwargs['is_online']
+    if 'is_online' in query and query['is_online']:
+        params['is_online'] = query['is_online']
 
-    if 'is_user' in kwargs and kwargs['is_user']:
-        params['is_user'] = kwargs['is_user']
+    if 'is_user' in query and query['is_user']:
+        params['is_user'] = query['is_user']
 
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimit(kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimit(query['limit'])
 
-    if 'topic' in kwargs:
-        params['topic'] = validate_string(kwargs['topic'])
+    if 'topic' in query:
+        params['topic'] = validate_string(query['topic'])
 
-        if 'type' in kwargs:
-            if kwargs['type'] in dict(TOPIC_TYPE).keys():
-                params['_type'] = kwargs['type']
+        if 'type' in query:
+            if query['type'] in dict(TOPIC_TYPE).keys():
+                params['_type'] = query['type']
 
     instance = Persons.get_persons_list(**params).all()
 

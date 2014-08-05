@@ -3,11 +3,14 @@ import unittest
 from models import Base, SessionToken
 from sqlalchemy.orm import sessionmaker, scoped_session
 from utils.connection import db_connect, create_session
-from tests.api_tests.fixtures import create_media_units, create_topic, create
+
+from tests.constants import ZERORPC_SERVICE_URI
+from tests.fixtures import create_media_units, create_topic, create
 
 
 def setUpModule():
     engine = db_connect()
+    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -21,7 +24,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class MediaUnitsTestCase(unittest.TestCase):
@@ -30,7 +33,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         self.cl = zerorpc.Client(timeout=3000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
+        self.cl.connect(ZERORPC_SERVICE_URI, )
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 

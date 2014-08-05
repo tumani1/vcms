@@ -1,11 +1,15 @@
 # coding: utf-8
-from sqlalchemy.orm import relation, backref
-from models import Base, Users
+
+from sqlalchemy.orm import relation, backref, relationship
 from sqlalchemy.event import listen
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey
 from sqlalchemy_utils import ChoiceType
+
+from models.base import Base
+from models.users import Users
+
 from constants import OBJECT_TYPES
-from sqlalchemy.orm import relationship
+
 
 class Comments(Base):
     __tablename__ = 'comments'

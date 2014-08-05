@@ -1,9 +1,10 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, ForeignKey, SMALLINT, Text, Date, and_
-from models import Base
-from models.media.users_media_units import UsersMediaUnits
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, and_
 from sqlalchemy.orm import relationship, contains_eager
+
+from models.base import Base
+from models.media.users_media_units import UsersMediaUnits
 
 
 class MediaUnits(Base):
@@ -16,8 +17,8 @@ class MediaUnits(Base):
     description = Column(Text, nullable=True)
     previous_unit = Column(Integer, nullable=True)
     next_unit = Column(Integer, nullable=True)
-    release_date = Column(Date, nullable=True)
-    end_date = Column(Date, nullable=True)
+    release_date = Column(DateTime, nullable=True)
+    end_date = Column(DateTime, nullable=True)
     batch = Column(String, nullable=True)
 
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')

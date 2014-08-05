@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from content_info import *
 from content_list import *
 

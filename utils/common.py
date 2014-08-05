@@ -76,4 +76,4 @@ def compare_to_dict(d1, d2):
 
 
 def convert_to_utc(time_to_utc):
-    return time.mktime(time_to_utc.timetuple())
+    return time.mktime(time_to_utc.utctimetuple())

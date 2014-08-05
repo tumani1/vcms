@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, Boolean, ForeignKe
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
-from models import Base
+from models.base import Base
 from models.scheme.constants import KLASS_TYPE, M_SCHEME_INT
 
 

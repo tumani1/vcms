@@ -2,11 +2,11 @@
 from models.users import Users
 from utils.exceptions import DoesNotExist
 
-from serializer import mUser
+from api.serializers import mUser
 
 
-def get(auth_user, id, session, **kwargs):
-    query = session.query(Users).get(id)
+def get(user_id, auth_user, session, **kwargs):
+    query = session.query(Users).get(user_id)
     if not query:
         raise DoesNotExist
 

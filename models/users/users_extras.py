@@ -1,7 +1,8 @@
 # coding: utf-8
+
 from sqlalchemy import Column, Integer, ForeignKey, PrimaryKeyConstraint
 
-from models import Base
+from models.base import Base
 
 
 class UsersExtras(Base):

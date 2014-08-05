@@ -8,9 +8,12 @@ def get(auth_user, session, type, **kwargs):
         'session': session,
         'obj_type': type
     }
-    if 'id' in kwargs:
-        params.update(obj_id=kwargs['id'])
+
+    query = kwargs['query']
+    if 'id' in query:
+        params.update(obj_id=query['id'])
         return get_comments_list(**params)
-    elif 'name' in kwargs:
-        params.update(obj_name=kwargs['name'])
+
+    elif 'name' in query:
+        params.update(obj_name=query['name'])
         return get_comments_list(**params)

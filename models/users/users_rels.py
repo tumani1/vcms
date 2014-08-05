@@ -1,12 +1,13 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from sqlalchemy_utils import ChoiceType
 
 import datetime
 
-from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_UNDEF, APP_USERS_TYPE_BLOCKED
-from models import Base
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy_utils import ChoiceType
+
+from models.base import Base
 from models.users import Users
+from constants import APP_USERSRELS_TYPE, APP_USERSRELS_TYPE_BLOCKED, APP_USERSRELS_BLOCK_TYPE_UNDEF, APP_USERSRELS_TYPE_UNDEF
 
 
 class UsersRels(Base):
@@ -15,9 +16,9 @@ class UsersRels(Base):
     id         = Column(Integer, primary_key=True)
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False)
     partner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE), nullable=False)
+    urStatus   = Column(ChoiceType(choices=APP_USERSRELS_TYPE), nullable=False, default=APP_USERSRELS_TYPE_UNDEF)
     updated    = Column(DateTime, onupdate=datetime.datetime.utcnow, default=datetime.datetime.now)
-    blocked    = Column(ChoiceType(APP_USERS_TYPE_BLOCKED))
+    blocked    = Column(ChoiceType(APP_USERSRELS_TYPE_BLOCKED),  nullable=False, default=APP_USERSRELS_BLOCK_TYPE_UNDEF)
 
     def __repr__(self):
         return u"<UsersRels({}-{}:{})>".format(self.user_id, self.partner_id,

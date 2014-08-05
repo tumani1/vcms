@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from models import Base
+from models.base import Base
 
 
 class UsersMedia(Base):
@@ -15,5 +15,3 @@ class UsersMedia(Base):
     playlist  = Column(DateTime)
     play_pos  = Column(Integer)
     watched   = Column(DateTime)
-
-

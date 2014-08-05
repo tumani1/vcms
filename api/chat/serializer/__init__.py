@@ -1,2 +1,0 @@
-from m_chat import mChatSerializer
-from m_chat_msg import mChatMsgSerializer

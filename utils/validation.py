@@ -1,6 +1,7 @@
 # coding: utf-8
-from models.comments.constants import OBJECT_TYPES
+
 import re
+from models.comments.constants import OBJECT_TYPES
 
 
 def validate_mLimit(limit, **kwargs):
@@ -78,6 +79,7 @@ def validate_mLimitId(limit):
         raise Exception("Значение меньше 0")
     return result
 
+
 def validate_list_int(value, **kwargs):
     if not isinstance(value, list):
          value = [value]
@@ -88,7 +90,7 @@ def validate_list_int(value, **kwargs):
             return clean_value
 
     except Exception, e:
-        pass
+        raise Exception(u"Не целое значение")
 
     return None
 
@@ -118,20 +120,21 @@ def validate_string(value, **kwargs):
 
 
 def validate_int(value, min_value=None, max_value=None, **kwargs):
-   try:
-       value = int(value)
+    try:
+        value = int(value)
 
-       if not min_value is None:
-          if value < min_value:
-           return Exception("Значение меньше {0}".format(min_value))
+        if not min_value is None:
+            if value < min_value:
+                raise Exception("Значение меньше {0}".format(min_value))
 
-       if not max_value is None:
-          if value > max_value:
-           return Exception("Значение больше {0}".format(max_value))
-   except:
-       return Exception("Значение не является целым")
+        if not max_value is None:
+            if value > max_value:
+                raise Exception("Значение больше {0}".format(max_value))
+    except:
+        raise Exception("Значение не является целым")
 
-   return value
+    return value
+
 
 def validate_obj_type(value, **kwargs):
     try:

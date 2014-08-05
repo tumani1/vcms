@@ -1,19 +1,20 @@
 # coding: utf-8
 
-import requests
 import unittest
-from models import Base, MsgrLog
-from utils.connection import db_connect, create_session
-from fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
-from settings import NODE
+
+import requests
 from websocket import create_connection
 
+from models import Base, MsgrLog
+from utils.connection import db_connect, create_session
+from tests.fixtures import create, create_msgr_threads, create_users_msgr_threads, create_msgr_log
+from settings import NODE
 
 
 def setUpModule():
 
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    #engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -27,7 +28,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    #engine.execute("drop schema public cascade; create schema public;")
 
 
 class MsgrTestCase(unittest.TestCase):
@@ -49,6 +50,8 @@ class MsgrTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.ws.close()
+        self.req_sess.close()
+        self.session.close()
 
     def test_stream_get(self):
         data = {

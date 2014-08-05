@@ -1,9 +1,9 @@
 # coding: utf-8
 
-from models import Topics
+from models.topics import Topics
 from models.topics.constants import TOPIC_TYPE
 
-from serializer import mTopicSerializer
+from api.serializers import mTopicSerializer
 
 from utils.validation import validate_mLimit
 
@@ -21,24 +21,22 @@ def get_topics_list(auth_user, session, **kwargs):
         'limit': None,
     }
 
-    if 'name' in kwargs:
+    query = kwargs['query']
+    if 'name' in query:
+        params['name'] = str(query['name']).strip()
+
+    if 'text' in query:
         try:
-            params['name'] = str(kwargs['name']).strip()
+            params['text'] = str(query['text']).strip()
         except Exception, e:
             pass
 
-    if 'text' in kwargs:
-        try:
-            params['text'] = str(kwargs['text']).strip()
-        except Exception, e:
-            pass
+    if 'type' in query:
+        if query['type'] in dict(TOPIC_TYPE).keys():
+            params['_type'] = query['type']
 
-    if 'type' in kwargs:
-        if kwargs['type'] in dict(TOPIC_TYPE).keys():
-            params['_type'] = kwargs['type']
-
-    if 'limit' in kwargs:
-        params['limit'] = validate_mLimit(limit=kwargs['limit'])
+    if 'limit' in query:
+        params['limit'] = validate_mLimit(limit=query['limit'])
 
     instance = Topics.get_topics_list(**params).all()
 

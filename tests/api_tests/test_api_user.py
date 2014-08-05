@@ -1,10 +1,16 @@
+# coding: utf-8
+
+import random
 import zerorpc
 import unittest
-from models import Base, SessionToken, Users, UsersValues
+
 from sqlalchemy.orm import sessionmaker, scoped_session
+
+from models import Base, SessionToken, Users, UsersValues
 from utils.connection import db_connect, create_session
-from tests.api_tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
-import random
+
+from tests.constants import ZERORPC_SERVICE_URI
+from tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 
 
 def setUpModule():
@@ -25,7 +31,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class UsersTestCase(unittest.TestCase):
@@ -34,7 +40,7 @@ class UsersTestCase(unittest.TestCase):
         self.engine = db_connect()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         self.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        self.cl.connect("tcp://127.0.0.1:4242", )
+        self.cl.connect(ZERORPC_SERVICE_URI, )
         self.user_id = 1
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
@@ -51,12 +57,12 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {}
         }
         temp = {
-                'city': 'Test',
-                'userpic': 'Test',
-                'firstname': 'Test',
-                'country': 'Test',
-                'time_zone': 'UTC',
-                'lastname': 'Test',
+                'city': u'Test',
+                'userpic': u'Test1',
+                'firstname': u'Test1',
+                'country': u'Test',
+                'time_zone': u'UTC',
+                'lastname': u'Test1',
                 'id': 1
         }
         resp = self.cl.route(IPC_pack)
@@ -99,7 +105,7 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {'topic': 'test1'}
         }
         resp = self.cl.route(IPC_pack)
-        temp = {'id': 1, 'value': 777}
+        temp = {'name': 1, 'value': 777}
         self.assertDictEqual(temp, resp[0])
 
     def test_friends_get(self):
@@ -111,7 +117,7 @@ class UsersTestCase(unittest.TestCase):
                     'query_params': {'limit': '4'}
         }
         resp = self.cl.route(IPC_pack)
-        temp = {'lastname': 'Test1', 'relation': 'f', 'id': 2, 'firstname': 'Test1', 'is_online': False}
+        temp = {'lastname': 'Test2', 'relation': 'f', 'id': 2, 'firstname': 'Test2', 'is_online': False}
         self.assertDictEqual(resp[0], temp)
 
     def test_password_put(self):

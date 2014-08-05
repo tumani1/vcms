@@ -1,20 +1,19 @@
 # coding: utf-8
-from models import Persons
-from api.persons.serializer import mPersonSerializer
+
+from models.persons import Persons
+from api.serializers import mPersonSerializer
 
 from utils.validation import validate_int
 
 __all__ = ['get_person_info']
 
 
-def get_person_info(auth_user, id, session, **kwargs):
+def get_person_info(person_id, auth_user, session, **kwargs):
     # Validation person value
-    person = validate_int(id, min_value=1)
-    if type(person) == Exception:
-        return {'code': 404}
+    person_id = validate_int(person_id, min_value=1)
 
     data = {}
-    instance = Persons.get_persons_by_id(auth_user, person, session).first()
+    instance = Persons.get_persons_by_id(auth_user, person_id, session).first()
 
     if not instance is None:
         params = {

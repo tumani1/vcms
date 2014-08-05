@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
-from models import Base
+from models.base import Base
 
 
 class UsersMediaUnits(Base):

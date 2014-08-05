@@ -1,19 +1,23 @@
+# coding: utf-8
+
 import datetime
-from models import MsgrLog, UsersMsgrThreads, MsgrThreads
+from models.msgr import MsgrLog, UsersMsgrThreads, MsgrThreads
 from utils import need_authorization
 
 
 @need_authorization
-def put(auth_user, session, id, **kwargs):
+def put(id, auth_user, session, **kwargs):
     msgr_thread = MsgrThreads.get_msgr_threads_by_id(session, id).first()
 
     if msgr_thread is None:
         return {'code': 400}
-    if 'text' in kwargs:
-        msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, text=kwargs['text'])
+
+    query = kwargs['query']
+    if 'text' in query:
+        msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, text=query['text'])
     else:
-        if 'attach' in kwargs:
-            msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, attachments=kwargs['attach'])
+        if 'attach' in query:
+            msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, attachments=query['attach'])
         else:
             return {'code': 400}
 

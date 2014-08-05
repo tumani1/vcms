@@ -2,8 +2,7 @@ var http  = require("http"),
     url = require("url"),
     path = require("path"),
     jade = require("jade"),
-    settings = require("../settings"),
-    sdk = require(__dirname+"/sdk");
+    settings = require("../settings");
 
 var jade_templates = {
     "/": "index.jade",
@@ -40,5 +39,4 @@ function run_server(host, port) {
     console.log("["+(new Date())+"]"+" render server runnig on "+host+":"+port);
 }
 
-var NODE = settings.NODE('node_service.yaml');
-run_server(NODE["render_serv"]["host"], NODE["render_serv"]["port"]);
+run_server(settings.NODE["render_serv"]["host"], settings.NODE["render_serv"]["port"]);
