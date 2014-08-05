@@ -6,7 +6,7 @@ from utils import need_authorization
 
 
 @need_authorization
-def get(auth_user, session=None):
+def get(auth_user, session=None, **kwargs):
     user = session.query(Users).filter_by(id=auth_user.id).first()
     city = session.query(Cities).filter_by(id=user.city_id).first()
     country = session.query(Countries).filter_by(id=city.country_id).first()

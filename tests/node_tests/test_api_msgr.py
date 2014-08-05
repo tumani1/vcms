@@ -14,7 +14,7 @@ from settings import NODE
 def setUpModule():
 
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -55,9 +55,9 @@ class MsgrTestCase(unittest.TestCase):
 
     def test_stream_get(self):
         data = {
-            'id': 1
         }
-        resp = self.req_sess.get(self.fullpath+'/msgr/stream', headers={'token': self.token}, params=data)
+        id = 1
+        resp = self.req_sess.get(self.fullpath+'/msgr/%s/stream' % (id), headers={'token': self.token}, params=data)
         result = {
             u'thread': 1,
             u'created': u'2014-01-01',
@@ -123,9 +123,9 @@ class MsgrTestCase(unittest.TestCase):
     def test_send_put(self):
         data = {
             u'text': u'Hi',
-            u'id': 1
         }
-        resp = self.req_sess.put(self.fullpath+'/msgr/send', headers={'token': self.token}, data=data)
+        id = 1
+        resp = self.req_sess.put(self.fullpath+'/msgr/%s/send' % (id), headers={'token': self.token}, data=data)
         msgr_log = MsgrLog.get_msgr_log_by_msgr_thread_id_and_user_id(self.session, 1, 1).all()
         self.assertEqual(data['text'], msgr_log[1].text)
 

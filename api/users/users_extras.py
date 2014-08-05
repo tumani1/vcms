@@ -8,11 +8,11 @@ from utils.exceptions import DoesNotExist
 from utils.validation import validate_mLimit
 
 
-def get(user_id, session, **kwargs):
-    user = session.query(Users).get(user_id)
+def get(id, session, **kwargs):
+    user = session.query(Users).get(id)
     if not user:
         raise DoesNotExist
-    query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
+    query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == id)
 
     if 'id' in kwargs['query']:
         if isinstance(kwargs['query']['id'], int):

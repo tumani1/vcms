@@ -17,7 +17,7 @@ from tests.fixtures import create, create_users_rels, create_scheme, create_topi
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -43,10 +43,8 @@ class UsersTestCase(unittest.TestCase):
         self.zero_client = zerorpc.Client(timeout=3000, heartbeat=100000)
         self.zero_client.connect(ZERORPC_SERVICE_URI)
         self.ipc_pack = {
-            'api_group': 'users',
             'api_method': '',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_type': 'get',
             'x_token': None,
             'query_params': {}
         }
@@ -59,19 +57,19 @@ class UsersTestCase(unittest.TestCase):
         
 
     def test_users_values_get(self):
-        self.ipc_pack['api_method'] = 'values'
-        self.ipc_pack['http_method'] = 'get'
+        user_id = 1
+        self.ipc_pack['api_method'] = '/users/%s/values' % (user_id)
+        self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['query_params'] = {
             'topic': 'test1',
             'text': 'test',
-            'user_id': 1
         }
         resp = self.zero_client.route(self.ipc_pack)
         self.assertDictEqual(resp[0], {'name': 1, 'value': 777})
 
     def test_test_users_list_get(self):
-        self.ipc_pack['api_method'] = 'list'
-        self.ipc_pack['http_method'] = 'get'
+        self.ipc_pack['api_method'] = '/users/list'
+        self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['query_params'] = {
             'country': 'Test',
         }
@@ -97,12 +95,9 @@ class UsersTestCase(unittest.TestCase):
             self.assertDictEqual(resp_dict, user_d)
 
     def test_users_info_get(self):
-        self.ipc_pack['api_method'] = 'info'
-        self.ipc_pack['http_method'] = 'get'
-
-        self.ipc_pack['query_params'] = {
-            'id': 1
-        }
+        user_id = 1
+        self.ipc_pack['api_method'] = '/users/%s/info' % (user_id)
+        self.ipc_pack['api_type'] = 'get'
         resp_dict = self.zero_client.route(self.ipc_pack)
         user = self.session.query(Users).get(1)
         user_dict = {
@@ -119,26 +114,21 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp_dict, user_dict)
 
     def test_users_friendship_get(self):
-        self.ipc_pack['api_method'] = 'friendship'
-        self.ipc_pack['http_method'] = 'get'
+        user_id = 2
+        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
+        self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
-        self.ipc_pack['query_params'] = {
-            'id': 2
-        }
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_FRIEND)
-        self.ipc_pack['query_params'] = {
-            'id': 3
-        }
+        user_id = 3
+        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_UNDEF)
 
     def test_users_friends_get(self):
-        self.ipc_pack['api_method'] = 'friends'
-        self.ipc_pack['http_method'] = 'get'
-        self.ipc_pack['query_params'] = {
-            'id': 1
-        }
+        user_id = 1
+        self.ipc_pack['api_method'] = '/users/%s/friends' % (user_id)
+        self.ipc_pack['api_type'] = 'get'
         resp_dicts = self.zero_client.route(self.ipc_pack)
         subquery = self.session.query(UsersRels.partner_id).filter_by(user_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
         friends = self.session.query(Users).filter(Users.id.in_(subquery)).all()
@@ -155,11 +145,9 @@ class UsersTestCase(unittest.TestCase):
             self.assertDictEqual(resp_dict, user_dict)
 
     def test_users_extras_get(self):
-        self.ipc_pack['api_method'] = 'extras'
-        self.ipc_pack['http_method'] = 'get'
-        self.ipc_pack['query_params'] = {
-            'user_id': 1,
-        }
+        user_id = 1
+        self.ipc_pack['api_method'] = '/users/%s/extras' % (user_id)
+        self.ipc_pack['api_type'] = 'get'
 
         resp_dicts = self.zero_client.route(self.ipc_pack)
         extras = self.session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == 1).all()

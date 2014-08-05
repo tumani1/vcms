@@ -45,8 +45,9 @@ class CommentsTestCase(unittest.TestCase):
         self.token = json.loads(token_str)['token']
 
     def test_comments_info(self):
-        data = {'id': 1}
-        resp = self.req_sess.get(self.fullpath+'/comments/info', headers={'token': self.token}, params=data)
+        data = {}
+        id = 1
+        resp = self.req_sess.get(self.fullpath+'/comments/%s/info' % (id), headers={'token': self.token}, params=data)
         temp = {
             u'text': u'Тест',
             u'object': None,
@@ -87,33 +88,36 @@ class CommentsTestCase(unittest.TestCase):
         self.assertEqual(new_com.text, data['text'])
 
     def test_comments_like_put(self):
-        data = {'id': 2}
-        resp = self.req_sess.put(self.fullpath+'/comments/like', headers={'token': self.token}, params=data)
+        data = {}
+        id = 2
+        resp = self.req_sess.put(self.fullpath+'/comments/%s/like' % (id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == data['id'])).first()
+        new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(new_like)
         self.assertTrue(new_like.liked)
 
     def test_comments_like_delete(self):
-        data = {'id': 3}
-        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == data['id'])).first()
+        data = {}
+        id = 3
+        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com.liked)
-        resp = self.req_sess.delete(self.fullpath+'/comments/like', headers={'token': self.token}, params=data)
+        resp = self.req_sess.delete(self.fullpath+'/comments/%s/like' % (id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == data['id'])).first()
+        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com)
         self.assertFalse(user_com.liked)
 
     def test_comments_reply(self):
-        data = {'id': 1, 'text': 'reply_test'}
-        resp = self.req_sess.post(self.fullpath+'/comments/reply', headers={'token': self.token}, params=data)
+        data = {'text': 'reply_test'}
+        id = 1
+        resp = self.req_sess.post(self.fullpath+'/comments/%s/reply' % (id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         reply_com = self.session.query(Comments).all()[-1]
         self.assertTrue(reply_com)
-        self.assertEqual(reply_com.parent_id, data['id'])
+        self.assertEqual(reply_com.parent_id, id)
         self.assertEqual(reply_com.text, data['text'])
 
 

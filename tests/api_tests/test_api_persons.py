@@ -17,7 +17,7 @@ from utils.connection import get_session, db_connect, create_session
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -63,14 +63,10 @@ class PersonInfoTestCase(unittest.TestCase):
     def test_get_person_info(self):
         person_id = 1
         ipc_pack = {
-            'api_group': 'persons',
-            'api_method': 'info',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_method': '/persons/%s/info' % (person_id),
+            'api_type': 'get',
             'x_token': self.session_token[1],
-            'query_params': {
-                'id': person_id,
-            }
+            'query_params': {}
         }
 
         resp = self.zero_client.route(ipc_pack)
@@ -134,10 +130,8 @@ class PersonListTestCase(unittest.TestCase):
 
     def test_get_person_list(self):
         ipc_pack = {
-            'api_group': 'persons',
-            'api_method': 'list',
-            'http_method': 'get',
-            'api_format': 'json',
+            'api_method': '/persons/list',
+            'api_type': 'get',
             'x_token': self.session_token[1],
             'query_params': {}
         }
@@ -167,14 +161,10 @@ class PersonLikeTestCase(unittest.TestCase):
     def test_echo_get(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/persons/%s/like" % (person),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -186,14 +176,10 @@ class PersonLikeTestCase(unittest.TestCase):
     def test_echo_post(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/persons/%s/like" % (person),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                 "id": person,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -211,14 +197,10 @@ class PersonLikeTestCase(unittest.TestCase):
     def test_fail_echo_post(self):
         person = 1
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/persons/%s/subscribe" % (person),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -228,14 +210,10 @@ class PersonLikeTestCase(unittest.TestCase):
     def test_echo_delete(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "like",
-            "api_format": "json",
+            "api_method": "/persons/%s/like" % (person),
             "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                 "id": person,
-            }
+            "api_type": "delete",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -268,14 +246,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
     def test_echo_get(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/persons/%s/subscribe" % (person),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -287,14 +261,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
     def test_fail_echo_post(self):
         person = 1
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/persons/%s/subscribe" % (person),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -304,14 +274,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
     def test_echo_post(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/persons/%s/subscribe" % (person),
             "x_token": self.session_token[1],
-            "http_method": "post",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "post",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -329,14 +295,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
     def test_echo_delete(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "subscribe",
-            "api_format": "json",
+            "api_method": "/persons/%s/subscribe" % (person),
             "x_token": self.session_token[1],
-            "http_method": "delete",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "delete",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -369,14 +331,10 @@ class PersonExtrasTestCase(unittest.TestCase):
     def test_echo(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "extras",
-            "api_format": "json",
+            "api_method": "/persons/%s/extras" % (person),
             "x_token": self.session_token[1],
-            "http_method": "get",
-            "query_params": {
-                "id": person,
-            }
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -425,12 +383,9 @@ class PersonValuesTestCase(unittest.TestCase):
     def test_echo(self):
         person = 2
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "values",
-            "api_format": "json",
-            "http_method": "get",
+            "api_method": "/persons/%s/values" % (person),
+            "api_type": "get",
             "query_params": {
-                'id': person,
                 'name': ['shm1', 'shm2'],
                 'value': '777',
             }
@@ -470,13 +425,9 @@ class PersonMediaTestCase(unittest.TestCase):
     def test_echo(self):
         person = 1
         IPC_pack = {
-            "api_group": "persons",
-            "api_method": "media",
-            "api_format": "json",
-            "http_method": "get",
-            "query_params": {
-                'id': person,
-            }
+            "api_method": "/persons/%s/media" % (person),
+            "api_type": "get",
+            "query_params": {}
         }
 
         resp = self.zero_client.route(IPC_pack)

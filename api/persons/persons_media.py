@@ -6,4 +6,5 @@ __all__ = ['get_person_media']
 
 
 def get_person_media(person_id, auth_user, session, **kwargs):
-    return get_media_list(auth_user=auth_user, persons=person_id, session=session, **kwargs)
+    params = {'query': {'persons': person_id}}
+    return get_media_list(auth_user=auth_user, session=session, **params)

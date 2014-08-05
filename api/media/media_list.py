@@ -5,6 +5,7 @@ from utils.validation import validate_list_int
 
 
 def get(auth_user=None, session=None, **kwargs):
+    data = {}
     params = {
         'user': auth_user,
         'session': session,

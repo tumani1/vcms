@@ -13,7 +13,7 @@ import json
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -78,7 +78,7 @@ class UserTestCase(unittest.TestCase):
     def test_values_get(self):
         data = {'topic': 'test1'}
         resp = self.req_sess.get(self.fullpath+'/user/values', headers={'token': self.token}, params=data)
-        temp = [{u'id': 1, u'value': 777}]
+        temp = [{u'name': 1, u'value': 777}]
         self.assertListEqual(temp, resp.json())
 
     def test_friends_get(self):

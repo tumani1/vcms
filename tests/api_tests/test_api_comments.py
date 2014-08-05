@@ -43,12 +43,12 @@ class CommentsTestCase(unittest.TestCase):
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
     def test_comments_info(self):
-        IPC_pack = {'api_group': 'comments',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        id = 1
+        IPC_pack = {
+                    'api_method': '/comments/%s/info' % (id),
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 1}
+                    'query_params': {}
         }
         temp = {
             'text': 'Тест',
@@ -62,10 +62,9 @@ class CommentsTestCase(unittest.TestCase):
         self.assertDictEqual(resp, temp)
 
     def test_comments_list(self):
-        IPC_pack = {'api_group': 'comments',
-                'api_method': 'list',
-                'http_method': 'get',
-                'api_format': 'json',
+        IPC_pack = {
+                'api_method': '/comments/list',
+                'api_type': 'get',
                 'x_token': self.session_token[1],
                 'query_params': {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
         }
@@ -80,10 +79,9 @@ class CommentsTestCase(unittest.TestCase):
         self.assertListEqual(resp, temp)
 
     def test_comments_create(self):
-        IPC_pack = {'api_group': 'comments',
-                'api_method': 'create',
-                'http_method': 'post',
-                'api_format': 'json',
+        IPC_pack = {
+                'api_method': '/comments/create',
+                'api_type': 'post',
                 'x_token': self.session_token[1],
                 'query_params': {'text': 'test_create', 'obj_type': 'mu', 'obj_id': 2}
         }
@@ -95,47 +93,47 @@ class CommentsTestCase(unittest.TestCase):
         self.assertEqual(new_com.text, IPC_pack['query_params']['text'])
 
     def test_comments_like_put(self):
-        IPC_pack = {'api_group': 'comments',
-                'api_method': 'like',
-                'http_method': 'put',
-                'api_format': 'json',
+        id = 2
+        IPC_pack = {
+                'api_method': '/comments/%s/like'  % (id),
+                'api_type': 'put',
                 'x_token': self.session_token[1],
-                'query_params': {'id': 2}
+                'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == IPC_pack['query_params']['id'])).first()
+        new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(new_like)
         self.assertTrue(new_like.liked)
 
     def test_comments_like_delete(self):
-        IPC_pack = {'api_group': 'comments',
-                'api_method': 'like',
-                'http_method': 'delete',
-                'api_format': 'json',
+        id = 3
+        IPC_pack = {
+                'api_method': '/comments/%s/like'  % (id),
+                'api_type': 'delete',
                 'x_token': self.session_token[1],
-                'query_params': {'id': 3}
+                'query_params': {}
         }
-        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == IPC_pack['query_params']['id'])).first()
+        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com.liked)
         resp = self.cl.route(IPC_pack)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
-        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == IPC_pack['query_params']['id'])).first()
+        user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com)
         self.assertFalse(user_com.liked)
 
     def test_comments_reply(self):
-        IPC_pack = {'api_group': 'comments',
-                'api_method': 'reply',
-                'http_method': 'post',
-                'api_format': 'json',
+        id = 1
+        IPC_pack = {
+                'api_method': '/comments/%s/reply'  % (id),
+                'api_type': 'post',
                 'x_token': self.session_token[1],
-                'query_params': {'id': 1, 'text': 'reply_test'}
+                'query_params': {'text': 'reply_test'}
         }
         resp = self.cl.route(IPC_pack)
         reply_com = self.session.query(Comments).all()[-1]
         self.assertTrue(reply_com)
-        self.assertEqual(reply_com.parent_id, IPC_pack['query_params']['id'])
+        self.assertEqual(reply_com.parent_id, id)
         self.assertEqual(reply_com.text, IPC_pack['query_params']['text'])
 
     def tearDown(self):

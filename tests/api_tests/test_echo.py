@@ -21,9 +21,9 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
 
 
     def test_echo(self):
-        IPC_pack = {'api_group': 'test',
-                    'api_method': 'echo',
-                    'http_method': 'put',
+        IPC_pack = {
+                    'api_method': '/test/echo',
+                    'api_type': 'put',
                     'token': 'echo_token',
                     'query_params': {'message': 'hello'}}
         resp = self.cl.route(IPC_pack)
