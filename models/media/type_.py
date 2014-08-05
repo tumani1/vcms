@@ -10,15 +10,15 @@ from models.media.constants import APP_MEDIA_TYPE, APP_MEDIA_TYPE_AUDIO,\
 
 
 class Type(Base):
-    __tablename__ = 'type'
+    __tablename__ = 'type_'
 
-    type         = Column(ChoiceType(APP_MEDIA_TYPE), primary_key=True)
+    type_        = Column(ChoiceType(APP_MEDIA_TYPE), primary_key=True)
     access_level = Column(SMALLINT, default=None, nullable=True)
 
-    media_type = relationship('MediaType', backref='type', cascade='all, delete')
+    media_type = relationship('MediaType', backref='type_', cascade='all, delete')
 
 
-create_rows = DDL("""INSERT INTO "type" VALUES('{audio}', NULL), ('{video}', NULL), ('{picture}', NULL);""".
+create_rows = DDL("""INSERT INTO "type_" VALUES('{audio}', NULL), ('{video}', NULL), ('{picture}', NULL);""".
                   format(audio=APP_MEDIA_TYPE_AUDIO, video=APP_MEDIA_TYPE_VIDEO,
                          picture=APP_MEDIA_TYPE_PICTURE))
 listen(Type.__table__, 'after_create', create_rows)

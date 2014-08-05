@@ -14,4 +14,8 @@ DATABASE = {}
 with open(os.path.join(CONFIG_PATH, 'db.yaml'), 'r') as file:
     DATABASE = yaml.load(file, Loader=yaml.loader.Loader)
 
+NODE = {}
+with open(os.path.join(BASE_PATH, 'nodeservices', 'node_service.yaml')) as conf:
+    NODE = yaml.safe_load(conf)
+
 TOKEN_LIFETIME = 15
