@@ -5,17 +5,15 @@ from models.media.media import Media
 from api.serializers import mPersonRoleSerializer
 
 
-def get(auth_user, session, **kwargs):
+def get(id, auth_user, session, **kwargs):
     params = {
-        'id': None,
+        'id': validate_list_int(id),
         'is_online': None,
         'limit': None,
         'session': session,
     }
 
     query = kwargs['query']
-    if 'id' in query:
-        params['id'] = validate_list_int(query['id'])
 
     if 'is_online' in query and query['is_online']:
         params['is_online'] = query['is_online']

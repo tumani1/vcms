@@ -41,8 +41,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.token = json.loads(token_str)['token']
 
     def test_info(self):
-        data = {'id': 2}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/info', headers={'token': self.token}, params=data)
+        id = 2
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/info' % (id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',
@@ -58,8 +59,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         self.assertDictEqual(resp.json(), temp)
 
     def test_next(self):
-        data = {'id': 2}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/next', headers={'token': self.token}, params=data)
+        id = 2
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/next' % (id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test3',

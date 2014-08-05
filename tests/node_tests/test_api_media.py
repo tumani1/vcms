@@ -46,8 +46,9 @@ class MediaTestCase(unittest.TestCase):
         self.token = json.loads(token_str)['token']
 
     def test_info(self):
-        data = {'id': 1}
-        resp = self.req_sess.get(self.fullpath+'/media/info', headers={'token': self.token}, params=data)
+        id = 1
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/info' % (id), headers={'token': self.token}, params=data)
         temp = {
             u'description': u'test_desc1',
             u'title': u'media1',
@@ -76,8 +77,9 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp.json(), temp)
 
     def test_media_persons(self):
-        data = {'id': 1}
-        resp = self.req_sess.get(self.fullpath+'/media/persons', headers={'token': self.token}, params=data)
+        id = 1
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/persons' % (id), headers={'token': self.token}, params=data)
         temp = [{
                     u'firstname': u'test',
                     u'lastname': u'testov',
@@ -90,8 +92,9 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp.json(), temp)
 
     def test_media_units(self):
-        data = {'id': 1}
-        resp = self.req_sess.get(self.fullpath+'/media/units', headers={'token': self.token}, params=data)
+        id = 1
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/units' % (id), headers={'token': self.token}, params=data)
         temp = [{
                     u'enddate': 1391212800,
                     u'description': u'test2',
@@ -107,57 +110,66 @@ class MediaTestCase(unittest.TestCase):
         self.assertListEqual(resp.json(), temp)
 
     def test_media_like_get(self):
-        data = {'id': 3}
-        resp = self.req_sess.get(self.fullpath+'/media/like', headers={'token': self.token}, params=data)
+        id = 3
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/like' % (id), headers={'token': self.token}, params=data)
         temp = {"liked":0}
         self.assertDictEqual(resp.json(), temp)
 
     def test_media_like_post(self):
-        data = {'id': 2}
-        resp = self.req_sess.post(self.fullpath+'/media/like', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 2
+        data = {}
+        resp = self.req_sess.post(self.fullpath+'/media/%s/like' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertTrue(um.liked)
 
     def test_media_like_delete(self):
-        data = {'id': 4}
-        resp = self.req_sess.delete(self.fullpath+'/media/like', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 4
+        data = {}
+        resp = self.req_sess.delete(self.fullpath+'/media/%s/like' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.liked)
 
     def test_media_playlist_get(self):
-        data = {'id': 3}
-        resp = self.req_sess.get(self.fullpath+'/media/playlist', headers={'token': self.token}, params=data)
+        id = 3
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/playlist' % (id), headers={'token': self.token}, params=data)
         temp = {"in_playlist":1391212800}
         self.assertDictEqual(resp.json(), temp)
 
     def test_media_playlist_post(self):
-        data = {'id': 2}
-        resp = self.req_sess.post(self.fullpath+'/media/playlist', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 2
+        data = {}
+        resp = self.req_sess.post(self.fullpath+'/media/%s/playlist' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertTrue(um.playlist)
 
     def test_media_playlist_delete(self):
-        data = {'id': 4}
-        resp = self.req_sess.delete(self.fullpath+'/media/playlist', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 4
+        data = {}
+        resp = self.req_sess.delete(self.fullpath+'/media/%s/playlist' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.playlist)
 
     def test_media_state_get(self):
-        data = {'id': 3}
-        resp = self.req_sess.get(self.fullpath+'/media/state', headers={'token': self.token}, params=data)
+        id = 3
+        data = {}
+        resp = self.req_sess.get(self.fullpath+'/media/%s/state' % (id), headers={'token': self.token}, params=data)
         temp = {"watched":1388534400,"pos":20}
         self.assertDictEqual(resp.json(), temp)
 
     def test_media_state_post(self):
-        data = {'id': 2, 'pos': 20}
-        resp = self.req_sess.post(self.fullpath+'/media/state', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 2
+        data = {'pos': 20}
+        resp = self.req_sess.post(self.fullpath+'/media/%s/state' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertEqual(um.play_pos, data['pos'])
 
     def test_media_state_delete(self):
-        data = {'id': 4}
-        resp = self.req_sess.delete(self.fullpath+'/media/state', headers={'token': self.token}, params=data)
-        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==data['id'])).first()
+        id = 4
+        data = {}
+        resp = self.req_sess.delete(self.fullpath+'/media/%s/state' % (id), headers={'token': self.token}, params=data)
+        um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
         self.assertFalse(um.watched)
         self.assertFalse(um.play_pos)
 

@@ -11,7 +11,7 @@ from tests.fixtures import create_media_units, create_topic, create, create_medi
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -41,12 +41,10 @@ class MediaTestCase(unittest.TestCase):
         self.session_token = SessionToken.generate_token(self.user_id, session=self.session)
 
     def test_info(self):
-        IPC_pack = {'api_group': 'media',
-                    'api_method': 'info',
-                    'http_method': 'get',
-                    'api_format': 'json',
+        IPC_pack = {'api_method': 'media/1/info',
+                    'api_type': 'get',
                     'x_token': self.session_token[1],
-                    'query_params': {'id': 1}
+                    'query_params': {}
         }
         temp = {
             'description': 'test_desc1',

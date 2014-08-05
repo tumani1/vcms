@@ -5,7 +5,9 @@ from models.tokens import GlobalToken
 from utils.exceptions import NotAuthorizedException
 
 
-def post(auth_user, session, email, password, **kwargs):
+def post(auth_user, session, **kwargs):
+    email = kwargs['query']['email']
+    password = kwargs['query']['password']
     user = session.query(Users).filter(Users.email == email).first()
 
     if user.password == str(password):

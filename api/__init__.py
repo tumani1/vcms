@@ -53,6 +53,4 @@ def authorize(IPC_pack, session=None):
     if user_id:
         user = session.query(Users).get(user_id)
 
-    IPC_pack['query_params'].update({'auth_user': user})
-
-    return IPC_pack
+    return user, IPC_pack
