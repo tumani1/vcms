@@ -1,5 +1,5 @@
 # coding: utf-8
 
 
-def on_done(session, **kwargs):
+def get(auth_user, session, media_id, **kwargs):
     return 200

@@ -12,7 +12,7 @@ from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE
 from models.contents import Cities
 from settings import NODE
 from utils.connection import db_connect, create_session
-from utils.common import convert_to_utc
+from utils.common import detetime_to_unixtime
 
 
 def setUpModule():
@@ -75,8 +75,8 @@ class UsersTestCase(unittest.TestCase):
                 'lastname': user.lastname,
                 'is_online': False,
                 'gender': user.gender.code,
-                'regdate': convert_to_utc(user.created),
-                'lastvisit': convert_to_utc(user.last_visit) if user.last_visit else '',
+                'regdate': detetime_to_unixtime(user.created),
+                'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
                 'city': user.city.name,
                 'country': user.city.country.name,
             })
@@ -96,8 +96,8 @@ class UsersTestCase(unittest.TestCase):
             u'lastname': user.lastname,
             u'is_online': False,
             u'gender': user.gender.code,
-            u'regdate': convert_to_utc(user.created),
-            u'lastvisit': convert_to_utc(user.last_visit) if user.last_visit else '',
+            u'regdate': detetime_to_unixtime(user.created),
+            u'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
             u'city': user.city.name,
             u'country': user.city.country.name,
         }
@@ -143,7 +143,7 @@ class UsersTestCase(unittest.TestCase):
                 'title_orig': extra.title_orig,
                 'description': extra.description,
                 'location': extra.location,
-                'created': convert_to_utc(extra.created),
+                'created': detetime_to_unixtime(extra.created),
             })
 
         for resp_dict in resp_dicts:

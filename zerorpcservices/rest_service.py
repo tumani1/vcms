@@ -21,15 +21,14 @@ class ZeroRpcRestApiService(object):
         session = create_session(bind=self.connect, expire_on_commit=False)
 
         try:
-            auth_user, Auth_IPC_pack = authorize(IPC_pack, session=session)
-            path_parse = Auth_IPC_pack['api_method'].split('/', 4)
-            mashed_key = (path_parse[1], path_parse[-1], Auth_IPC_pack['api_type'])
+            auth_user = authorize(IPC_pack, session=session)
+            path_parse = IPC_pack['api_method'].split('/', 4)
+            mashed_key = (path_parse[1], path_parse[-1], IPC_pack['api_type'])
             api_method = self.mashed_routes[mashed_key]
-
             params = {
                 'session': session,
                 'auth_user': auth_user,
-                'query': Auth_IPC_pack['query_params']
+                'query': IPC_pack['query_params']
             }
             response = api_method(*path_parse[2:-1], **params)
 
@@ -40,7 +39,6 @@ class ZeroRpcRestApiService(object):
         except Exception as e:
             session.rollback()
             response = {'error': e.message}  # TODO: определить формат ошибок
-
         finally:
             session.close()
 

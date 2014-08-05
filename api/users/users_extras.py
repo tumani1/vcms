@@ -3,16 +3,16 @@ from sqlalchemy.sql.expression import func
 
 from models.users import Users, UsersExtras
 from models.extras import Extras
-from utils.common import convert_to_utc
-from utils.exceptions import DoesNotExist
+from utils.common import detetime_to_unixtime
+from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit
 
 
-def get(id, session, **kwargs):
-    user = session.query(Users).get(id)
+def get(user_id, session, **kwargs):
+    user = session.query(Users).get(user_id)
     if not user:
-        raise DoesNotExist
-    query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == id)
+        raise RequestErrorException
+    query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
 
     if 'id' in kwargs['query']:
         if isinstance(kwargs['query']['id'], int):
@@ -48,7 +48,7 @@ def get(id, session, **kwargs):
             'title_orig': extra.title_orig,
             'description': extra.description,
             'location': extra.location,
-            'created': convert_to_utc(extra.created),
+            'created': detetime_to_unixtime(extra.created),
         })
 
     return ret_list
