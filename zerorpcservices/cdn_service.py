@@ -3,7 +3,7 @@ import argparse
 import zerorpc
 import settings as conf
 from utils.connection import get_session
-from api.cdn import cdn_list, on_done, on_play
+from api.cdn import on_done, on_play
 
 
 class ZeroRpcCdnApiService(object):
