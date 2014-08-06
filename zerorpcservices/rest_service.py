@@ -25,27 +25,24 @@ class ZeroRpcRestApiService(object):
             path_parse = Auth_IPC_pack['api_method'].split('/', 4)
             mashed_key = (path_parse[1], path_parse[-1], Auth_IPC_pack['api_type'])
             api_method = self.mashed_routes[mashed_key]
-
             params = {
                 'session': session,
                 'auth_user': auth_user,
                 'query': Auth_IPC_pack['query_params']
             }
             response = api_method(*path_parse[2:-1], **params)
-
         except APIException as e:
             session.rollback()
-            return {'error': e.code}
-
+            response = {'error': {'code': e.code,
+                                  'message': e.message}}
         except Exception as e:
             session.rollback()
-            response = {'error': e.message}  # TODO: определить формат ошибок
-
+            response = {'error': {'code': 404,
+                                  'message': 'Bad Request'}}
         finally:
             session.close()
 
         return response
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -18,8 +18,8 @@ function form_ipc_pack(pathname, headers, http_method, query_params) {
 }
 
 function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы общепринятое правило прятать всё в функцию
-    var max_KB = 4 * 1024;
-    var backend_client = new zerorpc.Client(heartbeat == undefined? {}: {heartbeatInterval: heartbeat})
+    var backend_client = new zerorpc.Client(heartbeat == undefined? {}: {heartbeatInterval: heartbeat}),
+        IPC_pack;
 
     backend_client.connect("tcp://"+bck_host+":"+bck_port);
     var server = http.createServer(function(request, response) {
@@ -30,20 +30,31 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
             headers = request.headers;
 
         if (["post", "put"].indexOf(http_method)>-1) {
-            var form = new formidable.IncomingForm(),
-                IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
+            var form = new formidable.IncomingForm();
+            IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
 
             form.maxFieldsSize = 1024;  // TODO: не заваливается, если любое поле содержит больше данных
             form.maxFields = 6;
             form.parse(request, function(error, fields, files) {
-                for (var field in fields) {
+                for (var field in fields) {  // заполняем IPC_pack параметрами из методов POST/PUT
                         if (!IPC_pack["query_params"].hasOwnProperty(field)) {
                             IPC_pack["query_params"][field] = fields[field];
                         }
                 }
                 backend_client.invoke("route", IPC_pack, function(error, res, more) {
-                    response.writeHead(200, {"Content-Type": "text/plain"});
-                    response.end(JSON.stringify(res));
+                    if (!res) {
+                        response.writeHead(404, {"Content-Type": "text/plain"});
+                        response.end('Undefined response');
+                    }
+                    else if (res.hasOwnProperty('error')) {
+                        var code = parseInt(res.error.code);
+                        response.writeHead(code, {"Content-Type": "text/plain"});
+                        response.end(res.error.message);
+                    }
+                    else {
+                        response.writeHead(200, {"Content-Type": "application/json"});
+                        response.end(JSON.stringify(res));
+                    }
                 });
             });
             form.on('error', function(error) {
@@ -52,14 +63,20 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
         }
 
         else {
-            var IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
+            IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
             backend_client.invoke("route", IPC_pack, function(error, res, more) {
-                if (error) {
-                    console.error(error);
-                    response.end();
+                console.log(res);
+                if (!res) {
+                    response.writeHead(404, {"Content-Type": "text/plain"});
+                    response.end('Undefined response');
                 }
-                else {  //TODO: сделать структурный возврат ошибок с HTTP кодами
-                    response.writeHead(200, {"Content-Type": "text/plain"});
+                else if (res.hasOwnProperty('error')) {
+                    var code = parseInt(res.error.code);
+                    response.writeHead(code, {"Content-Type": "text/plain"});
+                    response.end(res.error.message);
+                }
+                else {
+                    response.writeHead(200, {"Content-Type": "application/json"});
                     response.end(JSON.stringify(res));
                 }
             });
@@ -74,15 +91,19 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
         socket.on("message", function(message){
             IPC_pack = JSON.parse(message);
             backend_client.invoke("route", IPC_pack, function(error, res, more) {
-                if (error){
-                    console.error(error);
-                    return;
+                if (!res) {
+                    socket.send('Undefined response');
                 }
-                socket.send(JSON.stringify(res));
+                else if (res.hasOwnProperty('error')) {
+                    socket.send(JSON.stringify({'error': res.error.code}));
+                }
+                else {
+                    socket.send(JSON.stringify(res));
+                }
             });
         });
     });
-    ws_server.on('error', function(error){
+    ws_server.on('error', function(error) {
        console.error(error)
     });
 }
