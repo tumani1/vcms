@@ -42,7 +42,7 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         resp = self.ws.recv()
         resp = json.loads(resp)
         print(resp)
-        self.assertEqual(resp['message'], 'Bad Request')
+        self.assertEqual(resp['error'], 404)
 
 
     def tearDown(self):
