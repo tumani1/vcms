@@ -31,19 +31,18 @@ class ZeroRpcRestApiService(object):
                 'query': IPC_pack['query_params']
             }
             response = api_method(*path_parse[2:-1], **params)
-
         except APIException as e:
             session.rollback()
-            return {'error': e.code}
-
+            response = {'error': {'code': e.code,
+                                  'message': e.message}}
         except Exception as e:
             session.rollback()
-            response = {'error': e.message}  # TODO: определить формат ошибок
+            response = {'error': {'code': 404,
+                                  'message': 'Bad Request'}}
         finally:
             session.close()
 
         return response
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
