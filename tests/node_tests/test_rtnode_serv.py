@@ -3,7 +3,6 @@ import unittest
 import requests
 import json
 from settings import NODE
-from tests.create_test_user import create
 from websocket import create_connection
 from utils.connection import get_session
 
@@ -21,10 +20,19 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         resp = self.req_sess.get(self.fullpath+'/test/echo?message=hello')
         self.assertEqual(resp.json(), {'query': {'message': 'hello'}})
 
+    def test_error_get(self):
+        resp = self.req_sess.get(self.fullpath+'/some/some?message=hello')
+        self.assertEqual(resp.status_code, 404)
+
     def test_echo_put(self):
         data = {'message': 'hello'}
         resp = self.req_sess.put(self.fullpath+'/test/echo', data=data)
         self.assertEqual(resp.json(), {'query': data})
+
+    def test_error_put(self):
+        data = {'message': 'hello'}
+        resp = self.req_sess.put(self.fullpath+'/some/some', data=data)
+        self.assertEqual(resp.status_code, 404)
 
     def test_ws_echo_get(self):
         IPC_pack = {'api_method': '/test/echo',
@@ -41,7 +49,6 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         self.ws.send(json.dumps(IPC_pack))
         resp = self.ws.recv()
         resp = json.loads(resp)
-        print(resp)
         self.assertEqual(resp['error'], 404)
 
 
