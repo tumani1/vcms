@@ -15,6 +15,7 @@ class BaseService(object):
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
+
         try:
             auth_user = authorize(IPC_pack, session=session)
             path_parse = IPC_pack['api_method'].split('/', 4)
@@ -28,11 +29,13 @@ class BaseService(object):
             response = api_method(*path_parse[2:-1], **params)
         except APIException as e:
             session.rollback()
-            return {'error': e.code}
-
+            response = {'error': {'code': e.code,
+                                  'message': e.message}}
         except Exception as e:
             session.rollback()
-            response = {'error': e.message}  # TODO: определить формат ошибок
+            response = {'error': {'code': 404,
+                                  'message': 'Bad Request'}}
         finally:
             session.close()
+
         return response
