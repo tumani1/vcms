@@ -7,7 +7,7 @@ from api.users import routing as users_routing
 from api.topics import routing as topics_routing
 from api.persons import routing as persons_routing
 from api.media_unit import routing as media_unit_routing
-from api.test import routes as test_routing
+from api.test import routing as test_routing
 from api.user import routing as user_routing
 from api.auth import routing as auth_routing
 from api.msgr import routing as msgr_routing
@@ -20,7 +20,7 @@ from api.obj_comments import routing as obj_comments_routing
 from api.cdn import routing as cdn_routing
 
 
-routes = {
+rest_routes = {
     'mediaunits': media_unit_routing,
     'user': user_routing,
     'users': users_routing,
@@ -35,6 +35,9 @@ routes = {
     'chat': chat_routes,
     'comments': comments_routing,
     'obj_comments': obj_comments_routing,
+}
+
+cdn_routes = {
     'int-api': cdn_routing,
 }
 
@@ -47,7 +50,7 @@ def authorize(IPC_pack, session=None):
         })
 
     user_id = None
-    if  IPC_pack.get('x_token'):
+    if IPC_pack.get('x_token'):
         user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
     elif IPC_pack.get('token'):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
