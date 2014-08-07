@@ -1,8 +1,7 @@
 # coding: utf-8
-
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_, ForeignKey
 from sqlalchemy.orm import relationship, contains_eager
 
 from models.base import Base
@@ -30,12 +29,13 @@ class Media(Base):
     release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
+    owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
+    type_          = Column(String, ForeignKey('media_type.type_'), nullable=False)
 
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
     medias_units    = relationship('MediaInUnit', backref='media', cascade='all, delete')
     media_persons   = relationship('PersonsMedia', backref='media', cascade='all, delete')
-    media_type      = relationship('MediaType', backref='media', cascade='all, delete')
 
     @classmethod
     def tmpl_for_media(cls, user, session):

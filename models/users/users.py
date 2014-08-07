@@ -2,8 +2,8 @@
 import datetime
 
 from sqlalchemy.sql.expression import func
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event
-from sqlalchemy.orm import relationship, sessionmaker, relation, backref
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
@@ -26,6 +26,7 @@ class Users(Base):
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
     email         = Column(EmailType(), unique=True, nullable=False)
+    is_manager    = Column(Boolean, default=False)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
     bio           = Column(Text)
@@ -36,8 +37,8 @@ class Users(Base):
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
 
-    city          = relationship("Cities", backref='users')
-    users_chat    = relationship('UsersChat', backref='user')
+    city          = relationship("Cities", backref='users', cascade='all, delete')
+    users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
     social        = relationship('UsersSocial', backref='user', cascade='all, delete')
     users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
     users_values  = relationship('UsersValues', backref='user', cascade='all, delete')
@@ -48,10 +49,10 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
-
     user_comments = relationship('UsersComments', backref='users', cascade='all, delete')
     user_medias   = relationship('UsersMedia', backref='users', cascade='all, delete')
     user_units    = relationship('UsersMediaUnits', backref='users', cascade='all, delete')
+    user_media_owner = relationship('Media', backref='user_owner', cascade='all, delete')
     user_msgr_thread_= relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
     user_msgr_logs = relationship('MsgrLog', backref='users', cascade='all, delete')
 

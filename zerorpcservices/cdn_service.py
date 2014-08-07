@@ -3,13 +3,12 @@ import argparse
 import zerorpc
 
 import settings as conf
-from api import rest_routes
+from api import cdn_routes
 from base_service import BaseService
 
 
-class ZeroRpcRestApiService(BaseService):
+class ZeroRpcCdnApiService(BaseService):
     pass
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -22,7 +21,7 @@ if __name__ == '__main__':
     if namespace.testdb:
         conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
 
-    server = zerorpc.Server(ZeroRpcRestApiService(rest_routes))
+    server = zerorpc.Server(ZeroRpcCdnApiService(cdn_routes))
     server.bind("tcp://{host}:{port}".format(**vars(namespace)))
-    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcRestApiService.__name__, **vars(namespace)))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcCdnApiService.__name__, **vars(namespace)))
     server.run()
