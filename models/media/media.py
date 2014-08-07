@@ -31,6 +31,7 @@ class Media(Base):
     duration       = Column(Integer, nullable=True)
     owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
     type_          = Column(String, ForeignKey('media_type.type_'), nullable=False)
+    access_level   = Column(Integer, nullable=True, default=None)
 
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')

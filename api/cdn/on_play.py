@@ -18,14 +18,12 @@ def get(auth_user, session, query, **kwargs):
     if media is None:
         raise RequestErrorException
 
-    # TODO: media-access
-    access = None
+    access = media.access_level
 
     # TODO: media-unit
     if access is None:
         pass
 
-    # TODO: media-type
     if access is None:
         access = media.media_type.access
 
