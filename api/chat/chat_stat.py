@@ -9,10 +9,12 @@ from utils.validation import validate_int
 from api.serializers import mPersonSerializer as mP
 
 
-def get_chat_stat(id, auth_user, session, **kwargs):
-    chat = validate_int(id)
+def get_chat_stat(id, **kwargs):
+    chat_id = validate_int(id)
+    auth_user = kwargs.get('auth_user')
+    session = kwargs.get('session')
 
-    users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id==chat)
+    users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id==chat_id)
     on_users = SessionToken.filter_users_is_online(True, users)
     on_users_count = on_users.count()  # тип - long
     persons = session.query(Persons).join(Users).filter(Persons.user_id.in_([u.id for u in on_users.all()])).all()
@@ -22,7 +24,7 @@ def get_chat_stat(id, auth_user, session, **kwargs):
     if auth_user:
         uc = session.query(UsersChat).filter_by(user_id=auth_user.id).one()
         last_update = uc.last_update
-        new_msgs_count = ChatMessages.objects.filter(chat_id=chat, created__gt=last_update).count()
+        new_msgs_count = ChatMessages.objects.filter(chat_id=chat_id, created__gt=last_update).count()
         data.update({'new_msgs': new_msgs_count})
 
     return data
