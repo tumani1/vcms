@@ -7,7 +7,7 @@ def need_authorization(func):
 
     def wraper(*args, **kwargs):
         if not ('auth_user' in kwargs) or kwargs['auth_user'] is None:
-            raise NotAuthorizedException('Need authorize')
+            raise NotAuthorizedException
         return func(*args, **kwargs)
 
     return wraper

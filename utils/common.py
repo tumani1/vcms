@@ -77,3 +77,13 @@ def compare_to_dict(d1, d2):
 
 def detetime_to_unixtime(time_to_utc):
     return time.mktime(time_to_utc.utctimetuple())
+
+
+def get_or_create(session, model, create=None, filter=None):
+    instance = session.query(model).filter_by(**(filter or {})).first()
+    if instance:
+        return instance, False
+    else:
+        instance = model(**create)
+        session.add(instance)
+        return instance, True
