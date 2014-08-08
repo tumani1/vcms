@@ -1,10 +1,10 @@
 from models.mongo import ChatMessages
 from api.serializers import mChatMsgSerializer
-from utils.validation import validate_mLimit
+from utils.validation import validate_mLimit, validate_int
 
 
-def get_chat_stream(auth_user, session, **kwargs):
-    chat = kwargs['query']['chat']
+def get_chat_stream(id, auth_user, session, **kwargs):
+    chat = validate_int(id)
     limit_arg = kwargs['query']['limit']
 
     limit, top = validate_mLimit(limit_arg)

@@ -58,8 +58,7 @@ class ChatInfoTestCase(unittest.TestCase):
 
     def test_get_info_nonexistent(self):
         resp = self.req_sess.get(self.fullpath+'/chat/0/info')
-        resp = resp.json()
-        self.assertNotIn('description', resp)
+        self.assertEqual(resp.status_code, 400)
 
     def tearDown(self):
         self.session.close()
@@ -91,8 +90,7 @@ class ChatStatTestCase(unittest.TestCase):
 
     def test_get_stat_nonexistent(self):
         resp = self.req_sess.get(self.fullpath+'/chat/0/stat', headers={'token': self.gl_token})
-        resp = resp.json()
-        self.assertNotIn('users_cnt', resp)
+        self.assertEqual(resp.status_code, 404)
 
 
     def tearDown(self):

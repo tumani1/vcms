@@ -5,12 +5,12 @@ from models.tokens import SessionToken
 from models.persons import Persons
 from models.chats import UsersChat
 from models.mongo import ChatMessages
-
+from utils.validation import validate_int
 from api.serializers import mPersonSerializer as mP
 
 
-def get_chat_stat(auth_user, session, **kwargs):
-    chat = kwargs['query']['chat']
+def get_chat_stat(id, auth_user, session, **kwargs):
+    chat = validate_int(id)
 
     users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id==chat)
     on_users = SessionToken.filter_users_is_online(True, users)
