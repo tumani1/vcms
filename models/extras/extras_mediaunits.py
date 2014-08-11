@@ -5,10 +5,10 @@ from models.base import Base
 
 
 class ExtrasMediaUnits(Base):
-    __tablename__ = 'extras_mediaunits'
+    __tablename__ = 'extras_media_units'
 
 
-    id           = Column(Integer, primary_key=True)
-    extra_id     = Column(Integer, ForeignKey('extras.id'), nullable=False)
-    mediaunit_id = Column(String, ForeignKey('media_units.id'), nullable=False)
-    extra_type   = Column(String)
+    id            = Column(Integer, primary_key=True)
+    extras_id     = Column(Integer, ForeignKey('extras.id'), nullable=False)
+    media_unit_id = Column(Integer, ForeignKey('media_units.id'), nullable=False)
+    extra_type    = Column(String)

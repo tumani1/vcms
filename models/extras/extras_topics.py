@@ -9,6 +9,6 @@ class ExtrasTopics(Base):
 
 
     id         = Column(Integer, primary_key=True)
-    extra_id   = Column(Integer, ForeignKey('extras.id'), nullable=False)
+    extras_id  = Column(Integer, ForeignKey('extras.id'), nullable=False)
     topic_name = Column(String, ForeignKey('topics.name'), nullable=False)
     extra_type = Column(String)
