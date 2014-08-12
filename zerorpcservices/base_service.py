@@ -15,11 +15,12 @@ class BaseService(object):
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
+        return {'code': 300, 'location': 'http://ya.ru'}
 
         try:
             auth_user = authorize(IPC_pack, session=session)
             path_parse = IPC_pack['api_method'].split('/', 4)
-            mashed_key = (path_parse[1], path_parse[-1], IPC_pack['api_type'])
+            mashed_key = (path_parse[1], path_parse[-1], IPC_pack['api_type'].lower())
             api_method = self.mashed_routes[mashed_key]
             params = {
                 'session': session,
@@ -35,6 +36,31 @@ class BaseService(object):
             session.rollback()
             response = {'error': {'code': 404,
                                   'message': 'Bad Request'}}
+        finally:
+            session.close()
+
+        return response
+
+    @raven_report
+    def content_route(self, IPC_pack):
+        session = create_session(bind=self.connect, expire_on_commit=False)
+
+        try:
+            auth_user = authorize(IPC_pack, session=session)
+            path_parse = IPC_pack['api_method'].split('/', 4)
+            mashed_key = (path_parse[1], path_parse[2], IPC_pack['api_type'].lower())
+
+            api_method = self.mashed_routes[mashed_key]
+            response = {
+                'code': 200,
+                'location': api_method(*path_parse[3:], session=session),
+            }
+        except APIException as e:
+            session.rollback()
+            response = {'code': e.code, 'message': e.message}
+        except Exception as e:
+            session.rollback()
+            response = {'code': 404, 'message': e.message}
         finally:
             session.close()
 
