@@ -14,7 +14,7 @@ from tests.fixtures import create, create_topic, create_user_topic, create_cdn, 
 
 def setUpModule():
     engine = db_connect().connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
