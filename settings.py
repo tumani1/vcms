@@ -8,6 +8,7 @@ BASE_PATH = os.path.dirname(__file__)
 
 # Base path for configs folder
 CONFIG_PATH = os.path.join(BASE_PATH, 'configs')
+GEO_IP_DATABASE = os.path.join(BASE_PATH, 'GeoLite2-Country.mmdb')
 
 # Parse DB Config
 DATABASE = {}

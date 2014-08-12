@@ -1,7 +1,8 @@
 # coding: utf-8
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, and_, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean
+from sqlalchemy_utils import ChoiceType
 from sqlalchemy.orm import relationship, contains_eager
 
 from models.base import Base
@@ -11,6 +12,7 @@ from models.media.persons_media import PersonsMedia
 from models.persons.persons import Persons
 from models.media.media_units import MediaUnits
 from models.media.media_locations import MediaLocations
+from constants import APP_MEDIA_TYPE, APP_MEDIA_LIST
 
 
 class Media(Base):
@@ -30,12 +32,14 @@ class Media(Base):
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
     owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
-    type_          = Column(String, ForeignKey('media_type.type_'), nullable=False)
-    access_level   = Column(Integer, nullable=True, default=None)
+    type_          = Column(ChoiceType(APP_MEDIA_TYPE), nullable=False)
+    access         = Column(Integer, nullable=True, default=None)
+    access_type    = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
 
+    countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
-    medias_units    = relationship('MediaInUnit', backref='media', cascade='all, delete')
+    media_units     = relationship('MediaInUnit', backref='media', cascade='all, delete')
     media_persons   = relationship('PersonsMedia', backref='media', cascade='all, delete')
 
     @classmethod
@@ -116,3 +120,6 @@ class Media(Base):
     def get_users_media_by_media(cls, user,  session, id, **kwargs):
         users_media = session.query(UsersMedia).filter(and_(UsersMedia.user_id == user.id, UsersMedia.media_id == id)).first()
         return users_media
+
+    def __repr__(self):
+        return u"<Media(id={0}, title={1})>".format(self.id, self.title)

@@ -10,7 +10,7 @@ from scheme import SchemeModelView
 from topics import TopicsModelView, PersonsTopicsModelView, UsersTopicsModelView
 from cdn import CdnModelView
 from chats import ChatsModelView, UsersChatModelView
-from contents import CountryModelView, CitieModelView
+from locations import CountryModelView, CitieModelView
 from stream import StreamModelView
 
 admin = Admin(name='NextTV')

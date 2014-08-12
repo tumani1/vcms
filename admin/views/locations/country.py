@@ -1,7 +1,7 @@
 # coding: utf-8
 from admin.views.base import SqlAlModelView
 
-from models.contents import Countries
+from models.locations import Countries
 
 
 class CountryModelView(SqlAlModelView):

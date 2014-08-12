@@ -9,7 +9,7 @@ from models.users import Users, UsersRels, UsersExtras
 from models.users.constants import APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_SEND
 from models.extras import Extras
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
-from models.contents import Cities
+from models.locations import Cities
 from settings import NODE
 from utils.connection import db_connect, create_session
 from utils.common import detetime_to_unixtime
