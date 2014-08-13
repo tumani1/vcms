@@ -15,7 +15,6 @@ class BaseService(object):
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
-        return {'code': 300, 'location': 'http://ya.ru'}
 
         try:
             auth_user = authorize(IPC_pack, session=session)
