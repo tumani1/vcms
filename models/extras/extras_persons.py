@@ -14,5 +14,6 @@ class PersonsExtras(Base):
     extras_id  = Column(Integer, ForeignKey('extras.id'), nullable=False)
     extra_type = Column(String)
 
+
     def __repr__(self):
-        return u'<PersonsExtras(person={0}, extras={1}, type={2})>'.format(self.person_id, self.extras_id, self.extra_type)
+        return u'<PersonsExtras(person={0}, extras={1}, type={2})>'.format(self.person_id, self.extra_id, self.extra_type)
