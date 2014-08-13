@@ -2,7 +2,7 @@ import unittest
 import requests
 from models import Base
 from settings import NODE
-from tests.fixtures import create
+from tests.fixtures import create, create_content
 from utils.connection import db_connect, create_session
 
 
@@ -20,6 +20,7 @@ def setUpModule():
     Base.metadata.create_all(bind=engine)
 
     create(session)
+    create_content(session)
 
     engine.close()
 
@@ -38,7 +39,18 @@ class ContentInfoTestCase(unittest.TestCase):
 
     def test_get_info(self):
         resp = ContentInfoTestCase.req_sess.get(ContentInfoTestCase.fullpath + '/content/1/info')
-        self.assertEqual(resp.json(), 1)
+        result = {
+            u'text': u'test',
+            u'id': 1,
+            u'title': None
+        }
+        self.assertDictEqual(resp.json(), result)
+
+    @classmethod
+    def tearDownClass(cls):
+        ContentInfoTestCase.session.close()
+        ContentInfoTestCase.engine.close()
+        ContentInfoTestCase.req_sess.close()
 
 
 class ContentListTestCase(unittest.TestCase):
@@ -55,4 +67,16 @@ class ContentListTestCase(unittest.TestCase):
 
     def test_get_list(self):
         resp = ContentInfoTestCase.req_sess.get(ContentInfoTestCase.fullpath + '/content/list')
-        self.assertEqual(resp.json(), 1)
+        result = {
+            u'text': u'test',
+            u'id': 1,
+            u'title': None
+        }
+        self.assertDictEqual(resp.json()[0], result)
+
+    @classmethod
+    def tearDownClass(cls):
+        ContentInfoTestCase.session.close()
+        ContentInfoTestCase.engine.close()
+        ContentInfoTestCase.req_sess.close()
+
