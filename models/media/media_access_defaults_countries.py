@@ -8,9 +8,9 @@ from constants import APP_MEDIA_ACCESS_LIST
 class MediaAccessDefaultsCountries(Base):
     __tablename__ = 'media_access_defaults_countries'
 
-    id          = Column(Integer, primary_key=True)
-    media_type = Column(Unicode, ForeignKey('media_access_defaults.name'))
-    country_id  = Column(Integer, ForeignKey('countries.id'))
+    id            = Column(Integer, primary_key=True)
+    media_type_id = Column(Unicode, ForeignKey('media_access_defaults.name'))
+    country_id    = Column(Integer, ForeignKey('countries.id'))
 
     # Проверка доступа к видео типу по стране
     @classmethod

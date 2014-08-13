@@ -2,7 +2,7 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
-from views import admin
+from views import admin_view
 from settings import DATABASE
 
 import argparse
@@ -18,5 +18,5 @@ if __name__ == '__main__':
     db = MongoEngine()
     app.config['MONGODB_SETTINGS'] = DATABASE['mongodb']
     db.init_app(app)
-    admin.init_app(app)
+    admin_view.init_app(app)
     app.run(**vars(args))

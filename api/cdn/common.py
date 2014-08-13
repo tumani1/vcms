@@ -2,7 +2,7 @@
 from models.locations import Countries
 from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
     APP_ACCESS_LEVEL_OWNER_MASK, APP_ACCESS_LEVEL_GUEST_MASK,\
-    APP_ACCESS_LEVEL_AUTH_USER_MASK, APP_MEDIA_TYPE_DEFAULT
+    APP_ACCESS_LEVEL_AUTH_USER_MASK, APP_MEDIA_TYPE_DEFAULT, APP_MEDIA_ACCESS_LIST
 from models.media import MediaAccessCountries, MediaAccessDefaultsCountries,\
     MediaAccessDefaults
 from utils.constants import HTTP_OK, HTTP_FORBIDDEN
@@ -19,10 +19,10 @@ def user_access(user, media, session):
         pass
 
     if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(access_type=media.type_).first()
+        access = session.query(MediaAccessDefaults.access).filter_by(name=media.type_.code).first()
 
     if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(access_type=APP_MEDIA_TYPE_DEFAULT).first()
+        access = session.query(MediaAccessDefaults.access).filter_by(name=APP_MEDIA_TYPE_DEFAULT).first()
 
     status_code = HTTP_FORBIDDEN
 
@@ -43,7 +43,13 @@ def user_access(user, media, session):
 
 def geo_access(ip_address, media, session):
     reader = database.Reader(GEO_IP_DATABASE)
-    country_name = reader.country(ip_address)
+    try:
+        country_name = reader.country(ip_address)
+    except Exception as e:
+        if media.access_type == APP_MEDIA_ACCESS_LIST:
+            return HTTP_OK
+        else:
+            return HTTP_FORBIDDEN
     country = session.query(Countries).filte_by(name=country_name).first()
 
     status_code = MediaAccessCountries.access_media(media, country, session)
