@@ -2,7 +2,7 @@ import unittest
 import requests
 from models import Base
 from settings import NODE
-from tests.fixtures import create, create_content
+from tests.fixtures import create_content
 from utils.connection import db_connect, create_session
 
 
