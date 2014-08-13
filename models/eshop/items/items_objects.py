@@ -8,6 +8,6 @@ class ItemsObjects(Base):
     __tablename__ = 'items_extras'
     id = Column(Integer, primary_key=True)
     item_id = Column(ForeignKey('items.id'), nullable=False)
-    obj_type = Column(Text, nullable=False)
-    obj_id = Column(Integer, nullable=False)
-    obj_name = Column(Text, nullable=False)
+    obj_type = Column(Text, nullable=True)
+    obj_id = Column(Integer, nullable=True)
+    obj_name = Column(Text, nullable=True)
