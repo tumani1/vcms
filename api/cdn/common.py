@@ -12,7 +12,7 @@ from geoip2 import database
 
 
 def user_access(user, media, session):
-    access = media.access_level
+    access = media.access
 
     # TODO: media-unit
     if access is None:

@@ -20,7 +20,7 @@ def get(auth_user, session, query, **kwargs):
     status_code = access(auth_user, query['ip_address'], media, session)
 
     if status_code == HTTP_OK:
-        if media.media_type.type_.code == APP_MEDIA_TYPE_PICTURE:
+        if media.type_ == APP_MEDIA_TYPE_PICTURE:
             media.views_cnt += 1
 
             if auth_user:
