@@ -31,16 +31,18 @@ if args.create:
         TABLESPACE=pg_default LC_COLLATE='en_US.UTF-8' LC_CTYPE='en_US.UTF-8' CONNECTION LIMIT=-1;
     """
 
-    print u"Creating database: {0}".format(original_dbname)
+    print u"Создание базыданных: {0}".format(original_dbname).encode('utf-8')
+
     session.execute(sql.format(original_dbname, settings.DATABASE[args.database]['username']))
 
     session.connection().connection.set_isolation_level(1)
     settings.DATABASE[args.database]['database'] = original_dbname
 
 
-print u'Creating tables'
+print u'Создание таблиц...'.encode('utf-8')
 Base.metadata.create_all(bind=db_connect(type=args.database))
 
+print u'Миграции...'.encode('utf-8')
 # TODO: Здесь должен быть код для запуска миграций alembic
 
-print u'Finished setting up database'
+print u'Процесс окончен.'.encode('utf-8')
