@@ -230,3 +230,8 @@ def create_topic_values(session):
 
     session.add_all(list_tov)
     session.commit()
+
+def create_content(session):
+    content = Content(text='test')
+    session.add(content)
+    session.commit()
