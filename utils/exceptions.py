@@ -57,7 +57,9 @@ class Http404(APIException):
     message = 'Not Found'
 
 
-class DoesNotExist(APIException):
-    """Object does not exist"""
-    code = 404
-    message = 'Not Found'
+class InternalServerError(APIException):
+    """
+    500 http code
+    """
+    code = 500
+    message = 'Internal server error'

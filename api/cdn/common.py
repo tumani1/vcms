@@ -5,7 +5,8 @@ from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
     APP_ACCESS_LEVEL_AUTH_USER_MASK, APP_MEDIA_TYPE_DEFAULT, APP_MEDIA_ACCESS_LIST
 from models.media import MediaAccessCountries, MediaAccessDefaultsCountries,\
     MediaAccessDefaults
-from utils.constants import HTTP_OK, HTTP_FORBIDDEN
+from utils.exceptions import APIException
+from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 from settings import GEO_IP_DATABASE
 
 from geoip2 import database
@@ -19,12 +20,12 @@ def user_access(user, media, session):
         pass
 
     if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(name=media.type_.code).first()
+        access = session.query(MediaAccessDefaults.access).filter_by(name=media.type_.code).scalar()
 
     if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(name=APP_MEDIA_TYPE_DEFAULT).first()
+        access = session.query(MediaAccessDefaults.access).filter_by(name=APP_MEDIA_TYPE_DEFAULT).scalar()
 
-    status_code = HTTP_FORBIDDEN
+    status_code = HTTP_INTERNAL_SERVER_ERROR
 
     if access is None:
         status_code = HTTP_OK
@@ -43,14 +44,8 @@ def user_access(user, media, session):
 
 def geo_access(ip_address, media, session):
     reader = database.Reader(GEO_IP_DATABASE)
-    try:
-        country_name = reader.country(ip_address)
-    except Exception as e:
-        if media.access_type == APP_MEDIA_ACCESS_LIST:
-            return HTTP_OK
-        else:
-            return HTTP_FORBIDDEN
-    country = session.query(Countries).filte_by(name=country_name).first()
+    country_name = reader.country(ip_address).country.iso_code
+    country = session.query(Countries).filter_by(id=country_name).first()
 
     status_code = MediaAccessCountries.access_media(media, country, session)
     # TODO: media-units
@@ -58,7 +53,10 @@ def geo_access(ip_address, media, session):
         pass
 
     if status_code is None:
-        status_code = MediaAccessDefaultsCountries.access_media_type(media.type_, country, session)
+        status_code = MediaAccessDefaultsCountries.access_media_type(media.type_.code, country, session)
+
+    if status_code is None:
+        status_code = MediaAccessDefaultsCountries.access_media_type(APP_MEDIA_TYPE_DEFAULT, country, session)
 
     if status_code is None:
         status_code = HTTP_OK
@@ -67,8 +65,17 @@ def geo_access(ip_address, media, session):
 
 
 def access(user, ip_address, media, session):
-    status_code = user_access(user, media, session)
-    if status_code == HTTP_OK:
-        status_code = geo_access(ip_address, media, session)
+    try:
+        status_code = user_access(user, media, session)
+        if status_code == HTTP_OK:
+            status_code = geo_access(ip_address, media, session)
+    except APIException as e:
+        status_code = e.code
+    except Exception as e:
+        if media.access_type == APP_MEDIA_ACCESS_LIST:
+            status_code = HTTP_OK
+        else:
+            status_code = HTTP_INTERNAL_SERVER_ERROR
+
     return status_code
 

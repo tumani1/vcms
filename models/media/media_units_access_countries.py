@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, String
 
 from models.base import Base
 from constants import APP_MEDIA_ACCESS_LIST
@@ -10,7 +10,7 @@ class MediaUnitsAccessCountries(Base):
 
     id            = Column(Integer, primary_key=True)
     media_unit_id = Column(Integer, ForeignKey('media_units.id'))
-    country_id    = Column(Integer, ForeignKey('countries.id'))
+    country_id    = Column(String(2), ForeignKey('countries.id'))
 
     @classmethod
     def access_media_unit(cls, media_unit, country, session):
