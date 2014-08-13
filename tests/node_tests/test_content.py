@@ -19,7 +19,6 @@ def setUpModule():
     # Create table
     Base.metadata.create_all(bind=engine)
 
-    create(session)
     create_content(session)
 
     engine.close()
