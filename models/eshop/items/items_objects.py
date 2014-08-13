@@ -5,7 +5,9 @@ from models import Base
 
 
 class ItemsObjects(Base):
-    __tablename__ = 'items_extras'
+    __tablename__ = 'items_objects'
+
+
     id = Column(Integer, primary_key=True)
     item_id = Column(ForeignKey('items.id'), nullable=False)
     obj_type = Column(Text, nullable=True)
