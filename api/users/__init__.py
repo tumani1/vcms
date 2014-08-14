@@ -41,12 +41,13 @@ blacklist = {
     'delete': users_black_list_action.delete,
 }
 
-routing = { 'friendship': friendship,
-            'info': info,
-            'list': list,
-            'values': values,
-            'friends': friends,
-            'extras': extras,
-            'stream': stream,
-            'blacklist': blacklist,
-}
+routing = (
+    (r'^list/$', list),
+    (r'^(?P<id>\d+)/info$', info),
+    (r'^(?P<id>\d+)/friends$', friends),
+    (r'^(?P<id>\d+)/values$', values),
+    (r'^(?P<id>\d+)/extras$', extras),
+    (r'^(?P<id>\d+)/stream', stream),
+    (r'^(?P<id>\d+)/friendship', friendship),
+    (r'^(?P<id>\d+)/blacklist$', blacklist),
+)
