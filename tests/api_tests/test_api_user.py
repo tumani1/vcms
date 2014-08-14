@@ -59,7 +59,7 @@ class UsersTestCase(unittest.TestCase):
                 'city': u'Test',
                 'userpic': u'Test1',
                 'firstname': u'Test1',
-                'country': u'Test',
+                'country': u'Russian Federation',
                 'time_zone': u'UTC',
                 'lastname': u'Test1',
                 'id': 1
