@@ -29,10 +29,10 @@ class Extras(Base):
 
     search_description = Column(TSVectorType('description'), index=True)
 
-    cdn                = relationship('CDN', backref='extras')
-    users_extras       = relationship('UsersExtras', backref='extra', cascade='all, delete')
-    extras_topics      = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
-    person_extras      = relationship('PersonsExtras', backref='extra', cascade='all, delete')
+    cdn            = relationship('CDN', backref='extras')
+    users_extras   = relationship('UsersExtras', backref='extra', cascade='all, delete')
+    extras_topics  = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
+    person_extras  = relationship('PersonsExtras', backref='extra', cascade='all, delete')
 
 
     @classmethod
