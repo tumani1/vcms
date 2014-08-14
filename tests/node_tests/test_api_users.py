@@ -63,8 +63,8 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp.json()[0], {u'name': 1, u'value': 777})
 
     def test_users_list_get(self):
-        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Test'})
-        users = self.session.query(Users).join(Cities).filter(Cities.name == 'Test')
+        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Russian'})
+        users = self.session.query(Users).join(Cities).filter(Cities.id == 'RU')
         resp_dicts = resp.json()[0]
         self.assertEqual(len(resp_dicts), users.count())
         users_dict = []

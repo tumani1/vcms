@@ -93,14 +93,14 @@ class Users(Base):
         if query is None:
             query = cls.tmpl_for_users(session)
         text = "%{}%".format(city.lower().encode('utf-8'))
-        return query.join(Cities).filter(func.lower(Cities.name).like(text))
+        return query.join(Cities).filter(func.to_tsvector(Countries.name).match(text))
 
     @classmethod
     def filter_by_country(cls, country, session, query=None):
         if query is None:
             query = cls.tmpl_for_users(session)
         text = "%{}%".format(country.lower().encode('utf-8'))
-        return query.join(Cities).join(Countries).filter(func.lower(Countries.name).like(text))
+        return query.join(Cities).join(Countries).filter(func.to_tsvector(Countries.name).match(text))
 
     @classmethod
     def filter_users_person(cls, is_person, session, query=None):
