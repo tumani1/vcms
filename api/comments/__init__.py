@@ -4,22 +4,22 @@ from comments_like import put as put_like, delete as delete_like
 from comments_create import post as post_comment, delete as delete_comment
 from comments_reply import post as post_reply
 
-routing = {
-    'list': {
+routing = (
+    (r'^list$', {
         'get': get_list
-    },
-    'info': {
+    }),
+    (r'^(?P<comment_id>\d+)/info$', {
         'get': get_info
-    },
-    'like': {
+    }),
+    (r'^(?P<comment_id>\d+)/like$', {
         'put': put_like,
         'delete': delete_like
-    },
-    'create': {
+    }),
+    (r'^create$', {
         'post': post_comment,
         'delete': delete_comment
-    },
-    'reply': {
+    }),
+    (r'^(?P<parent_id>\d+)/reply$', {
         'post': post_reply,
-    },
-}
+    }),
+)

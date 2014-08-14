@@ -15,8 +15,8 @@ def echo_auth(auth_user, **kwargs):
     return {'message': "Hello,{}".format(auth_user.firstname)}
 
 routing = (
-    ('echo', {'put': put, 'get': get}),
-    ('echoauth', {'get': echo_auth}),
+    (r'^echo$', {'put': put, 'get': get}),
+    (r'^echoauth$', {'get': echo_auth}),
 )
 
 

@@ -7,29 +7,29 @@ from media_like import get as get_like, post as post_like, delete as delete_like
 from media_state import get as get_state, post as post_state, delete as delete_state
 
 routing = (
-    ('^list$', {
+    (r'^list$', {
         'get': get_list
     }),
-    ('^(?P<media_id>\d+)/info$', {
+    (r'^(?P<media_id>\d+)/info$', {
         'get': get_info
     }),
-    ('^(?P<media_id>\d+)/persons$', {
+    (r'^(?P<media_id>\d+)/persons$', {
         'get': get_persons
     }),
-    ('^(?P<media_id>\d+)/units$', {
+    (r'^(?P<media_id>\d+)/units$', {
         'get': get_units
     }),
-    ('^(?P<media_id>\d+)/playlist$', {
+    (r'^(?P<media_id>\d+)/playlist$', {
         'get': get_playlist,
         'post': post_playlist,
         'delete': delete_playlist,
     }),
-    ('^(?P<media_id>\d+)/like$', {
+    (r'^(?P<media_id>\d+)/like$', {
         'get': get_like,
         'post': post_like,
         'delete': delete_like,
     }),
-    ('^(?P<media_id>\d+)/state$', {
+    (r'^(?P<media_id>\d+)/state$', {
         'get': get_state,
         'post': post_state,
         'delete': delete_state,

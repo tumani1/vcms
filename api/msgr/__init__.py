@@ -5,23 +5,23 @@ from api.msgr.msgr_info import get as info_get
 from api.msgr.msgr_send import put as sent_put
 from api.msgr.msgr_stream import get as stream_get
 
-routing = {
-    'list': {
+routing = (
+    (r'^list$', {
         'get': list_get,
-    },
-    'stat': {
+    }),
+    (r'^stat$', {
         'get': stat_get,
-    },
-    'create': {
+    }),
+    (r'^create$', {
         'put': create_put,
-    },
-    'info': {
+    }),
+    (r'^(?P<id>\d+)/info$', {
         'get': info_get
-    },
-    'send': {
+    }),
+    (r'^(?P<id>\d+)/send$', {
         'put': sent_put
-    },
-    'stream': {
+    }),
+    (r'^(?P<id>\d+)/stream$', {
         'get': stream_get
-    }
-}
+    })
+)
