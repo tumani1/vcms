@@ -42,12 +42,12 @@ blacklist = {
 }
 
 routing = (
-    (r'^list/$', list),
-    (r'^(?P<id>\d+)/info$', info),
-    (r'^(?P<id>\d+)/friends$', friends),
-    (r'^(?P<id>\d+)/values$', values),
-    (r'^(?P<id>\d+)/extras$', extras),
-    (r'^(?P<id>\d+)/stream', stream),
-    (r'^(?P<id>\d+)/friendship', friendship),
-    (r'^(?P<id>\d+)/blacklist$', blacklist),
+    (r'^list$', list),
+    (r'^(?P<user_id>\d+)/info$', info),
+    (r'^(?P<user_id>\d+)/friends$', friends),
+    (r'^(?P<user_id>\d+)/values$', values),
+    (r'^(?P<user_id>\d+)/extras$', extras),
+    (r'^(?P<user_id>\d+)/stream', stream),
+    (r'^(?P<user_id>\d+)/friendship', friendship),
+    (r'^(?P<user_id>\d+)/blacklist$', blacklist),
 )

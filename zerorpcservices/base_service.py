@@ -5,7 +5,7 @@ import re
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
 from zerorpcservices.additional import raven_report
-from utils.exceptions import APIException
+from utils.exceptions import APIException, NoSuchMethodException
 
 
 class BaseService(object):
@@ -14,7 +14,6 @@ class BaseService(object):
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
         self.routes = routes
-
 
     def get_url(self, IPC_pack):
         path_parse = IPC_pack['api_method'].split('/', 2)
@@ -27,8 +26,7 @@ class BaseService(object):
             if match and method in item[1]:
                 return match.groupdict(), item[1][method]
 
-        raise
-
+        raise NoSuchMethodException
 
     @raven_report
     def route(self, IPC_pack):
