@@ -2,12 +2,13 @@
 from api.comments.comments_list import get as get_comments_list
 
 
-def get(type, name_or_id, auth_user, session,  **kwargs):
+def get(type, comment, auth_user, session,  **kwargs):
     id, name = None, None
     try:
-        id = int(name_or_id)
+        id = int(comment)
     except ValueError:
-        name = name_or_id
+        name = comment
+
     params = {
         'auth_user': auth_user,
         'session': session,

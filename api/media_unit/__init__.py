@@ -5,9 +5,10 @@ from mediaunits_next import get as get_next
 from mediaunits_media import get as get_media
 
 routing = (
-    (r'^list$', {'get': get_list}),
-    (r'^(?P<id>\d+)/info$', {'get': get_info}),
-    (r'^(?P<id>\d+)/prev$', {'get': get_prev}),
-    (r'^(?P<id>\d+)/next$', {'get': get_next}),
-    (r'^(?P<id>\d+)/media$', {'get': get_media}),
+    ('^list$', {'get': get_list}),
+    ('^(?P<id>\d+)/info$', {'get': get_info}),
+    ('^(?P<id>\d+)/prev$', {'get': get_prev}),
+    ('^(?P<id>\d+)/next$', {'get': get_next}),
+    ('^(?P<id>\d+)/media$', {'get': get_media}),
 )
+

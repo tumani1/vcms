@@ -20,7 +20,7 @@ like = {
 
 
 routing = {
-    'list': list,
-    'info': info,
-    'like': like,
+    '^list$': list,
+    '^info$': info,
+    '^like$': like,
 }

@@ -3,8 +3,8 @@ from api.serializers import mChatMsgSerializer
 from utils.validation import validate_mLimit, validate_int
 
 
-def get_chat_stream(id, **kwargs):
-    chat_id = validate_int(id, min_value=1)
+def get_chat_stream(chat_id, **kwargs):
+    chat_id = validate_int(chat_id, min_value=1)
     session = kwargs.get('session')
     limit = kwargs['query'].get('limit', '')
     limit, top = validate_mLimit(limit)

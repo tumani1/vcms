@@ -8,8 +8,8 @@ from utils.validation import validate_int
 from api.serializers import mPersonSerializer as mP
 
 
-def get_chat_stat(id, **kwargs):
-    chat_id = validate_int(id, min_value=1)
+def get_chat_stat(chat_id, **kwargs):
+    chat_id = validate_int(chat_id, min_value=1)
     auth_user = kwargs.get('auth_user')
     session = kwargs.get('session')
 

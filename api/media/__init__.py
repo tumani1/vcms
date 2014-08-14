@@ -6,33 +6,32 @@ from media_playlist import get as get_playlist, post as post_playlist, delete as
 from media_like import get as get_like, post as post_like, delete as delete_like
 from media_state import get as get_state, post as post_state, delete as delete_state
 
-routing = {
-    'list': {
+routing = (
+    ('^list$', {
         'get': get_list
-    },
-    'info': {
+    }),
+    ('^(?P<media_id>\d+)/info$', {
         'get': get_info
-    },
-    'persons': {
+    }),
+    ('^(?P<media_id>\d+)/persons$', {
         'get': get_persons
-    },
-    'units': {
+    }),
+    ('^(?P<media_id>\d+)/units$', {
         'get': get_units
-    },
-    'playlist': {
+    }),
+    ('^(?P<media_id>\d+)/playlist$', {
         'get': get_playlist,
         'post': post_playlist,
         'delete': delete_playlist,
-    },
-    'like': {
+    }),
+    ('^(?P<media_id>\d+)/like$', {
         'get': get_like,
         'post': post_like,
         'delete': delete_like,
-    },
-    'state': {
+    }),
+    ('^(?P<media_id>\d+)/state$', {
         'get': get_state,
         'post': post_state,
         'delete': delete_state,
-    },
-
-}
+    }),
+)

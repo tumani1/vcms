@@ -5,7 +5,7 @@ from user_friends import get as friend_get
 
 routing = (
     (r'^info$', {'get': get, 'put': put}),
-    ('values', {'put': val_put, 'get': val_get}),
-    ('password', {'put': password_put}),
-    ('friends', {'get': friend_get}),
+    ('values$', {'put': val_put, 'get': val_get}),
+    ('password$', {'put': password_put}),
+    ('friends$', {'get': friend_get}),
 )
