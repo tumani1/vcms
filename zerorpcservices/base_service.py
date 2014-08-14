@@ -11,9 +11,10 @@ from utils.exceptions import APIException, NoSuchMethodException
 class BaseService(object):
 
     def __init__(self, routes):
-        self.connect = db_connect()
-        self.mongodb_session = mongo_connect()
-        self.routes = routes
+         self.routes = routes
+         self.connect = db_connect()
+         self.mongodb_session = mongo_connect()
+
 
     def get_url(self, IPC_pack):
         path_parse = IPC_pack['api_method'].split('/', 2)
@@ -28,6 +29,7 @@ class BaseService(object):
 
         raise NoSuchMethodException
 
+
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
@@ -35,14 +37,12 @@ class BaseService(object):
         try:
             auth_user = authorize(IPC_pack, session=session)
 
-            params = {
+            params, api_method = self.get_url(IPC_pack)
+            params.update({
                 'session': session,
                 'auth_user': auth_user,
                 'query': IPC_pack['query_params']
-            }
-
-            url_params, api_method = self.get_url(IPC_pack)
-            params.update(url_params)
+            })
 
             response = api_method(**params)
 
