@@ -1,26 +1,36 @@
 # coding: utf-8
 from models.media import Media, UsersMedia
-from models.media.constants import APP_MEDIA_TYPE_PICTURE
+from models.media.constants import APP_MEDIA_TYPE_PICTURE, APP_MEDIA_ACCESS_LIST
 from utils.exceptions import RequestErrorException
 from utils.common import get_or_create
-from utils.constants import HTTP_OK
 from api.cdn.common import access
+from utils.exceptions import APIException
+from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 
 from datetime import datetime
 
 
-def get(auth_user, session, query, **kwargs):
+def get(auth_user, session, query, reader, **kwargs):
     if 'media_id' in query and 'ip_address' in query:
-        media = session.query(Media).get(query['media_id'])
+        media_id = query['media_id']
     else:
         raise RequestErrorException
+    media = session.query(Media).get(media_id)
     if media is None:
         raise RequestErrorException
 
-    status_code = access(auth_user, query['ip_address'], media, session)
+    try:
+        status_code = access(auth_user, query['ip_address'], media, session, reader)
+    except APIException as e:
+        status_code = e.code
+    except Exception as e:
+        if media.access_type.code == APP_MEDIA_ACCESS_LIST:
+            status_code = HTTP_OK
+        else:
+            status_code = HTTP_INTERNAL_SERVER_ERROR
 
     if status_code == HTTP_OK:
-        if media.type_ == APP_MEDIA_TYPE_PICTURE:
+        if media.type_.code == APP_MEDIA_TYPE_PICTURE:
             media.views_cnt += 1
 
             if auth_user:

@@ -14,10 +14,12 @@ class MediaAccessDefaultsCountries(Base):
     country_id    = Column(String(2), ForeignKey('countries.id'))
 
     @classmethod
-    def access_media_type(cls, media_type, country, session):
-        media_type = session.query(MediaAccessDefaults).filter_by(name=media_type).first()
+    def access_media_type(cls, media_type_code, country, session):
+        media_type = session.query(MediaAccessDefaults).filter_by(name=media_type_code).first()
+        if media_type.access_type is None:
+            return None
         access = HTTP_FORBIDDEN
-        if country.id in session.query(cls.country_id).filter_by(media_type_id=media_type).all():
+        if country.id in session.query(cls.country_id).filter_by(media_type_id=media_type_code).all():
             access = HTTP_OK
         return access
 

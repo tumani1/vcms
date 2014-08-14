@@ -11,6 +11,7 @@ class BaseService(object):
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
+        self.default_params = {}
 
     @raven_report
     def route(self, IPC_pack):
@@ -21,12 +22,14 @@ class BaseService(object):
             path_parse = IPC_pack['api_method'].split('/', 4)
             mashed_key = (path_parse[1], path_parse[-1], IPC_pack['api_type'].lower())
             api_method = self.mashed_routes[mashed_key]
+            api_params = self.default_params.copy()
             params = {
                 'session': session,
                 'auth_user': auth_user,
                 'query': IPC_pack['query_params']
             }
-            response = api_method(*path_parse[2:-1], **params)
+            api_params.update(params)
+            response = api_method(*path_parse[2:-1], **api_params)
         except APIException as e:
             session.rollback()
             response = {'error': {'code': e.code,

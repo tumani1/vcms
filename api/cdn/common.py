@@ -5,11 +5,8 @@ from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
     APP_ACCESS_LEVEL_AUTH_USER_MASK, APP_MEDIA_TYPE_DEFAULT, APP_MEDIA_ACCESS_LIST
 from models.media import MediaAccessCountries, MediaAccessDefaultsCountries,\
     MediaAccessDefaults
-from utils.exceptions import APIException
-from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
-from settings import GEO_IP_DATABASE
 
-from geoip2 import database
+from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 
 
 def user_access(user, media, session):
@@ -42,9 +39,9 @@ def user_access(user, media, session):
     return status_code
 
 
-def geo_access(ip_address, media, session):
-    reader = database.Reader(GEO_IP_DATABASE)
+def geo_access(ip_address, media, session, reader):
     country_name = reader.country(ip_address).country.iso_code
+    reader.close()
     country = session.query(Countries).filter_by(id=country_name).first()
 
     status_code = MediaAccessCountries.access_media(media, country, session)
@@ -64,18 +61,10 @@ def geo_access(ip_address, media, session):
     return status_code
 
 
-def access(user, ip_address, media, session):
-    try:
-        status_code = user_access(user, media, session)
-        if status_code == HTTP_OK:
-            status_code = geo_access(ip_address, media, session)
-    except APIException as e:
-        status_code = e.code
-    except Exception as e:
-        if media.access_type == APP_MEDIA_ACCESS_LIST:
-            status_code = HTTP_OK
-        else:
-            status_code = HTTP_INTERNAL_SERVER_ERROR
+def access(user, ip_address, media, session, reader):
+    status_code = user_access(user, media, session)
+    if status_code == HTTP_OK:
+        status_code = geo_access(ip_address, media, session, reader)
 
     return status_code
 
