@@ -42,7 +42,12 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
                         }
                 }
                 backend_client.invoke("route", IPC_pack, function(error, res, more) {
-                    if (!res) {
+                    if (error) {
+                        console.log(error);
+                        response.writeHead(404, {"Content-Type": "text/plain"});
+                        response.end('Error');
+                    }
+                    if (!res && res != []) {
                         response.writeHead(404, {"Content-Type": "text/plain"});
                         response.end('Undefined response');
                     }
@@ -65,7 +70,12 @@ function run_server(host, port, bck_host, bck_port, heartbeat) {  // якобы 
         else {
             IPC_pack = form_ipc_pack(pathname, headers, http_method, query_params);
             backend_client.invoke("route", IPC_pack, function(error, res, more) {
-                if (!res) {
+                if (error) {
+                    console.log(error);
+                    response.writeHead(404, {"Content-Type": "text/plain"});
+                    response.end('Error');
+                }
+                if (!res && res != []) {
                     response.writeHead(404, {"Content-Type": "text/plain"});
                     response.end('Undefined response');
                 }
