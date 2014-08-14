@@ -4,12 +4,14 @@ from utils.validation import validate_mLimit, validate_int
 
 
 def get_chat_stream(id, **kwargs):
-    chat_id = validate_int(id)
+    chat_id = validate_int(id, min_value=1)
     session = kwargs.get('session')
-    limit = kwargs['query']['limit']
-
+    limit = kwargs['query'].get('limit', '')
     limit, top = validate_mLimit(limit)
-    cms = ChatMessages.objects.filter(chat_id=chat_id).skip(top)
+    cms = ChatMessages.objects.filter(chat_id=chat_id)
+
+    if top:
+        cms = cms.skip(top)
 
     if limit:
         cms = cms.limit(limit)

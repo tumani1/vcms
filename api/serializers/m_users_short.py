@@ -16,8 +16,8 @@ class mUserShort(DefaultSerializer):
         'is_online': '',
     }
 
-    def __init__(self, instance, user=None, **kwargs):
-        super(mUserShort, self).__init__(instance=instance, user=user, **kwargs)
+    def __init__(self, user=None, **kwargs):
+        super(mUserShort, self).__init__(user=user, **kwargs)
         if not user is None:
             self.__read_fields['relation'] = ''
 
