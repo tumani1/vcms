@@ -27,7 +27,7 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
                     'token': 'echo_token',
                     'query_params': {'message': 'hello'}}
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(IPC_pack['query_params'], resp)
+        self.assertEqual(IPC_pack['query_params'], resp['query'])
 
 
     def tearDown(self):

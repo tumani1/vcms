@@ -130,9 +130,7 @@ def create_person_extras(session):
 
 
 def create(session):
-    country = Countries(name='Test', name_orig="Test")
-    session.add(country)
-    session.commit()
+    country = session.query(Countries).get('RU')
 
     city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
     session.add(city)

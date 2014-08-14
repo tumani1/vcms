@@ -13,7 +13,6 @@ class BaseService(object):
         self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
         self.default_params = {}
 
-
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
@@ -43,7 +42,6 @@ class BaseService(object):
             session.close()
 
         return response
-
 
     @raven_report
     def content_route(self, IPC_pack):

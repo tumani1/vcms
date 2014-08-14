@@ -3,7 +3,7 @@ from models import Countries, Cities, Users, GlobalToken, SessionToken
 
 
 def create(session):
-    country = Countries(name='Test', name_orig="Test")
+    country = session.query(Countries).get('RU')
     session.add(country)
     session.commit()
 
