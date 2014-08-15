@@ -84,7 +84,7 @@ class MediaTestCase(unittest.TestCase):
                     u'firstname': u'test',
                     u'lastname': u'testov',
                     u'relation': {},
-                    u'user': {u'lastvisit': u'', u'city': u'Test', u'firstname': u'Test1', u'gender': u'n', u'is_online': False, u'regdate': 1325376000, u'lastname': u'Test1', u'country': u'Test', u'id': 1},
+                    u'user': {u'lastvisit': u'', u'city': u'Test', u'firstname': u'Test1', u'gender': u'n', u'is_online': False, u'regdate': 1325376000, u'lastname': u'Test1', u'country': u'Russian Federation', u'id': 1},
                     u'role': u'actor',
                     u'type': u'',
                     u'id': 1

@@ -156,8 +156,8 @@ class UsersTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath + '/users/%s/blacklist' % (id), headers={'token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
-        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
-        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+        self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_SEND)
+        self.assertEqual(partner_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
 
     def test_users_blacklist_delete(self):
         data = {}
@@ -165,5 +165,5 @@ class UsersTestCase(unittest.TestCase):
         resp = self.req_sess.delete(self.fullpath + '/users/%s/blacklist' % (id), headers={'token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
-        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
-        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
+        self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+        self.assertEqual(partner_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_SEND)
