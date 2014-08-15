@@ -11,9 +11,9 @@ from utils.exceptions import APIException, NoSuchMethodException
 class BaseService(object):
 
     def __init__(self, routes):
-         self.routes = routes
-         self.connect = db_connect()
-         self.mongodb_session = mongo_connect()
+        self.routes = routes
+        self.connect = db_connect()
+        self.mongodb_session = mongo_connect()
 
 
     def get_url(self, IPC_pack):
