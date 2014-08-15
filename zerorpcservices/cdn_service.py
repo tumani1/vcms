@@ -10,8 +10,8 @@ from base_service import BaseService
 
 class ZeroRpcCdnApiService(BaseService):
 
-    def __init__(self, **kwargs):
-        super(ZeroRpcCdnApiService, self).__init__(**kwargs)
+    def __init__(self, routes):
+        super(ZeroRpcCdnApiService, self).__init__(routes)
         self.reader_geoip = database.Reader(conf.GEO_IP_DATABASE)
         self.default_params = {'reader': self.reader_geoip, }
 

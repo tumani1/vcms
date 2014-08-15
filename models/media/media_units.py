@@ -12,8 +12,8 @@ class MediaUnits(Base):
 
     id            = Column(Integer, primary_key=True)
     topic_name    = Column(String, ForeignKey('topics.name'), nullable=False)
-    title         = Column(String, nullable=True)
-    title_orig    = Column(Integer, nullable=True)
+    title         = Column(String, nullable=False)
+    title_orig    = Column(String, nullable=True)
     description   = Column(Text, nullable=True)
     previous_unit = Column(Integer, nullable=True)
     next_unit     = Column(Integer, nullable=True)

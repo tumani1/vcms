@@ -18,7 +18,7 @@ class Topics(Base):
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
     title_orig  = Column(String)
-    description = Column(String, nullable=False)
+    description = Column(String, nullable=True)
     releasedate = Column(DateTime, nullable=False)
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)

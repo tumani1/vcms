@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 
 from models.base import Base
-from constants import APP_MEDIA_BLACK_LIST
+from constants import APP_MEDIA_ACCESS_LIST
 from utils.constants import HTTP_OK, HTTP_FORBIDDEN
 
 
@@ -19,7 +19,8 @@ class MediaAccessCountries(Base):
         if media.access_type is None:
             return None
         access = HTTP_FORBIDDEN
-        if country.id in session.query(cls.country_id).filter_by(media_id=media.id).all():
+        countries = session.query(cls.country_id).filter_by(media_id=media.id).all()
+        if country.id in countries and media.access_type.code == APP_MEDIA_ACCESS_LIST:
             access = HTTP_OK
 
         return access
