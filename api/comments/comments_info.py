@@ -5,8 +5,8 @@ from models.comments.comments import Comments
 from utils.validation import validate_int
 
 
-def get(id, auth_user, session, **kwargs):
-    comment_id = validate_int(id)
+def get(comment_id, auth_user, session, **kwargs):
+    comment_id = validate_int(comment_id)
     instance = Comments.get_comment_by_id(auth_user, session, comment_id)
     if not instance is None:
         params = {
@@ -15,4 +15,5 @@ def get(id, auth_user, session, **kwargs):
             'session': session,
         }
         data = mCommentSerializer(**params).data
+
     return data

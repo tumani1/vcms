@@ -8,30 +8,20 @@ from persons_values import *
 from persons_list import *
 from persons_media import *
 
-routing = {
-    'list': {
-        'get': get_person_list,
-    },
-    'info': {
-        'get': get_person_info,
-    },
-    'extras': {
-        'get': get_person_extars,
-    },
-    'media': {
-       'get': get_person_media,
-    },
-    'values': {
-        'get': get_person_values,
-    },
-    'subscribe': {
+routing = (
+    (r'^list$', {'get': get_person_list}),
+    (r'^(?P<person_id>\d+)/info$', {'get': get_person_info}),
+    (r'^(?P<person_id>\d+)/extras$', {'get': get_person_extars}),
+    (r'^(?P<person_id>\d+)/media$', {'get': get_person_media}),
+    (r'^(?P<person_id>\d+)/values$', {'get': get_person_values}),
+    (r'^(?P<person_id>\d+)/subscribe$', {
         'get': get_subscribe,
         'post': post_subscribe,
         'delete': delete_subscribe,
-    },
-    'like': {
+    }),
+    (r'^(?P<person_id>\d+)/like$', {
         'get': get_like,
         'post': post_like,
         'delete': delete_like,
-    },
-}
+    }),
+)

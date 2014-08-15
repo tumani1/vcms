@@ -45,8 +45,8 @@ cdn_routes = {
 def authorize(IPC_pack, session=None):
     if IPC_pack['api_method'].startswith('auth'):
         IPC_pack['query_params'].update({
-            'x_token': IPC_pack.get('x_token'),
-            'token'  : IPC_pack.get('token')
+            'token'  : IPC_pack.get('token'),
+            'x_token': IPC_pack.get('x_token')
         })
 
     user_id = None
@@ -54,6 +54,7 @@ def authorize(IPC_pack, session=None):
         user_id = SessionToken.get_user_id_by_token(token_string=IPC_pack['x_token'], session=session)
     elif IPC_pack.get('token'):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
+
     user = None
     if user_id:
         user = session.query(Users).get(user_id)

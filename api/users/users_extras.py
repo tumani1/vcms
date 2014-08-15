@@ -8,27 +8,27 @@ from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit
 
 
-def get(user_id, session, **kwargs):
+def get(user_id, session, query, **kwargs):
     user = session.query(Users).get(user_id)
     if not user:
         raise RequestErrorException
     query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
 
-    if 'id' in kwargs['query']:
-        if isinstance(kwargs['query']['id'], int):
-            id_ = [kwargs['query']['id']]
+    if 'id' in query:
+        if isinstance(query['id'], int):
+            id_ = [query['id']]
         else:
-            id_ = kwargs['query']['id']
+            id_ = query['id']
         query = query.filter(Extras.id.in_(id_))
 
-    if 'type' in kwargs['query']:
-        query = query.filter(Extras.type == kwargs['query']['type'])
+    if 'type' in query:
+        query = query.filter(Extras.type == query['type'])
 
-    if 'text' in kwargs['query']:
-        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['query']['text']))
+    if 'text' in query:
+        query = query.filter(func.to_tsvector(Extras.description).match(query['text']))
 
-    if 'limit' in kwargs['query']:
-        limit = validate_mLimit(kwargs['query']['limit'])
+    if 'limit' in query:
+        limit = validate_mLimit(query['limit'])
          # Set limit and offset filter
         if not limit is None:
             # Set Limit

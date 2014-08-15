@@ -9,13 +9,13 @@ from utils.common import detetime_to_unixtime as convert_date
 from utils.validation import validate_int
 
 
-def get(id, auth_user, session, **kwargs):
+def get(media_id, auth_user, session, **kwargs):
     data = {
         'watched': 0,
         'pos': None
     }
 
-    users_media = Media.get_users_media_by_media(auth_user, session, id)
+    users_media = Media.get_users_media_by_media(auth_user, session, media_id)
     if users_media:
         watched = convert_date(users_media.watched) if users_media.watched else 0
         data.update(watched=watched)
@@ -25,12 +25,12 @@ def get(id, auth_user, session, **kwargs):
     return data
 
 
-def post(id, auth_user, session, **kwargs):
+def post(media_id, auth_user, session, **kwargs):
     query = kwargs['query']
     date = datetime.datetime.utcnow()
     params = {
         'user_id': auth_user.id,
-        'media_id': id,
+        'media_id': media_id,
     }
     if 'watched' in query and query['watched']:
         params.update(watched=date)
@@ -39,7 +39,7 @@ def post(id, auth_user, session, **kwargs):
         pos = validate_int(query['pos'], min_value=0)
         params.update(play_pos=pos)
 
-    users_media = Media.get_users_media_by_media(auth_user, session, id)
+    users_media = Media.get_users_media_by_media(auth_user, session, media_id)
 
     if users_media is None:
         users_media = UsersMedia(**params)
@@ -55,8 +55,8 @@ def post(id, auth_user, session, **kwargs):
         session.commit()
 
 
-def delete(id, auth_user, session, **kwargs):
-    users_media = Media.get_users_media_by_media(auth_user, session, id)
+def delete(media_id, auth_user, session, **kwargs):
+    users_media = Media.get_users_media_by_media(auth_user, session, media_id)
     if not users_media is None:
         users_media.watched = None
         users_media.play_pos = None

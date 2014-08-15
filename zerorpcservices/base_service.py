@@ -1,16 +1,34 @@
 # coding: utf-8
+
+import re
+
 from api import authorize
 from utils.connection import create_session, db_connect, mongo_connect
 from zerorpcservices.additional import raven_report
-from utils.exceptions import APIException
+from utils.exceptions import APIException, NoSuchMethodException
 
 
 class BaseService(object):
 
     def __init__(self, routes):
-        self.connect = db_connect()
-        self.mongodb_session = mongo_connect()
-        self.mashed_routes = dict(((g, a, h), routes[g][a][h]) for g in routes for a in routes[g] for h in routes[g][a])
+         self.routes = routes
+         self.connect = db_connect()
+         self.mongodb_session = mongo_connect()
+
+
+    def get_url(self, IPC_pack):
+        path_parse = IPC_pack['api_method'].split('/', 2)
+        group = self.routes[path_parse[1]]
+
+        for item in group:
+            method = IPC_pack['api_type'].lower()
+            match = re.match(item[0], u'/'.join(path_parse[2:]))
+
+            if match and method in item[1]:
+                return match.groupdict(), item[1][method]
+
+        raise NoSuchMethodException
+
 
     @raven_report
     def route(self, IPC_pack):
@@ -18,15 +36,16 @@ class BaseService(object):
 
         try:
             auth_user = authorize(IPC_pack, session=session)
-            path_parse = IPC_pack['api_method'].split('/', 4)
-            mashed_key = (path_parse[1], path_parse[-1], IPC_pack['api_type'])
-            api_method = self.mashed_routes[mashed_key]
-            params = {
+
+            params, api_method = self.get_url(IPC_pack)
+            params.update({
                 'session': session,
                 'auth_user': auth_user,
                 'query': IPC_pack['query_params']
-            }
-            response = api_method(*path_parse[2:-1], **params)
+            })
+
+            response = api_method(**params)
+
         except APIException as e:
             session.rollback()
             response = {'error': {'code': e.code,

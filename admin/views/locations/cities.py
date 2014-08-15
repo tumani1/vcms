@@ -2,7 +2,7 @@
 from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
-from models.contents import Cities
+from models.locations import Cities
 from pytz import common_timezones
 
 

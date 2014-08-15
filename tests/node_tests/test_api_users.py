@@ -9,7 +9,7 @@ from models.users import Users, UsersRels, UsersExtras
 from models.users.constants import APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_SEND
 from models.extras import Extras
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
-from models.contents import Cities
+from models.locations import Cities
 from settings import NODE
 from utils.connection import db_connect, create_session
 from utils.common import detetime_to_unixtime
@@ -63,8 +63,8 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp.json()[0], {u'name': 1, u'value': 777})
 
     def test_users_list_get(self):
-        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Test'})
-        users = self.session.query(Users).join(Cities).filter(Cities.name == 'Test')
+        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Russian'})
+        users = self.session.query(Users).join(Cities).filter(Cities.id == 'RU')
         resp_dicts = resp.json()[0]
         self.assertEqual(len(resp_dicts), users.count())
         users_dict = []

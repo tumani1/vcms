@@ -16,7 +16,7 @@ from m_localion import mLocationSerializer
 from m_content import mContentSerializer
 from m_comment import mCommentSerializer
 from m_chat import mChatSerializer
-from api.serializers.m_chat_msg import mChatMsgSerializer
+from m_chat_msg import mChatMsgSerializer
 
 
 __all__ = [
