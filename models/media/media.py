@@ -29,7 +29,7 @@ class Media(Base):
     description    = Column(Text, nullable=True)
     created        = Column(DateTime, default=datetime.datetime.utcnow)
     views_cnt      = Column(Integer, default=0)
-    release_date   = Column(DateTime, nullable=False)
+    release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
     owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
