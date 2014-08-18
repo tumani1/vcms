@@ -11,9 +11,10 @@ from utils.exceptions import APIException, NoSuchMethodException
 class BaseService(object):
 
     def __init__(self, routes):
-         self.routes = routes
-         self.connect = db_connect()
-         self.mongodb_session = mongo_connect()
+        self.routes = routes
+        self.connect = db_connect()
+        self.mongodb_session = mongo_connect()
+        self.default_params = {}
 
 
     def get_url(self, IPC_pack):
@@ -43,8 +44,9 @@ class BaseService(object):
                 'auth_user': auth_user,
                 'query': IPC_pack['query_params']
             })
-
-            response = api_method(**params)
+            api_params = self.default_params.copy()
+            api_params.update(params)
+            response = api_method(**api_params)
 
         except APIException as e:
             session.rollback()
