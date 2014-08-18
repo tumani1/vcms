@@ -19,7 +19,7 @@ class MediaUnitsAccessCountries(Base):
         for media_unit in media_units:
             if media_unit.access_type is None:
                 continue
-            countries = session.query(cls.country_id).filter_by(media_unit_id=media_unit.id).all()
+            countries = [i.country_id for i in session.query(cls.country_id).filter_by(media_unit_id=media_unit.id).all()]
             if country.id in countries:
                 if media_unit.access_type.code == APP_MEDIA_ACCESS_LIST:
                     access = HTTP_OK

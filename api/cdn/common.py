@@ -12,7 +12,6 @@ from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 def user_access(user, media, session):
     access = media.access
 
-    # TODO: media-unit
     if access is None:
         pass
 
@@ -41,11 +40,10 @@ def user_access(user, media, session):
 
 def geo_access(ip_address, media, session, reader):
     country_name = reader.country(ip_address).country.iso_code
-    reader.close()
     country = session.query(Countries).filter_by(id=country_name).first()
 
     status_code = MediaAccessCountries.access_media(media, country, session)
-    # TODO: media-units
+
     if status_code is None:
         media_units = session.query(MediaUnits).join(MediaInUnit).join(Media).filter(Media.id == media.id).all()
         status_code = MediaUnitsAccessCountries.access_media_unit(media_units, country, session)

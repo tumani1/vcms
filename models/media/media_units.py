@@ -1,9 +1,11 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
-    and_, SMALLINT, Boolean
+    and_, SMALLINT
 from sqlalchemy.orm import relationship, contains_eager
+from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
+from models.media.constants import APP_MEDIA_LIST
 from models.media.users_media_units import UsersMediaUnits
 
 
@@ -21,7 +23,7 @@ class MediaUnits(Base):
     end_date      = Column(DateTime, nullable=True)
     batch         = Column(String, nullable=True)
     access        = Column(SMALLINT, default=None, nullable=True)
-    access_type   = Column(Boolean, default=None, nullable=True)
+    access_type   = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
 
     countries_list   = relationship('MediaUnitsAccessCountries', backref='media_units', cascade='all, delete')
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')

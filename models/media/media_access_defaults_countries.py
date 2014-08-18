@@ -20,7 +20,7 @@ class MediaAccessDefaultsCountries(Base):
         if media_type.access_type is None:
             return None
         access = HTTP_FORBIDDEN
-        countries = session.query(cls.country_id).filter_by(media_type_id=media_type_code).all()
+        countries = [i.country_id for i in session.query(cls.country_id).filter_by(media_type_id=media_type_code).all()]
         if country.id in countries and media_type.access_type.code == APP_MEDIA_ACCESS_LIST:
             access = HTTP_OK
         return access
