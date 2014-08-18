@@ -1,6 +1,9 @@
 # coding: utf-8
 import time
-
+from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
+    APP_ACCESS_LEVEL_OWNER_MASK, APP_ACCESS_LEVEL_GUEST_MASK,\
+    APP_ACCESS_LEVEL_AUTH_USER_MASK
+from utils.constants import HTTP_OK, HTTP_FORBIDDEN
 
 # Возвращает массив состоящий из значений всех полей key
 # в двумерном массиве или в массиве объектов list
@@ -87,3 +90,22 @@ def get_or_create(session, model, create=None, filter=None):
         instance = model(**create)
         session.add(instance)
         return instance, True
+
+
+def user_access_media(access, owner, is_auth, is_manager):
+    status_code = None
+    if access:
+        if is_auth:
+            if owner and (access & APP_ACCESS_LEVEL_OWNER_MASK) != 0:
+                status_code = HTTP_OK
+            elif is_manager and (access & APP_ACCESS_LEVEL_MANAGER_MASK) != 0:
+                status_code = HTTP_OK
+            elif (access & APP_ACCESS_LEVEL_AUTH_USER_MASK) != 0:
+                status_code = HTTP_OK
+            else:
+                status_code = HTTP_FORBIDDEN
+        elif (access & APP_ACCESS_LEVEL_GUEST_MASK) != 0:
+            status_code = HTTP_OK
+        else:
+            status_code = HTTP_FORBIDDEN
+    return status_code

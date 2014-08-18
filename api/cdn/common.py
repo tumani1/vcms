@@ -1,38 +1,29 @@
 # coding: utf-8
 from models.locations import Countries
-from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
-    APP_ACCESS_LEVEL_OWNER_MASK, APP_ACCESS_LEVEL_GUEST_MASK,\
-    APP_ACCESS_LEVEL_AUTH_USER_MASK, APP_MEDIA_TYPE_DEFAULT
+from models.media.constants import APP_MEDIA_TYPE_DEFAULT
 from models.media import MediaAccessCountries, MediaAccessDefaultsCountries,\
     MediaAccessDefaults, MediaUnitsAccessCountries, MediaUnits, MediaInUnit, Media
 
-from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
+from utils.constants import HTTP_OK
 
 
 def user_access(user, media, session):
-    access = media.access
+    owner = user == media.users_media
+    is_auth = True if user else False
+    is_manager = True if user and user.is_manager else False
 
-    if access is None:
-        pass
+    status_code = Media.access_media(media, owner, is_auth, is_manager)
+    if status_code is None:
+        media_units = session.query(MediaUnits).join(MediaInUnit).join(Media).filter(Media.id == media.id).all()
+        status_code = MediaUnits.access_media_units(media_units, owner, is_auth, is_manager)
 
-    if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(name=media.type_.code).scalar()
+    if status_code is None:
+        status_code = MediaAccessDefaults.access_media_type(media.type_, owner, is_auth, is_manager, session)
 
-    if access is None:
-        access = session.query(MediaAccessDefaults.access).filter_by(name=APP_MEDIA_TYPE_DEFAULT).scalar()
+    if status_code is None:
+        status_code = MediaAccessDefaults.access_media_type(APP_MEDIA_TYPE_DEFAULT, owner, is_auth, is_manager, session)
 
-    status_code = HTTP_INTERNAL_SERVER_ERROR
-
-    if access is None:
-        status_code = HTTP_OK
-    elif user:
-        if user == media.user_owner and (access & APP_ACCESS_LEVEL_OWNER_MASK) != 0:
-            status_code = HTTP_OK
-        elif user.is_manager and (access & APP_ACCESS_LEVEL_MANAGER_MASK) != 0:
-            status_code = HTTP_OK
-        elif (access & APP_ACCESS_LEVEL_AUTH_USER_MASK) != 0:
-            status_code = HTTP_OK
-    elif (access & APP_ACCESS_LEVEL_GUEST_MASK) != 0:
+    if status_code is None:
         status_code = HTTP_OK
 
     return status_code
