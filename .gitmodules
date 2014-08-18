@@ -1,0 +1,3 @@
+[submodule "nodeservices"]
+	path = nodeservices
+	url = git@git.aaysm.com:developers/frontend.git
