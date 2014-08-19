@@ -116,6 +116,7 @@ def user_access_media(access, owner, is_auth, is_manager):
             status_code = HTTP_FORBIDDEN
     return status_code
 
+
 def get_api_by_url(routes, IPC_pack):
         path_parse = IPC_pack['api_method'].split('/', 2)
 
