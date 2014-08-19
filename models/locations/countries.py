@@ -1,7 +1,10 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Text, event
+from sqlalchemy import Column, String, Text, event
 from sqlalchemy.orm import relationship
 from pycountry import countries
+import logging
+logger = logging.getLogger('pycountry.db')
+logger.setLevel(logging.INFO)
 
 from models.base import Base
 
