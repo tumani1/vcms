@@ -1,7 +1,7 @@
-local conf = require "config";
+local conf = require "common.config";
 
 local width, height = ngx.var.width, ngx.var.height
-local access, prefix =  tonumber(ngx.var.access, 0), ngx.var.prefix
+local access, prefix =  ngx.var.access, ngx.var.prefix
 
 if not (width and height) or width == "" or height == "" then
     return 1;
