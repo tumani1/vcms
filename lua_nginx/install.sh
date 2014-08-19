@@ -4,7 +4,7 @@ set -x
 cd /tmp
 
 # Install requirements
-sudo apt-get install gcc make cmake luarocks lua-cjson-dev libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl
+sudo apt-get install gcc make cmake luarocks lua-cjson-dev libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl memcached
 
 # Extract Openresty
 wget http://openresty.org/download/ngx_openresty-1.7.2.1.tar.gz
