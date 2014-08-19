@@ -29,7 +29,7 @@ end
 
 local function concat_url(location)
     local width, height = ngx.var.width, ngx.var.height
-    if not (width and height) or width == "" or height == "" then
+    if width and height and width ~= "" and height ~= "" then
         location = location .. "?width=" .. width .. "&height=" .. height
     end
 
