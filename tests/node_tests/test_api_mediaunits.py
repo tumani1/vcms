@@ -52,7 +52,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': 3,
             u'releasedate': 1325376000,
-            u'title_orig': 2,
+            u'title_orig': u'2',
             u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
@@ -70,7 +70,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': None,
             u'releasedate': 1356998400,
-            u'title_orig': 3,
+            u'title_orig': u'3',
             u'relation': {},
             u'prev': 2,
             u'id': 3
@@ -88,7 +88,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': 3,
             u'releasedate': 1325376000,
-            u'title_orig': 2,
+            u'title_orig': u'2',
             u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
@@ -105,7 +105,7 @@ class MediaUnitsTestCase(unittest.TestCase):
                     u'batch': u'batch1',
                     u'next': 2,
                     u'releasedate': 1293840000,
-                    u'title_orig': 1,
+                    u'title_orig': u'1',
                     u'relation': {u'watched': 1388534400},
                     u'prev': None,
                     u'id': 1
