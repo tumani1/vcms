@@ -28,8 +28,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect(ZERORPC_SERVICE_URI)
-        
-        
+
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
         clear(self.session)
         variable = create(self.session)
