@@ -12,7 +12,7 @@ local function get_memc(conf)
     local memcached = require "resty.memcached"
     local memc, err = memcached:new()
     if not memc then
-        ngx.log(ngx.ERR, "failed to instantiate memc: " .. err)
+        ngx.log(ngx.ERR, "Failed to init memc: " .. err)
         return nil
     end
 
@@ -20,7 +20,7 @@ local function get_memc(conf)
 
     local ok, err = memc:connect(conf['host'], conf['port'])
     if not ok then
-        ngx.log(ngx.ERR, "failed to connect: " .. err)
+        ngx.log(ngx.ERR, "Failed to connect memcache: " .. err)
         return nil
     end
 
@@ -46,10 +46,10 @@ if memc then
     end
 end
 
--- Если в кеше ничего нету, отправим запрос через ZeroRPC
--- Вызов в ZeroRPC не гарантирую, что не заблочит nginx
+-- Если в кеше ничего нету, отправим запрос в API
 if not result then
-    local http = require "zerorpc.http"
+    local http = require "http"
+
     local httpc = http.new()
     local uri = "http://" .. conf.noda['host'] .. ":" .. conf.noda['port'] .. ngx.var.uri
     local resp, err = httpc:request_uri(uri, {
@@ -57,51 +57,39 @@ if not result then
         body = ""
     })
 
-    if (resp and resp.status == ngx.HTTP_OK) then
-        --  and resp.location and #resp.location > 0
-        -- Установим значение в memcache
-        local cache_exptime = conf.exptime[prefix]
-        if memc and cache_exptime then
-            local ok, err = memc:set(memcache_key, resp.body, cache_exptime)
-            if not ok then
-                ngx.log(ngx.ERR, "failed to set : " .. err)
-            end
-        end
-
-        -- Redirect на url
-        return ngx.redirect(resp.body)
-    else
-        ngx.log(ngx.ERR, "failed to request: " .. err)
+    -- Проверка статуса запроса
+    if (not resp or resp.status == ngx.HTTP_OK) then
+        ngx.log(ngx.ERR, "Failed to request: " .. err)
+        return_not_found()
     end
 
---    local client = require "zerorpc.client"
---    local S = client.new("tcp://" .. conf.zerorpc['host'] .. ":" .. conf.zerorpc['port'])
---
---    local scall = function(...)
---        local r = {S:call(...)}
---        assert(r[1])
---        return select(2, unpack(r))
---    end
---
---    local resp = scall("route", {
---        api_type = ngx.req.get_method(),
---        api_method = ngx.var.uri
---    })
---    S:close()
---
---    if (resp.code == 200 and resp.location and #resp.location > 0) then
---        -- Установим значение в memcache
---        local cache_exptime = conf.exptime[prefix]
---        if memc and cache_exptime then
---            local ok, err = memc:set(memcache_key, resp.location, cache_exptime)
---            if not ok then
---                ngx.log(ngx.ERR, "failed to set : " .. err)
---            end
---        end
---
---        -- Redirect на url
---        return ngx.redirect(resp.location)
---    end
+    -- Проверка типа заголовка
+    -- if (resp.headers['Content-Type'] != 'application/json') then
+    --     ngx.log(ngx.ERR, "Recived not json response: " .. resp.headers['Content-Type'])
+    -- end
+
+    local location = nil
+    local json = require "cjson"
+    local result = json.decode(resp.body)
+
+    if (result and result.location and #result.location > 0) then
+        location = result.location
+    else
+        ngx.log(ngx.ERR, "Json response error: " .. result)
+        return_not_found()
+    end
+
+    --Установка значения в memcache
+    local cache_exptime = conf.exptime[prefix]
+    if memc and cache_exptime then
+        local ok, err = memc:set(memcache_key, location, cache_exptime)
+        if not ok then
+            ngx.log(ngx.ERR, "Failed to set memcache: " .. err)
+        end
+    end
+
+    -- Перенаправление на url
+    return ngx.redirect(location)
 end
 
 return_not_found()
