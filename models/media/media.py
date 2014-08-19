@@ -13,6 +13,7 @@ from models.persons.persons import Persons
 from models.media.media_units import MediaUnits
 from models.media.media_locations import MediaLocations
 from constants import APP_MEDIA_TYPE, APP_MEDIA_LIST
+from utils.common import user_access_media
 
 
 class Media(Base):
@@ -28,7 +29,7 @@ class Media(Base):
     description    = Column(Text, nullable=True)
     created        = Column(DateTime, default=datetime.datetime.utcnow)
     views_cnt      = Column(Integer, default=0)
-    release_date   = Column(DateTime, nullable=False)
+    release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
     owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
@@ -120,6 +121,12 @@ class Media(Base):
     def get_users_media_by_media(cls, user,  session, id, **kwargs):
         users_media = session.query(UsersMedia).filter(and_(UsersMedia.user_id == user.id, UsersMedia.media_id == id)).first()
         return users_media
+
+    @classmethod
+    def access_media(cls, media, owner, is_auth, is_manager):
+        access = media.access
+        status_code = user_access_media(access, owner, is_auth, is_manager)
+        return status_code
 
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)

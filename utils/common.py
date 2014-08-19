@@ -1,5 +1,14 @@
 # coding: utf-8
+
+import re
 import time
+
+from models.media.constants import APP_ACCESS_LEVEL_MANAGER_MASK,\
+    APP_ACCESS_LEVEL_OWNER_MASK, APP_ACCESS_LEVEL_GUEST_MASK,\
+    APP_ACCESS_LEVEL_AUTH_USER_MASK
+
+from utils.constants import HTTP_OK, HTTP_FORBIDDEN
+from utils.exceptions import NoSuchMethodException
 
 
 # Возвращает массив состоящий из значений всех полей key
@@ -87,3 +96,38 @@ def get_or_create(session, model, create=None, filter=None):
         instance = model(**create)
         session.add(instance)
         return instance, True
+
+
+def user_access_media(access, owner, is_auth, is_manager):
+    status_code = None
+    if access:
+        if is_auth:
+            if owner and (access & APP_ACCESS_LEVEL_OWNER_MASK) != 0:
+                status_code = HTTP_OK
+            elif is_manager and (access & APP_ACCESS_LEVEL_MANAGER_MASK) != 0:
+                status_code = HTTP_OK
+            elif (access & APP_ACCESS_LEVEL_AUTH_USER_MASK) != 0:
+                status_code = HTTP_OK
+            else:
+                status_code = HTTP_FORBIDDEN
+        elif (access & APP_ACCESS_LEVEL_GUEST_MASK) != 0:
+            status_code = HTTP_OK
+        else:
+            status_code = HTTP_FORBIDDEN
+    return status_code
+
+def get_api_by_url(routes, IPC_pack):
+        path_parse = IPC_pack['api_method'].split('/', 2)
+
+        group = routes.get(path_parse[1])
+        if group is None:
+            raise NoSuchMethodException
+
+        for item in group:
+            method = IPC_pack['api_type'].lower()
+            match = re.match(item[0], u'/'.join(path_parse[2:]))
+
+            if match and method in item[1]:
+                return match.groupdict(), item[1][method]
+
+        raise NoSuchMethodException

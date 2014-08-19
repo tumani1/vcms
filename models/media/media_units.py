@@ -7,6 +7,7 @@ from sqlalchemy_utils import ChoiceType
 from models.base import Base
 from models.media.constants import APP_MEDIA_LIST
 from models.media.users_media_units import UsersMediaUnits
+from utils.common import user_access_media
 
 
 class MediaUnits(Base):
@@ -73,6 +74,16 @@ class MediaUnits(Base):
     def get_next_media_unit(cls, user, session, id, **kwargs):
         query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).first()
         return query
+
+    @classmethod
+    def access_media_units(cls, media_units, owner, is_auth, is_manager):
+        status_code = None
+        for media_unit in media_units:
+            access = media_unit.access
+            status_code = user_access_media(access, owner, is_auth, is_manager)
+            if not status_code is None:
+                break
+        return status_code
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)

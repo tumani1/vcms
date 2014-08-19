@@ -1,34 +1,20 @@
 # coding: utf-8
 
-import re
-
 from api import authorize
-from utils.connection import create_session, db_connect, mongo_connect
 from zerorpcservices.additional import raven_report
-from utils.exceptions import APIException, NoSuchMethodException
+
+from utils.common import get_api_by_url
+from utils.exceptions import APIException
+from utils.connection import create_session, db_connect, mongo_connect
 
 
 class BaseService(object):
 
     def __init__(self, routes):
         self.routes = routes
+        self.default_params = {}
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
-        self.default_params = {}
-
-
-    def get_url(self, IPC_pack):
-        path_parse = IPC_pack['api_method'].split('/', 2)
-        group = self.routes[path_parse[1]]
-
-        for item in group:
-            method = IPC_pack['api_type'].lower()
-            match = re.match(item[0], u'/'.join(path_parse[2:]))
-
-            if match and method in item[1]:
-                return match.groupdict(), item[1][method]
-
-        raise NoSuchMethodException
 
 
     @raven_report
@@ -38,7 +24,7 @@ class BaseService(object):
         try:
             auth_user = authorize(IPC_pack, session=session)
 
-            params, api_method = self.get_url(IPC_pack)
+            params, api_method = get_api_by_url(self.routes, IPC_pack)
             params.update({
                 'session': session,
                 'auth_user': auth_user,
