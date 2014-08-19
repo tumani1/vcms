@@ -159,3 +159,28 @@ def validate_email(value, **kwargs):
             return email
         else:
             raise Exception(u"Некорректный e-mail!")
+
+
+def validate_eshop_price(value, **kwargs):
+    try:
+        result = [0, 0]
+        if isinstance(value, int):
+            result = [0, value]
+            return result
+        elif isinstance(value, str):
+            value = value.split(',', 1)
+            for i in xrange(2):
+                result[i] = int(value[i]) if len(value[i].strip()) else 0
+            return result
+        else:
+            raise Exception("Неверный формат цены")
+    except:
+        raise Exception("Неверный формат цены")
+
+
+def validate_eshop_sort(value, **kwargs):
+    value = value.strip()
+    if value == 'name' or value == 'price' or value == 'date':
+        return value
+    else:
+        raise Exception("Неверный формат сортировки")
