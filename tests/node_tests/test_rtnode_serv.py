@@ -1,8 +1,9 @@
-# coding=utf-8
+# coding: utf-8
+import json
 import unittest
 import requests
-import json
-from settings import NODE
+
+from tests.constants import NODE
 from websocket import create_connection
 from utils.connection import get_session
 

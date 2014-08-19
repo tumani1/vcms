@@ -1,11 +1,11 @@
-# coding=utf-8
+# coding: utf-8
 import unittest
 import requests
-from settings import NODE
+from datetime import datetime, timedelta
+
 from models import ChatMessages, Base, Users, Chats
 from utils.connection import mongo_connect, db_connect, create_session
-
-from datetime import datetime, timedelta
+from tests.constants import NODE
 from fixtures import create, create_chat, create_users_chat
 
 

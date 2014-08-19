@@ -9,7 +9,7 @@ import requests
 from models import Base, UsersMedia
 from utils.connection import db_connect, create_session
 from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons
-from settings import NODE
+from tests.constants import NODE
 
 
 def setUpModule():
