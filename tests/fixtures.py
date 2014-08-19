@@ -6,6 +6,7 @@ from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_BLOC
 
 UTC = pytz.utc
 
+
 def create_media_units(session):
     mu1 = MediaUnits(topic_name='test1', title='mu1', title_orig=1, description='test1', next_unit=2, release_date=datetime.datetime(2011,1,1,0,0,0,tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
     mu2 = MediaUnits(topic_name='test1', title='mu2', title_orig=2, description='test2', previous_unit=1, next_unit=3, release_date=datetime.datetime(2012,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
@@ -18,10 +19,10 @@ def create_media_units(session):
 
 
 def create_media(session):
-    media1 = Media(title='media1', title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
-    media2 = Media(title='media2', title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media3 = Media(title='media3', title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media4 = Media(title='media4', title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media1 = Media(title='media1', type_='v', owner=1, title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    media2 = Media(title='media2', type_='v', owner=1, title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media3 = Media(title='media3', type_='v', owner=1, title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media4 = Media(title='media4', type_='v', owner=1, title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
 
     m_in_u1 = MediaInUnit(media_id=1, media_unit_id=2)
     m_in_u2 = MediaInUnit(media_id=2, media_unit_id=1)
