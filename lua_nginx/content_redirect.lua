@@ -27,8 +27,13 @@ local function get_memc(conf)
     return memc
 end
 
-local function test()
+local function concat_url(location)
+    local width, height = ngx.var.width, ngx.var.height
+    if not (width and height) or width == "" or height == "" then
+        location = location .. "?width=" .. width .. "&height=" .. height
+    end
 
+    return location
 end
 
 -- Инициализируем memcache и зададим ключ кеширования
@@ -42,7 +47,7 @@ if memc then
     -- Проверим, есть ли в кеше по данному ключу
     result, flags, err = memc:get(memcache_key)
     if result and #result > 0 then
-        return ngx.redirect(result)
+        return ngx.redirect(concat_url(result))
     end
 end
 
@@ -88,7 +93,7 @@ if not result then
     end
 
     -- Перенаправление на url
-    return ngx.redirect(location)
+    return ngx.redirect(concat_url(location))
 end
 
 return_not_found()
