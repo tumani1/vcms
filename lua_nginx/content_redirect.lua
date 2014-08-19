@@ -1,4 +1,4 @@
-local conf = require "config";
+local conf = require "common.config"
 
 local function return_not_found(msg)
     ngx.status = ngx.HTTP_NOT_FOUND
@@ -48,7 +48,7 @@ end
 
 -- Если в кеше ничего нету, отправим запрос в API
 if not result then
-    local http = require "http"
+    local http = require "common.http"
 
     local httpc = http.new()
     local uri = "http://" .. conf.noda['host'] .. ":" .. conf.noda['port'] .. ngx.var.uri
@@ -58,8 +58,8 @@ if not result then
     })
 
     -- Проверка статуса запроса
-    if (not resp or resp.status == ngx.HTTP_OK) then
-        ngx.log(ngx.ERR, "Failed to request: " .. err)
+    if (not resp or resp.status ~= ngx.HTTP_OK) then
+        ngx.log(ngx.ERR, "Recieved failed to request")
         return_not_found()
     end
 
@@ -68,7 +68,6 @@ if not result then
     --     ngx.log(ngx.ERR, "Recived not json response: " .. resp.headers['Content-Type'])
     -- end
 
-    local location = nil
     local json = require "cjson"
     local result = json.decode(resp.body)
 
