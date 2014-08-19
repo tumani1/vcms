@@ -2,7 +2,9 @@
 from sqlalchemy import Column, String, Text, event
 from sqlalchemy.orm import relationship
 import logging
-logging.getLogger('pycountry.db').addHandler(logging.NullHandler())
+logger = logging.getLogger('pycountry.db')
+logger.addHandler(logging.NullHandler())
+logger.setLevel(logging.INFO)
 from pycountry import countries
 
 from models.base import Base
