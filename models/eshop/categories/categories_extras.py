@@ -1,6 +1,7 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, ForeignKey
-from models import Base, Categories
+from sqlalchemy import Column, Integer, ForeignKey, and_
+from sqlalchemy.orm import relationship, contains_eager
+from models import Base, Extras
 
 
 class CategoriesExtras(Base):
@@ -11,6 +12,8 @@ class CategoriesExtras(Base):
     extras_id = Column(ForeignKey('extras.id'), nullable=False)
     extras_type = Column(Integer, nullable=True)
 
+    extras = relationship('Extras', backref='categories_extras', cascade='all, delete')
+
     @classmethod
     def tmpl_for_categories(cls, session):
         query = session.query(cls)
@@ -18,5 +21,7 @@ class CategoriesExtras(Base):
         return query
 
     @classmethod
-    def get_extras_by_category_id(cls, session, category_id):
-        query = cls.tmpl_for_categories(session).outerjoin(Categories, )
+    def join_with_extras(cls, session, category_id):
+        query = cls.tmpl_for_categories(session).filter(cls.categories_id==category_id)\
+            .outerjoin(Extras, Extras.id==cls.extras_id).options(contains_eager(cls.extras))
+        return query

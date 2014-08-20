@@ -1,6 +1,7 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String
-from models import Base
+from models import Base, Extras
+from models.eshop.categories.categories_extras import CategoriesExtras
 
 
 class Categories(Base):
@@ -29,4 +30,10 @@ class Categories(Base):
 
         return query
 
+    @classmethod
+    def get_extras_by_category_id(cls, session, category_id):
+        query = cls.tmpl_for_categories(session).\
+            outerjoin(CategoriesExtras, category_id==CategoriesExtras.categories_id).\
+            outerjoin(Extras, Extras.id==CategoriesExtras.extras_id)
+        return query
 

@@ -1,7 +1,8 @@
-from models import Categories, ItemsCategories
+from models import Categories, ItemsCategories, CategoriesExtras
 
 
 def get(categories_id, session=None, **kwargs):
+    extras_list = []
     data = {
         'items_cnt': '',
         'instock_cnt': '',
@@ -19,6 +20,11 @@ def get(categories_id, session=None, **kwargs):
     data['items_cnt'] = items_categories.__len__()
 
     items = Categories.get_item_by_category_id(session, categories_id)
+
+    categories_extras = CategoriesExtras.join_with_extras(session, categories_id).all()
+
+    for cat in categories_extras:
+        extras_list = extras_list.append(cat.extras)
 
 
 
