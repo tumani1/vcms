@@ -89,6 +89,6 @@ def get(auth_user, session, **kwargs):
         }
         data['total_cnt'] = total_cnt
         data['cnt'] = len(serializer_params['instance'])
-        data = data.update(items=mShopItem(**serializer_params).data)
+        data.update(items=mShopItem(**serializer_params).data)
 
     return data

@@ -9,10 +9,10 @@ routing = (
     (r'^items/list$', {
         'get': get_list,
     }),
-    (r'^items/(?P<media_id>\d+)/info$', {
+    (r'^items/(?P<item_id>\d+)/info$', {
         'get': get_info,
     }),
-    (r'^items/(?P<media_id>\d+)/variants$', {
+    (r'^items/(?P<item_id>\d+)/variants$', {
         'get': get_variants,
     }),
     (r'^categories/(?P<categories_id>\d+)/info$', {
