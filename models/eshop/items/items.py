@@ -123,7 +123,7 @@ class ItemsCategories(Base):
     item_id = Column(ForeignKey('items.id'), nullable=False)
     category_id = Column(ForeignKey('categories.id'), nullable=False)
 
-    items = relationship('Items', backref='items_categories', cascade='all, delete')
+    category_items = relationship('Items', backref='items_categories', cascade='all, delete')
 
     @classmethod
     def tmpl_for_items_categories(cls, session):
