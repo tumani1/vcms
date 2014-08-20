@@ -12,7 +12,7 @@ from models.base import Base
 from models.locations import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
-
+from models.mongo import ChatMessages
 
 class Users(Base):
     __tablename__ = 'users'
@@ -125,3 +125,8 @@ class Users(Base):
 def create_token_for_user(mapper, connect, target):
     session = sessionmaker(bind=connect)()
     token = GlobalToken.generate_token(target.id, session)
+
+
+@event.listens_for(Users, 'after_delete')
+def delete_mongo_chat_mess(mapper, connection, target):
+    ChatMessages.objects.filter(user_id=target.id).delete()
