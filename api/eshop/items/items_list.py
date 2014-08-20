@@ -5,7 +5,10 @@ from api.serializers.m_shop_item import mShopItem
 
 
 def get(auth_user, session, **kwargs):
-    data = {}
+    data = {
+        'cnt': 0,
+        'total_cnt': 0
+    }
     params = {
         'user': auth_user,
         'session': session,
@@ -76,7 +79,7 @@ def get(auth_user, session, **kwargs):
     if 'is_digital' in query:
         params['is_digital'] = query['is_digital']
 
-    instance = Items.get_items_list(**params)
+    instance, total_cnt = Items.get_items_list(**params)
 
     if not instance is None:
         serializer_params = {
@@ -84,5 +87,8 @@ def get(auth_user, session, **kwargs):
             'session': session,
             'instance': instance.all(),
         }
-        data = mShopItem(**serializer_params).data
+        data['total_cnt'] = total_cnt
+        data['cnt'] = len(serializer_params['instance'])
+        data = data.update(items=mShopItem(**serializer_params).data)
+
     return data
