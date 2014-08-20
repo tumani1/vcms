@@ -9,7 +9,7 @@ from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, Password
 from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
 
 from models.base import Base
-from models.contents import Cities, Countries
+from models.locations import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
 
@@ -93,14 +93,14 @@ class Users(Base):
         if query is None:
             query = cls.tmpl_for_users(session)
         text = "%{}%".format(city.lower().encode('utf-8'))
-        return query.join(Cities).filter(func.lower(Cities.name).like(text))
+        return query.join(Cities).filter(func.to_tsvector(Countries.name).match(text))
 
     @classmethod
     def filter_by_country(cls, country, session, query=None):
         if query is None:
             query = cls.tmpl_for_users(session)
         text = "%{}%".format(country.lower().encode('utf-8'))
-        return query.join(Cities).join(Countries).filter(func.lower(Countries.name).like(text))
+        return query.join(Cities).join(Countries).filter(func.to_tsvector(Countries.name).match(text))
 
     @classmethod
     def filter_users_person(cls, is_person, session, query=None):

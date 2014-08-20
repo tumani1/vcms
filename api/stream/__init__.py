@@ -19,8 +19,8 @@ like = {
 }
 
 
-routing = {
-    'list': list,
-    'info': info,
-    'like': like,
-}
+routing = (
+    (r'^list$', list),
+    (r'^info$', info),
+    (r'^like$', like)
+)

@@ -2,16 +2,16 @@
 from models import Countries, Cities, Users, GlobalToken, SessionToken
 
 
-def create(session):
-    country = Countries(name='Test', name_orig="Test")
+def create(session, usuff=1, cisuff=1, cousuff=1):
+    country = Countries(name='Test'+str(cousuff), name_orig='Test'+str(cousuff))
     session.add(country)
     session.commit()
 
-    city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
+    city = Cities(country=country, name='Test'+str(cisuff), name_orig='Test'+str(cisuff), time_zone='UTC')
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test", lastname="Test", password='Test', email='test1@test.ru')
+    user = Users(city=city, firstname='Test'+str(usuff), lastname='Test'+str(usuff), password='Test', email='test{}@test.ru'.format(usuff))
     session.add(user)
     session.commit()
 

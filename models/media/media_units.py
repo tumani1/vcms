@@ -1,5 +1,6 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, and_, SMALLINT
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
+    and_, SMALLINT, Boolean
 from sqlalchemy.orm import relationship, contains_eager
 
 from models.base import Base
@@ -19,10 +20,12 @@ class MediaUnits(Base):
     release_date  = Column(DateTime, nullable=True)
     end_date      = Column(DateTime, nullable=True)
     batch         = Column(String, nullable=True)
-    access_level  = Column(SMALLINT, default=None, nullable=True)
+    access        = Column(SMALLINT, default=None, nullable=True)
+    access_type   = Column(Boolean, default=None, nullable=True)
 
+    countries_list   = relationship('MediaUnitsAccessCountries', backref='media_units', cascade='all, delete')
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
-    unit_medias = relationship('MediaInUnit', backref='media_units', cascade='all, delete')
+    unit_medias      = relationship('MediaInUnit', backref='media_units', cascade='all, delete')
 
 
     @classmethod
@@ -68,3 +71,6 @@ class MediaUnits(Base):
     def get_next_media_unit(cls, user, session, id, **kwargs):
         query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).first()
         return query
+
+    def __repr__(self):
+        return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)

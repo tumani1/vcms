@@ -1,7 +1,7 @@
 postgresql:
   drivername: postgresql+psycopg2
-  username: postgres
-  password: 1234
+  username: pgadmin
+  password: qwerty
   host: localhost
   port: 5432
   database: next_tv
@@ -11,12 +11,12 @@ mongodb:
   username: admin
   password: admin
   host: 127.0.0.1
-  port: !!int "27017"
+  port: 27017
 
 test:
   drivername: postgresql+psycopg2
-  username: postgres
-  password: 1234
+  username: pgadmin
+  password: qwerty
   host: localhost
   port: 5432
   database: test

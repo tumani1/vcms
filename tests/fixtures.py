@@ -18,10 +18,10 @@ def create_media_units(session):
 
 
 def create_media(session):
-    media1 = Media(title='media1', title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
-    media2 = Media(title='media2', title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media3 = Media(title='media3', title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media4 = Media(title='media4', title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media1 = Media(title='media1', title_orig='test_media1', description='test_desc1', owner=1, type_='v', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    media2 = Media(title='media2', title_orig='test_media2', description='test_desc2', owner=1, type_='v', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media3 = Media(title='media3', title_orig='test_media3', description='test_desc3', owner=1, type_='v', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media4 = Media(title='media4', title_orig='test_media4', description='test_desc4', owner=1, type_='v', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
 
     m_in_u1 = MediaInUnit(media_id=1, media_unit_id=2)
     m_in_u2 = MediaInUnit(media_id=2, media_unit_id=1)
@@ -130,9 +130,7 @@ def create_person_extras(session):
 
 
 def create(session):
-    country = Countries(name='Test', name_orig="Test")
-    session.add(country)
-    session.commit()
+    country = session.query(Countries).get('RU')
 
     city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
     session.add(city)
@@ -229,4 +227,22 @@ def create_topic_values(session):
     ]
 
     session.add_all(list_tov)
+    session.commit()
+
+
+def create_content(session):
+    content = Content(text='test')
+    session.add(content)
+    session.commit()
+
+
+def create_chat(session):
+    c = Chats(description='chat for testing')
+    session.add(c)
+    session.commit()
+
+
+def create_users_chat(session):
+    uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
+    session.add(uc)
     session.commit()

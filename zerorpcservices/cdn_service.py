@@ -1,6 +1,7 @@
 # coding: utf-8
 import argparse
 import zerorpc
+from geoip2 import database
 
 import settings as conf
 from api import cdn_routes
@@ -8,7 +9,14 @@ from base_service import BaseService
 
 
 class ZeroRpcCdnApiService(BaseService):
-    pass
+
+    def __init__(self, **kwargs):
+        super(ZeroRpcCdnApiService, self).__init__(**kwargs)
+        self.reader_geoip = database.Reader(conf.GEO_IP_DATABASE)
+        self.default_params = {'reader': self.reader_geoip, }
+
+    def __del__(self):
+        self.reader_geoip.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

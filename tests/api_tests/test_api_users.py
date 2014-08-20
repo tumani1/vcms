@@ -71,7 +71,7 @@ class UsersTestCase(unittest.TestCase):
         self.ipc_pack['api_method'] = '/users/list'
         self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['query_params'] = {
-            'country': 'Test',
+            'country': 'Russian',
         }
         resp_dicts = self.zero_client.route(self.ipc_pack)
         users = self.session.query(Users).join(Cities).filter(Cities.name == 'Test')

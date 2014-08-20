@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from models.users import Users
-from models.contents import Cities, Countries
+from models.locations import Cities, Countries
 from utils import need_authorization
 
 

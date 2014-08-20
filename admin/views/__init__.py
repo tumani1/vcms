@@ -10,80 +10,80 @@ from scheme import SchemeModelView
 from topics import TopicsModelView, PersonsTopicsModelView, UsersTopicsModelView
 from cdn import CdnModelView
 from chats import ChatsModelView, UsersChatModelView
-from contents import CountryModelView, CitieModelView
+from locations import CountryModelView, CitieModelView
 from stream import StreamModelView
 
-admin = Admin(name='NextTV')
+admin_view = Admin(name='NextTV')
 
 ###############################################################################
 # Users
 
-admin.add_view(UsersModelView())
-admin.add_view(UsersRelsModelView())
-admin.add_view(UsersSocialModelView())
-admin.add_view(UsersValuesModelView())
-admin.add_view(UsersExtrasModelView())
-admin.add_view(UsersTopicsModelView())
+admin_view.add_view(UsersModelView())
+admin_view.add_view(UsersRelsModelView())
+admin_view.add_view(UsersSocialModelView())
+admin_view.add_view(UsersValuesModelView())
+admin_view.add_view(UsersExtrasModelView())
+admin_view.add_view(UsersTopicsModelView())
 ###############################################################################
 
 ###############################################################################
 # Token
 
-admin.add_view(SessionTokenModelView())
-admin.add_view(GlobalTokenModelView())
+admin_view.add_view(SessionTokenModelView())
+admin_view.add_view(GlobalTokenModelView())
 ###############################################################################
 
 ###############################################################################
 # Persons
 
-admin.add_view(PersonsModelView())
-admin.add_view(PersonsUsersModelView())
-admin.add_view(PersonsValuesModelView())
-admin.add_view(PersonsExtrasModelView())
-admin.add_view(PersonsTopicsModelView())
+admin_view.add_view(PersonsModelView())
+admin_view.add_view(PersonsUsersModelView())
+admin_view.add_view(PersonsValuesModelView())
+admin_view.add_view(PersonsExtrasModelView())
+admin_view.add_view(PersonsTopicsModelView())
 ###############################################################################
 
 ###############################################################################
 # Extras
 
-admin.add_view(ExtrasModelView())
+admin_view.add_view(ExtrasModelView())
 ###############################################################################
 
 ###############################################################################
 # Scheme
 
-admin.add_view(SchemeModelView())
+admin_view.add_view(SchemeModelView())
 ###############################################################################
 
 ###############################################################################
 # Topics
 
-admin.add_view(TopicsModelView())
-admin.add_view(TopicsExtrasModelView())
+admin_view.add_view(TopicsModelView())
+admin_view.add_view(TopicsExtrasModelView())
 ###############################################################################
 
 ###############################################################################
 # CDN
 
-admin.add_view(CdnModelView())
+admin_view.add_view(CdnModelView())
 ###############################################################################
 
 ###############################################################################
 # Stream
 
-admin.add_view(StreamModelView())
+admin_view.add_view(StreamModelView())
 ###############################################################################
 
 ###############################################################################
 # Chats
 
-admin.add_view(ChatsModelView())
-admin.add_view(UsersChatModelView())
+admin_view.add_view(ChatsModelView())
+admin_view.add_view(UsersChatModelView())
 ###############################################################################
 
 ###############################################################################
 # Contents
 
-admin.add_view(CitieModelView())
-admin.add_view(CountryModelView())
+admin_view.add_view(CitieModelView())
+admin_view.add_view(CountryModelView())
 ###############################################################################

@@ -8,21 +8,25 @@ def validate_mLimit(limit, **kwargs):
     result = limit.split(',', 1)
 
     if len(result) == 1:
-        limit = int(result[0])
-        if limit < 0:
-            raise Exception("Значение меньше {0}".format(limit))
+        if not len(result[0]):
+            limit = None
+        else:
+            limit = int(result[0])
+            if limit < 0:
+                raise Exception("Значение меньше {0}".format(limit))
         return limit, 0
+
     elif len(result) == 2:
         # Check limit
         if not len(result[0]):
-            limit = None  # TODO: можно заменить на - 0
+            limit = None
         else:
             try:
                 limit = int(result[0])
                 if limit < 0:
                     raise Exception("Значение меньше {0}".format(limit))
             except Exception, e:
-                limit = None  # TODO: можно заменить на - 0
+                limit = None
 
         # Check top
         try:

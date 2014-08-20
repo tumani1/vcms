@@ -9,7 +9,7 @@ from models.users import Users, UsersRels, UsersExtras
 from models.users.constants import APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_SEND
 from models.extras import Extras
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
-from models.contents import Cities
+from models.locations import Cities
 from settings import NODE
 from utils.connection import db_connect, create_session
 from utils.common import detetime_to_unixtime
@@ -63,8 +63,8 @@ class UsersTestCase(unittest.TestCase):
         self.assertDictEqual(resp.json()[0], {u'name': 1, u'value': 777})
 
     def test_users_list_get(self):
-        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Test'})
-        users = self.session.query(Users).join(Cities).filter(Cities.name == 'Test')
+        resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Russian'})
+        users = self.session.query(Users).join(Cities).filter(Cities.id == 'RU')
         resp_dicts = resp.json()[0]
         self.assertEqual(len(resp_dicts), users.count())
         users_dict = []
@@ -156,8 +156,8 @@ class UsersTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath + '/users/%s/blacklist' % (id), headers={'token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
-        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
-        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+        self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_SEND)
+        self.assertEqual(partner_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
 
     def test_users_blacklist_delete(self):
         data = {}
@@ -165,5 +165,5 @@ class UsersTestCase(unittest.TestCase):
         resp = self.req_sess.delete(self.fullpath + '/users/%s/blacklist' % (id), headers={'token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
-        self.assertEqual(user_rels.blocked, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
-        self.assertEqual(partner_rels.blocked, APP_USERSRELS_BLOCK_TYPE_SEND)
+        self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_RECIEVE)
+        self.assertEqual(partner_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_SEND)

@@ -13,7 +13,7 @@ import json
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -52,7 +52,7 @@ class UserTestCase(unittest.TestCase):
             u'city': u'Test',
             u'userpic': u'Test1',
             u'firstname': u'Test1',
-            u'country': u'Test',
+            u'country': u'Russian Federation',
             u'time_zone': u'UTC',
             u'lastname': u'Test1',
             u'id': 1

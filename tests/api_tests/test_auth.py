@@ -42,7 +42,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
                     'api_type': 'get',
                     'token': self.token,
                     'x_token': None,
-                    'query_params':{}}
+                    'query_params': {}}
 
         auth_resp = self.cl.route(Auth_IPC_pack)
 

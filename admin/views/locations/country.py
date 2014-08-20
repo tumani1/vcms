@@ -1,7 +1,7 @@
 # coding: utf-8
 from admin.views.base import SqlAlModelView
 
-from models.contents import Countries
+from models.locations import Countries
 
 
 class CountryModelView(SqlAlModelView):
@@ -11,6 +11,9 @@ class CountryModelView(SqlAlModelView):
 
     column_labels = dict(name=u'Название', name_orig=u'Оригинальное название',
                          description=u'Описание')
+
+
+    column_display_pk = True
 
     form_args = dict(
         name=dict(

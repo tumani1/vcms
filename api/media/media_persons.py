@@ -5,9 +5,9 @@ from models.media.media import Media
 from api.serializers import mPersonRoleSerializer
 
 
-def get(id, auth_user, session, **kwargs):
+def get(media_id, auth_user, session, **kwargs):
     params = {
-        'id': validate_list_int(id),
+        'id': validate_list_int(media_id),
         'is_online': None,
         'limit': None,
         'session': session,
