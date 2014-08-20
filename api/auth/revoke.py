@@ -3,11 +3,11 @@
 from models.tokens import GlobalToken
 
 
-def revoke(auth_user, x_token, token, session, **kwargs):
+def revoke(auth_user, session, query, **kwargs):
     '''
     Revoking access for users Global Token by deleting it
     '''
-    gt = session.query(GlobalToken).filter(token=token).first()
-
-    session.delete(gt)
-    session.commit()
+    if 'token' in query:
+        gt = session.query(GlobalToken).filter(token=query['token']).first()
+        session.delete(gt)
+        session.commit()

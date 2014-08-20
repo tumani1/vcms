@@ -45,7 +45,6 @@ class UsersTestCase(unittest.TestCase):
         self.ipc_pack = {
             'api_method': '',
             'api_type': 'get',
-            'x_token': None,
             'query_params': {}
         }
 
@@ -117,7 +116,7 @@ class UsersTestCase(unittest.TestCase):
         user_id = 2
         self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
         self.ipc_pack['api_type'] = 'get'
-        self.ipc_pack['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
+        self.ipc_pack['query_params']['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_FRIEND)
         user_id = 3

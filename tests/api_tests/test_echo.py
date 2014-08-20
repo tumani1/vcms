@@ -24,8 +24,11 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/test/echo',
                     'api_type': 'put',
-                    'token': 'echo_token',
-                    'query_params': {'message': 'hello'}}
+                    'query_params': {
+                        'message': 'hello',
+                        'token': 'echo_token',
+                    }
+        }
         resp = self.cl.route(IPC_pack)
         self.assertEqual(IPC_pack['query_params'], resp['query'])
 

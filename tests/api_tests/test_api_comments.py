@@ -47,8 +47,9 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/comments/%s/info' % (id),
                     'api_type': 'get',
-                    'x_token': self.session_token[1],
-                    'query_params': {}
+                    'query_params': {
+                        'x_token': self.session_token[1]
+                    }
         }
         temp = {
             'text': 'Тест',
@@ -65,8 +66,11 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/comments/list',
                 'api_type': 'get',
-                'x_token': self.session_token[1],
-                'query_params': {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
+                'query_params': {
+                    'obj_type': 'm',
+                    'obj_id': 1,
+                    'with_obj': True,
+                    'x_token': self.session_token[1]}
         }
         temp = [{
                     'text': 'Тест',
@@ -82,8 +86,11 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/comments/create',
                 'api_type': 'post',
-                'x_token': self.session_token[1],
-                'query_params': {'text': 'test_create', 'obj_type': 'mu', 'obj_id': 2}
+                'query_params': {
+                    'text': 'test_create',
+                    'obj_type': 'mu',
+                    'obj_id': 2,
+                    'x_token': self.session_token[1]}
         }
         resp = self.cl.route(IPC_pack)
         new_com = self.session.query(Comments).all()[-1]
@@ -97,8 +104,9 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/comments/%s/like'  % (id),
                 'api_type': 'put',
-                'x_token': self.session_token[1],
-                'query_params': {}
+                'query_params': {
+                    'x_token': self.session_token[1],
+                }
         }
         resp = self.cl.route(IPC_pack)
         new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
@@ -110,8 +118,9 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/comments/%s/like'  % (id),
                 'api_type': 'delete',
-                'x_token': self.session_token[1],
-                'query_params': {}
+                'query_params': {
+                    'x_token': self.session_token[1]
+                }
         }
         user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com.liked)
@@ -127,8 +136,10 @@ class CommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/comments/%s/reply'  % (id),
                 'api_type': 'post',
-                'x_token': self.session_token[1],
-                'query_params': {'text': 'reply_test'}
+                'query_params': {
+                    'text': 'reply_test',
+                    'x_token': self.session_token[1]
+                }
         }
         resp = self.cl.route(IPC_pack)
         reply_com = self.session.query(Comments).all()[-1]

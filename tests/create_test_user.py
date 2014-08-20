@@ -2,7 +2,7 @@
 from models import Countries, Cities, Users, GlobalToken, SessionToken
 
 
-def create(session, usuff=1, cisuff=1, cousuff=1):
+def create(session, usuff=1, cisuff=1):
     country = session.query(Countries).get('RU')
 
     city = Cities(country=country, name='Test'+str(cisuff), name_orig='Test'+str(cisuff), time_zone='UTC')
@@ -23,5 +23,4 @@ def clear(session):
     session.query(SessionToken).delete()
     session.query(Users).delete()
     session.query(Cities).delete()
-    session.query(Countries).delete()
     session.commit()

@@ -42,8 +42,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/mediaunits/%s/info' % (id),
                     'api_type': 'get',
-                    'x_token': self.session_token[1],
-                    'query_params': {}
+                    'query_params': {
+                        'x_token': self.session_token[1],
+                    }
         }
         temp = {
             'id': 2,
@@ -65,9 +66,10 @@ class MediaUnitsTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/mediaunits/%s/next' % (id),
                     'api_type': 'get',
-                    'x_token': self.session_token[1],
-                    'query_params': {}
+                    'query_params': {
+                        'x_token': self.session_token[1],
                     }
+        }
         temp = {
             'id': 3,
             'title': 'mu3',
@@ -88,9 +90,10 @@ class MediaUnitsTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/mediaunits/%s/prev' % (id),
                     'api_type': 'get',
-                    'x_token': self.session_token[1],
-                    'query_params': {}
+                    'query_params': {
+                        'x_token': self.session_token[1],
                     }
+        }
         temp = {
             'id': 2,
             'title': 'mu2',
@@ -110,8 +113,9 @@ class MediaUnitsTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/mediaunits/list',
                     'api_type': 'get',
-                    'x_token': self.session_token[1],
-                    'query_params': {'text': 'mu1',}
+                    'query_params': {
+                        'text': 'mu1',
+                        'x_token': self.session_token[1],}
                     }
         temp = {
             'id': 1,

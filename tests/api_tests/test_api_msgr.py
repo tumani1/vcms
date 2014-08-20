@@ -49,8 +49,9 @@ class MsgrTestCase(unittest.TestCase):
         IPC_pack = {
             'api_method': '/msgr/%s/info' % (id),
             'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
+            'query_params': {
+                'x_token': self.session_token[1],
+            }
         }
         resp = self.cl.route(IPC_pack)
 
@@ -58,8 +59,9 @@ class MsgrTestCase(unittest.TestCase):
         IPC_pack = {
             'api_method': '/msgr/stat',
             'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
+            'query_params': {
+                'x_token': self.session_token[1],
+            }
         }
         resp = self.cl.route(IPC_pack)
         param = {'new_msgs': 1}
@@ -69,8 +71,10 @@ class MsgrTestCase(unittest.TestCase):
         IPC_pack = {
             'api_method': '/msgr/create',
             'api_type': 'put',
-            'x_token': self.session_token[1],
-            'query_params': {'user_ids': [1, 2], 'text': 'test'}
+            'query_params': {
+                'user_ids': [1, 2],
+                'text': 'test',
+                'x_token': self.session_token[1],}
         }
         resp = self.cl.route(IPC_pack)
 
@@ -78,7 +82,8 @@ class MsgrTestCase(unittest.TestCase):
         IPC_pack = {
             'api_method': '/msgr/list',
             'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {'user_author': [1, 2]}
+            'query_params': {
+                'user_author': [1, 2],
+                'x_token': self.session_token[1],}
         }
         resp = self.cl.route(IPC_pack)

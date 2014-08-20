@@ -65,8 +65,9 @@ class PersonInfoTestCase(unittest.TestCase):
         ipc_pack = {
             'api_method': '/persons/%s/info' % (person_id),
             'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
+            'query_params': {
+                'x_token': self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(ipc_pack)
@@ -132,8 +133,9 @@ class PersonListTestCase(unittest.TestCase):
         ipc_pack = {
             'api_method': '/persons/list',
             'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
+            'query_params': {
+                'x_token': self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(ipc_pack)
@@ -162,9 +164,10 @@ class PersonLikeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/like" % (person),
-            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -177,9 +180,10 @@ class PersonLikeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/like" % (person),
-            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -198,9 +202,10 @@ class PersonLikeTestCase(unittest.TestCase):
         person = 1
         IPC_pack = {
             "api_method": "/persons/%s/subscribe" % (person),
-            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -211,9 +216,10 @@ class PersonLikeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/like" % (person),
-            "x_token": self.session_token[1],
             "api_type": "delete",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -247,9 +253,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/subscribe" % (person),
-            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -262,9 +269,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
         person = 1
         IPC_pack = {
             "api_method": "/persons/%s/subscribe" % (person),
-            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -275,9 +283,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/subscribe" % (person),
-            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -296,9 +305,10 @@ class PersonSubscribeTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/subscribe" % (person),
-            "x_token": self.session_token[1],
             "api_type": "delete",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)
@@ -332,9 +342,10 @@ class PersonExtrasTestCase(unittest.TestCase):
         person = 2
         IPC_pack = {
             "api_method": "/persons/%s/extras" % (person),
-            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {}
+            "query_params": {
+                "x_token": self.session_token[1],
+            }
         }
 
         resp = self.zero_client.route(IPC_pack)

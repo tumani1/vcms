@@ -29,7 +29,6 @@ class ContentInfoTestCase(unittest.TestCase):
         cls.ipc_pack = {
             'api_method': '',
             'api_type': 'get',
-            'x_token': None,
             'query_params': {}
         }
 
@@ -49,6 +48,7 @@ class ContentInfoTestCase(unittest.TestCase):
         }
         self.assertDictEqual(resp, result)
 
+
 class ContentListTestCase(unittest.TestCase):
 
     @classmethod
@@ -59,7 +59,6 @@ class ContentListTestCase(unittest.TestCase):
         cls.ipc_pack = {
             'api_method': '',
             'api_type': 'get',
-            'x_token': None,
             'query_params': {}
         }
 

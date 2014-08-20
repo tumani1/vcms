@@ -46,8 +46,9 @@ class ObjCommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/obj_comments/%s/%s/list' % (type_, id),
                 'api_type': 'get',
-                'x_token': self.session_token[1],
-                'query_params': {}
+                'query_params': {
+                    'x_token': self.session_token[1],
+                }
         }
         temp = [{
                     'text': 'Тест',
@@ -65,8 +66,10 @@ class ObjCommentsTestCase(unittest.TestCase):
         IPC_pack = {
                 'api_method': '/obj_comments/%s/%s/create' % (type_, id),
                 'api_type': 'post',
-                'x_token': self.session_token[1],
-                'query_params': {'text': 'test_create'}
+                'query_params': {
+                    'text': 'test_create',
+                    'x_token': self.session_token[1],
+                }
         }
         resp = self.cl.route(IPC_pack)
         new_com = self.session.query(Comments).all()[-1]
