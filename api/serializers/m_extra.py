@@ -35,11 +35,11 @@ class mExtra(DefaultSerializer):
         return instance.description
 
     def transform_title_orig(self, instance, **kwargs):
-        return instance.is_digital
+        return instance.title_orig
 
     def transform_location(self, instance, **kwargs):
-        return instance.price
+        return instance.location
 
     def transform_created(self, instance, **kwargs):
-        return instance.price_old
+        return instance.created
 

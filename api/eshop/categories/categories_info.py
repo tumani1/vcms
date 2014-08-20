@@ -1,7 +1,8 @@
+from api.serializers.m_extra import mExtra
 from models import Categories, ItemsCategories, CategoriesExtras
 
 
-def get(categories_id, session=None, **kwargs):
+def get(categories_id, auth_user, session=None, **kwargs):
     extras_list = []
     data = {
         'items_cnt': '',
@@ -24,7 +25,16 @@ def get(categories_id, session=None, **kwargs):
     categories_extras = CategoriesExtras.join_with_extras(session, categories_id).all()
 
     for cat in categories_extras:
-        extras_list = extras_list.append(cat.extras)
+        extras_list.append(cat.extras)
+
+    serializer_params = {
+            'user': auth_user,
+            'session': session,
+            'instance': extras_list,
+    }
+
+    data['extras'] = mExtra(**serializer_params).data
+
 
 
 
