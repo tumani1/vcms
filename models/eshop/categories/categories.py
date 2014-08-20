@@ -1,7 +1,9 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String
-from models import Base, Extras
-from models.eshop.categories.categories_extras import CategoriesExtras
+from sqlalchemy.orm import relationship
+from models.eshop.items import ItemsCategories
+from models.eshop.items.items import Items
+from models import Base
 
 
 class Categories(Base):
@@ -23,9 +25,17 @@ class Categories(Base):
         return query
 
     @classmethod
-    def get_extras_by_category_id(cls, session, category_id):
-        query = cls.tmpl_for_categories(session).\
-            outerjoin(CategoriesExtras, category_id==CategoriesExtras.categories_id).\
-            outerjoin(Extras, Extras.id==CategoriesExtras.extras_id)
+    def get_list_categories(cls, session, instock=None, has_items=None, sort=None):
+        query = cls.tmpl_for_categories(session)
+
+        if not instock is None:
+            if instock:
+                query = query.outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id).\
+                    outerjoin(Items, ItemsCategories.item_id==Items.id).\
+                    filter(Items.instock==True)
+
         return query
+
+
+
 

@@ -1,7 +1,9 @@
 from items.items_list import get as get_list
 from items.items_info import get as get_info
 from items.items_variants import get as get_variants
-from categories.categories_info import get as get_categories_list
+from categories.categories_info import get as get_categories_info
+from categories.categories_list import get as get_categories_list
+from categories.categories_extras import get as get_categories_extras
 
 routing = (
     (r'^items/list$', {
@@ -14,6 +16,12 @@ routing = (
         'get': get_variants,
     }),
     (r'^categories/(?P<categories_id>\d+)/info$', {
+        'get': get_categories_info,
+    }),
+    (r'^categories/list$', {
         'get': get_categories_list,
+    }),
+    (r'^categories/(?P<categories_id>\d+)/extras$', {
+        'get': get_categories_extras,
     }),
 )

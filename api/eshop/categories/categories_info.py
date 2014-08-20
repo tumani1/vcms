@@ -22,6 +22,8 @@ def get(categories_id, auth_user, session=None, **kwargs):
 
     items = ItemsCategories.get_item_by_category_id(session, categories_id).all()
 
+    data['instock_cnt'] = items.__len__()
+
     categories_extras = CategoriesExtras.join_with_extras(session, categories_id).all()
 
     for cat in categories_extras:

@@ -117,7 +117,7 @@ class ItemsCategories(Base):
     item_id = Column(ForeignKey('items.id'), nullable=False)
     category_id = Column(ForeignKey('categories.id'), nullable=False)
 
-    items = relationship('Items', backref='items_categories', cascade='all, delete')
+    category_items = relationship('Items', backref='items_categories', cascade='all, delete')
 
     @classmethod
     def tmpl_for_items_categories(cls, session):
@@ -132,6 +132,6 @@ class ItemsCategories(Base):
 
     @classmethod
     def get_item_by_category_id(cls, session, category_id):
-        query = cls.tmpl_for_categories(session).filter(cls.category_id==category_id).outerjoin(Items, and_(cls.item_id==Items.id, Items.instock==True))
+        query = cls.tmpl_for_items_categories(session).outerjoin(Items, cls.item_id==Items.id).filter(and_(cls.category_id==category_id, Items.instock==True))
 
         return query
