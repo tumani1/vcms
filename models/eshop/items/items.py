@@ -91,6 +91,8 @@ class Items(Base):
                 else:
                     query = query.filter(or_(UsersItems.bought_cnt == 0, UsersItems.bought_cnt == None))
 
+        total_cnt = len(query.all())
+
         # Set limit and offset filter
         if not limit is None:
             # Set Limit
@@ -101,4 +103,9 @@ class Items(Base):
             if limit[1]:
                 query = query.offset(limit[1])
 
+        return query, total_cnt
+
+    @classmethod
+    def get_item_by_id(cls, user, session, item_id, **kwargs):
+        query = cls.tmpl_for_items(user, session).filter(cls.id == item_id).first()
         return query
