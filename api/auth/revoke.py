@@ -3,7 +3,7 @@
 from models.tokens import GlobalToken
 
 
-def revoke(auth_user, session, query, **kwargs):
+def revoke(auth_user, query, session, **kwargs):
     '''
     Revoking access for users Global Token by deleting it
     '''
