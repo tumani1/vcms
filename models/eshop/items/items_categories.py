@@ -11,3 +11,18 @@ class ItemsCategories(Base):
     item_id = Column(ForeignKey('items.id'), nullable=False)
     category_id = Column(ForeignKey('categories.id'), nullable=False)
 
+    @classmethod
+    def tmpl_for_items_categories(cls, session):
+        query = session.query(cls)
+
+        return query
+
+
+    @classmethod
+    def get_items_categories_by_category_id(cls, session, category_id):
+        query = cls.tmpl_for_items_categories(session).filter_by(category_id=category_id)
+        return query
+
+    @classmethod
+    def get_items_by_category_id(cls, session, category_id):
+        query = cls.tmpl_for_items_categories(session).filter()
