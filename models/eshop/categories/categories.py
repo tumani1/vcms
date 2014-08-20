@@ -23,14 +23,6 @@ class Categories(Base):
         return query
 
     @classmethod
-    def get_item_by_category_id(cls, session, category_id):
-        sql = " join items_categories on categories.id = 1 " \
-              "join  items on (items_categories.item_id = items.id and items.instock=True)"
-        query = cls.tmpl_for_categories(session).filter(sql)
-
-        return query
-
-    @classmethod
     def get_extras_by_category_id(cls, session, category_id):
         query = cls.tmpl_for_categories(session).\
             outerjoin(CategoriesExtras, category_id==CategoriesExtras.categories_id).\

@@ -1,9 +1,8 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Text, or_, and_, desc, asc
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Text, or_, and_, desc, asc, ForeignKey
 from sqlalchemy.orm import relationship, contains_eager
 from models import Base
 from models.eshop.items.users_items import UsersItems
-from models.eshop.items.items_categories import ItemsCategories
 from models.eshop.items.items_objects import ItemsObjects
 
 
@@ -108,4 +107,31 @@ class Items(Base):
     @classmethod
     def get_item_by_id(cls, user, session, item_id, **kwargs):
         query = cls.tmpl_for_items(user, session).filter(cls.id == item_id).first()
+        return query
+
+
+class ItemsCategories(Base):
+    __tablename__ = 'items_categories'
+
+    id = Column(Integer, primary_key=True)
+    item_id = Column(ForeignKey('items.id'), nullable=False)
+    category_id = Column(ForeignKey('categories.id'), nullable=False)
+
+    items = relationship('Items', backref='items_categories', cascade='all, delete')
+
+    @classmethod
+    def tmpl_for_items_categories(cls, session):
+        query = session.query(cls)
+
+        return query
+
+    @classmethod
+    def get_items_categories_by_category_id(cls, session, category_id):
+        query = cls.tmpl_for_items_categories(session).filter_by(category_id=category_id)
+        return query
+
+    @classmethod
+    def get_item_by_category_id(cls, session, category_id):
+        query = cls.tmpl_for_categories(session).filter(cls.category_id==category_id).outerjoin(Items, and_(cls.item_id==Items.id, Items.instock==True))
+
         return query

@@ -20,7 +20,7 @@ def get(categories_id, auth_user, session=None, **kwargs):
 
     data['items_cnt'] = items_categories.__len__()
 
-    items = Categories.get_item_by_category_id(session, categories_id)
+    items = ItemsCategories.get_item_by_category_id(session, categories_id).all()
 
     categories_extras = CategoriesExtras.join_with_extras(session, categories_id).all()
 
@@ -35,8 +35,10 @@ def get(categories_id, auth_user, session=None, **kwargs):
 
     data['extras'] = mExtra(**serializer_params).data
 
+    return data
 
 
 
-    print categories
+
+
 
