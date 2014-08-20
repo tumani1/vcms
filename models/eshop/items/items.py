@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship, contains_eager
 from models import Base
 from models.eshop.items.users_items import UsersItems
 from models.eshop.items.items_objects import ItemsObjects
+from models.eshop.items.items_extras import ItemsExtras
 
 
 class Items(Base):
@@ -21,10 +22,15 @@ class Items(Base):
 
     item_users = relationship('UsersItems', backref='items', cascade='all, delete')
     item_categories = relationship('ItemsCategories', backref='items', cascade='all, delete')
+    item_extras = relationship('ItemsExtras', backref='items', cascade='all, delete')
 
     @classmethod
     def tmpl_for_items(cls, user, session):
         query = session.query(cls)
+
+        query = query. \
+            outerjoin(ItemsExtras, cls.id == ItemsExtras.item_id).\
+            options(contains_eager(cls.item_extras))
 
         if not user is None:
             query = query. \

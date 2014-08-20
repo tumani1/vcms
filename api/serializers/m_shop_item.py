@@ -1,5 +1,6 @@
 # coding: utf-8
-
+from models.extras.extras import Extras
+from api.serializers.m_extra import mExtra
 from utils.serializer import DefaultSerializer
 from utils.common import detetime_to_unixtime as convert_date
 
@@ -17,6 +18,7 @@ class mShopItem(DefaultSerializer):
         'price': '',
         'price_old': '',
         'relation': '',
+        'extras': ''
 
     }
 
@@ -44,6 +46,14 @@ class mShopItem(DefaultSerializer):
 
     def transform_price_old(self, instance, **kwargs):
         return instance.price_old
+
+    def transform_extras(self, instance, **kwargs):
+        extras_ids = []
+        for extra in instance.item_extras:
+            extras_ids.append(extra.extras_id)
+        extras_instance = self.session.query(Extras).filter(Extras.id.in_(extras_ids)).all()
+        extras = mExtra(instance=extras_instance, user=self.user, session=self.session).data
+        return extras
 
     def transform_relation(self, instance, **kwargs):
         relation = {}

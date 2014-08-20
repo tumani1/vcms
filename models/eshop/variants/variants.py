@@ -18,5 +18,7 @@ class Variants(Base):
     reserved_cnt = Column(Integer, nullable=True)
     added = Column(DateTime, nullable=True)
 
-
-
+    @classmethod
+    def get_variants_by_item_id(cls, user, session, item_id, **kwargs):
+        query = session.query(cls).filter(cls.item_id == item_id)
+        return query
