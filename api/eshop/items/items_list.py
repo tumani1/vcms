@@ -1,5 +1,5 @@
 # coding: utf-8
-from utils.validation import validate_list_int, validate_mLimit
+from utils.validation import validate_list_int, validate_mLimit, validate_eshop_price, validate_eshop_sort
 from models.eshop.items.items import Items
 from api.serializers.m_shop_item import mShopItem
 
@@ -45,7 +45,7 @@ def get(auth_user, session, **kwargs):
         params['instock'] = query['instock']
 
     if 'price' in query:
-        params['price'] = query['price']
+        params['price'] = validate_eshop_price(query['price'])
 
     if 'is_watched' in query:
         params['is_watched'] = query['is_watched']
@@ -54,7 +54,7 @@ def get(auth_user, session, **kwargs):
         params['is_bought'] = query['is_bought']
 
     if 'sort' in query:
-        params['sort'] = query['sort']
+        params['sort'] = validate_eshop_sort(query['sort'])
         if 'sort_desc' in query:
             params['sort_desc'] = query['sort_desc']
 

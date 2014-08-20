@@ -46,4 +46,13 @@ class mShopItem(DefaultSerializer):
         return instance.price_old
 
     def transform_relation(self, instance, **kwargs):
-        pass
+        relation = {}
+        item_user = instance.item_users
+        if self.is_auth and item_user:
+            if item_user[0].watched:               # [0] тк как существует только один обект связи одного юнита и юзера
+                relation.update(watched=convert_date(item_user[0].watched))
+            if item_user[0].bought_cnt:
+                relation.update(bought_cnt=item_user[0].bought_cnt)
+            if item_user[0].wished:
+                relation.update(wished=convert_date(item_user[0].wished))
+        return relation
