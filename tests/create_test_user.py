@@ -15,7 +15,6 @@ def create(session, usuff=1, cisuff=1):
 
 
 def clear(session):
-
     session.query(GlobalToken).delete()
     session.commit()
     session.query(SessionToken).delete()
