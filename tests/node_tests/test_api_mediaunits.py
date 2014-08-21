@@ -44,7 +44,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_info(self):
         id = 2
         data = {}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/info' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/info'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',
@@ -62,7 +62,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_next(self):
         id = 2
         data = {}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/next' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/next'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test3',
@@ -80,7 +80,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_prev(self):
         data = {}
         id = 3
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/prev' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/prev'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',

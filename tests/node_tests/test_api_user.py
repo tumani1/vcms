@@ -78,8 +78,8 @@ class UserTestCase(unittest.TestCase):
     def test_values_get(self):
         data = {'topic': 'test1'}
         resp = self.req_sess.get(self.fullpath+'/user/values', headers={'token': self.token}, params=data)
-        temp = [{u'name': 1, u'value': 777}]
-        self.assertListEqual(temp, resp.json())
+        temp = {u'name': 1, u'value': 777}
+        self.assertListEqual(temp, resp.json()[0])
 
     def test_friends_get(self):
         data = {'limit': '4'}

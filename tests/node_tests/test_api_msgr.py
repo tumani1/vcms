@@ -55,7 +55,7 @@ class MsgrTestCase(unittest.TestCase):
         data = {
         }
         id = 1
-        resp = self.req_sess.get(self.fullpath+'/msgr/%s/stream' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/msgr/{0}/stream'.format(id), headers={'token': self.token}, params=data)
         result = {
             u'thread': 1,
             u'created': u'2014-01-01',
@@ -123,7 +123,7 @@ class MsgrTestCase(unittest.TestCase):
             u'text': u'Hi',
         }
         id = 1
-        resp = self.req_sess.put(self.fullpath+'/msgr/%s/send' % (id), headers={'token': self.token}, data=data)
+        resp = self.req_sess.put(self.fullpath+'/msgr/{0}/send'.format(id), headers={'token': self.token}, data=data)
         msgr_log = MsgrLog.get_msgr_log_by_msgr_thread_id_and_user_id(self.session, 1, 1).all()
         self.assertEqual(data['text'], msgr_log[1].text)
 

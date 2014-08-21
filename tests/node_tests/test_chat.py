@@ -80,7 +80,7 @@ class ChatStatTestCase(unittest.TestCase):
     def test_get_stat(self):
         ch = self.session.query(Chats).first()
         ChatMessages.objects.create(text='for stat', chat_id=ch.id, created=datetime.utcnow()+timedelta(1,0,0))
-        resp = self.req_sess.get(self.fullpath+'/chat/{}/stat'.format(ch.id), headers={'token': self.gl_token})
+        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stat'.format(ch.id), headers={'token': self.gl_token})
         resp = resp.json()
         self.assertEqual(resp['new_msgs'], 1)
 
@@ -108,7 +108,7 @@ class ChatStreamTestCase(unittest.TestCase):
         self.cm = ChatMessages.objects.create(text='test', chat_id=1, user_id=self.u.id)
 
     def test_get_stream(self):
-        resp = self.req_sess.get(self.fullpath+'/chat/{}/stream'.format(self.ch.id))
+        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stream'.format(self.ch.id))
         resp = resp.json()
         self.assertEqual(len(resp), 1)
 
@@ -133,7 +133,7 @@ class ChatSendTestCase(unittest.TestCase):
     def test_chat_send(self):
         data={'text': 'for send'}
         ch = self.session.query(Chats).first()
-        resp = self.req_sess.put(self.fullpath+'/chat/{}/send'.format(ch.id),
+        resp = self.req_sess.put(self.fullpath+'/chat/{0}/send'.format(ch.id),
                                  headers={'token': self.gl_token}, data=data)
         m = ChatMessages.objects.first()
         self.assertEqual(m.text, data['text'])

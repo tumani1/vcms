@@ -54,7 +54,7 @@ class TopicInfoTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/info' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/info'.format(topic), headers={'token': self.token}, params={})
 
         temp = {
             u'name': u'test',
@@ -95,7 +95,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_get(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
         temp = {
             'liked': 0
         }
@@ -103,7 +103,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_post(self):
         topic = "test1"
-        self.req_sess.post(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, data={})
+        self.req_sess.post(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -112,7 +112,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test2"
-        self.req_sess.delete(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, params={})
+        self.req_sess.delete(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -143,7 +143,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_get(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
 
         temp = {'subscribed': 0}
 
@@ -151,7 +151,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_post(self):
         topic = "test2"
-        resp = self.req_sess.post(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, data={})
+        resp = self.req_sess.post(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -160,7 +160,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test1"
-        resp = self.req_sess.delete(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.delete(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -190,7 +190,7 @@ class TopicExtrasTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/extras' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/extras'.format(topic), headers={'token': self.token}, params={})
 
         temp = [
             {
@@ -284,7 +284,7 @@ class TopicValuesTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/values' % (topic), headers={'token': self.token}, params={'scheme_name': 't'})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/values'.format(topic), headers={'token': self.token}, params={'scheme_name': 't'})
 
         temp = []
 
@@ -315,7 +315,7 @@ class TopicMediaTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/media' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/media'.format(topic), headers={'token': self.token}, params={})
 
         temp = []
 
@@ -345,7 +345,7 @@ class TopicPersonsTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/persons' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/persons'.format(topic), headers={'token': self.token}, params={})
 
         temp = []
 

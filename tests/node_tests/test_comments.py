@@ -48,7 +48,7 @@ class CommentsTestCase(unittest.TestCase):
     def test_comments_info(self):
         data = {}
         id = 1
-        resp = self.req_sess.get(self.fullpath+'/comments/%s/info' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/comments/{0}/info'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'text': u'Тест',
             u'object': None,
@@ -91,7 +91,7 @@ class CommentsTestCase(unittest.TestCase):
     def test_comments_like_put(self):
         data = {}
         id = 2
-        resp = self.req_sess.put(self.fullpath+'/comments/%s/like' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.put(self.fullpath+'/comments/{0}/like'.format(id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         new_like = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
@@ -103,7 +103,7 @@ class CommentsTestCase(unittest.TestCase):
         id = 3
         user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
         self.assertTrue(user_com.liked)
-        resp = self.req_sess.delete(self.fullpath+'/comments/%s/like' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.delete(self.fullpath+'/comments/{0}/like'.format(id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         user_com = self.session.query(UsersComments).filter(and_(UsersComments.user_id == self.user_id, UsersComments.comment_id == id)).first()
@@ -113,7 +113,7 @@ class CommentsTestCase(unittest.TestCase):
     def test_comments_reply(self):
         data = {'text': 'reply_test'}
         id = 1
-        resp = self.req_sess.post(self.fullpath+'/comments/%s/reply' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.post(self.fullpath+'/comments/{0}/reply'.format(id), headers={'token': self.token}, params=data)
         self.session.close()
         self.session = scoped_session(sessionmaker(bind=self.engine))
         reply_com = self.session.query(Comments).all()[-1]
