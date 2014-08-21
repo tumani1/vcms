@@ -57,10 +57,9 @@ class TopicInfoTestCase(unittest.TestCase):
         topic = "test"
         IPC_pack = {
             "api_method": "/topics/%s/info" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -104,10 +103,9 @@ class TopicLikeTestCase(unittest.TestCase):
         topic = "test"
         IPC_pack = {
             "api_method": "/topics/%s/like" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -120,10 +118,9 @@ class TopicLikeTestCase(unittest.TestCase):
         topic = "test1"
         IPC_pack = {
             "api_method": "/topics/%s/like" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -139,10 +136,9 @@ class TopicLikeTestCase(unittest.TestCase):
         topic = "test2"
         IPC_pack = {
             "api_method": "/topics/%s/like" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "delete",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -178,10 +174,9 @@ class TopicSubscribeTestCase(unittest.TestCase):
         topic = "test"
         IPC_pack = {
             "api_method": "/topics/%s/subscribe" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "get",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -194,10 +189,9 @@ class TopicSubscribeTestCase(unittest.TestCase):
         topic = "test2"
         IPC_pack = {
             "api_method": "/topics/%s/subscribe" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "post",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)
@@ -213,10 +207,9 @@ class TopicSubscribeTestCase(unittest.TestCase):
         topic = "test1"
         IPC_pack = {
             "api_method": "/topics/%s/subscribe" % (topic),
+            "x_token": self.session_token[1],
             "api_type": "delete",
-            "query_params": {
-                "x_token": self.session_token[1],
-            }
+            "query_params": {}
         }
 
         resp = self.cl.route(IPC_pack)

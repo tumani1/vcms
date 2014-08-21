@@ -52,9 +52,8 @@ class UsersTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/user/info',
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1]
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         temp = {
                 'city': u'Test',
@@ -72,10 +71,8 @@ class UsersTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/user/info',
                     'api_type': 'put',
-                    'query_params': {
-                        'firstname': 'Ivan',
-                        'lastname': 'Ivanov',
-                        'x_token': self.session_token[1]}
+                    'x_token': self.session_token[1],
+                    'query_params': {'firstname': 'Ivan', 'lastname': 'Ivanov'}
         }
         resp = self.cl.route(IPC_pack)
         test_user = self.session.query(Users).filter_by(id=self.user_id).first()

@@ -37,57 +37,52 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
     def test_echo(self):
         Auth_IPC_pack = {
-                    'api_method': '/auth/session',
+                    'api_method': 'auth/session',
                     'api_type': 'get',
-                    'query_params': {
-                        'token': self.token,
-                    }
-        }
+                    'token': self.token,
+                    'x_token': None,
+                    'query_params': {}}
 
         auth_resp = self.cl.route(Auth_IPC_pack)
 
         session_token = auth_resp['session_token']
         
         IPC_pack = {
-            'api_method': '/test/echoauth',
+            'api_method': 'test/echoauth',
             'api_type': 'get',
-            'query_params': {
-                'message': 'hello',
-                'x_token': session_token,
-                }
+            'x_token': session_token,
+            'query_params': {'message': 'hello'}
         }
         resp = self.cl.route(IPC_pack)
 
         print "Before assert \n", IPC_pack, '\n resp', resp
-        self.assertEqual({'message': "Hello,Test1"}, resp)
+        self.assertEqual({'message': "Hello,Test"}, resp)
 
     def test_revoke(self):
         Auth_IPC_pack = {
-            'api_method': '/auth/session',
+            'api_method': 'auth/session',
             'api_type': 'get',
-            'query_params': {
-                'token': self.token,
-            }
+            'token': self.token,
+            'x_token': None,
+            'query_params': {}
         }
         auth_resp = self.cl.route(Auth_IPC_pack)
 
         session_token = auth_resp['session_token']
         Del_IPC_pack = {
-            'api_method': '/auth/session',
+            'api_method': 'auth/session',
             'api_type': 'delete',
-            'query_params': {
-                'x_token': session_token,
-            },
+            'x_token': session_token,
+            'query_params': {},
+            'token': None
         }
         auth_resp = self.cl.route(Del_IPC_pack)
         
         IPC_pack = {
-            'api_method': '/test/echoauth',
+            'api_method': 'test/echoauth',
             'api_type': 'get',
-            'query_params': {
-                'message': 'hello',
-                'x_token': session_token,
-                }
+            'x_token': session_token,
+            'query_params': {'message': 'hello'}
         }
 
         try:

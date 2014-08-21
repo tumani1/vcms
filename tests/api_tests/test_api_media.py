@@ -44,9 +44,8 @@ class MediaTestCase(unittest.TestCase):
         id = 1
         IPC_pack = {'api_method': '/media/%s/info'  % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         temp = {
             'description': 'test_desc1',
@@ -65,10 +64,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/list',
                     'api_type': 'get',
-                    'query_params': {
-                        'text': u'media1',
-                        'x_token': self.session_token[1],
-                        }
+                    'x_token': self.session_token[1],
+                    'query_params': {'text': u'media1'}
         }
         temp = [{
             'description': 'test_desc1',
@@ -88,15 +85,14 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/persons' % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         temp = [{
                     'firstname': 'test',
                     'lastname': 'testov',
                     'relation': {},
-                    'user': {'lastvisit': '', 'city': 'Test', 'firstname': 'Test1', 'gender': 'n', 'is_online': True, 'regdate': 1325376000.0, 'lastname': 'Test1', 'country': 'Russian Federation', 'id': 1},
+                    'user': {'lastvisit': '', 'city': 'Test', 'firstname': 'Test1', 'gender': 'n', 'is_online': True, 'regdate': 1325376000.0, 'lastname': 'Test1', 'country': 'Test', 'id': 1},
                     'role': 'actor',
                     'type': '',
                     'id': 1
@@ -109,9 +105,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/units' % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         temp = [{
                     'enddate': 1391212800.0,
@@ -133,9 +128,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/like' % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         temp = {"liked":0}
         resp = self.cl.route(IPC_pack)
@@ -146,9 +140,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/like' % (id),
                     'api_type': 'post',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
@@ -159,9 +152,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/like' % (id),
                     'api_type': 'delete',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
@@ -172,9 +164,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/playlist' % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         temp = {"in_playlist":1391212800}
@@ -185,9 +176,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/playlist' % (id),
                     'api_type': 'post',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
@@ -198,9 +188,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/playlist' % (id),
                     'api_type': 'delete',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
@@ -211,9 +200,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/state' % (id),
                     'api_type': 'get',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         temp = {"watched":1388534400,"pos":20}
@@ -224,10 +212,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/state' % (id),
                     'api_type': 'post',
-                    'query_params': {
-                        'pos': 20,
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {'pos': 20}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
@@ -238,9 +224,8 @@ class MediaTestCase(unittest.TestCase):
         IPC_pack = {
                     'api_method': '/media/%s/state' % (id),
                     'api_type': 'delete',
-                    'query_params': {
-                        'x_token': self.session_token[1],
-                    }
+                    'x_token': self.session_token[1],
+                    'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
         um = self.session.query(UsersMedia).filter(and_(UsersMedia.user_id==self.user_id, UsersMedia.media_id==id)).first()
