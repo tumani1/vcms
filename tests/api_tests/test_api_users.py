@@ -54,11 +54,10 @@ class UsersTestCase(unittest.TestCase):
         self.session.commit()
         self.session.close()
         self.zero_client.close()
-        
 
     def test_users_values_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/values' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/values'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['query_params'] = {
             'topic': 'test1',
@@ -96,7 +95,7 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_info_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/info' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/info'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         resp_dict = self.zero_client.route(self.ipc_pack)
         user = self.session.query(Users).get(1)
@@ -115,19 +114,19 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_friendship_get(self):
         user_id = 2
-        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_FRIEND)
         user_id = 3
-        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user_id)
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_UNDEF)
 
     def test_users_friends_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/friends' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friends'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         resp_dicts = self.zero_client.route(self.ipc_pack)
         subquery = self.session.query(UsersRels.partner_id).filter_by(user_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
@@ -146,7 +145,7 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_extras_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/extras' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/extras'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
 
         resp_dicts = self.zero_client.route(self.ipc_pack)

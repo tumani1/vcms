@@ -92,7 +92,7 @@ class MediaTestCase(unittest.TestCase):
                     'firstname': 'test',
                     'lastname': 'testov',
                     'relation': {},
-                    'user': {'lastvisit': '', 'city': 'Test', 'firstname': 'Test1', 'gender': 'n', 'is_online': True, 'regdate': 1325376000.0, 'lastname': 'Test1', 'country': 'Test', 'id': 1},
+                    'user': {'lastvisit': '', 'city': 'Test', 'firstname': 'Test1', 'gender': 'n', 'is_online': True, 'regdate': 1325376000.0, 'lastname': 'Test1', 'country': u'Russian Federation', 'id': 1},
                     'role': 'actor',
                     'type': '',
                     'id': 1
@@ -115,7 +115,7 @@ class MediaTestCase(unittest.TestCase):
                     'batch': 'batch1',
                     'next': 3,
                     'releasedate': 1325376000.0,
-                    'title_orig': 2,
+                    'title_orig': '2',
                     'relation': {'watched': 1388534400.0},
                     'prev': 1,
                     'id': 2
