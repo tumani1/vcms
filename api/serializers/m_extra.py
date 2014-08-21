@@ -41,5 +41,7 @@ class mExtra(DefaultSerializer):
         return instance.location
 
     def transform_created(self, instance, **kwargs):
+        if instance.created is None:
+            return None
         return convert_date(instance.created)
 

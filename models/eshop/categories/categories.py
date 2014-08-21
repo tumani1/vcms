@@ -1,6 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, desc
 from models.eshop.items import ItemsCategories
 from models.eshop.items.items import Items
 from models import Base
@@ -26,16 +25,25 @@ class Categories(Base):
 
     @classmethod
     def get_list_categories(cls, session, instock=None, has_items=None, sort=None):
-        query = cls.tmpl_for_categories(session)
+        query = cls.tmpl_for_categories(session).\
+            outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id).\
+                    outerjoin(Items, ItemsCategories.item_id==Items.id).filter(ItemsCategories.item_id != None)
 
-        if not instock is None:
-            if instock:
+        if not has_items is None:
+            if not has_items:
                 query = query.outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id).\
-                    outerjoin(Items, ItemsCategories.item_id==Items.id).\
-                    filter(Items.instock==True)
+                    outerjoin(Items, ItemsCategories.item_id==Items.id).filter(ItemsCategories.item_id == None)
+
+        if not instock is None and has_items!=False:
+            if instock:
+                query = query.filter(Items.instock==True)
+
+        if not sort is None:
+            if sort == 'name':
+                query = query.order_by(desc(cls.name))
+            else:
+                query = query
 
         return query
-
-
 
 

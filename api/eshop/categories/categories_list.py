@@ -1,7 +1,8 @@
+import copy
 from models import Categories
 
 
-def get(auth_user, session=None, **kwargs):
+def get(session=None, **kwargs):
     data = []
     categories = {
         'id': '',
@@ -25,6 +26,15 @@ def get(auth_user, session=None, **kwargs):
     if 'sort' in query:
         params['sort'] = query['sort']
 
-    Categories.get_list_categories(**params)
+    category = Categories.get_list_categories(**params)
+
+    for cat in category:
+        categories['id'] = cat.id
+        categories['name'] = cat.name
+        data.append(copy.deepcopy(categories))
+
+    return data
+
+
 
 

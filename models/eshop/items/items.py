@@ -120,7 +120,7 @@ class ItemsCategories(Base):
     __tablename__ = 'items_categories'
 
     id = Column(Integer, primary_key=True)
-    item_id = Column(ForeignKey('items.id'), nullable=False)
+    item_id = Column(ForeignKey('items.id'), nullable=True)
     category_id = Column(ForeignKey('categories.id'), nullable=False)
 
     category_items = relationship('Items', backref='items_categories', cascade='all, delete')
