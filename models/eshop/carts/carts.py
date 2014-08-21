@@ -13,3 +13,9 @@ class Carts(Base):
     cost_total = Column(Float)
     crated     = Column(DateTime)
     updated    = Column(DateTime)
+
+
+    @classmethod
+    def get_cart_by_user_id(cls, session, user_id, **kwargs):
+        query = session.query(cls).filter(cls.user_id == user_id)
+        return query

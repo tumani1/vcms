@@ -5,6 +5,7 @@ from models import Base
 from models.eshop.items.users_items import UsersItems
 from models.eshop.items.items_objects import ItemsObjects
 from models.eshop.items.items_extras import ItemsExtras
+from models.extras.extras import Extras
 
 
 class Items(Base):
@@ -114,6 +115,13 @@ class Items(Base):
     def get_item_by_id(cls, user, session, item_id, **kwargs):
         query = cls.tmpl_for_items(user, session).filter(cls.id == item_id).first()
         return query
+
+    @classmethod
+    def get_item_extras(cls, session, item_id, **kwargs):
+        subquery = session.query(ItemsExtras.extras_id).filter(ItemsExtras.item_id == item_id).subquery()
+        query = session.query(Extras).filter(Extras.id.in_(subquery))
+        return query
+
 
 
 class ItemsCategories(Base):
