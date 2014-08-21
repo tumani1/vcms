@@ -16,11 +16,9 @@ class BaseService(object):
         self.connect = db_connect()
         self.mongodb_session = mongo_connect()
 
-
     @raven_report
     def route(self, IPC_pack):
         session = create_session(bind=self.connect, expire_on_commit=False)
-
         try:
             auth_user = authorize(IPC_pack, session=session)
 
