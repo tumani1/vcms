@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from utils.common import detetime_to_unixtime as convert_date
 from utils.serializer import DefaultSerializer
 
 __all__ = ['mExtra']
@@ -26,7 +26,7 @@ class mExtra(DefaultSerializer):
         return instance.id
 
     def transform_type(self, instance, **kwargs):
-        return instance.type
+        return instance.type.value
 
     def transform_title(self, instance, **kwargs):
         return instance.title
@@ -41,5 +41,5 @@ class mExtra(DefaultSerializer):
         return instance.location
 
     def transform_created(self, instance, **kwargs):
-        return instance.created
+        return convert_date(instance.created)
 
