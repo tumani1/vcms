@@ -37,7 +37,7 @@ class TokenMixin(Base):
         return Column('created', DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
-        return u'<{}({}-{})>'.format(self.__class__.__name__, self.user_id, self.token)
+        return u'<{0}({1}-{2})>'.format(self.__class__.__name__, self.user_id, self.token)
 
     @classmethod
     def get_tmpl(cls, session):

@@ -12,8 +12,8 @@ from utils.serializer import serialize
 
 @need_authorization
 @serialize
-def get(auth_user, session, **kwargs):
-    sid, token, created = SessionToken.generate_token(auth_user.id, session)
+def get(auth_user, session, meta, **kwargs):
+    sid, token, created = SessionToken.generate_token(auth_user.id, session, meta)
     auth_user.last_visit = datetime.datetime.utcnow()
     session.add(auth_user)
     session.commit()
