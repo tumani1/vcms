@@ -5,7 +5,7 @@ from api.serializers import mUser, mSession
 
 @need_authorization
 def get_user_session(auth_user, session, **kwargs):
-    return mSession(auth_user.session_token)
+    return mSession(instance=auth_user.session_token, session=session).data
 
 
 @need_authorization

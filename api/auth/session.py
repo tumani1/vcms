@@ -1,11 +1,8 @@
 # coding: utf-8
-
 import datetime
 
 from models.tokens import SessionToken
-
 from settings import TOKEN_LIFETIME
-
 from utils import need_authorization
 from utils.serializer import serialize
 
