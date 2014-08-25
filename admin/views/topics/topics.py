@@ -11,12 +11,9 @@ class TopicsModelView(SqlAlModelView):
     category = u'Топики'
     name = u'Топик'
 
-    # form_excluded_columns = ('topic_values', 'topic_user', )
-    form_columns = ('name', 'title', 'title_orig', 'description', 'releasedate',
-                    'status', 'type', )
+    form_columns = ('name', 'title', 'title_orig', 'releasedate', 'status',
+                    'type', 'description', )
     column_exclude_list = ('search_description', )
-
-    column_display_pk = True
 
     column_choices = dict(
         status=TOPIC_STATUS,

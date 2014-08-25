@@ -6,11 +6,11 @@ from users import UsersRelsModelView, UsersModelView, UsersValuesModelView,\
 from tokens import SessionTokenModelView, GlobalTokenModelView
 from persons import PersonsModelView, PersonsUsersModelView,\
     PersonsValuesModelView, PersonsExtrasModelView, PersonsTopicsModelView
-from extras import ExtrasModelView, TopicsExtrasModelView
+from extras import ExtrasModelView
 from scheme import SchemeModelView
-from topics import TopicsModelView
+from topics import TopicsModelView, TopicsExtrasModelView
 from cdn import CdnModelView
-from chats import ChatsModelView, UsersChatModelView
+from chats import ChatsModelView, UsersChatModelView, ChatMessagesModelView
 from locations import CountryModelView, CitieModelView
 from stream import StreamModelView
 from media import MediaModelView
@@ -46,6 +46,28 @@ admin_view.add_view(PersonsTopicsModelView())
 ###############################################################################
 
 ###############################################################################
+# Topics
+
+admin_view.add_view(TopicsModelView())
+admin_view.add_view(TopicsExtrasModelView())
+###############################################################################
+
+###############################################################################
+# Chats
+
+admin_view.add_view(ChatsModelView())
+admin_view.add_view(UsersChatModelView())
+admin_view.add_view(ChatMessagesModelView())
+###############################################################################
+
+###############################################################################
+# Contents
+
+admin_view.add_view(CitieModelView())
+admin_view.add_view(CountryModelView())
+###############################################################################
+
+###############################################################################
 # Extras
 
 admin_view.add_view(ExtrasModelView())
@@ -58,13 +80,6 @@ admin_view.add_view(SchemeModelView())
 ###############################################################################
 
 ###############################################################################
-# Topics
-
-admin_view.add_view(TopicsModelView())
-admin_view.add_view(TopicsExtrasModelView())
-###############################################################################
-
-###############################################################################
 # CDN
 
 admin_view.add_view(CdnModelView())
@@ -74,18 +89,6 @@ admin_view.add_view(CdnModelView())
 # Stream
 
 admin_view.add_view(StreamModelView())
-###############################################################################
-
-###############################################################################
-# Chats
-
-admin_view.add_view(ChatsModelView())
-admin_view.add_view(UsersChatModelView())
-###############################################################################
-
-###############################################################################
-# Contents
-
 admin_view.add_view(CitieModelView())
 admin_view.add_view(CountryModelView())
 ###############################################################################
