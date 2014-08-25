@@ -42,24 +42,6 @@ class UsersModelView(SqlAlModelView):
     )
 
     form_args = dict(
-        city=dict(
-            label=u'Родной город',
-        ),
-        firstname=dict(
-            label=u'Имя',
-        ),
-        lastname=dict(
-            label=u'Фамилия',
-        ),
-        address=dict(
-            label=u'Адресс',
-        ),
-        bio=dict(
-            label=u'Биография',
-        ),
-        birthdate=dict(
-            label=u'Дата рождения',
-        ),
         time_zone=dict(
             label=u'Временная зона',
             choices=[(i, i) for i in common_timezones]
@@ -67,11 +49,5 @@ class UsersModelView(SqlAlModelView):
         gender=dict(
             label=u'Пол',
             choices=APP_USERS_TYPE_GENDER,
-        ),
-        password=dict(
-            label=u'Пароль',
-        ),
-        phone=dict(
-            label=u'Телефон',
         ),
     )
