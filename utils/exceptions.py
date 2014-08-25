@@ -14,6 +14,14 @@ class RequestErrorException(APIException):
     message = 'Bad Request'
 
 
+class Invalid(APIException):
+    """
+    400
+    """
+    code = 400
+    message = 'Bad Request'
+
+
 class SessionExpiredException(APIException):
     """
     401
