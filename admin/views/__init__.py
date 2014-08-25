@@ -10,7 +10,7 @@ from extras import ExtrasModelView
 from scheme import SchemeModelView
 from topics import TopicsModelView, TopicsExtrasModelView
 from cdn import CdnModelView
-from chats import ChatsModelView, UsersChatModelView
+from chats import ChatsModelView, UsersChatModelView, ChatMessagesModelView
 from locations import CountryModelView, CitieModelView
 from stream import StreamModelView
 
@@ -56,6 +56,7 @@ admin_view.add_view(TopicsExtrasModelView())
 
 admin_view.add_view(ChatsModelView())
 admin_view.add_view(UsersChatModelView())
+admin_view.add_view(ChatMessagesModelView())
 ###############################################################################
 
 ###############################################################################

@@ -15,21 +15,12 @@ class CdnModelView(SqlAlModelView):
                          cdn_type=u'Тип', url=u'URL адресс',
                          has_mobile=u'Для мобильных устройств',
                          has_auth=u'Необходима авторизация',
-                         location_regxp=u'Регулярное вырожожение для локации',
-                         )
+                         location_regxp=u'Регулярное вырожожение для локации', )
 
-    column_list = ('name', 'has_mobile', 'has_auth', 'description', 'cdn_type',
-                   'url', 'location_regxp')
+    form_columns = column_list = ('name', 'has_mobile', 'has_auth', 'cdn_type',
+                                  'url', 'location_regxp', 'description', )
 
     form_excluded_columns = ('extras', 'media_locations', )
     form_overrides = dict(
         name=StringField,
-    )
-
-    form_columns = column_list
-
-    form_args = dict(
-        name=dict(
-            label=u'Название',
-        ),
     )
