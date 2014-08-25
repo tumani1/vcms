@@ -9,24 +9,9 @@ class CountryModelView(SqlAlModelView):
     category = u'Локации'
     name = u'Страны'
 
-    column_labels = dict(name=u'Название', name_orig=u'Оригинальное название',
-                         description=u'Описание')
+    column_labels = dict(id=u'ISO 3166-1 Alpha-2', name=u'Название',
+                         name_orig=u'Оригинальное название', description=u'Описание')
 
+    form_columns = ('id', 'name', 'name_orig', 'description', )
 
     column_display_pk = True
-
-    form_args = dict(
-        name=dict(
-            label=u'Название'
-        ),
-        name_orig=dict(
-            label=u'Оригинальное название'
-        ),
-        description=dict(
-            label=u'Описание'
-        )
-    )
-
-    form_excluded_columns = ('cities', )
-
-# coding: utf-8

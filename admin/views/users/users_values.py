@@ -19,3 +19,6 @@ class UsersValuesModelView(SqlAlModelView):
         value_int=u'Значение (целое число)', value_text=u'Значени (текст)',
         value_string=u'Значение (строка)'
     )
+
+    form_columns = column_list = ('user', 'scheme', 'value_int', 'value_text',
+                                  'value_string', )

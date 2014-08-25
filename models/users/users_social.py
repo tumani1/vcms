@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import datetime
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
@@ -12,7 +11,7 @@ from models.base import Base
 class UsersSocial(Base):
     __tablename__ = 'users_social'
 
-    id = Column(Integer, primary_key=True)
+    id      = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     sType   = Column(ChoiceType(APP_USERSOCIAL_TYPE), nullable=False)
     sToken  = Column(String(40), nullable=False)

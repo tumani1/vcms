@@ -1,6 +1,5 @@
 # coding: utf-8
 import datetime
-
 from sqlalchemy.sql.expression import func
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
 from sqlalchemy.orm import relationship, sessionmaker
@@ -13,6 +12,7 @@ from models.locations import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
 from models.mongo import ChatMessages
+
 
 class Users(Base):
     __tablename__ = 'users'
