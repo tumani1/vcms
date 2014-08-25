@@ -1,11 +1,12 @@
 # coding: utf-8
 import unittest
-from models import Base, Users
+import requests
 from sqlalchemy.orm import sessionmaker, scoped_session
+
+from models import Base, Users
 from utils.connection import db_connect, create_session
 from tests.fixtures import create
-from settings import NODE
-import requests
+from tests.constants import NODE
 
 
 def setUpModule():

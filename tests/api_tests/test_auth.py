@@ -28,8 +28,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect(ZERORPC_SERVICE_URI)
-        
-        
+
         self.session = create_session(bind=db_connect(), expire_on_commit=False)
         clear(self.session)
         variable = create(self.session)
@@ -38,7 +37,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
     def test_echo(self):
         Auth_IPC_pack = {
-                    'api_method': 'auth/session',
+                    'api_method': '/auth/session',
                     'api_type': 'get',
                     'token': self.token,
                     'x_token': None,
@@ -49,7 +48,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         session_token = auth_resp['session_token']
         
         IPC_pack = {
-            'api_method': 'test/echoauth',
+            'api_method': '/test/echoauth',
             'api_type': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}
@@ -57,11 +56,11 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
 
         print "Before assert \n", IPC_pack, '\n resp', resp
-        self.assertEqual({'message': "Hello,Test"}, resp)
+        self.assertEqual({'message': "Hello,Test1"}, resp)
 
     def test_revoke(self):
         Auth_IPC_pack = {
-            'api_method': 'auth/session',
+            'api_method': '/auth/session',
             'api_type': 'get',
             'token': self.token,
             'x_token': None,
@@ -71,7 +70,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
         session_token = auth_resp['session_token']
         Del_IPC_pack = {
-            'api_method': 'auth/session',
+            'api_method': '/auth/session',
             'api_type': 'delete',
             'x_token': session_token,
             'query_params': {},
@@ -80,7 +79,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         auth_resp = self.cl.route(Del_IPC_pack)
         
         IPC_pack = {
-            'api_method': 'test/echoauth',
+            'api_method': '/test/echoauth',
             'api_type': 'get',
             'x_token': session_token,
             'query_params': {'message': 'hello'}

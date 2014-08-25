@@ -5,7 +5,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
-from models.media.constants import APP_MEDIA_TYPE_WITH_DEFAULT, APP_MEDIA_LIST
+from constants import APP_MEDIA_LIST, APP_MEDIA_TYPE_WITH_DEFAULT
+from utils.common import user_access_media
 
 
 class MediaAccessDefaults(Base):
@@ -16,6 +17,13 @@ class MediaAccessDefaults(Base):
     access_type = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
 
     countries_list = relationship('MediaAccessDefaultsCountries', backref='media_type', cascade='all, delete')
+
+    @classmethod
+    def access_media_type(cls, media_type_code, owner, is_auth, is_manager, session):
+        media_type = session.query(cls).get(media_type_code)
+        access = media_type.access
+        status_code = user_access_media(access, owner, is_auth, is_manager)
+        return status_code
 
     def __repr__(self):
         return u'<MediaAccessDefaults(name={0})>'.format(self.name)

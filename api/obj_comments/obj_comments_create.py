@@ -1,5 +1,6 @@
 # coding: utf-8
 from api.comments.comments_create import post as create_comments
+from utils.exceptions import RequestErrorException
 
 
 def post(type, name_or_id, auth_user, session, **kwargs):
@@ -14,7 +15,7 @@ def post(type, name_or_id, auth_user, session, **kwargs):
     if 'text' in query:
         text = query['text']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
 
     params = {
         'auth_user': auth_user,

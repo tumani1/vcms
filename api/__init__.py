@@ -17,8 +17,8 @@ from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
-from api.cdn import routing as cdn_routing
 from api.eshop import routing as eshop_routing
+from api.internal import routing as internal_routing
 
 
 rest_routes = {
@@ -39,8 +39,8 @@ rest_routes = {
     'eshop': eshop_routing,
 }
 
-cdn_routes = {
-    'int-api': cdn_routing,
+internal_routes = {
+    'int-api': internal_routing,
 }
 
 

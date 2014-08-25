@@ -27,7 +27,7 @@ if args.create:
     session.connection().connection.set_isolation_level(0)
 
     sql = """
-        CREATE DATABASE {0} WITH OWNER={1} ENCODING='UTF8'
+        CREATE DATABASE {0} WITH OWNER={1} TEMPLATE template0 ENCODING='UTF8'
         TABLESPACE=pg_default LC_COLLATE='en_US.UTF-8' LC_CTYPE='en_US.UTF-8' CONNECTION LIMIT=-1;
     """
 
