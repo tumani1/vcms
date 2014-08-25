@@ -31,3 +31,5 @@ class PersonsTopicsModelView(SqlAlModelView):
             choices=PERSON_TOPIC_TYPE,
         ),
     )
+
+

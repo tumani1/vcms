@@ -4,10 +4,11 @@ from flask.ext.admin import Admin
 from users import UsersRelsModelView, UsersModelView, UsersValuesModelView,\
     UsersSocialModelView, UsersExtrasModelView, UsersTopicsModelView
 from tokens import SessionTokenModelView, GlobalTokenModelView
-from persons import PersonsModelView, PersonsUsersModelView, PersonsValuesModelView
-from extras import ExtrasModelView, TopicsExtrasModelView, PersonsExtrasModelView
+from persons import PersonsModelView, PersonsUsersModelView,\
+    PersonsValuesModelView, PersonsExtrasModelView, PersonsTopicsModelView
+from extras import ExtrasModelView, TopicsExtrasModelView
 from scheme import SchemeModelView
-from topics import TopicsModelView, PersonsTopicsModelView
+from topics import TopicsModelView
 from cdn import CdnModelView
 from chats import ChatsModelView, UsersChatModelView
 from locations import CountryModelView, CitieModelView

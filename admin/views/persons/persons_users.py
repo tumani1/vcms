@@ -13,3 +13,5 @@ class PersonsUsersModelView(SqlAlModelView):
         subscribed=u'Дата подписки',
         liked=u'Дата лайка',
     )
+
+    form_columns = column_list = ('users', 'subscribed', 'liked', )
