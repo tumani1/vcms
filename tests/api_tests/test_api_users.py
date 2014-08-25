@@ -8,7 +8,7 @@ from models import Base, Users, UsersRels, UsersExtras, Extras, Cities,SessionTo
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
 
 from utils.connection import get_session, db_connect, create_session
-from utils.common import detetime_to_unixtime
+from utils.common import datetime_to_unixtime
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
@@ -83,8 +83,8 @@ class UsersTestCase(unittest.TestCase):
                 'lastname': user.lastname,
                 'is_online': False,
                 'gender': user.gender.code,
-                'regdate': detetime_to_unixtime(user.created),
-                'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
+                'regdate': datetime_to_unixtime(user.created),
+                'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
                 'city': user.city.name,
                 'country': user.city.country.name,
             })
@@ -105,8 +105,8 @@ class UsersTestCase(unittest.TestCase):
             'lastname': str(user.lastname),
             'is_online': False,
             'gender': str(user.gender.code),
-            'regdate': detetime_to_unixtime(user.created),
-            'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
+            'regdate': datetime_to_unixtime(user.created),
+            'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
             'city': str(user.city.name),
             'country': str(user.city.country.name),
         }
@@ -159,7 +159,7 @@ class UsersTestCase(unittest.TestCase):
                 'title_orig': extra.title_orig,
                 'description': extra.description,
                 'location': extra.location,
-                'created': detetime_to_unixtime(extra.created),
+                'created': datetime_to_unixtime(extra.created),
             })
 
         for resp_dict in resp_dicts:

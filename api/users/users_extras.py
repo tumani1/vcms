@@ -3,7 +3,7 @@ from sqlalchemy.sql.expression import func
 
 from models.users import Users, UsersExtras
 from models.extras import Extras
-from utils.common import detetime_to_unixtime
+from utils.common import datetime_to_unixtime
 from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit
 
@@ -48,7 +48,7 @@ def get(user_id, session, query, **kwargs):
             'title_orig': extra.title_orig,
             'description': extra.description,
             'location': extra.location,
-            'created': detetime_to_unixtime(extra.created),
+            'created': datetime_to_unixtime(extra.created),
         })
 
     return ret_list

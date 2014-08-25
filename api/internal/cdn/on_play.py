@@ -3,7 +3,7 @@ from models.media import Media, UsersMedia
 from models.media.constants import APP_MEDIA_TYPE_PICTURE, APP_MEDIA_ACCESS_LIST
 from utils.exceptions import RequestErrorException
 from utils.common import get_or_create
-from api.cdn.common import access
+from common import access
 from utils.exceptions import APIException
 from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 
