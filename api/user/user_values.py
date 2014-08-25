@@ -8,6 +8,7 @@ from models.scheme import Scheme
 from utils import need_authorization
 
 from api.users.users_values import get as users_get
+from utils.exceptions import RequestErrorException
 
 
 @need_authorization
@@ -22,7 +23,7 @@ def put(auth_user, session=None, **kwargs):
     else:
         topic = None
     if not query['name'] or not query['value']:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
     shema_val = dict(zip(name, value))
     schemes = session.query(Scheme).filter(and_(Scheme.name.in_(name), Scheme.topic_name == topic)).all()
     user_values = []

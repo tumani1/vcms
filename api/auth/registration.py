@@ -1,34 +1,43 @@
 # coding: utf-8
 from models.users.users import Users
 from utils.validation import validate_email, validate_int
+from utils.exceptions import RequestErrorException
 
 
 def post(auth_user, session, **kwargs):
     query = kwargs['query']
+    firstname = query.get('firstname', None)
+
     if 'firstname' in query:
         firstname = query['firstname']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     if 'lastname' in query:
         lastname = query['lastname']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     if 'email' in query:
         email = query['email']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     if 'pswd1' in query:
         pswd1 = query['pswd1']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     if 'pswd2' in query:
         pswd2 = query['pswd2']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     if 'city_id' in query:
         city_id = query['city_id']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
+
     try:
         email = validate_email(email)
     except Exception, e:

@@ -29,9 +29,6 @@ class NotAuthorizedException(APIException):
     code = 403
     message = 'Forbidden'
 
-    def __str__(self):
-        return "Not authorized access"
-
 
 class NoSuchMethodException(APIException):
     """
