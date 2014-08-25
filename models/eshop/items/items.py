@@ -24,6 +24,7 @@ class Items(Base):
     item_users = relationship('UsersItems', backref='items', cascade='all, delete')
     item_categories = relationship('ItemsCategories', backref='items', cascade='all, delete')
     item_extras = relationship('ItemsExtras', backref='items', cascade='all, delete')
+    item_objects = relationship('ItemsObjects', backref='items', cascade='all, delete')
 
     @classmethod
     def tmpl_for_items(cls, user, session):
@@ -32,6 +33,10 @@ class Items(Base):
         query = query. \
             outerjoin(ItemsExtras, cls.id == ItemsExtras.item_id).\
             options(contains_eager(cls.item_extras))
+
+        query = query. \
+            outerjoin(ItemsObjects, cls.id == ItemsObjects.item_id).\
+            options(contains_eager(cls.item_objects))
 
         if not user is None:
             query = query. \

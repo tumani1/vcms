@@ -4,6 +4,7 @@ from sqlalchemy.dialects.postgresql import BYTEA
 from sqlalchemy.orm import relationship, contains_eager
 from models import Base
 from models.eshop.variants.variants_extras import VariantsExtras
+from models.eshop.variants.variants_values import VariantsValues
 from models.extras.extras import Extras
 
 
@@ -22,6 +23,7 @@ class Variants(Base):
     added = Column(DateTime, nullable=True)
 
     variant_extras = relationship('VariantsExtras', backref='items', cascade='all, delete')
+    variant_values = relationship('VariantsValues', backref='items', cascade='all, delete')
 
     @classmethod
     def tmpl_for_variants(cls, session):
@@ -30,6 +32,10 @@ class Variants(Base):
         query = query. \
             outerjoin(VariantsExtras, cls.id == VariantsExtras.variant_id).\
             options(contains_eager(cls.variant_extras))
+
+        query = query. \
+            outerjoin(VariantsValues, cls.id == VariantsValues.variant_id).\
+            options(contains_eager(cls.variant_values))
 
         return query
 

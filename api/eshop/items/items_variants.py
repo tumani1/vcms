@@ -7,7 +7,7 @@ from api.serializers.m_shop_item_variants import mShopItemVariants
 def get(item_id, auth_user, session, **kwargs):
     data = {}
     item_id = validate_int(item_id, min_value=1)
-    instance = Variants.get_variants_by_item_id(auth_user, session, item_id)
+    instance = Variants.get_variants_by_item_id(session, item_id)
     if not instance is None:
         params = {
             'instance': instance.all(),

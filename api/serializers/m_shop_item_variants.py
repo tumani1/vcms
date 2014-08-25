@@ -16,7 +16,8 @@ class mShopItemVariants(DefaultSerializer):
         'available_cnt': '',
         'price': '',
         'price_old': '',
-        'extras': ''
+        'extras': '',
+        'values': '',
 
     }
 
@@ -52,3 +53,9 @@ class mShopItemVariants(DefaultSerializer):
         extras_instance = self.session.query(Extras).filter(Extras.id.in_(extras_ids)).all()
         extras = mExtra(instance=extras_instance, user=self.user, session=self.session).data
         return extras
+
+    def transform_values(self, instance, **kwargs):
+        values_list = []
+        for val in instance.variant_values:
+            values_list.append(dict(name=val.name, value=val.value))
+        return  values_list

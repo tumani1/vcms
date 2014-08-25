@@ -7,6 +7,7 @@ from categories.categories_list import get as get_categories_list
 from categories.categories_extras import get as get_categories_extras
 from categories.categories_items import get as get_categories_items
 from items.items_book import post as post_book_item, delete as delete_book_item
+from items.items_objects import get as get_objects
 
 routing = (
     (r'^items/list$', {
@@ -20,6 +21,9 @@ routing = (
     }),
     (r'^items/(?P<item_id>\d+)/extras$', {
         'get': get_extras,
+    }),
+    (r'^items/(?P<item_id>\d+)/objects$', {
+        'get': get_objects,
     }),
     (r'^items/(?P<item_id>\d+)/book$', {
         'post': post_book_item,
