@@ -8,11 +8,11 @@ class Carts(Base):
 
     id         = Column(Integer, primary_key=True)
     user_id    = Column(Integer, ForeignKey('users.id'), nullable=False)
-    items_cnt  = Column(Integer)
-    status     = Column(Integer)
-    cost_total = Column(Float)
-    crated     = Column(DateTime)
-    updated    = Column(DateTime)
+    items_cnt  = Column(Integer, nullable=True)
+    status     = Column(Integer, nullable=True)
+    cost_total = Column(Float, nullable=True)
+    crated     = Column(DateTime, nullable=True)
+    updated    = Column(DateTime, nullable=True)
 
 
     @classmethod

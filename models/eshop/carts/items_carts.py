@@ -12,4 +12,9 @@ class ItemsCarts(Base):
     cnt         = Column(Integer)
     price       = Column(Float)
     cost        = Column(Float)
-    added       = Column(DateTime)
+    added       = Column(DateTime, nullable=True)
+
+    @classmethod
+    def get_items_carts_by_carts_id(cls, session, carts_id):
+        query = session.query(cls).filter(cls.carts_id==carts_id)
+        return query

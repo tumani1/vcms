@@ -8,7 +8,7 @@ from categories.categories_extras import get as get_categories_extras
 from categories.categories_items import get as get_categories_items
 from items.items_book import post as post_book_item, delete as delete_book_item
 from items.items_objects import get as get_objects
-
+from cart.cart_stat import get as get_cart_stat
 routing = (
     (r'^items/list$', {
         'get': get_list,
@@ -40,5 +40,8 @@ routing = (
     }),
     (r'^categories/(?P<categories_id>\d+)/items$', {
         'get': get_categories_items,
+    }),
+    (r'^cart/stat$', {
+        'get': get_cart_stat,
     }),
 )

@@ -9,5 +9,5 @@ class CartLog(Base):
     id         = Column(Integer, primary_key=True)
     cart_id    = Column(Integer, ForeignKey('carts.id'), nullable=False)
     status     = Column(Integer)
-    time       = Column(DateTime)
+    time       = Column(DateTime, nullable=True)
     comment    = Column(String)
