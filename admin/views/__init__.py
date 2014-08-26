@@ -13,7 +13,9 @@ from cdn import CdnModelView
 from chats import ChatsModelView, UsersChatModelView, ChatMessagesModelView
 from locations import CountryModelView, CitieModelView
 from stream import StreamModelView
-from media import MediaModelView, MediaUnitsModelView
+from media import MediaModelView, MediaUnitsModelView, MediaInUnitModelView, PersonsMediaModelView,\
+    UsersMediaModelView, UsersMediaUnitsModelView, MediaLocationsModelView, MediaAccessCountriesModelView,\
+    MediaAccessDefaultsModelView, MediaAccessDefaultsCountriesModelView, MediaUnitsAccessCountriesModelView
 
 admin_view = Admin(name='NextTV')
 
@@ -96,4 +98,13 @@ admin_view.add_view(StreamModelView())
 
 admin_view.add_view(MediaModelView())
 admin_view.add_view(MediaUnitsModelView())
+admin_view.add_view(MediaInUnitModelView())
+admin_view.add_view(PersonsMediaModelView())
+admin_view.add_view(UsersMediaModelView())
+admin_view.add_view(UsersMediaUnitsModelView())
+admin_view.add_view(MediaLocationsModelView())
+admin_view.add_view(MediaAccessCountriesModelView())
+admin_view.add_view(MediaAccessDefaultsModelView())
+admin_view.add_view(MediaAccessDefaultsCountriesModelView())
+admin_view.add_view(MediaUnitsAccessCountriesModelView())
 ###############################################################################
