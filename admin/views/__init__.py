@@ -16,6 +16,7 @@ from stream import StreamModelView
 from media import MediaModelView, MediaUnitsModelView, MediaInUnitModelView, PersonsMediaModelView,\
     UsersMediaModelView, UsersMediaUnitsModelView, MediaLocationsModelView, MediaAccessCountriesModelView,\
     MediaAccessDefaultsModelView, MediaAccessDefaultsCountriesModelView, MediaUnitsAccessCountriesModelView
+from comments import CommentsModelView, UsersCommentsModelView
 
 admin_view = Admin(name='NextTV')
 
@@ -107,4 +108,11 @@ admin_view.add_view(MediaAccessCountriesModelView())
 admin_view.add_view(MediaAccessDefaultsModelView())
 admin_view.add_view(MediaAccessDefaultsCountriesModelView())
 admin_view.add_view(MediaUnitsAccessCountriesModelView())
+###############################################################################
+
+###############################################################################
+# Comments
+
+admin_view.add_view(CommentsModelView())
+admin_view.add_view(UsersCommentsModelView())
 ###############################################################################

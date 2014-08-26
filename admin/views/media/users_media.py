@@ -16,9 +16,9 @@ class UsersMediaModelView(SqlAlModelView):
         media=u'Идентификатор медиа',
         users=u'Идентификатор пользователя',
         views_cnt=u'Кол-во просмотров',
-        liked=u'Лайк',
+        liked=u'Дата лайка',
         playlist=u'В плейлисте',
         play_pos=u'Позиция проигрывания',
-        watched=u'Просмотрено',
+        watched=u'Дата просмотра',
     )
 

@@ -16,6 +16,6 @@ class UsersMediaUnitsModelView(SqlAlModelView):
         media_units=u'Идентификатор медиа юнита',
         users=u'Идентификатор пользователя',
         subscribed=u'Подписка',
-        watched=u'Просмотрено',
+        watched=u'Дата просмотра',
     )
 

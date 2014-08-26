@@ -32,3 +32,12 @@ class MediaAccessDefaultsModelView(SqlAlModelView):
         name=APP_MEDIA_TYPE_WITH_DEFAULT,
         access_type=APP_MEDIA_LIST,
     )
+
+    form_args = dict(
+        name=dict(
+            choices=APP_MEDIA_TYPE_WITH_DEFAULT,
+        ),
+        access_type=dict(
+            choices=APP_MEDIA_LIST,
+        ),
+    )
