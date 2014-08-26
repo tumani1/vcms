@@ -1,7 +1,10 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.event import listen
+from sqlalchemy_utils import ChoiceType
 from models.base import Base
+from models.comments.constants import OBJECT_TYPES
 
 
 class Content(Base):
@@ -9,7 +12,7 @@ class Content(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=True)
     text = Column(Text, nullable=True)
-    obj_type = Column(String, nullable=True)
+    obj_type = Column(ChoiceType(OBJECT_TYPES), nullable=False)
     obj_id = Column(Integer, nullable=True)
     obj_name = Column(String, nullable=True)
 
@@ -29,3 +32,20 @@ class Content(Base):
                 query = query.filter(cls.obj_name == obj_name)
 
         return query.all()
+
+    def validate_obj(self):
+        count = 0
+        if self.obj_id:
+            count += 1
+        elif self.obj_name:
+            count += 1
+
+        if not count:
+            raise ValueError(u'Необходимо указать obj_id или obj_name')
+        return self
+
+
+def validate_object(mapper, connect, target):
+    target.validate_obj()
+
+listen(Content, 'before_insert', validate_object)

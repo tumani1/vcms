@@ -1,0 +1,2 @@
+from tags import TagsModelView
+from tags_objects import TagsObjectsModelView

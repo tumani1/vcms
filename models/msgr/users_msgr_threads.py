@@ -6,16 +6,12 @@ from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
 from models.msgr import MsgrThreads
+from constants import TYPE_STATUS
 
 
 class UsersMsgrThreads(Base):
     __tablename__ = 'users_msgr_threads'
     __table_args__ = {'extend_existing': True}
-
-    TYPE_STATUS = (
-        (u'0', u'Заблокирован'),
-        (u'1', u'Не заблокирован'),
-    )
 
     id              = Column(Integer, primary_key=True)
     user_id         = Column(Integer, ForeignKey("users.id"))

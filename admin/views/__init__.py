@@ -17,6 +17,9 @@ from media import MediaModelView, MediaUnitsModelView, MediaInUnitModelView, Per
     UsersMediaModelView, UsersMediaUnitsModelView, MediaLocationsModelView, MediaAccessCountriesModelView,\
     MediaAccessDefaultsModelView, MediaAccessDefaultsCountriesModelView, MediaUnitsAccessCountriesModelView
 from comments import CommentsModelView, UsersCommentsModelView
+from msgr import MsgrLogModelView, MsgrThreadsModelView, UsersMsgrThreadsModelView
+from tags import TagsModelView, TagsObjectsModelView
+from content import ContentModelView
 
 admin_view = Admin(name='NextTV')
 
@@ -115,4 +118,25 @@ admin_view.add_view(MediaUnitsAccessCountriesModelView())
 
 admin_view.add_view(CommentsModelView())
 admin_view.add_view(UsersCommentsModelView())
+###############################################################################
+
+###############################################################################
+# Msgr
+
+admin_view.add_view(MsgrLogModelView())
+admin_view.add_view(MsgrThreadsModelView())
+admin_view.add_view(UsersMsgrThreadsModelView())
+###############################################################################
+
+###############################################################################
+# Tags
+
+admin_view.add_view(TagsModelView())
+admin_view.add_view(TagsObjectsModelView())
+###############################################################################
+
+###############################################################################
+# Content
+
+admin_view.add_view(ContentModelView())
 ###############################################################################
