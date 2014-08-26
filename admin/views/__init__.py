@@ -89,8 +89,6 @@ admin_view.add_view(CdnModelView())
 # Stream
 
 admin_view.add_view(StreamModelView())
-admin_view.add_view(CitieModelView())
-admin_view.add_view(CountryModelView())
 ###############################################################################
 
 ###############################################################################
