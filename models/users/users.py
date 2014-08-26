@@ -117,6 +117,18 @@ class Users(Base):
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
+
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)
 

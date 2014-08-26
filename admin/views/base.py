@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask.ext.admin.contrib import sqla, mongoengine
-
-from utils.connection import get_session
+from flask.ext import login
+from admin import session
 
 
 class BaseModelView(object):
@@ -18,11 +18,17 @@ class BaseModelView(object):
 
 class SqlAlModelView(sqla.ModelView, BaseModelView):
 
-    def __init__(self, session=get_session()):
+    def __init__(self):
         super(SqlAlModelView, self).__init__(self.model, session, self.name, self.category, self.endpoint, self.url)
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated()
 
 
 class MongoDBModelView(mongoengine.ModelView, BaseModelView):
 
     def __init__(self):
         super(MongoDBModelView, self).__init__(self.model, self.name, self.category, self.endpoint, self.url)
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated()
