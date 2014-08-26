@@ -1,6 +1,7 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, String, Float
+import datetime
 from models import Base
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, String, Float
 
 
 class Payments(Base):
@@ -8,8 +9,11 @@ class Payments(Base):
 
     id         = Column(Integer, primary_key=True)
     cart_id    = Column(Integer, ForeignKey('carts.id'), nullable=False)
-    status     = Column(Integer)
-    created    = Column(DateTime)
+    status     = Column(String)
+    created    = Column(DateTime, default=datetime.datetime.utcnow)
     payed      = Column(DateTime)
     pay_system = Column(String)
     cost       = Column(Float)
+
+    def __repr__(self):
+        return u"<Payments(id={}, cart_id={}, cost={})>".format(self.id, self.cart_id, self.cost)
