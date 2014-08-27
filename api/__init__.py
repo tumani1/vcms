@@ -45,7 +45,7 @@ internal_routes = {
 
 
 def authorize(IPC_pack, session=None):
-    if IPC_pack['api_method'].startswith('auth'):
+    if IPC_pack['api_method'].startswith('/auth'):
         IPC_pack['query_params'].update({
             'token'  : IPC_pack.get('token'),
             'x_token': IPC_pack.get('x_token')

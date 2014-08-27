@@ -39,7 +39,7 @@ class BaseService(object):
                                   'message': e.message}}
         except Exception as e:
             session.rollback()
-            response = {'exception': {'code': 404,
+            response = {'exception': {'code': 400,
                                   'message': 'Bad Request'}}
         finally:
             session.close()
