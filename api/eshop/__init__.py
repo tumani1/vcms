@@ -10,6 +10,7 @@ from items.items_book import post as post_book_item, delete as delete_book_item
 from items.items_objects import get as get_objects
 from cart.cart_stat import get as get_cart_stat
 from cart.cart_items import get as get_cart_items
+from payments.payments_list import get as get_payment_list
 
 routing = (
     (r'^items/list$', {
@@ -42,6 +43,9 @@ routing = (
     }),
     (r'^categories/(?P<categories_id>\d+)/items$', {
         'get': get_categories_items,
+    }),
+    (r'^payments/list$', {
+        'get': get_payment_list,
     }),
     (r'^cart/stat$', {
         'get': get_cart_stat,
