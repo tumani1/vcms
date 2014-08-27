@@ -2,6 +2,7 @@
 
 from models.persons import PersonsValues
 from api.serializers import mValue
+from utils.exceptions import RequestErrorException
 
 from utils.validation import validate_list_string, validate_int
 
@@ -47,10 +48,10 @@ def get_person_values(person_id, auth_user, session, **kwargs):
             params['value'] = clean_value
 
     if params['name'] is None:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
 
     if params['value'] is None:
-        raise Exception(u"Empty value")
+        raise RequestErrorException
 
     query = PersonsValues.get_person_values(**params).all()
 

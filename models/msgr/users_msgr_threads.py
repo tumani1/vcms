@@ -34,7 +34,7 @@ class UsersMsgrThreads(Base):
         user_id = 0
         if not user is None:
             user_id = user.id
-        if 'user_authot' in kwargs:
+        if 'user_author' in kwargs:
             query = cls.tmpl_for_users_msgr_threads(session).\
                 outerjoin(MsgrThreads, and_(UsersMsgrThreads.msgr_threads_id==MsgrThreads.id, UsersMsgrThreads.user_id.in_(kwargs['user_author']))).\
                 options(contains_eager(UsersMsgrThreads.msgr_threads)).order_by(UsersMsgrThreads.last_msg_sent)

@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 
 from models import ChatMessages, Base, Users, Chats
 from utils.connection import mongo_connect, db_connect, create_session
+from datetime import datetime, timedelta
+from tests.fixtures import create, create_chat, create_users_chat
 from tests.constants import NODE
-from fixtures import create, create_chat, create_users_chat
 
 
 HOST = NODE['rest_ws_serv']['host']

@@ -2,8 +2,8 @@
 from models import Countries, Cities, Users, GlobalToken, SessionToken
 
 
-def create(session, usuff=1, cisuff=1):
-    country = session.query(Countries).get('RU')
+def create(session, usuff=1, cisuff=1, couid='RU'):
+    country = session.query(Countries).get(couid)
     city = Cities(country=country, name='Test'+str(cisuff), name_orig='Test'+str(cisuff), time_zone='UTC')
     session.add(city)
     session.commit()

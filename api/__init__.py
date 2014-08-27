@@ -17,6 +17,7 @@ from api.stream import routing as stream_routes
 from api.chat import routing as chat_routes
 from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
+from api.eshop import routing as eshop_routing
 from api.internal import routing as internal_routing
 
 
@@ -29,12 +30,13 @@ rest_routes = {
     'test': test_routing,
     'auth': auth_routing,
     'media': media_routing,
-    'msgr': msgr_routing,    
+    'msgr': msgr_routing,
     'content': content_routes,
     'stream': stream_routes,
     'chat': chat_routes,
     'comments': comments_routing,
     'obj_comments': obj_comments_routing,
+    'eshop': eshop_routing,
 }
 
 internal_routes = {
@@ -43,7 +45,7 @@ internal_routes = {
 
 
 def authorize(IPC_pack, session=None):
-    if IPC_pack['api_method'].startswith('auth'):
+    if IPC_pack['api_method'].startswith('/auth'):
         IPC_pack['query_params'].update({
             'token'  : IPC_pack.get('token'),
             'x_token': IPC_pack.get('x_token')
@@ -58,5 +60,4 @@ def authorize(IPC_pack, session=None):
     user = None
     if user_id:
         user = session.query(Users).get(user_id)
-
     return user

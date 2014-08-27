@@ -14,6 +14,14 @@ class RequestErrorException(APIException):
     message = 'Bad Request'
 
 
+class Invalid(APIException):
+    """
+    400
+    """
+    code = 400
+    message = 'Bad Request'
+
+
 class SessionExpiredException(APIException):
     """
     401
@@ -28,9 +36,6 @@ class NotAuthorizedException(APIException):
     """
     code = 403
     message = 'Forbidden'
-
-    def __str__(self):
-        return "Not authorized access"
 
 
 class NoSuchMethodException(APIException):

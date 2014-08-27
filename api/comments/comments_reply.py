@@ -1,12 +1,13 @@
 # coding: utf-8
 from comments_create import post as create_comment
+from utils.exceptions import RequestErrorException
 
 
 def post(parent_id, auth_user, session, **kwargs):
     if 'text' in kwargs['query']:
         text = kwargs['query']['text']
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
 
     params = {
         'query': {
