@@ -11,3 +11,8 @@ class CartLog(Base):
     status     = Column(Integer)
     time       = Column(DateTime, nullable=True)
     comment    = Column(String)
+
+    @classmethod
+    def get_cart_log_by_cart_id(cls, session, carts_id):
+        query = session.query(cls).filter(cls.cart_id == carts_id)
+        return query

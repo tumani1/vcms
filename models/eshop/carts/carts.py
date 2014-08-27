@@ -24,13 +24,13 @@ class Carts(Base):
     log = relationship('CartLog', backref='carts', cascade='all, delete')
 
     @classmethod
-    def tmpl_for_carts(cls, carts_id, session, user):
+    def tmpl_for_carts(cls, carts_id, session):
 
         query = session.query(cls).filter(cls.id == carts_id)
 
         query = query. \
             outerjoin(ItemsCarts, carts_id == ItemsCarts.carts_id).\
-            options(contains_eager(cls.carts_items_carts))
+            options(contains_eager(cls.items_carts))
 
         query = query. \
             outerjoin(Payments, carts_id == Payments.cart_id).\
@@ -43,9 +43,32 @@ class Carts(Base):
         return query
 
     @classmethod
+    def get_cart_by_id(cls, session, carts_id):
+        query = session.query(cls).filter(cls.id == carts_id)
+        return query
+
+    @classmethod
     def get_cart_active_by_user_id(cls, session, user_id, **kwargs):
         query = session.query(cls).filter(and_(cls.user_id == user_id, cls.status == 'active'))
         return query
+
+    @classmethod
+    def get_cart_by_user_id(cls, session, user_id):
+        query = session.query(cls).filter(cls.user_id == user_id)
+        return query
+
+    @classmethod
+    def get_cart_limit_by_user_id(cls, session, user_id, limit=None, top=None):
+        query = session.query(cls).filter(cls.user_id == user_id)
+
+        if limit:
+            query = query.limit(limit)
+
+        if top:
+            query = query.offset(top)
+
+        return query
+
 
     def __repr__(self):
         return u"<Carts(id={}, user_id={}, items_cnt={})>".format(self.id, self.user_id, self.items_cnt)
