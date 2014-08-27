@@ -49,6 +49,7 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
+    user_items   = relationship('UsersItems', backref='users', cascade='all, delete')
     user_comments = relationship('UsersComments', backref='users', cascade='all, delete')
     user_medias   = relationship('UsersMedia', backref='users', cascade='all, delete')
     user_units    = relationship('UsersMediaUnits', backref='users', cascade='all, delete')

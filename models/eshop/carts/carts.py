@@ -5,8 +5,10 @@ from sqlalchemy import Column, Integer, DateTime, Float, ForeignKey, String
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, DateTime, Float, ForeignKey, and_
 from sqlalchemy.orm import relationship, contains_eager
-from models import Base, ItemsCarts, Payments, ItemsExtras, ItemsObjects, UsersItems, CartLog
-
+from models import Base
+from models.eshop.carts.items_carts import ItemsCarts
+from models.eshop.carts.cart_log import CartLog
+from models.eshop.carts.payments import Payments
 
 class Carts(Base):
     __tablename__ = 'carts'
@@ -21,7 +23,7 @@ class Carts(Base):
 
     items_carts = relationship('ItemsCarts', backref='carts', cascade='all, delete')
     payments = relationship('Payments', backref='carts', cascade='all, delete')
-    log = relationship('CartLOg', backref='carts', cascade='all, delete')
+    log = relationship('CartLog', backref='carts', cascade='all, delete')
 
     @classmethod
     def tmpl_for_carts(cls, carts_id, session, user):

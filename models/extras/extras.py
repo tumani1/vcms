@@ -33,7 +33,9 @@ class Extras(Base):
     users_extras   = relationship('UsersExtras', backref='extra', cascade='all, delete')
     extras_topics  = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
     person_extras  = relationship('PersonsExtras', backref='extra', cascade='all, delete')
-
+    extra_items  = relationship('ItemsExtras', backref='extra', cascade='all, delete')
+    extra_categories  = relationship('CategoriesExtras', backref='extra', cascade='all, delete')
+    extra_variants  = relationship('VariantsExtras', backref='extra', cascade='all, delete')
 
     @classmethod
     def tmpl_for_extras(cls, session):

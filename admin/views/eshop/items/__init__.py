@@ -1,0 +1,4 @@
+from items import ItemsModelView
+from items_extras import ItemsExtrasModelView
+from items_objects import ItemsObjectsModelView
+from users_items import UsersItemsModelView

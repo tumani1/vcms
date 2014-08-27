@@ -23,6 +23,9 @@ from comments import CommentsModelView, UsersCommentsModelView
 from msgr import MsgrLogModelView, MsgrThreadsModelView, UsersMsgrThreadsModelView
 from tags import TagsModelView, TagsObjectsModelView
 from content import ContentModelView
+from eshop import ItemsModelView, ItemsExtrasModelView, ItemsObjectsModelView, UsersItemsModelView,\
+    CategoriesModelView, CategoriesExtrasModelView, VariantsModelView, VariantsExtrasModelView,\
+    VariantsSchemeModelView, VariantsValuesModelView
 
 
 class AdminIndexView(admin.AdminIndexView):
@@ -166,4 +169,19 @@ admin_view.add_view(TagsObjectsModelView())
 # Content
 
 admin_view.add_view(ContentModelView())
+###############################################################################
+
+###############################################################################
+# Eshop
+
+admin_view.add_view(ItemsModelView())
+admin_view.add_view(ItemsExtrasModelView())
+admin_view.add_view(ItemsObjectsModelView())
+admin_view.add_view(UsersItemsModelView())
+admin_view.add_view(CategoriesModelView())
+admin_view.add_view(CategoriesExtrasModelView())
+admin_view.add_view(VariantsModelView())
+admin_view.add_view(VariantsExtrasModelView())
+admin_view.add_view(VariantsSchemeModelView())
+admin_view.add_view(VariantsValuesModelView())
 ###############################################################################
