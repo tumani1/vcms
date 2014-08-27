@@ -2,12 +2,12 @@
 from utils import need_authorization
 
 
-def put(auth_user, session, **kwargs):
-    return kwargs
+def put(**kwargs):
+    return kwargs['query']
 
 
-def get(auth_user, session, **kwargs):
-    return kwargs
+def get(**kwargs):
+    return kwargs['query']
 
 
 @need_authorization

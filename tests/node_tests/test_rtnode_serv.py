@@ -18,8 +18,9 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         db_sess = get_session()
 
     def test_echo_get(self):
-        resp = self.req_sess.get(self.fullpath+'/test/echo?message=hello')
-        self.assertEqual(resp.json(), {'query': {'message': 'hello'}})
+        params = {'message': 'hello'}
+        resp = self.req_sess.get(self.fullpath+'/test/echo', params=params)
+        self.assertEqual(resp.json(), {'message': 'hello'})
 
     def test_error_get(self):
         resp = self.req_sess.get(self.fullpath+'/some/some?message=hello')
@@ -28,7 +29,7 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
     def test_echo_put(self):
         data = {'message': 'hello'}
         resp = self.req_sess.put(self.fullpath+'/test/echo', data=data)
-        self.assertEqual(resp.json(), {'query': data})
+        self.assertEqual(resp.json(), data)
 
     def test_error_put(self):
         data = {'message': 'hello'}
@@ -41,7 +42,7 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
                     'query_params': {'text': 'FROM TEST'}}
         self.ws.send(json.dumps(IPC_pack))
         resp = self.ws.recv()
-        self.assertEqual(json.loads(resp), {'query': IPC_pack['query_params']})
+        self.assertEqual(json.loads(resp), IPC_pack['query_params'])
 
     def test_ws_error(self):
         IPC_pack = {'api_method': '/some/some',
@@ -50,8 +51,8 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         self.ws.send(json.dumps(IPC_pack))
         resp = self.ws.recv()
         resp = json.loads(resp)
-        self.assertEqual(resp['error'], 404)
-
+        self.assertEqual(resp['code'], 404)
+        self.assertEqual(resp['message'], 'Not Found')
 
     def tearDown(self):
         self.ws.close()
