@@ -1,7 +1,8 @@
 # coding=utf-8
 import unittest
 import requests
-from settings import NODE
+
+from tests.constants import NODE
 
 
 class RestTemplateNodeServiceTestCase(unittest.TestCase):

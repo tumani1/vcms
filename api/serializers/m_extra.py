@@ -1,5 +1,5 @@
 # coding: utf-8
-from utils.common import detetime_to_unixtime as convert_date
+from utils.common import datetime_to_unixtime as convert_date
 from utils.serializer import DefaultSerializer
 
 __all__ = ['mExtra']

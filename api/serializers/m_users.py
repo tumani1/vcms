@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from utils.common import detetime_to_unixtime
+from utils.common import datetime_to_unixtime
 from api.serializers.m_users_short import mUserShort
 
 __all__ = ['mUser']
@@ -21,10 +21,10 @@ class mUser(mUserShort):
     }
 
     def transform_lastvisit(self, obj):
-        return detetime_to_unixtime(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
+        return datetime_to_unixtime(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
 
     def transform_regdate(self, obj):
-        return detetime_to_unixtime(obj.created)
+        return datetime_to_unixtime(obj.created)
 
     def transform_city(self, obj):
         return obj.city.name

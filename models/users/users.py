@@ -12,7 +12,7 @@ from models.base import Base
 from models.locations import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
-
+from models.mongo import ChatMessages
 
 class Users(Base):
     __tablename__ = 'users'
@@ -45,7 +45,7 @@ class Users(Base):
     friends       = relationship('UsersRels', foreign_keys='UsersRels.user_id', backref='user', cascade='all, delete')
     partners      = relationship('UsersRels', foreign_keys='UsersRels.partner_id', backref='partner', cascade='all, delete')
     global_token  = relationship('GlobalToken', backref="users", uselist=False, cascade='all, delete')
-    session_token = relationship('SessionToken', backref="users", cascade='all, delete')
+    session_token = relationship('SessionToken', backref="users", cascade='all, delete', order_by='SessionToken.created')
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
@@ -125,3 +125,8 @@ class Users(Base):
 def create_token_for_user(mapper, connect, target):
     session = sessionmaker(bind=connect)()
     token = GlobalToken.generate_token(target.id, session)
+
+
+@event.listens_for(Users, 'after_delete')
+def delete_mongo_chat_mess(mapper, connection, target):
+    ChatMessages.objects.filter(user_id=target.id).delete()

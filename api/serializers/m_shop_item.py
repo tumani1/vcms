@@ -2,7 +2,7 @@
 from models.extras.extras import Extras
 from api.serializers.m_extra import mExtra
 from utils.serializer import DefaultSerializer
-from utils.common import detetime_to_unixtime as convert_date
+from utils.common import datetime_to_unixtime as convert_date
 
 __all__ = ['mShopItem']
 

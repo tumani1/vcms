@@ -4,14 +4,14 @@ import zerorpc
 from geoip2 import database
 
 import settings as conf
-from api import cdn_routes
+from api import rest_routes
 from base_service import BaseService
 
 
-class ZeroRpcCdnApiService(BaseService):
+class ZeroRpcInternalApiService(BaseService):
 
-    def __init__(self, **kwargs):
-        super(ZeroRpcCdnApiService, self).__init__(**kwargs)
+    def __init__(self, routes):
+        super(ZeroRpcInternalApiService, self).__init__(routes)
         self.reader_geoip = database.Reader(conf.GEO_IP_DATABASE)
         self.default_params = {'reader': self.reader_geoip, }
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     if namespace.testdb:
         conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
 
-    server = zerorpc.Server(ZeroRpcCdnApiService(cdn_routes))
+    server = zerorpc.Server(ZeroRpcInternalApiService(rest_routes))
     server.bind("tcp://{host}:{port}".format(**vars(namespace)))
-    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcCdnApiService.__name__, **vars(namespace)))
+    print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcInternalApiService.__name__, **vars(namespace)))
     server.run()

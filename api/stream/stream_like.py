@@ -22,7 +22,5 @@ def post(id, auth_user, session, **kwargs):
 
 @need_authorization
 def delete(id, auth_user, session, **kwargs):
-    stream_el = session.query(UsersStream).filter_by(user_id=auth_user.id, stream_id=id)
-    if stream_el:
-        session.delete(stream_el)
-        session.commit()
+    stream_el = session.query(UsersStream).filter_by(user_id=auth_user.id, stream_id=id).delete()
+    session.commit()

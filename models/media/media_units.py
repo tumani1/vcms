@@ -1,10 +1,13 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
-    and_, SMALLINT, Boolean
+    and_, SMALLINT
 from sqlalchemy.orm import relationship, contains_eager
+from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
+from models.media.constants import APP_MEDIA_LIST
 from models.media.users_media_units import UsersMediaUnits
+from utils.common import user_access_media
 
 
 class MediaUnits(Base):
@@ -12,8 +15,8 @@ class MediaUnits(Base):
 
     id            = Column(Integer, primary_key=True)
     topic_name    = Column(String, ForeignKey('topics.name'), nullable=False)
-    title         = Column(String, nullable=True)
-    title_orig    = Column(Integer, nullable=True)
+    title         = Column(String, nullable=False)
+    title_orig    = Column(String, nullable=True)
     description   = Column(Text, nullable=True)
     previous_unit = Column(Integer, nullable=True)
     next_unit     = Column(Integer, nullable=True)
@@ -21,7 +24,7 @@ class MediaUnits(Base):
     end_date      = Column(DateTime, nullable=True)
     batch         = Column(String, nullable=True)
     access        = Column(SMALLINT, default=None, nullable=True)
-    access_type   = Column(Boolean, default=None, nullable=True)
+    access_type   = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
 
     countries_list   = relationship('MediaUnitsAccessCountries', backref='media_units', cascade='all, delete')
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
@@ -71,6 +74,16 @@ class MediaUnits(Base):
     def get_next_media_unit(cls, user, session, id, **kwargs):
         query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).first()
         return query
+
+    @classmethod
+    def access_media_units(cls, media_units, owner, is_auth, is_manager):
+        status_code = None
+        for media_unit in media_units:
+            access = media_unit.access
+            status_code = user_access_media(access, owner, is_auth, is_manager)
+            if not status_code is None:
+                break
+        return status_code
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)

@@ -2,11 +2,8 @@
 
 from models.content import Content
 from api.serializers import mContentSerializer
+from utils.exceptions import RequestErrorException
 from utils.validation import validate_list_int, validate_int, validate_string
-
-
-class RequiredParams(Exception):
-    pass
 
 
 def get_content_list(auth_user, session, **kwargs):
@@ -21,7 +18,7 @@ def get_content_list(auth_user, session, **kwargs):
 
         keys = set(query.keys())
         if not keys.intersection({'obj_id', 'obj_name'}):
-            raise RequiredParams('request must contain obj_id or obj_name params')
+            raise RequestErrorException
 
         if 'obj_id' in query:
             params['obj_id'] = validate_int(query['obj_id'])

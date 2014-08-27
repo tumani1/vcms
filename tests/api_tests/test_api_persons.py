@@ -11,7 +11,7 @@ from tests.fixtures import create, create_scheme, create_topic, create_cdn, \
 from models import Base, Users,\
     Extras, Cities, SessionToken, Persons, UsersPersons
 
-from utils.common import detetime_to_unixtime
+from utils.common import datetime_to_unixtime
 from utils.connection import get_session, db_connect, create_session
 
 
@@ -100,8 +100,8 @@ class PersonInfoTestCase(unittest.TestCase):
                 'lastname': user.lastname,
                 'is_online': True,
                 'gender': user.gender.code,
-                'regdate': detetime_to_unixtime(user.created),
-                'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
+                'regdate': datetime_to_unixtime(user.created),
+                'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
                 'city': user.city.name,
                 'country': user.city.country.name,
             }

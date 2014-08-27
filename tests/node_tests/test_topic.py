@@ -1,12 +1,9 @@
 # coding: utf-8
-
-import json
 import requests
 import unittest
-import datetime
-from settings import NODE
 
-from models import Base, SessionToken, UsersTopics, Users
+from tests.constants import NODE
+from models import Base, UsersTopics, Users
 from utils.connection import db_connect, create_session
 from tests.fixtures import create, create_topic, create_user_topic, create_cdn, \
     create_extras, create_topic_extras, create_topic_values, create_scheme
@@ -38,7 +35,7 @@ def tearDownModule():
     # engine.execute("drop schema public cascade; create schema public;")
 
 
-###################################################################################
+################################################################################
 class TopicInfoTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -57,7 +54,7 @@ class TopicInfoTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/info' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/info'.format(topic), headers={'token': self.token}, params={})
 
         temp = {
             u'name': u'test',
@@ -80,8 +77,7 @@ class TopicInfoTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-
-###################################################################################
+################################################################################
 class TopicLikeTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -97,36 +93,31 @@ class TopicLikeTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
         self.token = resp.json()['token']
 
-
-
     def test_echo_get(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
         temp = {
             'liked': 0
         }
         self.assertDictEqual(temp, resp.json())
 
-
     def test_echo_post(self):
         topic = "test1"
-        self.req_sess.post(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, data={})
+        self.req_sess.post(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
         topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertNotEqual(topic.liked, None)
 
-
     def test_echo_delete(self):
         topic = "test2"
-        self.req_sess.delete(self.fullpath + '/topics/%s/like' % (topic), headers={'token': self.token}, params={})
+        self.req_sess.delete(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
         topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertEqual(topic.liked, None)
-
 
     def tearDown(self):
         self.session.close()
@@ -134,7 +125,7 @@ class TopicLikeTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-# ###################################################################################
+# ##############################################################################
 class TopicSubscribeTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -150,35 +141,31 @@ class TopicSubscribeTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
         self.token = resp.json()['token']
 
-
     def test_echo_get(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
 
         temp = {'subscribed': 0}
 
         self.assertDictEqual(temp, resp.json())
 
-
     def test_echo_post(self):
         topic = "test2"
-        resp = self.req_sess.post(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, data={})
+        resp = self.req_sess.post(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
         topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertNotEqual(topic.subscribed, None)
 
-
     def test_echo_delete(self):
         topic = "test1"
-        resp = self.req_sess.delete(self.fullpath + '/topics/%s/subscribe' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.delete(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
         topic = UsersTopics.get_user_topic(user=user, name=topic, session=self.session).first()
         self.assertEqual(topic.subscribed, None)
-
 
     def tearDown(self):
         self.session.close()
@@ -186,7 +173,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-###################################################################################
+################################################################################
 class TopicExtrasTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -201,10 +188,9 @@ class TopicExtrasTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
         self.token = resp.json()['token']
 
-
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/extras' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/extras'.format(topic), headers={'token': self.token}, params={})
 
         temp = [
             {
@@ -234,7 +220,7 @@ class TopicExtrasTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-###################################################################################
+################################################################################
 class TopicListTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -274,14 +260,13 @@ class TopicListTestCase(unittest.TestCase):
         ]
         self.assertListEqual(temp, resp.json())
 
-
     def tearDown(self):
         self.session.close()
         self.engine.close()
         self.req_sess.close()
 
 
-###################################################################################
+################################################################################
 class TopicValuesTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -299,7 +284,7 @@ class TopicValuesTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/values' % (topic), headers={'token': self.token}, params={'scheme_name': 't'})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/values'.format(topic), headers={'token': self.token}, params={'scheme_name': 't'})
 
         temp = []
 
@@ -311,7 +296,7 @@ class TopicValuesTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-##################################################################################
+################################################################################
 class TopicMediaTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -330,7 +315,7 @@ class TopicMediaTestCase(unittest.TestCase):
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/media' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/media'.format(topic), headers={'token': self.token}, params={})
 
         temp = []
 
@@ -342,7 +327,7 @@ class TopicMediaTestCase(unittest.TestCase):
         self.req_sess.close()
 
 
-##################################################################################
+################################################################################
 class TopicPersonsTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -358,10 +343,9 @@ class TopicPersonsTestCase(unittest.TestCase):
         resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
         self.token = resp.json()['token']
 
-
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/%s/persons' % (topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/persons'.format(topic), headers={'token': self.token}, params={})
 
         temp = []
 

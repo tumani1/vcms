@@ -1,11 +1,8 @@
-#
-
+# coding: utf-8
 import zerorpc
 import unittest
 
 from utils.connection import db_connect, create_session
-from tests.constants import ZERORPC_SERVICE_URI
-
 from tests.create_test_user import create
 from tests.constants import ZERORPC_SERVICE_URI
 

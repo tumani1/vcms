@@ -1,7 +1,7 @@
 # coding: utf-8
-
 import re
 from models.comments.constants import OBJECT_TYPES
+from utils.exceptions import Invalid
 
 
 def validate_mLimit(limit, **kwargs):
@@ -13,7 +13,7 @@ def validate_mLimit(limit, **kwargs):
         else:
             limit = int(result[0])
             if limit < 0:
-                raise Exception("Значение меньше {0}".format(limit))
+                raise Invalid  # Значение меньше limit
         return limit, 0
 
     elif len(result) == 2:
@@ -24,7 +24,7 @@ def validate_mLimit(limit, **kwargs):
             try:
                 limit = int(result[0])
                 if limit < 0:
-                    raise Exception("Значение меньше {0}".format(limit))
+                    raise Invalid  # Значение меньше limit
             except Exception, e:
                 limit = None
 
@@ -32,7 +32,7 @@ def validate_mLimit(limit, **kwargs):
         try:
             top = int(result[1])
             if top < 0:
-                raise Exception("Значение меньше {0}".format(top))
+                raise Invalid  # Значение меньше top
         except Exception, e:
             top = 0
 
@@ -80,7 +80,7 @@ def validate_mLimitId(limit):
             result['top'] = 0
 
     if result['limit'] < 0 or result['top'] < 0 or result['id_dwn'] < 0 or result['id_top'] < 0:
-        raise Exception("Значение меньше 0")
+        raise Invalid  # Значение меньше 0
     return result
 
 
@@ -94,7 +94,7 @@ def validate_list_int(value, **kwargs):
             return clean_value
 
     except Exception, e:
-        raise Exception(u"Не целое значение")
+        raise Invalid  # Не целое значение
 
     return None
 
@@ -129,13 +129,13 @@ def validate_int(value, min_value=None, max_value=None, **kwargs):
 
         if not min_value is None:
             if value < min_value:
-                raise Exception("Значение меньше {0}".format(min_value))
+                raise Invalid  # Значение меньше min_value
 
         if not max_value is None:
             if value > max_value:
-                raise Exception("Значение больше {0}".format(max_value))
+                raise Invalid  # Значение меньше max_value
     except:
-        raise Exception("Значение не является целым")
+        raise Invalid  # Значение не является целым
 
     return value
 
@@ -146,7 +146,7 @@ def validate_obj_type(value, **kwargs):
         for item in OBJECT_TYPES:
             if obj_type in item:
                 return obj_type
-        raise Exception
+        raise Invalid
 
     except Exception, e:
         pass
@@ -158,7 +158,7 @@ def validate_email(value, **kwargs):
         if email_reg.match(email):
             return email
         else:
-            raise Exception(u"Некорректный e-mail!")
+            raise Invalid  # Некорректный e-mail
 
 
 def validate_eshop_price(value, **kwargs):
@@ -173,9 +173,9 @@ def validate_eshop_price(value, **kwargs):
                 result[i] = int(value[i]) if len(value[i].strip()) else 0
             return result
         else:
-            raise Exception("Неверный формат цены")
+            raise Invalid  # Неверный формат цены
     except:
-        raise Exception("Неверный формат цены")
+        raise Invalid  # Неверный формат цены
 
 
 def validate_eshop_sort(value, **kwargs):
@@ -183,4 +183,4 @@ def validate_eshop_sort(value, **kwargs):
     if value == 'name' or value == 'price' or value == 'date':
         return value
     else:
-        raise Exception("Неверный формат сортировки")
+        raise Invalid  # Неверный формат сортировки

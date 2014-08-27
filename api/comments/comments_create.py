@@ -1,14 +1,16 @@
 # coding: utf-8
 from models.comments.comments import Comments
 from utils.validation import validate_int, validate_string, validate_obj_type
+from utils.exceptions import RequestErrorException
 import datetime
+
 
 
 def post(auth_user, session, **kwargs):
     if 'text' in kwargs['query']:
         text = validate_string(kwargs['query']['text'])
     else:
-        raise Exception(u"Empty name")
+        raise RequestErrorException
     date = datetime.datetime.now()
     params = {
         'user_id': auth_user.id,

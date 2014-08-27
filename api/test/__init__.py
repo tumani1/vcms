@@ -1,22 +1,11 @@
-from utils import need_authorization
-
-
-def put(auth_user, session, **kwargs):
-    return kwargs
-
-
-def get(auth_user, session, **kwargs):
-    return kwargs
-
-
-@need_authorization
-def echo_auth(auth_user, **kwargs):
-
-    return {'message': "Hello,{}".format(auth_user.firstname)}
+# coding: utf-8
+import rest_test
+import render_test
 
 routing = (
-    (r'^echo$', {'put': put, 'get': get}),
-    (r'^echoauth$', {'get': echo_auth}),
+    (r'^echo$', {'put': rest_test.put, 'get': rest_test.get}),
+    (r'^echo/(?P<id>\d+)$', {'get': render_test.get}),
+    (r'^echoauth$', {'get': rest_test.echo_auth}),
 )
 
 

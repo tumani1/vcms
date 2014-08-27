@@ -1,14 +1,14 @@
 # coding: utf-8
-
-import unittest
-from models import Base, Users, UsersValues
-from sqlalchemy.orm import sessionmaker, scoped_session
-from utils.connection import db_connect, create_session
-from tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
 import random
-from settings import NODE
+import unittest
 import requests
 import json
+from sqlalchemy.orm import sessionmaker, scoped_session
+
+from models import Base, Users, UsersValues
+from utils.connection import db_connect, create_session
+from tests.fixtures import create, create_scheme, create_users_values, create_topic, create_users_rels
+from tests.constants import NODE
 
 
 def setUpModule():
@@ -78,8 +78,8 @@ class UserTestCase(unittest.TestCase):
     def test_values_get(self):
         data = {'topic': 'test1'}
         resp = self.req_sess.get(self.fullpath+'/user/values', headers={'token': self.token}, params=data)
-        temp = [{u'name': 1, u'value': 777}]
-        self.assertListEqual(temp, resp.json())
+        temp = {u'name': 1, u'value': 777}
+        self.assertListEqual(temp, resp.json()[0])
 
     def test_friends_get(self):
         data = {'limit': '4'}

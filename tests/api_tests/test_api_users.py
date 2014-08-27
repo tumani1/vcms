@@ -8,7 +8,7 @@ from models import Base, Users, UsersRels, UsersExtras, Extras, Cities,SessionTo
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND, APP_USERSRELS_TYPE_UNDEF
 
 from utils.connection import get_session, db_connect, create_session
-from utils.common import detetime_to_unixtime
+from utils.common import datetime_to_unixtime
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
@@ -54,11 +54,10 @@ class UsersTestCase(unittest.TestCase):
         self.session.commit()
         self.session.close()
         self.zero_client.close()
-        
 
     def test_users_values_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/values' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/values'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['query_params'] = {
             'topic': 'test1',
@@ -84,8 +83,8 @@ class UsersTestCase(unittest.TestCase):
                 'lastname': user.lastname,
                 'is_online': False,
                 'gender': user.gender.code,
-                'regdate': detetime_to_unixtime(user.created),
-                'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
+                'regdate': datetime_to_unixtime(user.created),
+                'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
                 'city': user.city.name,
                 'country': user.city.country.name,
             })
@@ -96,7 +95,7 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_info_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/info' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/info'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         resp_dict = self.zero_client.route(self.ipc_pack)
         user = self.session.query(Users).get(1)
@@ -106,8 +105,8 @@ class UsersTestCase(unittest.TestCase):
             'lastname': str(user.lastname),
             'is_online': False,
             'gender': str(user.gender.code),
-            'regdate': detetime_to_unixtime(user.created),
-            'lastvisit': detetime_to_unixtime(user.last_visit) if user.last_visit else '',
+            'regdate': datetime_to_unixtime(user.created),
+            'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
             'city': str(user.city.name),
             'country': str(user.city.country.name),
         }
@@ -115,19 +114,19 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_friendship_get(self):
         user_id = 2
-        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         self.ipc_pack['x_token'] = SessionToken.generate_token(1, session=self.session)[1]
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_FRIEND)
         user_id = 3
-        self.ipc_pack['api_method'] = '/users/%s/friendship' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user_id)
         resp = self.zero_client.route(self.ipc_pack)
         self.assertEqual(resp, APP_USERSRELS_TYPE_UNDEF)
 
     def test_users_friends_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/friends' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/friends'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
         resp_dicts = self.zero_client.route(self.ipc_pack)
         subquery = self.session.query(UsersRels.partner_id).filter_by(user_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
@@ -146,7 +145,7 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_extras_get(self):
         user_id = 1
-        self.ipc_pack['api_method'] = '/users/%s/extras' % (user_id)
+        self.ipc_pack['api_method'] = '/users/{0}/extras'.format(user_id)
         self.ipc_pack['api_type'] = 'get'
 
         resp_dicts = self.zero_client.route(self.ipc_pack)
@@ -160,7 +159,7 @@ class UsersTestCase(unittest.TestCase):
                 'title_orig': extra.title_orig,
                 'description': extra.description,
                 'location': extra.location,
-                'created': detetime_to_unixtime(extra.created),
+                'created': datetime_to_unixtime(extra.created),
             })
 
         for resp_dict in resp_dicts:

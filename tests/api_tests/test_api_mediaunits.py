@@ -48,7 +48,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         temp = {
             'id': 2,
             'title': 'mu2',
-            'title_orig': 2,
+            'title_orig': '2',
             'description': 'test2',
             'prev': 1,
             'next': 3,
@@ -71,7 +71,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         temp = {
             'id': 3,
             'title': 'mu3',
-            'title_orig': 3,
+            'title_orig': '3',
             'description': 'test3',
             'prev': 2,
             'next': None,
@@ -94,7 +94,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         temp = {
             'id': 2,
             'title': 'mu2',
-            'title_orig': 2,
+            'title_orig': '2',
             'description': 'test2',
             'prev': 1,
             'next': 3,
@@ -116,7 +116,7 @@ class MediaUnitsTestCase(unittest.TestCase):
         temp = {
             'id': 1,
             'title': 'mu1',
-            'title_orig': 1,
+            'title_orig': '1',
             'description': 'test1',
             'prev': None,
             'next': 2,

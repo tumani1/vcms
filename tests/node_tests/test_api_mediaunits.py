@@ -1,12 +1,13 @@
 # coding: utf-8
+import json
 import unittest
-from models import Base
+import requests
 from sqlalchemy.orm import sessionmaker, scoped_session
+
+from models import Base
 from utils.connection import db_connect, create_session
 from tests.fixtures import create_media_units, create_topic, create
-from settings import NODE
-import requests
-import json
+from tests.constants import NODE
 
 
 def setUpModule():
@@ -43,7 +44,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_info(self):
         id = 2
         data = {}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/info' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/info'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',
@@ -51,7 +52,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': 3,
             u'releasedate': 1325376000,
-            u'title_orig': 2,
+            u'title_orig': u'2',
             u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
@@ -61,7 +62,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_next(self):
         id = 2
         data = {}
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/next' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/next'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test3',
@@ -69,7 +70,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': None,
             u'releasedate': 1356998400,
-            u'title_orig': 3,
+            u'title_orig': u'3',
             u'relation': {},
             u'prev': 2,
             u'id': 3
@@ -79,7 +80,7 @@ class MediaUnitsTestCase(unittest.TestCase):
     def test_prev(self):
         data = {}
         id = 3
-        resp = self.req_sess.get(self.fullpath+'/mediaunits/%s/prev' % (id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.get(self.fullpath+'/mediaunits/{0}/prev'.format(id), headers={'token': self.token}, params=data)
         temp = {
             u'enddate': 1391212800,
             u'description': u'test2',
@@ -87,7 +88,7 @@ class MediaUnitsTestCase(unittest.TestCase):
             u'batch': u'batch1',
             u'next': 3,
             u'releasedate': 1325376000,
-            u'title_orig': 2,
+            u'title_orig': u'2',
             u'relation': {u'watched': 1388534400},
             u'prev': 1,
             u'id': 2
@@ -104,7 +105,7 @@ class MediaUnitsTestCase(unittest.TestCase):
                     u'batch': u'batch1',
                     u'next': 2,
                     u'releasedate': 1293840000,
-                    u'title_orig': 1,
+                    u'title_orig': u'1',
                     u'relation': {u'watched': 1388534400},
                     u'prev': None,
                     u'id': 1
