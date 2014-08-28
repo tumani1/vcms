@@ -232,7 +232,7 @@ def create_topic_values(session):
 
 
 def create_content(session):
-    content = Content(text='test')
+    content = Content(text='test', obj_id=1, obj_type='m')
     session.add(content)
     session.commit()
 
