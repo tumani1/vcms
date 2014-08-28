@@ -87,7 +87,7 @@ class ChatStatTestCase(unittest.TestCase):
 
     def test_get_stat_nonexistent(self):
         resp = self.req_sess.get(self.fullpath+'/chat/0/stat', headers={'token': self.gl_token})
-        self.assertEqual(resp.status_code, 404)
+        self.assertEqual(resp.status_code, 400)
 
     def tearDown(self):
         ChatMessages.objects.delete()
