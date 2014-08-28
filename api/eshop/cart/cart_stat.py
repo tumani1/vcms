@@ -11,7 +11,7 @@ def get(auth_user, session=None, **kwargs):
         'id': ''
     }
 
-    cart = Carts.get_cart_by_user_id(session, auth_user.id).first()
+    cart = Carts.get_cart_active_by_user_id(session, auth_user.id).first()
 
     data['items_cnt'] = cart.items_cnt
     data['cost'] = cart.cost_total

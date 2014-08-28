@@ -11,6 +11,10 @@ from items.items_objects import get as get_objects
 from cart.cart_stat import get as get_cart_stat
 from cart.cart_items import get as get_cart_items
 from payments.payments_list import get as get_payment_list
+from cart.carts_list import get as get_carts_list
+from cart.carts_info import get as get_carts_info
+from cart.carts_items import get as get_carts_items
+from cart.carts_log import get as get_carts_log
 
 routing = (
     (r'^items/list$', {
@@ -51,6 +55,20 @@ routing = (
         'get': get_cart_stat,
     }),
     (r'^cart/items$', {
-       'get': get_cart_items,
+        'get': get_cart_items,
     }),
+    (r'^carts/list$', {
+        'get': get_carts_list,
+    }),
+    (r'^carts/(?P<carts_id>\d+)/info$', {
+        'get': get_carts_info,
+    }),
+    (r'^carts/(?P<carts_id>\d+)/items$', {
+        'get': get_carts_items,
+    }),
+    (r'^carts/(?P<carts_id>\d+)/log$', {
+        'get': get_carts_log,
+    }),
+
+
 )

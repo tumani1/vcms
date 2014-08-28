@@ -31,13 +31,13 @@ class mShopCart(DefaultSerializer):
         return instance.status
 
     def transform_payed(self, instance, **kwargs):
-        return instance.payments.payed
+        return instance.payments[0].payed
 
     def transform_cost(self, instance, **kwargs):
         return instance.cost_total
 
     def transform_items(self, instance, **kwargs):
-        items_carts_instance = instance.items_carts
+        items_carts_instance = instance.items_carts[0]
 
         return mShopCartItem(instance=items_carts_instance, user=self.user, session=self.session).data
 

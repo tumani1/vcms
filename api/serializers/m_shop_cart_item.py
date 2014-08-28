@@ -1,6 +1,7 @@
 from api.serializers.m_shop_item import mShopItem
 from models import Variants, Items
 from utils.serializer import DefaultSerializer
+from utils.common import datetime_to_unixtime as convert_date
 
 
 class mShopCartItem(DefaultSerializer):
@@ -28,7 +29,9 @@ class mShopCartItem(DefaultSerializer):
         return instance.carts_id
 
     def transform_added(self, instance, **kwargs):
-        return instance.added
+        if instance.added is None:
+            return None
+        return convert_date(instance.added)
 
     def transform_cnt(self, instance, **kwargs):
         return instance.cnt
