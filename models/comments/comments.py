@@ -1,12 +1,11 @@
 # coding: utf-8
 
-from sqlalchemy.orm import relation, backref, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
-from models.users import Users
 
 from constants import OBJECT_TYPES
 

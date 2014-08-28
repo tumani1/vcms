@@ -21,4 +21,6 @@ class UsersChatModelView(SqlAlModelView):
         cuStatus=APP_USERSCHAT_TYPE,
     )
 
+    form_columns = ('chat', 'user', 'cuStatus', )
+    column_list = form_columns + ('last_update', )
     form_excluded_columns = ('last_update', )

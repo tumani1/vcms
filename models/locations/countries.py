@@ -27,6 +27,7 @@ class Countries(Base):
         return u"<Countries(id={0}, name={1})>".format(self.id, self.name)
 
 
+@event.listens_for(Countries.__table__, "after_create")
 def after_create(target, connection, **kw):
     countries_list = []
     for row in countries.objects:
@@ -38,6 +39,3 @@ def after_create(target, connection, **kw):
         countries_list.append(d)
     insert_sql = target.insert().values(countries_list)
     connection.execute(insert_sql)
-
-
-event.listen(Countries.__table__, "after_create", after_create)

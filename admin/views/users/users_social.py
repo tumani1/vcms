@@ -22,6 +22,8 @@ class UsersSocialModelView(SqlAlModelView):
     column_labels = dict(user=u'Пользователь', sType=u'Социальная сеть',
                          sToken=u'Токен пользователя', created=u'Дата создания',
                          updated=u'Последнее обновление')
+    form_columns = ('user', 'sType', 'sToken', )
+    column_list = form_columns + ('created', 'updated', )
 
     form_args = dict(
         sType=dict(
@@ -29,4 +31,3 @@ class UsersSocialModelView(SqlAlModelView):
         )
     )
 
-    form_excluded_columns = ('updated', 'created', )

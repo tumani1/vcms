@@ -10,7 +10,7 @@ class Chats(Base):
     __tablename__ = 'chats'
     __table_args__ = {'extend_existing': True}
 
-    id = Column(Integer, primary_key=True)
+    id          = Column(Integer, primary_key=True)
     description = Column(String(128), nullable=False)
     users_chats = relationship('UsersChat', backref='chat')
 

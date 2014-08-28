@@ -1,5 +1,8 @@
 # coding: utf-8
+APP_PERSONS_STATUS_TYPE_NOT_ACTIVE = u'0'
+APP_PERSONS_STATUS_TYPE_ACTIVE = u'1'
+
 APP_PERSONS_STATUS_TYPE = (
-    (u'1', u'Статус-Дятел'),
-    (u'2', u'Статус-Волчара'),
+    (APP_PERSONS_STATUS_TYPE_NOT_ACTIVE, u'Не активен'),
+    (APP_PERSONS_STATUS_TYPE_ACTIVE, u'Активен'),
 )

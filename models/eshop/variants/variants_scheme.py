@@ -1,5 +1,6 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, ForeignKey, String
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -13,3 +14,5 @@ class VariantsScheme(Base):
     type = Column(Integer, nullable=True)
     default = Column(String, nullable=True)
     enable = Column(Integer, nullable=True)
+
+    scheme_variants = relationship('VariantsValues', backref='variants_scheme', cascade='all, delete')

@@ -25,6 +25,7 @@ class Items(Base):
     item_categories = relationship('ItemsCategories', backref='items', cascade='all, delete')
     item_extras = relationship('ItemsExtras', backref='items', cascade='all, delete')
     item_objects = relationship('ItemsObjects', backref='items', cascade='all, delete')
+    item_variants = relationship('Variants', backref='items', cascade='all, delete')
 
     @classmethod
     def tmpl_for_items(cls, user, session):

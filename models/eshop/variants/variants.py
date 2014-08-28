@@ -22,8 +22,9 @@ class Variants(Base):
     reserved_cnt = Column(Integer, nullable=True)
     added = Column(DateTime, nullable=True)
 
-    variant_extras = relationship('VariantsExtras', backref='items', cascade='all, delete')
-    variant_values = relationship('VariantsValues', backref='items', cascade='all, delete')
+    variant_extras = relationship('VariantsExtras', backref='variants', cascade='all, delete')
+    variant_values = relationship('VariantsValues', backref='variants', cascade='all, delete')
+    variant_carts = relationship('ItemsCarts', backref='variants', cascade='all, delete')
 
     @classmethod
     def tmpl_for_variants(cls, session):

@@ -12,6 +12,7 @@ class UsersTopicsModelView(SqlAlModelView):
         users=u'Пользователь',
         subscribed=u'Дата подписки',
         liked=u'Дата лайка',
-        extra=u'Дополнительный материал',
         topics=u'Топик',
     )
+
+    column_list = form_columns = ('users', 'topics', 'liked', 'subscribed', )
