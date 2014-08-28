@@ -52,7 +52,7 @@ class SessionToken(TokenMixin):
 
 
     @classmethod
-    def generate_token(cls, user_id, session):
+    def generate_token(cls, user_id, session, meta={}):
         '''
         (Re)Generate token for given user_id
         '''
