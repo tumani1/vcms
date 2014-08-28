@@ -1,8 +1,7 @@
 # coding: utf-8
 import time
 
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint, select
 from sqlalchemy.event import listen
 
 from models.base import Base
@@ -67,9 +66,9 @@ class UsersPersons(Base):
 
 
 def validate_subcribe(mapper, connect, target):
-    session = sessionmaker(bind=connect)()
-    person = session.query(Persons).get(target.person_id)
-    if target.user_id == person.user_id:
+    query = select([Persons.user_id]).where(Persons.user_id == target.user_id)
+    user_id = connect.execute(query).scalar()
+    if target.user_id == user_id:
         raise ValueError(u'Нельзя подписаться на самого себя')
 
 listen(UsersPersons, 'before_insert', validate_subcribe)
