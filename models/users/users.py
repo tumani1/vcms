@@ -56,6 +56,7 @@ class Users(Base):
     user_media_owner = relationship('Media', backref='user_owner', cascade='all, delete')
     user_msgr_thread_= relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
     user_msgr_logs = relationship('MsgrLog', backref='users', cascade='all, delete')
+    user_carts = relationship('Carts', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):

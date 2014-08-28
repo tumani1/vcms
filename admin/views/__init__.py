@@ -25,7 +25,8 @@ from tags import TagsModelView, TagsObjectsModelView
 from content import ContentModelView
 from eshop import ItemsModelView, ItemsExtrasModelView, ItemsObjectsModelView, UsersItemsModelView,\
     CategoriesModelView, CategoriesExtrasModelView, VariantsModelView, VariantsExtrasModelView,\
-    VariantsSchemeModelView, VariantsValuesModelView
+    VariantsSchemeModelView, VariantsValuesModelView, CartsModelView, CartLogModelView, ItemsCartsModelView,\
+    PaymentsModelView
 
 
 class AdminIndexView(admin.AdminIndexView):
@@ -184,4 +185,8 @@ admin_view.add_view(VariantsModelView())
 admin_view.add_view(VariantsExtrasModelView())
 admin_view.add_view(VariantsSchemeModelView())
 admin_view.add_view(VariantsValuesModelView())
+admin_view.add_view(CartsModelView())
+admin_view.add_view(CartLogModelView())
+admin_view.add_view(ItemsCartsModelView())
+admin_view.add_view(PaymentsModelView())
 ###############################################################################
