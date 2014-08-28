@@ -1,5 +1,6 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, desc
+from sqlalchemy import Column, Integer, String, func, asc
+from sqlalchemy.orm import relationship, contains_eager
 from models.eshop.items import ItemsCategories
 from models.eshop.items.items import Items
 from models import Base
@@ -12,9 +13,11 @@ class Categories(Base):
     name = Column(String, nullable=True)
     description = Column(Integer, nullable=True)
 
+    items_categories = relationship('ItemsCategories', backref='categories', cascade='all, delete')
+
     @classmethod
     def tmpl_for_categories(cls, session):
-        query = session.query(cls)
+        query = session.query(Categories.id, Categories.name, Categories.description)
 
         return query
 
@@ -26,24 +29,30 @@ class Categories(Base):
     @classmethod
     def get_list_categories(cls, session, instock=None, has_items=None, sort=None):
         query = cls.tmpl_for_categories(session).\
-            outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id).\
-                    outerjoin(Items, ItemsCategories.item_id==Items.id).filter(ItemsCategories.item_id != None)
+            outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id)
+
+        query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
+            filter(ItemsCategories.item_id != None)
 
         if not has_items is None:
             if not has_items:
-                query = query.outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id).\
-                    outerjoin(Items, ItemsCategories.item_id==Items.id).filter(ItemsCategories.item_id == None)
+                query = cls.tmpl_for_categories(session).\
+                    outerjoin(ItemsCategories, cls.id == ItemsCategories.category_id)
 
-        if not instock is None and has_items!=False:
+                query = query.outerjoin(Items, ItemsCategories.item_id == Items.id).\
+                    filter(ItemsCategories.item_id == None)
+
+        if not instock is None:
             if instock:
                 query = query.filter(Items.instock==True)
 
         if not sort is None:
             if sort == 'name':
-                query = query.order_by(desc(cls.name))
+                query = query.order_by(asc(cls.name))
             else:
-                query = query
+                query = query.\
+                    order_by(asc(func.count(Categories.id)))
 
-        return query
+        return query.group_by(Categories.id)
 
 

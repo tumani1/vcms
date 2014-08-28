@@ -26,7 +26,7 @@ def get(session=None, **kwargs):
     if 'sort' in query:
         params['sort'] = query['sort']
 
-    category = Categories.get_list_categories(**params)
+    category = Categories.get_list_categories(**params).all()
 
     for cat in category:
         categories['id'] = cat.id
