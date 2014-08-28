@@ -12,10 +12,6 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
     def setUp(self):
         self.cl = zerorpc.Client()
         self.cl.connect(ZERORPC_SERVICE_URI)
-        engine = db_connect()
-        session = create_session(bind=engine)
-        create(session)
-
 
     def test_echo(self):
         IPC_pack = {
@@ -24,7 +20,7 @@ class ZeroRpcServiceTestCase(unittest.TestCase):
                     'token': 'echo_token',
                     'query_params': {'message': 'hello'}}
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(IPC_pack['query_params'], resp['query'])
+        self.assertEqual(IPC_pack['query_params'], resp)
 
 
     def tearDown(self):

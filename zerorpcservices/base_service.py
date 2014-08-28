@@ -27,7 +27,7 @@ class BaseService(object):
                 'session': session,
                 'auth_user': auth_user,
                 'query': IPC_pack['query_params'],
-                'meta': IPC_pack['meta'],
+                'meta': IPC_pack.get('meta', {}) # может будет приходить от ws-клиентов в будущем,
             })
             api_params = self.default_params.copy()
             api_params.update(params)
