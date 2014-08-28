@@ -1,12 +1,11 @@
 # coding: utf-8
-
 import time
 
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint, select
 from sqlalchemy.event import listen
-from sqlalchemy.orm import relationship
 
 from models.base import Base
+from models.persons import Persons
 
 
 class UsersPersons(Base):
@@ -67,7 +66,9 @@ class UsersPersons(Base):
 
 
 def validate_subcribe(mapper, connect, target):
-    if target.user_id == target.person_id:
+    query = select([Persons.user_id]).where(Persons.user_id == target.user_id)
+    user_id = connect.execute(query).scalar()
+    if target.user_id == user_id:
         raise ValueError(u'Нельзя подписаться на самого себя')
 
 listen(UsersPersons, 'before_insert', validate_subcribe)

@@ -16,7 +16,10 @@ class PersonsTopicsModelView(SqlAlModelView):
         description=u'Описание',
         topic=u'Топик',
         type=u'Тип',
+        role=u'Роль',
     )
+
+    column_list = form_columns = ('persons', 'topic', 'type', 'role', 'description')
 
     column_choices = dict(
         type=PERSON_TOPIC_TYPE,
@@ -31,3 +34,5 @@ class PersonsTopicsModelView(SqlAlModelView):
             choices=PERSON_TOPIC_TYPE,
         ),
     )
+
+

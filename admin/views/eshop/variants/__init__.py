@@ -1,0 +1,4 @@
+from variants import VariantsModelView
+from variants_extras import VariantsExtrasModelView
+from variants_scheme import VariantsSchemeModelView
+from variants_values import VariantsValuesModelView

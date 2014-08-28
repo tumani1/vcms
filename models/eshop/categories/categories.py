@@ -1,6 +1,6 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, func, asc
-from sqlalchemy.orm import relationship, contains_eager
+from sqlalchemy.orm import relationship
 from models.eshop.items import ItemsCategories
 from models.eshop.items.items import Items
 from models import Base
@@ -12,6 +12,9 @@ class Categories(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=True)
     description = Column(Integer, nullable=True)
+
+    category_extras = relationship('CategoriesExtras', backref='categories', cascade='all, delete')
+    category_variants_schemes = relationship('VariantsScheme', backref='categories', cascade='all, delete')
 
     items_categories = relationship('ItemsCategories', backref='categories', cascade='all, delete')
 

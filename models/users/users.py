@@ -1,6 +1,5 @@
 # coding: utf-8
 import datetime
-
 from sqlalchemy.sql.expression import func
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
 from sqlalchemy.orm import relationship, sessionmaker
@@ -13,6 +12,7 @@ from models.locations import Cities, Countries
 from models.persons import UsersPersons, Persons
 from models.tokens import GlobalToken
 from models.mongo import ChatMessages
+
 
 class Users(Base):
     __tablename__ = 'users'
@@ -49,12 +49,14 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
+    user_items   = relationship('UsersItems', backref='users', cascade='all, delete')
     user_comments = relationship('UsersComments', backref='users', cascade='all, delete')
     user_medias   = relationship('UsersMedia', backref='users', cascade='all, delete')
     user_units    = relationship('UsersMediaUnits', backref='users', cascade='all, delete')
     user_media_owner = relationship('Media', backref='user_owner', cascade='all, delete')
     user_msgr_thread_= relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
     user_msgr_logs = relationship('MsgrLog', backref='users', cascade='all, delete')
+    user_carts = relationship('Carts', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):
@@ -116,6 +118,18 @@ class Users(Base):
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
 
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)

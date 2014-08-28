@@ -1,0 +1,4 @@
+from carts import CartsModelView
+from cart_log import CartLogModelView
+from items_carts import ItemsCartsModelView
+from payments import PaymentsModelView

@@ -3,14 +3,14 @@ from api.comments.comments_create import post as create_comments
 from utils.exceptions import RequestErrorException
 
 
-def post(type, name_or_id, auth_user, session, **kwargs):
+def post(type, comment, auth_user, session, **kwargs):
     query = kwargs['query']
     id, name = None, None
 
     try:
-        id = int(name_or_id)
+        id = int(comment)
     except ValueError:
-        name = name_or_id
+        name = comment
 
     if 'text' in query:
         text = query['text']

@@ -204,7 +204,7 @@ class PersonLikeTestCase(unittest.TestCase):
         }
 
         resp = self.zero_client.route(IPC_pack)
-        self.assertTrue('error' in resp)
+        self.assertTrue('exception' in resp)
 
 
     def test_echo_delete(self):
@@ -268,7 +268,7 @@ class PersonSubscribeTestCase(unittest.TestCase):
         }
 
         resp = self.zero_client.route(IPC_pack)
-        self.assertTrue('error' in resp)
+        self.assertTrue('exception' in resp)
 
 
     def test_echo_post(self):

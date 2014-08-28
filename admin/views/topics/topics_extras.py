@@ -13,6 +13,6 @@ class TopicsExtrasModelView(SqlAlModelView):
         topics=u'Топик',
     )
 
-    column_display_pk = True
+    column_list = form_columns = ('topics', 'extra', 'extra_type', )
 
 

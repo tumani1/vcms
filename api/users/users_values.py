@@ -8,31 +8,31 @@ from utils.exceptions import RequestErrorException
 from api.serializers import mValue
 
 
-def get(user_id, session, query, **kwargs):
+def get(user_id, session, **kwargs):
     user = session.query(Users).get(user_id)
     if user is None:
         raise RequestErrorException()
 
     query = session.query(UsersValues).filter(UsersValues.user_id==user.id)
 
-    if 'id' in query:
-        if isinstance(query['id'], int):
-            ids = [query['id']]
+    if 'id' in kwargs['query']:
+        if isinstance(kwargs['query']['id'], int):
+            ids = [kwargs['query']['id']]
         else:
-            ids = query['id']
+            ids = kwargs['query']['id']
         query = query.join(Scheme).filter(Scheme.id.in_(ids))
 
-    if 'name' in query:
-        if not isinstance(query['name'], list):
-            name = [query['name']]
+    if 'name' in kwargs['query']:
+        if not isinstance(kwargs['query']['name'], list):
+            name = [kwargs['query']['name']]
         else:
-            name = query['name']
+            name = kwargs['query']['name']
         query = query.join(Scheme).filter(Scheme.name.in_(name))
 
-    if 'topic' in query:
-        query = query.join(Scheme).filter(Scheme.topic_name == query['topic'])
+    if 'topic' in kwargs['query']:
+        query = query.join(Scheme).filter(Scheme.topic_name == kwargs['query']['topic'])
 
-    if 'text' in query:
-        query = query.join(Scheme).join(Topics).filter(func.to_tsvector(Topics.description).match(query['text']))
+    if 'text' in kwargs['query']:
+        query = query.join(Scheme).join(Topics).filter(func.to_tsvector(Topics.description).match(kwargs['query']['text']))
 
     return mValue(instance=query.all(), session=session).data

@@ -1,0 +1,33 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="row">
+    {% if not current_user.is_authenticated() %}
+        <div class="span7 offset3">
+            <h1>Flask-Admin form authentication</h1>
+        </div>
+        <div class="span4 offset4">
+            <div class="table-bordered" style="border-left: 1px solid #dddddd">
+                <form class="form-horizontal" style="margin-top: 20px" method="POST" action="">
+                    {% if form.errors %}
+                    <p class="text-error" style="margin-left: 5px; margin-right: 5px">Форма содержит ошибку. Введён неправильный логин или пароль</p>
+                    {% endif %}
+                    {{ form.hidden_tag() if form.hidden_tag }}
+                    {% for f in form if f.type != 'CSRFTokenField' %}
+                    <div class="control-group {% if f.errors %}error{% endif %}">
+                        {{ f.label(class="control-label") }}
+                        <div class="controls">
+                            {{ f(placeholder=f.label.text) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="controls">
+                        <button class="btn" type="submit">Логин</button>
+                    </div>
+                </form>
+            </div>
+            {{ link | safe }}
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}

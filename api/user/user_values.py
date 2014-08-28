@@ -51,4 +51,4 @@ def put(auth_user, session=None, **kwargs):
 
 @need_authorization
 def get(auth_user, session, **kwargs):
-    return users_get(id=auth_user.id, session=session, **kwargs)
+    return users_get(user_id=auth_user.id, session=session, **kwargs)

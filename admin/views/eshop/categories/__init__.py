@@ -1,0 +1,2 @@
+from categories import CategoriesModelView
+from categories_extras import CategoriesExtrasModelView

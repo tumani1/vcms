@@ -19,25 +19,10 @@ class PersonsModelView(SqlAlModelView):
                          status=u'Статус персоны',
                          bio=u'Биография', users=u'Пользователь')
 
-    column_list = ('firstname', 'lastname', 'status', 'bio', 'users')
-
-    form_columns = column_list
+    form_columns = column_list = ('firstname', 'lastname', 'status', 'bio', 'users', )
 
     form_args = dict(
-        firstname=dict(
-            label=u'Имя',
-        ),
-        lastname=dict(
-            label=u'Фамилия',
-        ),
         status=dict(
-            label=u'Статус персоны',
             choices=APP_PERSONS_STATUS_TYPE,
-        ),
-        bio=dict(
-            label=u'Биография',
-        ),
-        users=dict(
-            label=u'Пользователь'
         ),
     )

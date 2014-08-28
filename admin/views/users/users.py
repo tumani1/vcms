@@ -23,47 +23,25 @@ class UsersModelView(SqlAlModelView):
         email=EmailField,
     )
 
-    form_excluded_columns = ('friends', 'partners', 'created', 'last_visit',
-                             'userpic_type', 'userpic_id', 'users_values',
-                             'users_chat', 'users_extras', 'person', 'social',
-                             'user_persons', 'global_token', 'session_token',
-                             'user_topics',
-    )
+    form_columns = ('firstname', 'lastname', 'gender', 'password', 'email',
+                    'city', 'is_manager', 'address', 'bio', 'phone', 'phone',
+                    'birthdate', 'time_zone', 'created', 'last_visit')
 
     column_labels = dict(city=u'Родной город', firstname=u'Имя', gender=u'Пол',
                          lastname=u'Фамилия', address=u'Адресс',
                          bio=u'Биография', birthdate=u'Дата рождения',
                          time_zone=u'Временная зона', created=u'Дата создания',
-                         phone=u'Телефон', last_visit=u'Последний визит',
-                         password=u'Пароль', )
+                         phone=u'Телефон', last_visit=u'Последний визит', )
 
-    column_list = ('id', 'firstname', 'lastname', 'gender', 'city', 'address',
-                   'bio', 'birthdate', 'phone', 'time_zone', 'created',
-                   'last_visit', 'email')
+    column_list = ('id', 'firstname', 'lastname', 'gender', 'email', 'city',
+                   'is_manager', 'address', 'bio', 'phone', 'birthdate',
+                   'time_zone', 'created', 'last_visit', )
 
     column_choices = dict(
         gender=APP_USERS_TYPE_GENDER,
     )
 
     form_args = dict(
-        city=dict(
-            label=u'Родной город',
-        ),
-        firstname=dict(
-            label=u'Имя',
-        ),
-        lastname=dict(
-            label=u'Фамилия',
-        ),
-        address=dict(
-            label=u'Адресс',
-        ),
-        bio=dict(
-            label=u'Биография',
-        ),
-        birthdate=dict(
-            label=u'Дата рождения',
-        ),
         time_zone=dict(
             label=u'Временная зона',
             choices=[(i, i) for i in common_timezones]
@@ -71,11 +49,5 @@ class UsersModelView(SqlAlModelView):
         gender=dict(
             label=u'Пол',
             choices=APP_USERS_TYPE_GENDER,
-        ),
-        password=dict(
-            label=u'Пароль',
-        ),
-        phone=dict(
-            label=u'Телефон',
         ),
     )

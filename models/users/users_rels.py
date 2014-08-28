@@ -1,7 +1,5 @@
 # coding: utf-8
-
 import datetime
-
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
 from sqlalchemy_utils import ChoiceType
 
