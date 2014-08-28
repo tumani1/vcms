@@ -5,30 +5,13 @@ from utils.validation import validate_email, validate_int
 
 def post(auth_user, session, **kwargs):
     query = kwargs['query']
-    if 'firstname' in query:
-        firstname = query['firstname']
-    else:
-        raise Exception(u"Empty name")
-    if 'lastname' in query:
-        lastname = query['lastname']
-    else:
-        raise Exception(u"Empty name")
-    if 'email' in query:
-        email = query['email']
-    else:
-        raise Exception(u"Empty name")
-    if 'pswd1' in query:
-        pswd1 = query['pswd1']
-    else:
-        raise Exception(u"Empty name")
-    if 'pswd2' in query:
-        pswd2 = query['pswd2']
-    else:
-        raise Exception(u"Empty name")
-    if 'city_id' in query:
-        city_id = query['city_id']
-    else:
-        raise Exception(u"Empty name")
+    firstname = query.get('firstname', None)
+    lastname = query.get('lastname', None)
+    email = query.get('email', None)
+    pswd1 = query.get('pswd1', None)
+    pswd2 = query.get('pswd2', None)
+    city_id = query.get('city_id', None)
+
     try:
         email = validate_email(email)
     except Exception, e:

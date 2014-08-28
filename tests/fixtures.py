@@ -230,7 +230,20 @@ def create_topic_values(session):
     session.add_all(list_tov)
     session.commit()
 
+
 def create_content(session):
     content = Content(text='test')
     session.add(content)
+    session.commit()
+
+
+def create_chat(session):
+    c = Chats(description='chat for testing')
+    session.add(c)
+    session.commit()
+
+
+def create_users_chat(session):
+    uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
+    session.add(uc)
     session.commit()

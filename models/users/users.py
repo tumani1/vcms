@@ -45,7 +45,7 @@ class Users(Base):
     friends       = relationship('UsersRels', foreign_keys='UsersRels.user_id', backref='user', cascade='all, delete')
     partners      = relationship('UsersRels', foreign_keys='UsersRels.partner_id', backref='partner', cascade='all, delete')
     global_token  = relationship('GlobalToken', backref="users", uselist=False, cascade='all, delete')
-    session_token = relationship('SessionToken', backref="users", cascade='all, delete')
+    session_token = relationship('SessionToken', backref="users", cascade='all, delete', order_by='SessionToken.created')
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')

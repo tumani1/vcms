@@ -26,7 +26,8 @@ class BaseService(object):
             params.update({
                 'session': session,
                 'auth_user': auth_user,
-                'query': IPC_pack['query_params']
+                'query': IPC_pack['query_params'],
+                'meta': IPC_pack.get('meta', {}) # может будет приходить от ws-клиентов в будущем,
             })
             api_params = self.default_params.copy()
             api_params.update(params)
@@ -34,11 +35,11 @@ class BaseService(object):
 
         except APIException as e:
             session.rollback()
-            response = {'error': {'code': e.code,
+            response = {'exception': {'code': e.code,
                                   'message': e.message}}
         except Exception as e:
             session.rollback()
-            response = {'error': {'code': 404,
+            response = {'exception': {'code': 400,
                                   'message': 'Bad Request'}}
         finally:
             session.close()

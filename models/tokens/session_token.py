@@ -1,5 +1,6 @@
 #coding: utf-8
-from sqlalchemy import Column, Boolean
+from sqlalchemy import Column, Boolean, Text
+from sqlalchemy_utils import IPAddressType
 from sqlalchemy.sql.expression import or_
 
 from token import TokenMixin
@@ -11,7 +12,11 @@ import datetime
 class SessionToken(TokenMixin):
     __tablename__ = "session_tokens"
 
-    is_active = Column(Boolean, default=True)
+    is_active  = Column(Boolean, default=True)
+    os         = Column(Text)
+    browser    = Column(Text)
+    ip_address = Column(IPAddressType)
+    device     = Column(Text)
 
 
     @classmethod
@@ -57,7 +62,9 @@ class SessionToken(TokenMixin):
         (Re)Generate token for given user_id
         '''
 
-        st = SessionToken(user_id=user_id, is_active=True)
+        st = SessionToken(user_id=user_id, is_active=True, os=meta.get("os"),
+                          browser=meta.get("browser"), ip_address=meta.get('ip_address'),
+                          device=meta.get('device'))
         
         session.add(st)
         session.commit()

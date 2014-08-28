@@ -3,7 +3,7 @@
 from m_users import mUser
 from m_users_short import mUserShort
 from m_value import mValue
-
+from m_session import mSession
 from m_persons import mPersonSerializer
 from m_person_role import mPersonRoleSerializer
 from m_topic import mTopicSerializer
@@ -17,6 +17,7 @@ from m_content import mContentSerializer
 from m_comment import mCommentSerializer
 from m_chat import mChatSerializer
 from m_chat_msg import mChatMsgSerializer
+from m_shop_payment import mShopPayment
 
 
 __all__ = [
@@ -24,5 +25,5 @@ __all__ = [
     'mUser', 'mUserShort', 'mValue', 'mStraemElement', 'mMsgrMsg',
     'mMsgrThread', 'mMediaUnitsSerializer', 'mMediaSerializer',
     'mLocationSerializer', 'mContentSerializer', 'mCommentSerializer',
-    'mChatSerializer', 'mChatMsgSerializer',
+    'mChatSerializer', 'mChatMsgSerializer', 'mSession', 'mShopPayment',
 ]
