@@ -72,9 +72,16 @@ class AuthApiTestCase(unittest.TestCase):
 
     def test_get_session(self):
         self.ipc_pack['api_method'] = self.ipc_pack['api_method'].format("info/session")
-        id_, token, date = SessionToken.generate_token(self.user_id, self.session)
+        meta = {
+            'os': 'Linux x86_64',
+            'browser': ' Chrome 37.0.2062.94',
+            'ip_address': '173.194.32.152',
+            'device': '',
+        }
+        id_, token, date = SessionToken.generate_token(self.user_id, self.session, meta)
         session = self.session.query(SessionToken).get(id_)
         self.ipc_pack['x_token'] = token
+        self.ipc_pack['meta'] = meta
         resp = self.zero_client.route(self.ipc_pack)
         m_session_dict = {
             'id': id_,
@@ -84,7 +91,7 @@ class AuthApiTestCase(unittest.TestCase):
             'is_active': True,
             'os': session.os,
             'browser': session.browser,
-            'ip_address': session.ip_address,
+            'ip_address': session.ip_address.compressed,
             'device': session.device,
         }
 
@@ -93,26 +100,3 @@ class AuthApiTestCase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.zero_client.close()
-
-
-class CdnApiTestCase(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def on_play_auth_user(self):
-        pass
-
-    def on_play_without_auth_user(self):
-        pass
-
-    def on_update_auth_user(self):
-        pass
-
-    def on_update_without_auth_user(self):
-        pass
-
-    def on_done_auth_user(self):
-        pass
-
-    def on_done_without_auth_user(self):
-        pass
