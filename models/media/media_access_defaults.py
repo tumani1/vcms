@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, SMALLINT
+from sqlalchemy import Column, SMALLINT, DDL
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
@@ -28,6 +28,19 @@ class MediaAccessDefaults(Base):
     def __repr__(self):
         return u'<MediaAccessDefaults(name={0})>'.format(self.name)
 
+update_media_access_defaults = DDL("""
+CREATE FUNCTION media_access_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.access_type != OLD.access_type THEN
+        DELETE FROM media_access_defaults_countries WHERE media_type_id = NEW.name;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+CREATE TRIGGER media_access_update BEFORE UPDATE ON media_access_defaults
+FOR EACH ROW EXECUTE PROCEDURE media_access_update();
+""")
+
 
 def after_create(target, connection, **kwargs):
     types = []
@@ -36,5 +49,6 @@ def after_create(target, connection, **kwargs):
         types.append(d)
     insert_sql = target.insert().values(types)
     connection.execute(insert_sql)
+    update_media_access_defaults.execute(bind=connection, target=target)
 
 listen(MediaAccessDefaults.__table__, 'after_create', after_create)

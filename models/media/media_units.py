@@ -1,6 +1,7 @@
 # coding: utf-8
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
-    and_, SMALLINT
+    and_, SMALLINT, DDL
+from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, contains_eager
 from sqlalchemy_utils import ChoiceType
 
@@ -87,3 +88,19 @@ class MediaUnits(Base):
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)
+
+
+update_media_units = DDL("""
+CREATE FUNCTION media_units_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.access_type != OLD.access_type THEN
+        DELETE FROM media_units_access_countries WHERE media_unit_id = NEW.id;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+CREATE TRIGGER media_units_update BEFORE UPDATE ON media_units
+FOR EACH ROW EXECUTE PROCEDURE media_units_update();
+""")
+
+listen(MediaUnits.__table__, 'after_create', update_media_units)

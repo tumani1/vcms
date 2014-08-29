@@ -66,7 +66,7 @@ class UsersPersons(Base):
 
 
 def validate_subcribe(mapper, connect, target):
-    query = select([Persons.user_id]).where(Persons.user_id == target.user_id)
+    query = select([Persons.user_id]).where(Persons.user_id == target.person_id)
     user_id = connect.execute(query).scalar()
     if target.user_id == user_id:
         raise ValueError(u'Нельзя подписаться на самого себя')
