@@ -39,7 +39,7 @@ def path(string):
     return abspath(string)
 
 
-def main(h, ha_port, ha_stat_port, pool, python, project, dest):
+def main(h, ha_port, ha_stat_port, pool, python, project, dest, without_node):
     try:
         # генерация группы для zerorpc служб
         pool = range(pool[0], pool[1])
@@ -115,18 +115,19 @@ backend zeronodes\n""".format(host=get_lan_ip(), ha_port=ha_port, ha_stat_port=h
                 cp.write(config)
 
         # генерация конфига для node служб
-        conf = {'render_serv': {
-                    'host': '127.0.0.1',
-                    'port': 9901,
-                    'template_dir': 'templates'},
-                'rest_ws_serv': {
-                    'host': '127.0.0.1',
-                    'port': 9902}}
-        conf['render_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
-        conf['rest_ws_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
+        if not without_node:
+            conf = {'render_serv': {
+                        'host': '127.0.0.1',
+                        'port': 9901,
+                        'template_dir': 'templates'},
+                    'rest_ws_serv': {
+                        'host': '127.0.0.1',
+                        'port': 9902}}
+            conf['render_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
+            conf['rest_ws_serv']['backend'] = {'host':get_lan_ip(), 'port':ha_port}
 
-        with open(join(dest, 'node_service.yaml'), 'w') as config:
-            yaml.dump(conf, config)
+            with open(join(dest, 'node_service.yaml'), 'w') as config:
+                yaml.dump(conf, config)
 
         #геренерация главного конфига супервизора
         template = """[unix_http_server]
@@ -177,5 +178,7 @@ if __name__ == '__main__':
                         help='путь и имя исполняемого файла питона из виртуального окружения')
     parser.add_argument('--destination', dest='dest', type=path, default='generated_configs', metavar='<path>',
                         help='путь выгрузки сгенерированных конфигов')
+    parser.add_argument('--without_node', action='store_true', dest='without_node',
+                        help='необходимо ли генерировать конфиг для node сервисов')
     namespace = parser.parse_args()
     main(**vars(namespace))
