@@ -3,11 +3,11 @@ from utils import need_authorization
 
 
 def put(**kwargs):
-    return kwargs['query']
+    return kwargs['query_params']
 
 
 def get(**kwargs):
-    return kwargs['query']
+    return kwargs['query_params']
 
 
 @need_authorization

@@ -20,7 +20,7 @@ def get(auth_user, session, **kwargs):
         'top': None
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
 
     if 'limit' in query:
         limit, top = validate_mLimit(query['limit'])

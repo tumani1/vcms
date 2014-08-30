@@ -8,7 +8,7 @@ from api.serializers import mShopPayment as mSP
 def get(**kwargs):
     auth_user = kwargs['auth_user']
     session = kwargs['session']
-    limit = kwargs['query'].get('limit', '')
+    limit = kwargs['query_params'].get('limit', '')
     limit, top = validate_mLimit(limit)
     carts = session.query(Carts).filter_by(user_id=auth_user.id)
     payments = session.query(Payments).filter(Payments.cart_id.in_([c.id for c in carts]))

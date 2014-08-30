@@ -8,8 +8,8 @@ from models.eshop.items.items import Items
 def get(item_id, auth_user, session, **kwargs):
     data = {}
     item_id = validate_int(item_id, min_value=1)
-    if 'variant' in kwargs['query']:
-        variant_id = validate_int(kwargs['query']['variant'], min_value=1)
+    if 'variant' in kwargs['query_params']:
+        variant_id = validate_int(kwargs['query_params']['variant'], min_value=1)
         instance = Variants.get_variant_extras(session, variant_id)
     else:
         instance = Items.get_item_extras(session, item_id)

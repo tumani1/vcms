@@ -19,7 +19,7 @@ def get_topic_extars(name, auth_user,  session, **kwargs):
         'session': session,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])
 

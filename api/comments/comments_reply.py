@@ -4,13 +4,13 @@ from utils.exceptions import RequestErrorException
 
 
 def post(parent_id, auth_user, session, **kwargs):
-    if 'text' in kwargs['query']:
-        text = kwargs['query']['text']
+    if 'text' in kwargs['query_params']:
+        text = kwargs['query_params']['text']
     else:
         raise RequestErrorException
 
     params = {
-        'query': {
+        'query_params': {
             'text': text,
             'parent_id': parent_id
         }

@@ -16,7 +16,7 @@ def get_topic_values(name, auth_user, session, **kwargs):
         'scheme_name': None,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'scheme_name' in query:
         params['scheme_name'] = validate_list_string(query['scheme_name'])
 

@@ -15,7 +15,7 @@ def put(auth_user, session=None, **kwargs):
     session.add(mt)
     session.commit()
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     users = Users.get_users_by_id(session, query['user_ids']).all()
     for id in query['user_ids']:
         if id != auth_user.id:

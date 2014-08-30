@@ -13,8 +13,8 @@ def post(item_id, auth_user, session, **kwargs):
     item_id = validate_int(item_id, min_value=1)
     date = datetime.datetime.utcnow()
 
-    if 'variant' in kwargs['query']:
-        variant_id = validate_int(kwargs['query']['variant'])
+    if 'variant' in kwargs['query_params']:
+        variant_id = validate_int(kwargs['query_params']['variant'])
         variant = Variants.get_variants_by_id(session, variant_id).first()
         if variant.item_id != item_id:
             raise Exception("Неверный вариант!")
@@ -54,8 +54,8 @@ def delete(item_id, auth_user, session, **kwargs):
     item_id = validate_int(item_id, min_value=1)
     date = datetime.datetime.utcnow()
 
-    if 'variant' in kwargs['query']:
-        variant_id = validate_int(kwargs['query']['variant'])
+    if 'variant' in kwargs['query_params']:
+        variant_id = validate_int(kwargs['query_params']['variant'])
         variant = Variants.get_variants_by_id(session, variant_id).first()
         if variant.item_id != item_id:
             raise Exception("Неверный вариант!")

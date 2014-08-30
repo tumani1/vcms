@@ -7,8 +7,8 @@ import datetime
 
 
 def post(auth_user, session, **kwargs):
-    if 'text' in kwargs['query']:
-        text = validate_string(kwargs['query']['text'])
+    if 'text' in kwargs['query_params']:
+        text = validate_string(kwargs['query_params']['text'])
     else:
         raise RequestErrorException
     date = datetime.datetime.now()
@@ -18,8 +18,8 @@ def post(auth_user, session, **kwargs):
         'created': date
     }
 
-    if 'parent_id' in kwargs['query']:
-        parent_id = validate_int(kwargs['query']['parent_id'], min_value=1)
+    if 'parent_id' in kwargs['query_params']:
+        parent_id = validate_int(kwargs['query_params']['parent_id'], min_value=1)
         parent = Comments.get_comment_by_id(auth_user, session, parent_id)
         if parent:
             params.update(parent_id=parent_id, obj_type=parent.obj_type.code)
@@ -30,12 +30,12 @@ def post(auth_user, session, **kwargs):
             new_comment = Comments(**params)
 
     else:
-        obj_type = validate_obj_type(kwargs['query']['obj_type'])
-        if 'obj_id' in kwargs['query']:
-            obj_id = validate_int(kwargs['query']['obj_id'], min_value=1)
+        obj_type = validate_obj_type(kwargs['query_params']['obj_type'])
+        if 'obj_id' in kwargs['query_params']:
+            obj_id = validate_int(kwargs['query_params']['obj_id'], min_value=1)
             params.update(obj_type=obj_type, obj_id=obj_id)
         else:
-            obj_name = validate_string(kwargs['query']['obj_name'])
+            obj_name = validate_string(kwargs['query_params']['obj_name'])
             params.update(obj_type=obj_type, obj_name=obj_name)
         new_comment = Comments(**params)
 

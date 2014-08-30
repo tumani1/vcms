@@ -9,7 +9,7 @@ from utils.validation import validate_list_int, validate_int, validate_string
 def get_content_list(auth_user, session, **kwargs):
 
     params = {}
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])
 

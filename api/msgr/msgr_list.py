@@ -17,7 +17,7 @@ def get(auth_user, session=None, **kwargs):
         'instance': ''
         }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'user_author' in query:
         params['instance'] = Users.get_users_by_id(session, query['user_author']).all()
         msgr_threads = UsersMsgrThreads.join_with_msgr_threads(auth_user, session, user_author=query['user_author']).all()

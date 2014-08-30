@@ -25,7 +25,7 @@ def get(auth_user, session=None, **kwargs):
 
 @need_authorization
 def put(auth_user, session, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     user = session.query(Users).filter_by(id=auth_user.id).first()
 
     if 'firstname' in query:

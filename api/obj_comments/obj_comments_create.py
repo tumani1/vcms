@@ -4,7 +4,7 @@ from utils.exceptions import RequestErrorException
 
 
 def post(type, comment, auth_user, session, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     id, name = None, None
 
     try:
@@ -20,13 +20,13 @@ def post(type, comment, auth_user, session, **kwargs):
     params = {
         'auth_user': auth_user,
         'session': session,
-        'query': {'obj_type': type, 'text': text}
+        'query_params': {'obj_type': type, 'text': text}
     }
 
     if id:
-        params['query'].update(obj_id=id)
+        params['query_params'].update(obj_id=id)
         return create_comments(**params)
 
     elif name:
-        params['query'].update(obj_name=name)
+        params['query_params'].update(obj_name=name)
         return create_comments(**params)

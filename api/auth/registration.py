@@ -4,7 +4,7 @@ from utils.validation import validate_email, validate_int
 
 
 def post(auth_user, session, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     firstname = query.get('firstname', None)
     lastname = query.get('lastname', None)
     email = query.get('email', None)

@@ -16,7 +16,7 @@ def get(auth_user=None, session=None, **kwargs):
         'topic': None,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])
 

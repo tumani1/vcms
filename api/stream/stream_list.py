@@ -8,7 +8,7 @@ from models.mongo import Stream
 
 
 def get(auth_user, session, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     stream_el = Stream.objects.all()
 
     if 'type' in query and 'objects' in query:

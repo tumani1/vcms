@@ -12,7 +12,7 @@ def put(id, auth_user, session, **kwargs):
     if msgr_thread is None:
         return {'code': 400}
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'text' in query:
         msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, text=query['text'])
     else:
