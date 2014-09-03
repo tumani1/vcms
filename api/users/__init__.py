@@ -1,3 +1,4 @@
+# coding: utf-8
 import users_friendship_action
 import users_info
 import users_values

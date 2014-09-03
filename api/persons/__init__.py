@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from persons_info import *
 from persons_subscribe import *
 from persons_like import *

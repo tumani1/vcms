@@ -1,3 +1,4 @@
+# coding: utf-8
 from media_list import get as get_list
 from media_info import get as get_info
 from media_persons import get as get_persons

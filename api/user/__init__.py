@@ -1,3 +1,4 @@
+# coding: utf-8
 from user_info import get, put
 from user_values import put as val_put, get as val_get
 from user_password import put as password_put

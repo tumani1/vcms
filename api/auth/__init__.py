@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from api.auth.login import post
 from api.auth.revoke import revoke
 from api.auth.session import get, delete
