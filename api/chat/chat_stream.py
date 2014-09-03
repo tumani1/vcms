@@ -1,3 +1,4 @@
+# coding: utf-8
 from models.mongo import ChatMessages
 from api.serializers import mChatMsgSerializer
 from utils.validation import validate_mLimit, validate_int

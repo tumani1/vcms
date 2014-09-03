@@ -1,11 +1,13 @@
 # coding: utf-8
-from models.comments.comments import Comments
-from utils.validation import validate_int, validate_string, validate_obj_type
-from utils.exceptions import RequestErrorException
 import datetime
 
+from models.comments.comments import Comments
+from utils import need_authorization
+from utils.validation import validate_int, validate_string, validate_obj_type
+from utils.exceptions import RequestErrorException
 
 
+@need_authorization
 def post(auth_user, session, **kwargs):
     if 'text' in kwargs['query_params']:
         text = validate_string(kwargs['query_params']['text'])
