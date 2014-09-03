@@ -17,7 +17,6 @@ class mPersonSerializer(DefaultSerializer):
         'relation': '',
     }
 
-
     def __init__(self, **kwargs):
         super(mPersonSerializer, self).__init__(**kwargs)
 
@@ -53,7 +52,6 @@ class mPersonSerializer(DefaultSerializer):
 
         self.user_list = user_list
 
-
     def calc_list_user_id(self):
         up_list = {}
         obj = self.instance
@@ -67,18 +65,14 @@ class mPersonSerializer(DefaultSerializer):
 
         self.up_list = up_list
 
-
     def transform_id(self, instance, **kwargs):
         return instance.id
-
 
     def transform_firstname(self, instance, **kwargs):
         return instance.firstname
 
-
     def transform_lastname(self, instance, **kwargs):
         return instance.lastname
-
 
     def transform_user(self, instance, **kwargs):
         user_id = instance.user_id
@@ -88,7 +82,6 @@ class mPersonSerializer(DefaultSerializer):
                 return mUser(instance=user_person, session=self.session, user=self.user).data
 
         return {}
-
 
     def transform_relation(self, instance, **kwargs):
         if self.is_auth:

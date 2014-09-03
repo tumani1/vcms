@@ -3,9 +3,12 @@ import time
 
 from models.users import UsersStream, Users
 from models.media import Media
+from models.comments import Comments
+from models.persons import Persons
 from models.mongo import constant
 from utils.serializer import DefaultSerializer
-from api.serializers import mUserShort, mAttach, mMediaSerializer
+from api.serializers import mUserShort, mAttach, mMediaSerializer, \
+    mCommentSerializer, mPersonSerializer
 
 
 class mStraemElement(DefaultSerializer):
@@ -61,3 +64,13 @@ class mStraemElement(DefaultSerializer):
             user = self.session.query(Users).get(obj.user_id)
             media = self.session.query(Media).get(obj.object['media_id'])
             return mMediaSerializer(instance=media, user=user, session=self.session)
+
+        if obj.type == constant.APP_STREAM_TYPE_MEDIA_C:
+            user = self.session.query(Users).get(obj.user_id)
+            comment = self.session.query(Comments).get(obj.object['comment_id'])
+            return mCommentSerializer(instance=comment, user=user, session=self.session, with_obj=True)
+
+        if obj.type == constant.APP_STREAM_TYPE_PERS_S:
+            user = self.session.query(Users).get(obj.user_id)
+            person = self.session.query(Persons).get(obj.object['person_id'])
+            return mPersonSerializer(instance=person, user=user, session=self.session)

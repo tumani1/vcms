@@ -1,6 +1,8 @@
 # coding: utf-8
 import datetime
 
+from api.serializers import mCommentSerializer
+from models.mongo import Stream, constant
 from models.comments.comments import Comments
 from utils import need_authorization
 from utils.validation import validate_int, validate_string, validate_obj_type
@@ -44,6 +46,9 @@ def post(auth_user, session, **kwargs):
     session.add(new_comment)
     if session.new:
         session.commit()
+
+    Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_C, object_={'comment_id': new_comment.id}, user_id=auth_user.id)
+    return mCommentSerializer(instance=new_comment, user=auth_user, session=session)
 
 
 def delete(auth_user, session, id, **kwargs):
