@@ -7,7 +7,7 @@ from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
 from models.media.constants import APP_MEDIA_LIST
-from models.media.users_media_units import UsersMediaUnits
+from models.media import UsersMediaUnits
 from utils.common import user_access_media
 
 
@@ -85,6 +85,11 @@ class MediaUnits(Base):
             if not status_code is None:
                 break
         return status_code
+
+    @classmethod
+    def get_users_media_unit(cls, user, session, media_id):
+        users_media = session.query(UsersMediaUnits).filter_by(user_id=user.id, media_id=media_id).first()
+        return users_media
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)

@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from sqlalchemy import and_
 
 from models.users import Users

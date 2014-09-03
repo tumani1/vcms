@@ -1,9 +1,6 @@
 # coding: utf-8
-
 from api.serializers import mUser
-
 from utils.serializer import DefaultSerializer
-
 from models.users.users import Users
 from models.persons.persons_users import UsersPersons
 

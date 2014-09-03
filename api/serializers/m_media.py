@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from utils.serializer import DefaultSerializer
 from utils.common import datetime_to_unixtime as convert_date
 from api.serializers.m_localion import mLocationSerializer

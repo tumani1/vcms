@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from utils.serializer import DefaultSerializer
 from models.users import UsersRels
 from models.tokens import SessionToken

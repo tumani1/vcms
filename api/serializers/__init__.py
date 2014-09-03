@@ -1,5 +1,5 @@
 # coding: utf-8
-
+from m_attach import mAttach
 from m_users import mUser
 from m_users_short import mUserShort
 from m_value import mValue
@@ -26,4 +26,5 @@ __all__ = [
     'mMsgrThread', 'mMediaUnitsSerializer', 'mMediaSerializer',
     'mLocationSerializer', 'mContentSerializer', 'mCommentSerializer',
     'mChatSerializer', 'mChatMsgSerializer', 'mSession', 'mShopPayment',
+    'mAttach',
 ]

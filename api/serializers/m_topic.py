@@ -1,8 +1,6 @@
 # coding: utf-8
-
 from utils.serializer import DefaultSerializer
 
-from models.users.users import Users
 from models.persons.persons_users import UsersPersons
 
 __all__ = ['mTopicSerializer']

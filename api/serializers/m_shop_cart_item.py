@@ -1,3 +1,4 @@
+# coding: utf-8
 from api.serializers.m_shop_item import mShopItem
 from models import Variants, Items
 from utils.serializer import DefaultSerializer

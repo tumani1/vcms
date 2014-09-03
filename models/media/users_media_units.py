@@ -1,6 +1,6 @@
 # coding: utf-8
-
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
+
 from models.base import Base
 
 
@@ -13,3 +13,5 @@ class UsersMediaUnits(Base):
     subscribed    = Column(DateTime, nullable=True)
     watched       = Column(DateTime, nullable=True)
 
+    def __repr__(self):
+        return u"<UsersMediaUnits(id={0}, user={1}, media_unit={2})>".format(self.id, self.user_id, self.media_unit_id)

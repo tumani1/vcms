@@ -1,6 +1,6 @@
 # coding: utf-8
-from mongoengine import Document, DateTimeField, StringField, IntField, BinaryField, DictField, SequenceField
 import datetime
+from mongoengine import Document, DateTimeField, StringField, IntField, BinaryField, DictField, SequenceField
 
 from constant import APP_STREAM_TYPE
 
@@ -10,7 +10,7 @@ class Stream(Document):
     created     = DateTimeField(verbose_name=u'Дата создания', default=datetime.datetime.utcnow)
     type        = StringField(verbose_name=u'Тип', max_length=10, choices=APP_STREAM_TYPE, )
     object      = DictField(verbose_name=u'Объект')
-    text        = StringField(verbose_name=u'Текст', default=None)
+    text        = StringField(verbose_name=u'Текст')
     user_id     = IntField(verbose_name=u'Пользователь')
     attachments = BinaryField(verbose_name=u'Приложение объекта')
 
@@ -32,6 +32,13 @@ class Stream(Document):
                 else:
                     query = query[:down]
         return query
+
+    # Юзеры друзья
+    @classmethod
+    def signal(cls, type_, object_, user_id=None):
+        stream_el = cls(type=type_, object=object_, user_id=user_id)
+        stream_el.save()
+        return stream_el
 
     def __repr__(self):
         return u'<Stream([{}]:type={},user={})>'.format(self.id, self.type, self.user_id)

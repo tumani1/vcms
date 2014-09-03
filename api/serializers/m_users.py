@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from utils.common import datetime_to_unixtime
 from api.serializers.m_users_short import mUserShort
 

@@ -1,7 +1,9 @@
 # coding: utf-8
 from models.users import UsersRels
+from models.mongo import Stream
 from models.users.constants import APP_USERSRELS_TYPE_UNDEF, APP_USERSRELS_TYPE_FRIEND,\
     APP_USERSRELS_TYPE_SEND_TO, APP_USERSRELS_TYPE_RECIEVE_USER
+from models.mongo.constant import APP_STREAM_TYPE_USER_A, APP_STREAM_TYPE_USER_F
 from utils import need_authorization
 
 
@@ -25,9 +27,11 @@ def post(user_id, auth_user, session, *args, **kwargs):
             partner_rels.urStatus = APP_USERSRELS_TYPE_RECIEVE_USER
         else:
             user_rels.urStatus = partner_rels.urStatus = APP_USERSRELS_TYPE_FRIEND
+        Stream.signal(type_=APP_STREAM_TYPE_USER_A, object_={'partner_id': user_id}, user_id=auth_user.id)
     else:
         user_rels = UsersRels(user_id=auth_user.id, partner_id=user_id, urStatus=APP_USERSRELS_TYPE_SEND_TO)
         partner_rels = UsersRels(user_id=user_id, partner_id=auth_user.id, urStatus=APP_USERSRELS_TYPE_RECIEVE_USER)
+        Stream.signal(type_=APP_STREAM_TYPE_USER_F, object_={'partner_id': user_id}, user_id=auth_user.id)
         session.add_all(user_rels, partner_rels)
 
     session.commit()
