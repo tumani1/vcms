@@ -13,7 +13,7 @@ def get(media_id, auth_user, session, **kwargs):
         'session': session,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
 
     if 'is_online' in query and query['is_online']:
         params['is_online'] = query['is_online']

@@ -21,7 +21,7 @@ def get_topics_list(auth_user, session, **kwargs):
         'limit': None,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'name' in query:
         params['name'] = str(query['name']).strip()
 

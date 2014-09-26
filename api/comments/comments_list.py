@@ -18,7 +18,7 @@ def get(auth_user=None, session=None, **kwargs):
         'limit': validate_mLimitId('10'),
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])
 

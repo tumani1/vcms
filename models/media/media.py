@@ -1,7 +1,8 @@
 # coding: utf-8
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL
+from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType
 from sqlalchemy.orm import relationship, contains_eager
 
@@ -34,8 +35,8 @@ class Media(Base):
     duration       = Column(Integer, nullable=True)
     owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
     type_          = Column(ChoiceType(APP_MEDIA_TYPE), nullable=False)
-    access         = Column(Integer, nullable=True, default=None)
-    access_type    = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
+    access         = Column(Integer, nullable=True)
+    access_type    = Column(ChoiceType(APP_MEDIA_LIST), nullable=True)
 
     countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
@@ -130,3 +131,19 @@ class Media(Base):
 
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)
+
+
+update_access_type = DDL("""
+CREATE FUNCTION media_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.access_type != OLD.access_type THEN
+        DELETE FROM media_access_countries WHERE media_id = NEW.id;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+CREATE TRIGGER media_update BEFORE UPDATE ON media
+FOR EACH ROW EXECUTE PROCEDURE media_update();
+""")
+
+listen(Media.__table__, 'after_create', update_access_type)

@@ -22,7 +22,7 @@ def get_person_values(person_id, auth_user, session, **kwargs):
         'value': None,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'name' in query:
         params['name'] = validate_list_string(query['name'])
 

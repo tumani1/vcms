@@ -22,7 +22,7 @@ def get_person_list(auth_user, session, **kwargs):
         'session': session,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])
 

@@ -14,21 +14,21 @@ def get(user_id, session, **kwargs):
         raise RequestErrorException
     query = session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == user_id)
 
-    if 'id' in kwargs['query']:
-        if isinstance(kwargs['query']['id'], int):
-            id_ = [kwargs['query']['id']]
+    if 'id' in kwargs['query_params']:
+        if isinstance(kwargs['query_params']['id'], int):
+            id_ = [kwargs['query_params']['id']]
         else:
-            id_ = kwargs['query']['id']
+            id_ = kwargs['query_params']['id']
         query = query.filter(Extras.id.in_(id_))
 
-    if 'type' in kwargs['query']:
-        query = query.filter(Extras.type == kwargs['query']['type'])
+    if 'type' in kwargs['query_params']:
+        query = query.filter(Extras.type == kwargs['query_params']['type'])
 
-    if 'text' in kwargs['query']:
-        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['query']['text']))
+    if 'text' in kwargs['query_params']:
+        query = query.filter(func.to_tsvector(Extras.description).match(kwargs['query_params']['text']))
 
-    if 'limit' in kwargs['query']:
-        limit = validate_mLimit(kwargs['query']['limit'])
+    if 'limit' in kwargs['query_params']:
+        limit = validate_mLimit(kwargs['query_params']['limit'])
          # Set limit and offset filter
         if not limit is None:
             # Set Limit

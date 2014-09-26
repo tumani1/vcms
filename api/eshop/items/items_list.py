@@ -30,7 +30,7 @@ def get(auth_user, session, **kwargs):
         'is_digital': None,
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
 
     if 'id' in query:
         params['id'] = validate_list_int(query['id'])

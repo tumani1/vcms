@@ -13,7 +13,7 @@ from utils.exceptions import RequestErrorException
 
 @need_authorization
 def put(auth_user, session=None, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     if 'name' in query:
         name = query['name']
     if 'value' in query:

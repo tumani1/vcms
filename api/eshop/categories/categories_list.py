@@ -15,7 +15,7 @@ def get(session=None, **kwargs):
         'sort': None
     }
 
-    query = kwargs['query']
+    query = kwargs['query_params']
 
     if 'instock' in query:
         params['instock'] = query['instock']

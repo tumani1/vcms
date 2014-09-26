@@ -5,8 +5,8 @@ from utils.exceptions import NotAuthorizedException
 
 
 def post(auth_user, session, **kwargs):
-    email = kwargs['query']['email']
-    password = kwargs['query']['password']
+    email = kwargs['query_params']['email']
+    password = kwargs['query_params']['password']
     user = session.query(Users).filter(Users.email == email).first()
 
     if user.password == str(password):

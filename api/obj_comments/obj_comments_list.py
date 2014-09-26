@@ -12,13 +12,13 @@ def get(type, comment, auth_user, session,  **kwargs):
     params = {
         'auth_user': auth_user,
         'session': session,
-        'query': {'obj_type': type}
+        'query_params': {'obj_type': type}
     }
 
     if id:
-        params['query'].update(obj_id=id)
+        params['query_params'].update(obj_id=id)
         return get_comments_list(**params)
 
     elif name:
-        params['query'].update(obj_name=name)
+        params['query_params'].update(obj_name=name)
         return get_comments_list(**params)

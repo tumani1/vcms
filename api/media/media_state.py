@@ -26,7 +26,7 @@ def get(media_id, auth_user, session, **kwargs):
 
 
 def post(media_id, auth_user, session, **kwargs):
-    query = kwargs['query']
+    query = kwargs['query_params']
     date = datetime.datetime.utcnow()
     params = {
         'user_id': auth_user.id,
