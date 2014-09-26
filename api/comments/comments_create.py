@@ -47,7 +47,7 @@ def post(auth_user, session, **kwargs):
     if session.new:
         session.commit()
 
-    Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_C, object_={'comment_id': new_comment.id}, user_id=auth_user.id)
+    Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_C, object={'comment_id': new_comment.id}, user_id=auth_user.id)
     return mCommentSerializer(instance=new_comment, user=auth_user, session=session)
 
 

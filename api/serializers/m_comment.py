@@ -8,8 +8,7 @@ from models.persons import Persons
 from models.content import Content
 from models.mongo import Stream
 
-from api.serializers import mMediaUnitsSerializer, mMediaSerializer, \
-    mPersonSerializer, mContentSerializer, mStraemElement, mUserShort
+from api import serializers
 
 from utils.common import datetime_to_unixtime as convert_date
 from utils.serializer import DefaultSerializer
@@ -29,11 +28,11 @@ class mCommentSerializer(DefaultSerializer):
 
     def __init__(self, **kwargs):
         self.object_types = {
-            'mu': (MediaUnits, mMediaUnitsSerializer),
-            'm': (Media, mMediaSerializer),
-            'p': (Persons, mPersonSerializer),
-            'c': (Content, mContentSerializer),
-            's': (Stream, mStraemElement),
+            'mu': (MediaUnits, serializers.mMediaUnitsSerializer),
+            'm': (Media, serializers.mMediaSerializer),
+            'p': (Persons, serializers.mPersonSerializer),
+            'c': (Content, serializers.mContentSerializer),
+            's': (Stream, serializers.mStraemElement),
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
         self.fields = self.__read_fields
@@ -54,7 +53,7 @@ class mCommentSerializer(DefaultSerializer):
 
     def transform_user(self, instance, **kwargs):
         if instance.user_id in self.users_dict.keys():
-            return mUserShort(user=self.user, session=self.session, instance=self.users_dict[instance.user_id]).data
+            return serializers.mUserShort(user=self.user, session=self.session, instance=self.users_dict[instance.user_id]).data
         else:
             return u'removed user'
 

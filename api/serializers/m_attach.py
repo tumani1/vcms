@@ -1,5 +1,11 @@
 # coding: utf-8
 from utils.serializer import DefaultSerializer
+from api.serializers import mPersonSerializer
+from models.mongo import constant
+
+OBJECT_TYPE = {
+    constant.APP_STREAM_TYPE_PERS_O: lambda: mPersonSerializer,
+}
 
 
 class mAttach(DefaultSerializer):
@@ -8,19 +14,21 @@ class mAttach(DefaultSerializer):
         'type': '',
         'id': '',
         'id_str': '',
+        'object': '',
     }
 
-    def __init__(self, **kwargs):
-        super(DefaultSerializer, self).__init__(**kwargs)
+    def __init__(self, type=None, *args, **kwargs):
+        self.type = type
+        super(DefaultSerializer, self).__init__(*args, **kwargs)
 
     def transform_type(self, obj):
-        return ''
-
-    def transform_id(self, obj):
-        return 1
+        return self.type
 
     def transform_id_str(self, obj):
-        return ''
+        return str(obj.id)
 
     def transform_object(self, obj):
-        return {}
+        try:
+            return OBJECT_TYPE[self.type](instance=obj, session=self.session, user=self.user).data
+        except KeyError:
+            return {}

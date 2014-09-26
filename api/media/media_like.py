@@ -29,7 +29,7 @@ def post(media_id, auth_user, session, **kwargs):
         session.add(users_media)
     elif users_media.liked is None:
         users_media.liked = date
-        Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_L, object_={'media_id': media_id}, user_id=auth_user.id)
+        Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_L, object={'media_id': media_id}, user_id=auth_user.id)
     if session.new or session.dirty:
         session.commit()
 

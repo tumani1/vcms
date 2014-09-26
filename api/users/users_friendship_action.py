@@ -27,11 +27,11 @@ def post(user_id, auth_user, session, *args, **kwargs):
             partner_rels.urStatus = APP_USERSRELS_TYPE_RECIEVE_USER
         else:
             user_rels.urStatus = partner_rels.urStatus = APP_USERSRELS_TYPE_FRIEND
-        Stream.signal(type_=APP_STREAM_TYPE_USER_A, object_={'partner_id': user_id}, user_id=auth_user.id)
+        Stream.signal(type_=APP_STREAM_TYPE_USER_A, object={'partner_id': user_id}, user_id=auth_user.id)
     else:
         user_rels = UsersRels(user_id=auth_user.id, partner_id=user_id, urStatus=APP_USERSRELS_TYPE_SEND_TO)
         partner_rels = UsersRels(user_id=user_id, partner_id=auth_user.id, urStatus=APP_USERSRELS_TYPE_RECIEVE_USER)
-        Stream.signal(type_=APP_STREAM_TYPE_USER_F, object_={'partner_id': user_id}, user_id=auth_user.id)
+        Stream.signal(type_=APP_STREAM_TYPE_USER_F, object={'partner_id': user_id}, user_id=auth_user.id)
         session.add_all(user_rels, partner_rels)
 
     session.commit()

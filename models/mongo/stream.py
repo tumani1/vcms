@@ -1,6 +1,6 @@
 # coding: utf-8
 import datetime
-from mongoengine import Document, DateTimeField, StringField, IntField, BinaryField, DictField, SequenceField
+from mongoengine import Document, DateTimeField, StringField, IntField, DictField, SequenceField
 
 from constant import APP_STREAM_TYPE
 
@@ -12,7 +12,7 @@ class Stream(Document):
     object      = DictField(verbose_name=u'Объект')
     text        = StringField(verbose_name=u'Текст')
     user_id     = IntField(verbose_name=u'Пользователь')
-    attachments = BinaryField(verbose_name=u'Приложение объекта')
+    attachments = DictField(verbose_name=u'Приложение объекта')
 
     @classmethod
     def mLimitId(cls, query, limit):
@@ -35,8 +35,8 @@ class Stream(Document):
 
     # Юзеры друзья
     @classmethod
-    def signal(cls, type_, object_, user_id=None):
-        stream_el = cls(type=type_, object=object_, user_id=user_id)
+    def signal(cls, type_, user_id=None, **kwargs):
+        stream_el = cls(type=type_, object=kwargs.get('object', {}), user_id=user_id, attachments=kwargs.get('attachments', {}))
         stream_el.save()
         return stream_el
 

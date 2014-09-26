@@ -50,7 +50,7 @@ def post_subscribe(person_id, auth_user, session, **kwargs):
         up.subscribed = date
 
     session.commit()
-    Stream.signal(type_=constant.APP_STREAM_TYPE_PERS_S, object_={'person_id': person_id}, user_id=auth_user.id)
+    Stream.signal(type_=constant.APP_STREAM_TYPE_PERS_S, object={'person_id': person_id}, user_id=auth_user.id)
 
 
 @need_authorization

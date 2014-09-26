@@ -6,8 +6,8 @@ from sqlalchemy.orm import relationship, contains_eager
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
+from models.media.users_media_units import UsersMediaUnits
 from models.media.constants import APP_MEDIA_LIST
-from models.media import UsersMediaUnits
 from utils.common import user_access_media
 
 
