@@ -247,3 +247,27 @@ def create_users_chat(session):
     uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
     session.add(uc)
     session.commit()
+
+
+def create_categories(session):
+    cat = Categories(name='category1', description='category_test')
+    session.add(cat)
+    session.commit()
+
+
+def create_items_categories(session):
+    item_cat = ItemsCategories(item_id=1, category_id=1)
+    session.add(item_cat)
+    session.commit()
+
+
+def create_categories_extras(session):
+    cat_extras = CategoriesExtras(categories_id=1, extras_id=1, extras_type=1)
+    session.add(cat_extras)
+    session.commit()
+
+
+def create_items(session):
+    item = Items(name='item1', description='item_test', active=True, instock=True)
+    session.add(item)
+    session.commit()

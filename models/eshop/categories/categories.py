@@ -11,7 +11,7 @@ class Categories(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=True)
-    description = Column(Integer, nullable=True)
+    description = Column(String, nullable=True)
 
     category_extras = relationship('CategoriesExtras', backref='categories', cascade='all, delete')
     category_variants_schemes = relationship('VariantsScheme', backref='categories', cascade='all, delete')
