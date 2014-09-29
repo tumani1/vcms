@@ -1,6 +1,6 @@
 # coding: utf-8
 from utils.serializer import DefaultSerializer
-from api.serializers import mPersonSerializer
+from api.serializers.m_persons import mPersonSerializer
 from models.mongo import constant
 
 OBJECT_TYPE = {
