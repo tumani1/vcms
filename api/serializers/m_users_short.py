@@ -1,5 +1,6 @@
 # coding: utf-8
 from utils.serializer import DefaultSerializer
+from models.users.constants import APP_USERSRELS_TYPE_UNDEF
 from models.users import UsersRels
 from models.tokens import SessionToken
 
@@ -27,7 +28,10 @@ class mUserShort(DefaultSerializer):
         return obj.person.id
 
     def transform_relation(self, obj):
-        return UsersRels.get_reletion_status(self.user.id, obj.id, self.session)
+        if self.user:
+            return UsersRels.get_reletion_status(self.user.id, obj.id, self.session)
+        else:
+            return APP_USERSRELS_TYPE_UNDEF
 
     def to_native(self, obj):
         if obj.person:

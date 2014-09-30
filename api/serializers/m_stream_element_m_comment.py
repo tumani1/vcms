@@ -37,19 +37,21 @@ class mStraemElement(DefaultSerializer):
             del self.fields['relation']
 
     def transform_created(self, obj):
-        return obj.unixtime
+        return convert_date(obj.created)
 
     def transform_user(self, obj):
         ret_value = {}
         user = self.session.query(Users).get(obj.user_id)
         if user:
-            ret_value = mUserShort(instance=obj, session=self.session, user=self.user).data
+            ret_value = mUserShort(instance=user, session=self.session, user=self.user).data
         return ret_value
 
     def transform_attach(self, obj):
         if obj.type == constant.APP_STREAM_TYPE_PERS_O:
             person = self.session.query(Persons).get(obj.object['person_id'])
             return mAttach(instance=person, type=constant.APP_STREAM_TYPE_PERS_O, session=self.session, user=self.user).data
+        else:
+            return {}
 
     def transform_relation(self, obj):
         liked = None

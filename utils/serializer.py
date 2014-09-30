@@ -31,7 +31,7 @@ class DefaultSerializer(object):
         self.user = user
         self.is_auth = True if not user is None else False
 
-        self.fields = getattr(self, '_{0}__read_fields'.format(self.__class__.__name__))
+        self.fields = getattr(self, '_{0}__read_fields'.format(self.__class__.__name__)).copy()
         self.context = context or {}
 
         self._data = None
@@ -41,11 +41,6 @@ class DefaultSerializer(object):
 
         if instance is None:
             raise ValueError('instance should be a queryset or other iterable with many=True')
-
-    @classmethod
-    @property
-    def schema(cls):
-        return cls.__read_fields
 
     @property
     def data(self):

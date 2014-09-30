@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 from sqlalchemy.sql.expression import func
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean, Date
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
@@ -22,7 +22,7 @@ class Users(Base):
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
     password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
-    city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'), nullable=False)
+    city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'))
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
     email         = Column(EmailType(), unique=True, nullable=False)
@@ -31,7 +31,7 @@ class Users(Base):
     address       = Column(Text)
     bio           = Column(Text)
     last_visit    = Column(DateTime)
-    birthdate     = Column(DateTime)
+    birthdate     = Column(Date)
     userpic_type  = Column(String(1))
     userpic_id    = Column(Integer)
     # status      = Column(ChoiceType(TYPE_STATUS))
