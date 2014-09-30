@@ -281,3 +281,13 @@ def create_items(session):
     item4 = Items(name='item4', description='item4_test', active=True, instock=True)
     session.add_all([item1, item2, item3, item4])
     session.commit()
+
+
+def create_items_extras(session):
+    items_extras1 = ItemsExtras(item_id=1, extras_id=1)
+    items_extras2 = ItemsExtras(item_id=2, extras_id=2)
+    session.add_all([items_extras1, items_extras2])
+    session.commit()
+
+def create_items_carts(session):
+    items_carts = ItemsCarts()
