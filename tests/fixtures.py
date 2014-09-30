@@ -250,14 +250,21 @@ def create_users_chat(session):
 
 
 def create_categories(session):
-    cat = Categories(name='category1', description='category_test')
-    session.add(cat)
+    cat1 = Categories(name='category1', description='category_test')
+    cat2 = Categories(name='category2', description='category2_test')
+    cat3 = Categories(name='category3', description='category3_test')
+    cat4 = Categories(name='category4', description='category4_test')
+    session.add_all([cat1, cat2, cat3, cat4])
     session.commit()
 
 
 def create_items_categories(session):
     item_cat = ItemsCategories(item_id=1, category_id=1)
-    session.add(item_cat)
+    item_cat2 = ItemsCategories(item_id=2, category_id=2)
+    item_cat3 = ItemsCategories(category_id=3)
+    item_cat4 = ItemsCategories(category_id=4, item_id=3)
+    item_cat5 = ItemsCategories(category_id=4, item_id=4)
+    session.add_all([item_cat, item_cat2, item_cat3, item_cat4, item_cat5])
     session.commit()
 
 
@@ -268,6 +275,9 @@ def create_categories_extras(session):
 
 
 def create_items(session):
-    item = Items(name='item1', description='item_test', active=True, instock=True)
-    session.add(item)
+    item1 = Items(name='item1', description='item_test', active=True, instock=False)
+    item2 = Items(name='item2', description='item2_test', active=True, instock=True)
+    item3 = Items(name='item3', description='item3_test', active=True, instock=False)
+    item4 = Items(name='item4', description='item4_test', active=True, instock=True)
+    session.add_all([item1, item2, item3, item4])
     session.commit()

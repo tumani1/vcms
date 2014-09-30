@@ -28,7 +28,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 class CategoriesTestCase(unittest.TestCase):
@@ -45,11 +45,244 @@ class CategoriesTestCase(unittest.TestCase):
         self.session.close()
 
     def test_info_get(self):
+        list_extras = []
+        extras = {
+            'id': 1,
+            'description': 'test test',
+            'created': 1388534400.0,
+            'location': 'russia',
+            'title': 'test',
+            'type': 'Video',
+            'title_orig': 'test'
+        }
+        list_extras.append(extras)
+        data = {
+            'items_cnt': 1,
+            'instock_cnt': 0,
+            'name': 'category1',
+            'description': 'category_test',
+            'extras': list_extras
+        }
         IPC_pack = {
-            'api_method': 'eshop/categories/%s/info' % (id),
+            'api_method': '/eshop/categories/{id}/info'.format(id=1),
             'api_type': 'get',
             'x_token': self.session_token[1],
             'query_params': {}
         }
         resp = self.cl.route(IPC_pack)
-        print resp
+        self.assertDictEqual(resp, data)
+
+    def test_extras_get(self):
+        list_extras = []
+        extras = {
+            'id': 1,
+            'description': 'test test',
+            'created': 1388534400.0,
+            'location': 'russia',
+            'title': 'test',
+            'type': 'Video',
+            'title_orig': 'test'
+        }
+        list_extras.append(extras)
+
+        IPC_pack = {
+            'api_method': '/eshop/categories/{id}/extras'.format(id=1),
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {}
+        }
+
+        resp = self.cl.route(IPC_pack)
+
+        self.assertListEqual(resp, list_extras)
+
+    def test_items_get(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/{id}/items'.format(id=1),
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {}
+
+        }
+
+        resp = self.cl.route(IPC_pack)
+
+
+    def test_list_get_has_items_true(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'has_items': 1}
+
+        }
+        resp = self.cl.route(IPC_pack)
+        list_category = []
+
+        category1 = {
+            'id': 2,
+            'name': 'category2'
+        }
+        category2 = {
+            'id': 1,
+            'name': 'category1'
+        }
+        category3 = {
+            'id': 4,
+            'name': 'category4'
+        }
+
+        list_category.append(category1)
+        list_category.append(category3)
+        list_category.append(category2)
+        self.assertListEqual(resp, list_category)
+
+    def test_list_get_has_items_false(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'has_items': 0}
+
+        }
+
+        category = {
+            'id': 3,
+            'name': 'category3'
+        }
+
+        list_category = []
+
+        list_category.append(category)
+        resp = self.cl.route(IPC_pack)
+        self.assertListEqual(resp, list_category)
+
+    def test_list_get_instock_true(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'instock': 1}
+
+        }
+
+        list_category = []
+        category = {
+            'id': 2,
+            'name': 'category2'
+        }
+        category2 = {
+            'id': 4,
+            'name': 'category4'
+        }
+
+        list_category.append(category)
+        list_category.append(category2)
+
+        resp = self.cl.route(IPC_pack)
+
+        self.assertListEqual(resp, list_category)
+
+    def test_list_get_instock_false(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'instock': 0}
+
+        }
+        list_category = []
+
+        category = {
+            'id': 1,
+            'name': 'category1'
+        }
+        category2 = {
+            'id': 4,
+            'name': 'category4'
+        }
+
+
+        list_category.append(category2)
+        list_category.append(category)
+
+        resp = self.cl.route(IPC_pack)
+
+        self.assertListEqual(resp, list_category)
+
+    def test_list_get_sort_by_name(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'sort': 'name'}
+
+        }
+        list_category = []
+
+        category1 = {
+            'id': 1,
+            'name': 'category1'
+        }
+        category2 = {
+            'id': 2,
+            'name': 'category2'
+        }
+        category3 = {
+            'id': 3,
+            'name': 'category3'
+        }
+        category4 = {
+            'id': 4,
+            'name': 'category4'
+        }
+
+        list_category.append(category1)
+        list_category.append(category2)
+        list_category.append(category3)
+        list_category.append(category4)
+
+        resp = self.cl.route(IPC_pack)
+
+        self.assertListEqual(resp, list_category)
+
+    def test_list_get_sort_by_cnt(self):
+        IPC_pack = {
+            'api_method': '/eshop/categories/list',
+            'api_type': 'get',
+            'x_token': self.session_token[1],
+            'query_params': {'sort': 'cnt'}
+
+        }
+        list_category = []
+
+        category1 = {
+            'id': 1,
+            'name': 'category1'
+        }
+        category2 = {
+            'id': 2,
+            'name': 'category2'
+        }
+        category3 = {
+            'id': 3,
+            'name': 'category3'
+        }
+        category4 = {
+            'id': 4,
+            'name': 'category4'
+        }
+
+
+
+        list_category.append(category3)
+        list_category.append(category2)
+        list_category.append(category1)
+        list_category.append(category4)
+
+        resp = self.cl.route(IPC_pack)
+
+        self.assertListEqual(resp, list_category)
+
+
+

@@ -34,9 +34,6 @@ class Categories(Base):
         query = cls.tmpl_for_categories(session).\
             outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id)
 
-        query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
-            filter(ItemsCategories.item_id != None)
-
         if not has_items is None:
             if not has_items:
                 query = cls.tmpl_for_categories(session).\
@@ -44,17 +41,24 @@ class Categories(Base):
 
                 query = query.outerjoin(Items, ItemsCategories.item_id == Items.id).\
                     filter(ItemsCategories.item_id == None)
+            else:
+                query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
+                    filter(ItemsCategories.item_id != None)
 
         if not instock is None:
+            query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
+                filter(ItemsCategories.item_id != None)
             if instock:
                 query = query.filter(Items.instock==True)
+            else:
+                query = query.filter(Items.instock==False)
 
         if not sort is None:
             if sort == 'name':
                 query = query.order_by(asc(cls.name))
             else:
                 query = query.\
-                    order_by(asc(func.count(Categories.id)))
+                    order_by(asc(func.count(ItemsCategories.item_id)))
 
         return query.group_by(Categories.id)
 
