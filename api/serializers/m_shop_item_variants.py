@@ -29,15 +29,17 @@ class mShopItemVariants(DefaultSerializer):
         return instance.id
 
     def transform_name(self, instance, **kwargs):
-        return instance.item_id
-
-    def transform_instock(self, instance, **kwargs):
         return instance.name
+
+    def transform_item_id(self, instance, **kwargs):
+        return instance.item_id
 
     def transform_description(self, instance, **kwargs):
         return instance.description
 
     def transform_available_cnt(self, instance, **kwargs):
+        if instance.stock_cnt is None or instance.reserved_cnt is None:
+            return None
         return instance.stock_cnt - instance.reserved_cnt
 
     def transform_price(self, instance, **kwargs):

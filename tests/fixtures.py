@@ -289,5 +289,18 @@ def create_items_extras(session):
     session.add_all([items_extras1, items_extras2])
     session.commit()
 
-def create_items_carts(session):
-    items_carts = ItemsCarts()
+
+def create_variants(session):
+    variants1 = Variants(item_id=1, name='variants1', description='variants1', price=1, price_old=1, active=True, stock_cnt=2, reserved_cnt=1 )
+    variants2 = Variants(item_id=2, name='variants2', description='variants2', price=2, price_old=2, active=True)
+    session.add_all([variants1, variants2])
+    session.commit()
+
+
+def create_variants_extras(session):
+    variants_extras = VariantsExtras(variant_id=1, extras_id=1)
+    session.add(variants_extras)
+    session.commit()
+
+
+
