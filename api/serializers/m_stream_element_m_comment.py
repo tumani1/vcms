@@ -48,7 +48,7 @@ class mStraemElement(DefaultSerializer):
 
     def transform_attach(self, obj):
         if obj.type == constant.APP_STREAM_TYPE_PERS_O:
-            person = self.session.query(Persons).get(obj.object['person_id'])
+            person = self.session.query(Persons).get(obj.attachments['person_id'])
             return mAttach(instance=person, type=constant.APP_STREAM_TYPE_PERS_O, session=self.session, user=self.user).data
         else:
             return {}
@@ -58,7 +58,7 @@ class mStraemElement(DefaultSerializer):
         if self.user:
             user_str_el = self.session.query(UsersStream).get((obj.id, self.user.id))
             if user_str_el:
-                liked = time.mktime(user_str_el.liked.timetuple())
+                liked = convert_date(user_str_el.liked)
 
         return {'liked': liked}
 
@@ -66,7 +66,7 @@ class mStraemElement(DefaultSerializer):
         if obj.type in (constant.APP_STREAM_TYPE_USER_A, constant.APP_STREAM_TYPE_USER_F):
             user = self.session.query(Users).get(obj.user_id)
             partner = self.session.query(Users).get(obj.object['partner_id'])
-            return mUserShort(instance=user, user=partner, session=self.session).data
+            return mUserShort(instance=partner, user=user, session=self.session).data
 
         elif obj.type == constant.APP_STREAM_TYPE_MEDIA_L:
             user = self.session.query(Users).get(obj.user_id)
