@@ -32,7 +32,7 @@ class mStraemElement(DefaultSerializer):
     }
 
     def __init__(self, user=None, **kwargs):
-        super(mStraemElement, self).__init__(**kwargs)
+        super(mStraemElement, self).__init__(user=user, **kwargs)
         if user is None:
             del self.fields['relation']
 
@@ -40,7 +40,7 @@ class mStraemElement(DefaultSerializer):
         return convert_date(obj.created)
 
     def transform_user(self, obj):
-        ret_value = {}
+        ret_value = None
         user = self.session.query(Users).get(obj.user_id)
         if user:
             ret_value = mUserShort(instance=user, session=self.session, user=self.user).data
@@ -56,7 +56,7 @@ class mStraemElement(DefaultSerializer):
     def transform_relation(self, obj):
         liked = None
         if self.user:
-            user_str_el = self.session.query(UsersStream).get((obj.id, self.user.id))
+            user_str_el = self.session.query(UsersStream).filter_by(stream_id=obj.id, user_id=self.user.id).first()
             if user_str_el:
                 liked = convert_date(user_str_el.liked)
 

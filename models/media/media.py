@@ -39,7 +39,7 @@ class Media(Base):
     access_type    = Column(ChoiceType(APP_MEDIA_LIST), nullable=True)
 
     countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
-    users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
+    users_media     = relationship('UsersMedia', backref='media', lazy='dynamic', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
     media_units     = relationship('MediaInUnit', backref='media', cascade='all, delete')
     media_persons   = relationship('PersonsMedia', backref='media', cascade='all, delete')

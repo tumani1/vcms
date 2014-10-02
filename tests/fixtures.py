@@ -89,6 +89,14 @@ def create_cdn(session):
     session.commit()
 
 
+def create_one_media(session):
+    user = Users(firstname="Test", lastname="Test", password='Test', email='test@test.ru')
+    session.add(user)
+    session.commit()
+    media = Media(title='Test', type_='v', owner=user.id, title_orig='test_media1', description='test_desc1')
+    session.add(media)
+    session.commit()
+
 def create_extras(session):
     list_extras = [
         Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC)),

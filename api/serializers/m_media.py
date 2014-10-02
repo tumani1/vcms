@@ -43,16 +43,16 @@ class mMediaSerializer(DefaultSerializer):
         return instance.duration
 
     def transform_locations(self, instance, **kwargs):
-        return mLocationSerializer(user=None, session=None, instance=instance.media_locations).data
+        return mLocationSerializer(user=self.user, session=self.session, instance=instance.media_locations).data
 
     def transform_relation(self, instance, **kwargs):
         relation = {}
-        users_media = instance.users_media
+        users_media = instance.users_media.filter_by(users=self.user).first()
         if self.is_auth and not users_media is None:
-            if users_media[0].watched:
-                relation.update(watched=convert_date(users_media[0].watched))
-            if users_media[0].liked:
-                relation.update(liked=convert_date(users_media[0].liked))
-            if users_media[0].play_pos:
-                relation.update(pos=users_media[0].play_pos)
+            if users_media.watched:
+                relation.update(watched=convert_date(users_media.watched))
+            if users_media.liked:
+                relation.update(liked=convert_date(users_media.liked))
+            if users_media.play_pos:
+                relation.update(pos=users_media.play_pos)
         return relation
