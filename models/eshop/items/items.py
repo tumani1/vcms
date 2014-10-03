@@ -54,7 +54,10 @@ class Items(Base):
             query = query.filter(cls.id.in_(id))
 
         if not instock is None:
-            query = query.filter(cls.instock == instock)
+            if instock:
+                query = query.filter(cls.instock==True)
+            else:
+                query = query.filter(cls.instock==False)
 
         if not is_digital is None:
             if is_digital == True:

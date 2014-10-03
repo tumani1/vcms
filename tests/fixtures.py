@@ -298,8 +298,31 @@ def create_variants(session):
 
 
 def create_variants_extras(session):
-    variants_extras = VariantsExtras(variant_id=1, extras_id=1)
+    variants_extras = VariantsExtras(variant_id=1, extras_id=2)
     session.add(variants_extras)
+    session.commit()
+
+
+def create_items_objects(session):
+    items_objects = ItemsObjects(item_id=1, obj_name='obj1', obj_id=1, obj_type=u'c')
+    session.add(items_objects)
+    session.commit()
+
+
+def create_cart(session):
+    carts = Carts(user_id=1, items_cnt=1, cost_total=10)
+    session.add(carts)
+    session.commit()
+
+
+def create_items_carts(session):
+    items_carts = ItemsCarts(carts_id=1, variant_id=1, cnt=1, price=10, cost=10)
+    session.add(items_carts)
+    session.commit()
+
+def create_cart_log(session):
+    cart_log = CartLog(cart_id=1, comment='cart')
+    session.add(cart_log)
     session.commit()
 
 
