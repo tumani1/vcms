@@ -4,7 +4,8 @@ import zerorpc
 from models import Base, SessionToken
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.create_test_user import create
-from tests.fixtures import create_items, create_extras, create_cdn, create_items_extras
+from tests.fixtures import create_items, create_extras, create_cdn, create_items_extras, create_categories, \
+    create_items_categories, create_categories_extras
 from utils.connection import db_connect, create_session
 
 
@@ -17,9 +18,12 @@ def setUpModule():
 
     # Fixture
     create(session)
+    create_categories(session)
     create_items(session)
+    create_items_categories(session)
     create_cdn(session)
     create_extras(session)
+    create_categories_extras(session)
     create_items_extras(session)
 
 
@@ -137,6 +141,40 @@ class CategoriesItemsTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
+        list_mShopItem = []
+        list_extras1 = []
+        extras1 = {
+            'id': 1,
+            'description': 'test test',
+            'created': 1388534400.0,
+            'location': 'russia',
+            'title': 'test',
+            'type': 'Video',
+            'title_orig': 'test'
+        }
+
+        list_extras1.append(extras1)
+        mShopItem1  = {
+            'name': 'item1',
+            'description': 'item_test',
+            'instock': False,
+            'id': 1,
+            'is_digital': True,
+            'price': None,
+            'price_old': None,
+            'extras': list_extras1,
+            'relation': {}
+        }
+
+        list_mShopItem.append(mShopItem1)
+
+        data = {
+            'cnt': 1,
+            'total_cnt': 1,
+            'items': list_mShopItem
+        }
+
+        self.assertDictEqual(resp, data)
 
 
 class CategoriesListTestCase(unittest.TestCase):

@@ -111,13 +111,13 @@ class ItemsVariantsTestCase(unittest.TestCase):
         resp = self.cl.route(IPC_pack)
         list_extras = []
         extras = {
-            'id': 1,
-            'description': 'test test',
+            'id': 2,
+            'description': 'test1 test',
             'created': 1388534400.0,
             'location': 'russia',
-            'title': 'test',
+            'title': 'test1',
             'type': 'Video',
-            'title_orig': 'test'
+            'title_orig': 'test1'
         }
         list_extras.append(extras)
 
@@ -132,7 +132,7 @@ class ItemsVariantsTestCase(unittest.TestCase):
             'price_old': 1.0,
             'extras': list_extras,
             'values': [],
-            'available_cnt': 1.0
+            'available_cnt': 1
         }
 
         data_list.append(data)
@@ -441,7 +441,7 @@ class ItemsExtrasTestCase(unittest.TestCase):
         list_mExtra = []
 
         mExtra = {
-            'id': 1,
+            'id': 2,
             'created': 1388534400.0,
             'description': 'test1 test',
             'title': 'test1',

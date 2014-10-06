@@ -39,7 +39,7 @@ def get(auth_user, session, **kwargs):
         serializer_params = {
                 'user': auth_user,
                 'session': session,
-                'instance': Carts.tmpl_for_carts(cart.id, session).all(),
+                'instance': Carts.tmpl_for_carts(cart.id, session).first(),
         }
         items.append(mShopCart(**serializer_params).data)
 

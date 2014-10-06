@@ -310,7 +310,7 @@ def create_items_objects(session):
 
 
 def create_cart(session):
-    carts = Carts(user_id=1, items_cnt=1, cost_total=10)
+    carts = Carts(user_id=1, items_cnt=1, cost_total=10, status='active', created='2014.02.02')
     session.add(carts)
     session.commit()
 
@@ -320,9 +320,16 @@ def create_items_carts(session):
     session.add(items_carts)
     session.commit()
 
+
 def create_cart_log(session):
     cart_log = CartLog(cart_id=1, comment='cart')
     session.add(cart_log)
+    session.commit()
+
+
+def create_payments(session):
+    payments = Payments(cart_id=1, status='active', cost=10, created='2014.02.02')
+    session.add(payments)
     session.commit()
 
 
