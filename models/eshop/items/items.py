@@ -54,13 +54,13 @@ class Items(Base):
             query = query.filter(cls.id.in_(id))
 
         if not instock is None:
-            if instock:
+            if instock==1 or instock=='1':
                 query = query.filter(cls.instock==True)
             else:
                 query = query.filter(cls.instock==False)
 
         if not is_digital is None:
-            if is_digital == True:
+            if is_digital == 1 or is_digital == '1':
                 query = query.filter(cls.is_digital == True)
             else:
                 query = query.filter(cls.is_digital == False)
@@ -96,12 +96,12 @@ class Items(Base):
 
         if not user is None:
             if not is_watched is None:
-                if is_watched == True:
+                if is_watched == 1 or is_watched == '1':
                     query = query.filter(UsersItems.watched != None)
                 else:
                     query = query.filter(UsersItems.watched == None)
             if not is_bought is None:
-                if is_bought == True:
+                if is_bought == 1 or is_bought == '1':
                     query = query.filter(UsersItems.bought_cnt > 0)
                 else:
                     query = query.filter(or_(UsersItems.bought_cnt == 0, UsersItems.bought_cnt == None))

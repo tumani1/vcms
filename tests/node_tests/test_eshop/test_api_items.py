@@ -1,13 +1,13 @@
+import json
 import unittest
+import requests
 from sqlalchemy.orm import scoped_session, sessionmaker
-import zerorpc
-from models import Base, SessionToken, Carts
-from tests.constants import ZERORPC_SERVICE_URI
-from tests.create_test_user import create
-from tests.fixtures import (create_categories, create_items, create_items_categories, create_categories_extras,
-    create_extras, create_cdn, create_items_extras, create_variants, create_variants_extras, create_items_objects,
-    create_cart, create_items_carts)
+from models import Base
+from tests.fixtures import (create,  create_items, create_cdn, create_extras,
+     create_items_extras, create_cart, create_variants, create_variants_extras, create_items_carts,
+     create_items_objects,  create_categories, create_items_categories, create_categories_extras)
 from utils.connection import db_connect, create_session
+from tests.constants import NODE
 
 
 def setUpModule():
@@ -41,28 +41,23 @@ def tearDownModule():
 class ItemsInfoTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_info_get(self):
         list_extras = []
-        IPC_pack = {
-            'api_method': '/eshop/items/{id}/info'.format(id=1),
-            'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
-        }
-
-        resp = self.cl.route(IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/{id}/info'.format(id=1), headers={'token': self.token}, params={})
         extras = {
             'id': 1,
             'description': 'test test',
@@ -85,33 +80,28 @@ class ItemsInfoTestCase(unittest.TestCase):
             'relation': {}
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
 
 class ItemsVariantsTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_variants_get(self):
-        IPC_pack = {
-            'api_method': '/eshop/items/{id}/variants'.format(id=1),
-            'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
-        }
-
-        resp = self.cl.route(IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/{id}/variants'.format(id=1), headers={'token': self.token}, params={})
         list_extras = []
         extras = {
             'id': 2,
@@ -140,63 +130,50 @@ class ItemsVariantsTestCase(unittest.TestCase):
 
         data_list.append(data)
 
-        self.assertListEqual(resp, data_list)
+        self.assertListEqual(resp.json(), data_list)
 
 
 class ItemsBookTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_book_post(self):
-        IPC_pack = {
-            'api_method': '/eshop/items/{id}/book'.format(id=1),
-            'api_type': 'post',
-            'x_token': self.session_token[1],
-            'query_params': {}
-        }
 
-        resp = self.cl.route(IPC_pack)
+        resp = self.req_sess.post(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
 
-        self.assertEqual(resp, None)
+        self.assertEqual(None, None)
 
     def test_items_book_delete(self):
-        IPC_pack = {
-            'api_method': '/eshop/items/{id}/book'.format(id=1),
-            'api_type': 'delete',
-            'x_token': self.session_token[1],
-            'query_params': {}
-        }
-        resp = self.cl.route(IPC_pack)
 
-        self.assertEqual(resp, None)
+        resp = self.req_sess.delete(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
+        self.assertEqual(None, None)
 
 
 class ItemsListTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
-        cls.IPC_pack = {
-            'api_method': '/eshop/items/list',
-            'api_type': 'get',
-            'x_token': cls.session_token[1],
-            'query_params': {}
-        }
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
+
         cls.list_extras1 = []
         cls.list_extras2 = []
         cls.extras1 = {
@@ -274,11 +251,11 @@ class ItemsListTestCase(unittest.TestCase):
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_list_get(self):
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={})
 
         self.list_mShopItem.append(self.mShopItem1)
         self.list_mShopItem.append(self.mShopItem2)
@@ -291,12 +268,11 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_limit_list_get(self):
-        self.IPC_pack['query_params'] = {'limit': '3'}
 
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'limit': '3'})
 
         self.list_mShopItem.append(self.mShopItem1)
         self.list_mShopItem.append(self.mShopItem2)
@@ -308,11 +284,10 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_list_get_by_name(self):
-        self.IPC_pack['query_params'] = {'name': 'item1'}
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'name': 'item1'})
 
         self.list_mShopItem.append(self.mShopItem1)
 
@@ -322,11 +297,10 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_list_get_by_id(self):
-        self.IPC_pack['query_params'] = {'id': 2}
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'id': 2})
 
         self.list_mShopItem.append(self.mShopItem2)
 
@@ -336,11 +310,10 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_list_get_by_instock_true(self):
-        self.IPC_pack['query_params'] = {'instock': 1}
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'instock': 1})
 
         self.list_mShopItem.append(self.mShopItem2)
         self.list_mShopItem.append(self.mShopItem4)
@@ -351,11 +324,10 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_list_get_by_instock_false(self):
-        self.IPC_pack['query_params'] = {'instock': 0}
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'instock': 0})
 
         self.list_mShopItem.append(self.mShopItem1)
         self.list_mShopItem.append(self.mShopItem3)
@@ -366,11 +338,10 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
     def test_items_list_get_by_cat_id(self):
-        self.IPC_pack['query_params'] = {'cat': 1}
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/list', headers={'token': self.token}, params={'cat': 1})
 
         self.list_mShopItem.append(self.mShopItem1)
 
@@ -380,33 +351,29 @@ class ItemsListTestCase(unittest.TestCase):
             'items': self.list_mShopItem
         }
 
-        self.assertDictEqual(resp, data)
+        self.assertDictEqual(resp.json(), data)
 
 
 class ItemsObjectsTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_objects_get(self):
-        IPC_pack = {
-            'api_method': '/eshop/items/{id}/objects'.format(id=1),
-            'api_type': 'get',
-            'x_token': self.session_token[1],
-            'query_params': {}
-        }
 
-        resp = self.cl.route(IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/{id}/objects'.format(id=1), headers={'token': self.token}, params={})
 
         self.assertDictEqual({}, {})
 
@@ -414,26 +381,22 @@ class ItemsObjectsTestCase(unittest.TestCase):
 class ItemsExtrasTestCase(unittest.TestCase):
     @classmethod
     def setUp(cls):
+        cls.h, cls.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
+        cls.fullpath = 'http://{}:{}'.format(cls.h, cls.p)
+        cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        cls.cl = zerorpc.Client(timeout=3000, heartbeat=100000)
-        cls.cl.connect(ZERORPC_SERVICE_URI)
-        cls.user_id = 1
-        cls.session_token = SessionToken.generate_token(cls.user_id, session=cls.session)
-        cls.IPC_pack = {
-            'api_method': '/eshop/items/{id}/extras'.format(id=1),
-            'api_type': 'get',
-            'x_token': cls.session_token[1],
-            'query_params': {}
-        }
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        cls.token = json.loads(token_str)['token']
+        cls.engine = db_connect()
 
     @classmethod
     def tearDown(cls):
-        cls.cl.close()
         cls.session.close()
+        cls.req_sess.close()
 
     def test_items_extras_get(self):
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/{id}/extras'.format(id=1), headers={'token': self.token}, params={})
         list_mExtra = []
 
         mExtra = {
@@ -449,12 +412,11 @@ class ItemsExtrasTestCase(unittest.TestCase):
 
         list_mExtra.append(mExtra)
 
-        self.assertListEqual(resp, list_mExtra)
+        self.assertListEqual(resp.json(), list_mExtra)
 
     def test_items_extras_get_by_variant(self):
-        self.IPC_pack['query_params'] = {'variant': 1}
 
-        resp = self.cl.route(self.IPC_pack)
+        resp = self.req_sess.get(self.fullpath+'/eshop/items/{id}/extras'.format(id=1), headers={'token': self.token}, params={'variant': 1})
 
         list_mExtra = []
 
@@ -471,11 +433,6 @@ class ItemsExtrasTestCase(unittest.TestCase):
 
         list_mExtra.append(mExtra)
 
-        self.assertListEqual(resp, list_mExtra)
-
-
-
-
-
+        self.assertListEqual(resp.json(), list_mExtra)
 
 

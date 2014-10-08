@@ -35,7 +35,7 @@ class Categories(Base):
             outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id)
 
         if not has_items is None:
-            if not has_items:
+            if has_items == 0 or has_items == '0':
                 query = cls.tmpl_for_categories(session).\
                     outerjoin(ItemsCategories, cls.id == ItemsCategories.category_id)
 
@@ -48,7 +48,7 @@ class Categories(Base):
         if not instock is None:
             query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
                 filter(ItemsCategories.item_id != None)
-            if instock:
+            if instock == 1 or instock == '1':
                 query = query.filter(Items.instock==True)
             else:
                 query = query.filter(Items.instock==False)
