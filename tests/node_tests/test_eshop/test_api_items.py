@@ -1,8 +1,9 @@
 import json
 import unittest
 import requests
+from sqlalchemy import and_
 from sqlalchemy.orm import scoped_session, sessionmaker
-from models import Base
+from models import Base, ItemsCarts
 from tests.fixtures import (create,  create_items, create_cdn, create_extras,
      create_items_extras, create_cart, create_variants, create_variants_extras, create_items_carts,
      create_items_objects,  create_categories, create_items_categories, create_categories_extras)
@@ -152,14 +153,21 @@ class ItemsBookTestCase(unittest.TestCase):
 
     def test_items_book_post(self):
 
-        resp = self.req_sess.post(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
+        self.req_sess.post(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
 
-        self.assertEqual(None, None)
+        item_cart = self.session.query(ItemsCarts).filter(and_(ItemsCarts.carts_id == 1, ItemsCarts.variant_id == 1)).first()
+
+        self.assertEqual(item_cart.cost, 2.0)
 
     def test_items_book_delete(self):
 
-        resp = self.req_sess.delete(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
-        self.assertEqual(None, None)
+        self.req_sess.post(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
+
+        self.req_sess.delete(self.fullpath+'/eshop/items/{id}/book'.format(id=1), headers={'token': self.token})
+
+        item_cart = self.session.query(ItemsCarts).filter(and_(ItemsCarts.carts_id == 1, ItemsCarts.variant_id == 1)).first()
+
+        self.assertEqual(item_cart.cost, 1.0)
 
 
 class ItemsListTestCase(unittest.TestCase):
