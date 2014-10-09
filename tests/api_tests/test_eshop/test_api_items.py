@@ -1,7 +1,8 @@
 import unittest
+from sqlalchemy import and_
 from sqlalchemy.orm import scoped_session, sessionmaker
 import zerorpc
-from models import Base, SessionToken, Carts
+from models import Base, SessionToken, ItemsCarts
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.create_test_user import create
 from tests.fixtures import (create_categories, create_items, create_items_categories, create_categories_extras,
@@ -166,20 +167,28 @@ class ItemsBookTestCase(unittest.TestCase):
             'query_params': {}
         }
 
-        resp = self.cl.route(IPC_pack)
+        self.cl.route(IPC_pack)
+        item_cart = self.session.query(ItemsCarts).filter(and_(ItemsCarts.carts_id == 1, ItemsCarts.variant_id == 1)).first()
 
-        self.assertEqual(resp, None)
+        self.assertEqual(item_cart.cost, 2.0)
 
     def test_items_book_delete(self):
         IPC_pack = {
             'api_method': '/eshop/items/{id}/book'.format(id=1),
-            'api_type': 'delete',
+            'api_type': '',
             'x_token': self.session_token[1],
             'query_params': {}
         }
-        resp = self.cl.route(IPC_pack)
 
-        self.assertEqual(resp, None)
+        IPC_pack['api_type'] = 'post'
+        self.cl.route(IPC_pack)
+
+        IPC_pack['api_type'] = 'delete'
+        self.cl.route(IPC_pack)
+
+        item_cart = self.session.query(ItemsCarts).filter(and_(ItemsCarts.carts_id == 1, ItemsCarts.variant_id == 1)).first()
+
+        self.assertEqual(item_cart.cost, 1.0)
 
 
 class ItemsListTestCase(unittest.TestCase):
