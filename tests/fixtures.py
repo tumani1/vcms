@@ -97,6 +97,16 @@ def create_one_media(session):
     session.add(media)
     session.commit()
 
+
+def create_persons_media(session):
+    user = Users(firstname="User", lastname="User", password='Test', email='user@test.ru')
+    media = Media(title='Test', type_='v', user_owner=user, title_orig='test_media1', description='test_desc1')
+    person = Persons(users=user, firstname='test', lastname='test', bio='test_bio')
+    person_media = PersonsMedia(media=media, persons=person, role='actor')
+    session.add_all([media, user, person, person_media])
+    session.commit()
+
+
 def create_extras(session):
     list_extras = [
         Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC)),
@@ -141,7 +151,7 @@ def create_person_extras(session):
 def create(session):
     country = session.query(Countries).get('RU')
 
-    city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
+    city = Cities(country=country, region="76", name="Test", name_orig="Test", time_zone='UTC')
     session.add(city)
     session.commit()
 

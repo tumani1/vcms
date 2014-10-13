@@ -7,8 +7,9 @@ from models.tokens import SessionToken
 from models.media import Media
 from models.mongo import Stream, constant as stream_const
 from models.users import constants as user_const, Users
+from models.persons import Persons
 from tests.constants import ZERORPC_SERVICE_URI
-from tests.fixtures import create_one_media
+from tests.fixtures import create_one_media, create_persons_media
 from tests.create_test_user import create
 from utils.common import datetime_to_unixtime, get_or_create
 from utils.connection import db_connect, create_session, mongo_connect
@@ -25,7 +26,6 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    Stream.objects().delete()
     engine.execute("drop schema public cascade; create schema public;")
 
 
@@ -176,7 +176,60 @@ class StreamCreateTestCase(unittest.TestCase):
         pass
 
     def test_person_media(self):
-        pass
+        create_persons_media(session=self.session)
+        try:
+            stream_obj = Stream.objects().get(type=stream_const.APP_STREAM_TYPE_PERS_O)
+        except:
+            stream_obj = None
+        self.assertIsNotNone(stream_obj)
+        self.ipc_pack['api_method'] = '/stream/{0}/info'.format(stream_obj.id)
+        self.ipc_pack['api_type'] = 'get'
+        response = self.client.route(self.ipc_pack)
+        media = self.session.query(Media).get(stream_obj.object['media_id'])
+        person = self.session.query(Persons).get(stream_obj.attachments['person_id'])
+        m_stream = {
+            'user': {},
+            'type': stream_const.APP_STREAM_TYPE_PERS_O,
+            'text': None,
+            'id': stream_obj.id,
+            'created': datetime_to_unixtime(stream_obj.created),
+            'relation': {'liked': None},
+            'attach': {
+                'id': person.id,
+                'id_str': str(person.id),
+                'type': stream_const.APP_STREAM_TYPE_PERS_O,
+                'object': {
+                    'lastname': person.lastname,
+                    'firstname': person.firstname,
+                    'id': person.id,
+                    'relation': {},
+                    'user': {
+                        'city': None,
+                        'country': None,
+                        'firstname': person.users.firstname,
+                        'lastname': person.users.lastname,
+                        'id': person.users.id,
+                        'gender': person.users.gender.code,
+                        'is_online': False,
+                        'lastvisit': '',
+                        'person_id': person.id,
+                        'regdate': datetime_to_unixtime(person.users.created),
+                        'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
+                    }
+                },
+            },
+            'object': {
+                'description': media.description,
+                'duration': None,
+                'id': media.id,
+                'locations': [],
+                'relation': {},
+                'releasedate': None,
+                'title': media.title,
+                'title_orig': media.title_orig,
+            }
+        }
+        self.assertDictEqual(m_stream, response)
 
     def tearDown(self):
         self.session.close()

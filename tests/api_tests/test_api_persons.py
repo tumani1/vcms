@@ -12,10 +12,11 @@ from models import Base, Users,\
     Extras, Cities, SessionToken, Persons, UsersPersons
 
 from utils.common import datetime_to_unixtime
-from utils.connection import get_session, db_connect, create_session
+from utils.connection import get_session, db_connect, create_session, mongo_connect
 
 
 def setUpModule():
+    mongo_connect()
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
@@ -104,6 +105,8 @@ class PersonInfoTestCase(unittest.TestCase):
                 'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
                 'city': user.city.name,
                 'country': user.city.country.name,
+                'relation': 'u',
+                'person_id': 1,
             }
         }
 

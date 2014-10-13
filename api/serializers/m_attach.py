@@ -4,7 +4,7 @@ from api.serializers.m_persons import mPersonSerializer
 from models.mongo import constant
 
 OBJECT_TYPE = {
-    constant.APP_STREAM_TYPE_PERS_O: lambda: mPersonSerializer,
+    constant.APP_STREAM_TYPE_PERS_O: lambda instance, session, user: mPersonSerializer(instance=instance, user=user, session=session).data,
 }
 
 
@@ -19,7 +19,7 @@ class mAttach(DefaultSerializer):
 
     def __init__(self, type=None, *args, **kwargs):
         self.type = type
-        super(DefaultSerializer, self).__init__(*args, **kwargs)
+        super(mAttach, self).__init__(*args, **kwargs)
 
     def transform_type(self, obj):
         return self.type
@@ -29,6 +29,6 @@ class mAttach(DefaultSerializer):
 
     def transform_object(self, obj):
         try:
-            return OBJECT_TYPE[self.type](instance=obj, session=self.session, user=self.user).data
+            return OBJECT_TYPE[self.type](instance=obj, session=self.session, user=self.user)
         except KeyError:
             return {}

@@ -36,11 +36,13 @@ class BaseService(object):
         except APIException as e:
             session.rollback()
             response = {'exception': {'code': e.code,
-                                  'message': e.message}}
+                                      'message': e.message}}
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             session.rollback()
             response = {'exception': {'code': 400,
-                                  'message': 'Bad Request'}}
+                                      'message': 'Bad Request'}}
         finally:
             session.close()
 

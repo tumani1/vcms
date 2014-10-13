@@ -40,8 +40,10 @@ class mStraemElement(DefaultSerializer):
         return convert_date(obj.created)
 
     def transform_user(self, obj):
-        ret_value = None
-        user = self.session.query(Users).get(obj.user_id)
+        ret_value = {}
+        user = None
+        if not obj.user_id is None:
+            user = self.session.query(Users).get(obj.user_id)
         if user:
             ret_value = mUserShort(instance=user, session=self.session, user=self.user).data
         return ret_value
@@ -85,7 +87,7 @@ class mStraemElement(DefaultSerializer):
 
         elif obj.type == constant.APP_STREAM_TYPE_PERS_O:
             media = self.session.query(Media).get(obj.object['media_id'])
-            return mMediaSerializer(instance=media, session=self.session).data
+            return mMediaSerializer(instance=media, user=self.user, session=self.session).data
 
         else:
             return {}

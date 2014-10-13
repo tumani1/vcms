@@ -21,5 +21,5 @@ class PersonsMedia(Base):
 
 
 @listens_for(PersonsMedia, 'after_insert')
-def create_media(target, **kwargs):
+def create_media(mapper, connection, target):
     Stream.signal(type_=constant.APP_STREAM_TYPE_PERS_O, object={'media_id': target.media_id}, attachments={'person_id': target.person_id})
