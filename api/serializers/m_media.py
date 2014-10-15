@@ -47,7 +47,7 @@ class mMediaSerializer(DefaultSerializer):
 
     def transform_relation(self, instance, **kwargs):
         relation = {}
-        users_media = instance.users_media.filter_by(users=self.user).first()
+        users_media = instance.users_media_query.filter_by(users=self.user).first()
         if self.is_auth and not users_media is None:
             if users_media.watched:
                 relation.update(watched=convert_date(users_media.watched))

@@ -39,7 +39,7 @@ class Media(Base):
     access_type    = Column(ChoiceType(APP_MEDIA_LIST), nullable=True)
 
     countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
-    users_media     = relationship('UsersMedia', backref='media', lazy='dynamic', cascade='all, delete')
+    users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
     media_units     = relationship('MediaInUnit', backref='media', cascade='all, delete')
     media_persons   = relationship('PersonsMedia', backref='media', cascade='all, delete')
@@ -132,6 +132,7 @@ class Media(Base):
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)
 
+Media.users_media_query = relationship('UsersMedia', lazy='dynamic')
 
 update_access_type = DDL("""
 CREATE FUNCTION media_update() RETURNS TRIGGER AS $$

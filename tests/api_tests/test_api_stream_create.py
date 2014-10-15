@@ -131,7 +131,7 @@ class StreamCreateTestCase(unittest.TestCase):
         self.ipc_pack['api_method'] = '/media/{0}/like'.format(media.id)
         self.ipc_pack['api_type'] = 'post'
         self.client.route(self.ipc_pack)
-        users_media = media.users_media.filter_by(users=self.auth_user).first()
+        users_media = media.users_media_query.filter_by(users=self.auth_user).first()
         try:
             stream_obj = Stream.objects().get(type=stream_const.APP_STREAM_TYPE_MEDIA_L)
         except:
