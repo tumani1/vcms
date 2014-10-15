@@ -155,12 +155,12 @@ def create(session):
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test1@test.ru', created=datetime.datetime(2012,1,1,0,0,0,0, tzinfo=UTC))
+    user = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test1@test.ru', created=datetime.datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=UTC))
     session.add(user)
     session.commit()
 
-    user2 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test2@test.ru', created=datetime.datetime(2012,2,1,0,0,0,0, tzinfo=UTC))
-    user3 = Users(city=city, firstname="Test3", lastname="Test3", password='Test3', email='test3@test.ru', created=datetime.datetime(2012,3,1,0,0,0,0, tzinfo=UTC))
+    user2 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test2@test.ru', created=datetime.datetime(2012, 2, 1, 0, 0, 0, 0, tzinfo=UTC))
+    user3 = Users(city=city, firstname="Test3", lastname="Test3", password='Test3', email='test3@test.ru', created=datetime.datetime(2012, 3, 1, 0, 0, 0, 0, tzinfo=UTC))
     session.add_all([user2, user3])
     session.commit()
 

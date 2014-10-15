@@ -49,7 +49,7 @@ class StreamCreateTestCase(unittest.TestCase):
         }
 
     def test_user_send_friend(self):
-        user = create(session=self.session, usuff=2, cisuff=2)
+        user = create(session=self.session, usuff=2)
         # User send offer for friendship
         self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user.id)
         self.ipc_pack['api_type'] = 'post'
@@ -87,7 +87,7 @@ class StreamCreateTestCase(unittest.TestCase):
         self.assertDictEqual(m_stream, response)
 
     def test_user_friend(self):
-        user = create(session=self.session, usuff=3, cisuff=3)
+        user = create(session=self.session, usuff=3)
         # User is friends
         self.ipc_pack['api_method'] = '/users/{0}/friendship'.format(user.id)
         self.ipc_pack['api_type'] = 'post'

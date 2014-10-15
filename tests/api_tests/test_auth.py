@@ -2,13 +2,14 @@
 
 import zerorpc
 import unittest
-
 from zerorpc.exceptions import RemoteError
 
-from utils.connection import create_session, db_connect
+from utils.connection import create_session, db_connect, mongo_connect
 from tests.create_test_user import create, clear
-from models import GlobalToken
 from tests.constants import ZERORPC_SERVICE_URI
+from models.base import Base
+from models.tokens import GlobalToken
+
 
 def get_token_by_id(user_id, session):
     gt = session.query(GlobalToken).filter(GlobalToken.user_id == user_id)
@@ -17,6 +18,13 @@ def get_token_by_id(user_id, session):
     assert len(gta) == 1
 
     return gta[0].token
+
+
+def setUpModule():
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
+    Base.metadata.create_all(bind=engine)
+    mongo_connect()
 
 
 class ZeroRpcServiceAuthTestCase(unittest.TestCase):
