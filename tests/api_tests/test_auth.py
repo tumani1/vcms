@@ -63,7 +63,6 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         }
         resp = self.cl.route(IPC_pack)
 
-        print "Before assert \n", IPC_pack, '\n resp', resp
         self.assertEqual({'message': "Hello,Test1"}, resp)
 
     def test_revoke(self):

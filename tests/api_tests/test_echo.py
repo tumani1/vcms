@@ -2,9 +2,15 @@
 import zerorpc
 import unittest
 
-from utils.connection import db_connect, create_session
-from tests.create_test_user import create
+from utils.connection import db_connect
+from models.base import Base
 from tests.constants import ZERORPC_SERVICE_URI
+
+
+def setUpModule():
+    engine = db_connect()
+    engine.execute("drop schema public cascade; create schema public;")
+    Base.metadata.create_all(bind=engine)
 
 
 class ZeroRpcServiceTestCase(unittest.TestCase):

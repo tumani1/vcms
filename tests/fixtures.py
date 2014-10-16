@@ -265,8 +265,6 @@ def create_users_chat(session):
     uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
     session.add(uc)
     session.commit()
-<<<<<<< HEAD
-=======
 
 
 def create_categories(session):
@@ -351,7 +349,3 @@ def create_payments(session):
     payments = Payments(cart_id=1, status='active', cost=10, created='2014.02.02')
     session.add(payments)
     session.commit()
-
-
-
->>>>>>> origin/develop

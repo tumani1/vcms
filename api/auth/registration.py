@@ -10,21 +10,19 @@ def post(auth_user, session, **kwargs):
     email = query.get('email', None)
     pswd1 = query.get('pswd1', None)
     pswd2 = query.get('pswd2', None)
-    city_id = query.get('city_id', None)
 
     try:
         email = validate_email(email)
     except Exception, e:
         return {'error': u'Некорректный e-mail!'}
 
-    city_id = validate_int(city_id, min_value=1)
     if pswd1 and pswd2 and pswd1 == pswd2:
         password = pswd1
     else:
         return {'error': u'Пароли не совпадают!'}
 
     if firstname and lastname:
-        user = Users(firstname=firstname, lastname=lastname, email=email, city_id=city_id, password=password)
+        user = Users(firstname=firstname, lastname=lastname, email=email, password=password)
         session.add(user)
         session.commit()
     else:
