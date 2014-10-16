@@ -21,7 +21,7 @@ class Cities(Base):
     time_zone   = Column(TimezoneType(backend='pytz'), nullable=False, default=u'UTC')
     description = Column(Text)
 
-    country     = relationship('Countries', backref='cities')
+    users       = relationship("Users", backref='city', cascade='all, delete')
 
     def __repr__(self):
         return u"<Cities(id={0}, name={1})>".format(self.id, self.name)

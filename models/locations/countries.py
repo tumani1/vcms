@@ -22,6 +22,7 @@ class Countries(Base):
     media_access       = relationship('MediaAccessCountries', backref='location', cascade='all, delete')
     media_type_access  = relationship('MediaAccessDefaultsCountries', backref='location', cascade='all, delete')
     media_units_access = relationship('MediaUnitsAccessCountries', backref='location', cascade='all, delete')
+    city               = relationship('Cities', backref='country', cascade='all, delete')
 
     def __repr__(self):
         return u"<Countries(id={0}, name={1})>".format(self.id, self.name)
