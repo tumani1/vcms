@@ -265,3 +265,93 @@ def create_users_chat(session):
     uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
     session.add(uc)
     session.commit()
+<<<<<<< HEAD
+=======
+
+
+def create_categories(session):
+    cat1 = Categories(name='category1', description='category_test')
+    cat2 = Categories(name='category2', description='category2_test')
+    cat3 = Categories(name='category3', description='category3_test')
+    cat4 = Categories(name='category4', description='category4_test')
+    session.add_all([cat1, cat2, cat3, cat4])
+    session.commit()
+
+
+def create_items_categories(session):
+    item_cat = ItemsCategories(item_id=1, category_id=1)
+    item_cat2 = ItemsCategories(item_id=2, category_id=2)
+    item_cat3 = ItemsCategories(category_id=3)
+    item_cat4 = ItemsCategories(category_id=4, item_id=3)
+    item_cat5 = ItemsCategories(category_id=4, item_id=4)
+    session.add_all([item_cat, item_cat2, item_cat3, item_cat4, item_cat5])
+    session.commit()
+
+
+def create_categories_extras(session):
+    cat_extras = CategoriesExtras(categories_id=1, extras_id=1, extras_type=1)
+    session.add(cat_extras)
+    session.commit()
+
+
+def create_items(session):
+    item1 = Items(name='item1', description='item_test', active=True, instock=False)
+    item2 = Items(name='item2', description='item2_test', active=True, instock=True)
+    item3 = Items(name='item3', description='item3_test', active=True, instock=False)
+    item4 = Items(name='item4', description='item4_test', active=True, instock=True)
+    session.add_all([item1, item2, item3, item4])
+    session.commit()
+
+
+def create_items_extras(session):
+    items_extras1 = ItemsExtras(item_id=1, extras_id=1)
+    items_extras2 = ItemsExtras(item_id=2, extras_id=2)
+    session.add_all([items_extras1, items_extras2])
+    session.commit()
+
+
+def create_variants(session):
+    variants1 = Variants(item_id=1, name='variants1', description='variants1', price=1, price_old=1, active=True, stock_cnt=2, reserved_cnt=1 )
+    variants2 = Variants(item_id=2, name='variants2', description='variants2', price=2, price_old=2, active=True)
+    session.add_all([variants1, variants2])
+    session.commit()
+
+
+def create_variants_extras(session):
+    variants_extras = VariantsExtras(variant_id=1, extras_id=2)
+    session.add(variants_extras)
+    session.commit()
+
+
+def create_items_objects(session):
+    items_objects = ItemsObjects(item_id=1, obj_name='obj1', obj_id=1, obj_type=u'c')
+    session.add(items_objects)
+    session.commit()
+
+
+def create_cart(session):
+    carts = Carts(user_id=1, items_cnt=1, cost_total=10, status='active', created='2014.02.02')
+    session.add(carts)
+    session.commit()
+
+
+def create_items_carts(session):
+    items_carts = ItemsCarts(carts_id=1, variant_id=1, cnt=1, price=10, cost=10)
+    session.add(items_carts)
+    session.commit()
+
+
+def create_cart_log(session):
+    cart_log = CartLog(cart_id=1, comment='cart')
+    session.add(cart_log)
+    session.commit()
+
+
+def create_payments(session):
+    payments = Payments(cart_id=1, status='active', cost=10, created='2014.02.02')
+    session.add(payments)
+    session.commit()
+
+
+
+>>>>>>> origin/develop

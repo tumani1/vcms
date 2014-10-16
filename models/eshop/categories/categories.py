@@ -11,7 +11,7 @@ class Categories(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=True)
-    description = Column(Integer, nullable=True)
+    description = Column(String, nullable=True)
 
     category_extras = relationship('CategoriesExtras', backref='categories', cascade='all, delete')
     category_variants_schemes = relationship('VariantsScheme', backref='categories', cascade='all, delete')
@@ -34,27 +34,31 @@ class Categories(Base):
         query = cls.tmpl_for_categories(session).\
             outerjoin(ItemsCategories, cls.id==ItemsCategories.category_id)
 
-        query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
-            filter(ItemsCategories.item_id != None)
-
         if not has_items is None:
-            if not has_items:
+            if has_items == 0 or has_items == '0':
                 query = cls.tmpl_for_categories(session).\
                     outerjoin(ItemsCategories, cls.id == ItemsCategories.category_id)
 
                 query = query.outerjoin(Items, ItemsCategories.item_id == Items.id).\
                     filter(ItemsCategories.item_id == None)
+            else:
+                query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
+                    filter(ItemsCategories.item_id != None)
 
         if not instock is None:
-            if instock:
+            query = query.outerjoin(Items, ItemsCategories.item_id==Items.id).\
+                filter(ItemsCategories.item_id != None)
+            if instock == 1 or instock == '1':
                 query = query.filter(Items.instock==True)
+            else:
+                query = query.filter(Items.instock==False)
 
         if not sort is None:
             if sort == 'name':
                 query = query.order_by(asc(cls.name))
             else:
                 query = query.\
-                    order_by(asc(func.count(Categories.id)))
+                    order_by(asc(func.count(ItemsCategories.item_id)))
 
         return query.group_by(Categories.id)
 

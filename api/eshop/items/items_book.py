@@ -9,7 +9,7 @@ import datetime
 
 
 @need_authorization
-def post(item_id, auth_user, session, **kwargs):
+def  post(item_id, auth_user, session, **kwargs):
     item_id = validate_int(item_id, min_value=1)
     date = datetime.datetime.utcnow()
 
@@ -43,8 +43,16 @@ def post(item_id, auth_user, session, **kwargs):
         item_cart.price = variant.price
         item_cart.cost = variant.price * item_cart.cnt
 
-    cart.items_cnt += 1
-    cart.cost_total += variant.price
+    if cart.items_cnt is None:
+        cart.items_cnt = 1
+    else:
+        cart.items_cnt += 1
+
+    if cart.cost_total is None:
+        cart.cost_total = variant.price
+    else:
+        cart.cost_total += variant.price
+
     cart.updated = date
 
     session.commit()
