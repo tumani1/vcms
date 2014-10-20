@@ -3,7 +3,7 @@ import zerorpc
 import unittest
 from models import Base, SessionToken, Comments
 from sqlalchemy.orm import sessionmaker, scoped_session
-from utils.connection import db_connect, create_session
+from utils.connection import db_connect, create_session, mongo_connect
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons, create_comments
 
@@ -12,6 +12,7 @@ def setUpModule():
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
+    mongo_connect()
 
     # Create table
     Base.metadata.create_all(bind=engine)

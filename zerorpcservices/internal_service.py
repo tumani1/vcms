@@ -15,8 +15,13 @@ class ZeroRpcInternalApiService(BaseService):
         self.reader_geoip = database.Reader(conf.GEO_IP_DATABASE)
         self.default_params = {'reader': self.reader_geoip, }
 
-    def __del__(self):
-        self.reader_geoip.close()
+    def route(self, IPC_pack):
+        response = super(ZeroRpcInternalApiService, self).route(IPC_pack)
+        try:
+            self.reader_geoip.close()
+        except:
+            pass
+        return response
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
