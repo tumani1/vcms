@@ -25,7 +25,7 @@ class Users(Base):
     city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'))
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
-    email         = Column(EmailType(), unique=True, nullable=False)
+    email         = Column(EmailType(), unique=True)
     is_manager    = Column(Boolean, default=False)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
@@ -36,6 +36,8 @@ class Users(Base):
     userpic_id    = Column(Integer)
     # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
+    attempts_count = Column(Integer)
+    deny_to        = Column(Date)
 
     users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
     social        = relationship('UsersSocial', backref='user', cascade='all, delete')

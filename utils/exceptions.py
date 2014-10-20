@@ -68,3 +68,11 @@ class InternalServerError(APIException):
     """
     code = 500
     message = 'Internal server error'
+
+
+class NotAllowed(APIException):
+    """
+    403
+    """
+    code = 403
+    message = 'Forbidden'
