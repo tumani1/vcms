@@ -9,7 +9,7 @@ from models.mongo import Stream, constant as stream_const
 from models.users import constants as user_const, Users
 from models.persons import Persons
 from tests.constants import ZERORPC_SERVICE_URI
-from tests.fixtures import create_one_media, create_persons_media
+from tests.fixtures import create_one_media, create_persons_media, create_person
 from tests.create_test_user import create
 from utils.common import datetime_to_unixtime, get_or_create
 from utils.connection import db_connect, create_session, mongo_connect
@@ -30,6 +30,7 @@ def tearDownModule():
 
 
 class StreamCreateTestCase(unittest.TestCase):
+
     def setUp(self):
         engine = db_connect()
         self.session = create_session(bind=engine)
@@ -169,11 +170,56 @@ class StreamCreateTestCase(unittest.TestCase):
         }
         self.assertDictEqual(m_stream, response)
 
-    def test_media_comments(self):
-        pass
-
     def test_person_subscribe(self):
-        pass
+        person = create_person(session=self.session)
+        self.ipc_pack['api_method'] = "/persons/{0}/subscribe".format(person.id)
+        self.ipc_pack['query_params'] = {}
+        self.ipc_pack['api_type'] = "post"
+        resp = self.client.route(self.ipc_pack)
+        self.assertIsNone(resp)
+        try:
+            stream_obj = Stream.objects().get(type=stream_const.APP_STREAM_TYPE_PERS_S)
+        except:
+            stream_obj = None
+        self.assertIsNotNone(stream_obj)
+        self.ipc_pack['api_method'] = '/stream/{0}/info'.format(stream_obj.id)
+        self.ipc_pack['api_type'] = 'get'
+        response = self.client.route(self.ipc_pack)
+        m_stream = {
+            'attach': {},
+            'created': datetime_to_unixtime(stream_obj.created),
+            'id': stream_obj.id,
+            'object': {
+                'firstname': person.firstname,
+                'relation': {'liked': 0, 'subscribed': True},
+                'id': person.id,
+                'lastname': person.lastname,
+                'user': {
+                   'city': person.users.city,
+                   'country': None if person.users.city is None else person.users.city.country.name,
+                   'firstname': person.users.firstname,
+                   'gender': person.users.gender.code,
+                   'id': person.users.id,
+                   'is_online': False,
+                   'lastname': person.users.lastname,
+                   'lastvisit': '',
+                   'person_id': person.id,
+                   'regdate': datetime_to_unixtime(person.users.created),
+                   'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
+                }
+            },
+            'relation': {'liked': None},
+            'text': None,
+            'type': stream_const.APP_STREAM_TYPE_PERS_S,
+            'user': {
+                'lastname': self.auth_user.lastname,
+                'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
+                'id': self.auth_user.id,
+                'firstname': self.auth_user.firstname,
+                'is_online': True,
+            }
+        }
+        self.assertDictEqual(m_stream, response)
 
     def test_person_media(self):
         create_persons_media(session=self.session)

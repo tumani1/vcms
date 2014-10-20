@@ -167,6 +167,13 @@ def create(session):
     return user.id
 
 
+def create_person(session):
+    person = Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio')
+    session.add(person)
+    session.commit()
+    return person
+
+
 def create_scheme(session):
     shms = [
         Scheme(topic_name='test1', name='shm1', internal=False),
