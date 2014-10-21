@@ -40,7 +40,7 @@ rest_routes = {
 }
 
 internal_routes = {
-    'int-api': internal_routing,
+    'internal': internal_routing,
 }
 
 

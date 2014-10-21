@@ -4,7 +4,7 @@ import zerorpc
 from geoip2 import database
 
 import settings as conf
-from api import rest_routes
+from api import internal_routes
 from base_service import BaseService
 
 
@@ -26,7 +26,7 @@ class ZeroRpcInternalApiService(BaseService):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', dest='host', default='127.0.0.1')
-    parser.add_argument('--port', dest='port', default=6600)
+    parser.add_argument('--port', dest='port', default=6601)
     parser.add_argument('--testdb', dest='testdb', action='store_true', default=False,
                     help='использование тестовой БД')
     namespace = parser.parse_args()
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     if namespace.testdb:
         conf.DATABASE['postgresql'] = conf.DATABASE['test']  # переключение на тестовую БД
 
-    server = zerorpc.Server(ZeroRpcInternalApiService(rest_routes))
+    server = zerorpc.Server(ZeroRpcInternalApiService(internal_routes))
     server.bind("tcp://{host}:{port}".format(**vars(namespace)))
     print("ZeroRPC: Starting {0} at {host}:{port}".format(ZeroRpcInternalApiService.__name__, **vars(namespace)))
     server.run()

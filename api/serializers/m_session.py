@@ -17,5 +17,8 @@ class mSession(DefaultSerializer):
         'device': ""
     }
 
+    def transform_ip_address(self, obj):
+        return obj.ip_address.compressed if not obj.ip_address is None else ""
+
     def transform_created(self, obj):
         return datetime_to_unixtime(obj.created)
