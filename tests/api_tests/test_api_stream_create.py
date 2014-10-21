@@ -5,6 +5,7 @@ import unittest
 from models import Base
 from models.tokens import SessionToken
 from models.media import Media
+from models.comments import constants as comments_const
 from models.mongo import Stream, constant as stream_const
 from models.users import constants as user_const, Users
 from models.persons import Persons
@@ -275,6 +276,61 @@ class StreamCreateTestCase(unittest.TestCase):
                 'title_orig': media.title_orig,
             }
         }
+        self.assertDictEqual(m_stream, response)
+
+    def test_create_comments(self):
+        media = self.session.query(Media).filter_by(title='Test').first()
+        self.ipc_pack['api_method'] = '/obj_comments/{0}/{1}/create'.format(comments_const.OBJECT_TYPE_MEDIA, media.id)
+        self.ipc_pack['api_type'] = 'post'
+        self.ipc_pack['query_params'] = {'text': 'test_create'}
+        resp = self.client.route(self.ipc_pack)
+        self.assertNotIn('exception', resp)
+        try:
+            stream_obj = Stream.objects().get(type=stream_const.APP_STREAM_TYPE_MEDIA_C)
+        except:
+            stream_obj = None
+        self.assertIsNotNone(stream_obj)
+        self.ipc_pack['api_method'] = '/stream/{0}/info'.format(stream_obj.id)
+        self.ipc_pack['api_type'] = 'get'
+        response = self.client.route(self.ipc_pack)
+        m_stream = {
+            'attach': {},
+            'created': datetime_to_unixtime(stream_obj.created),
+            'id': stream_obj.id,
+            'object': {
+                'user': {
+                    'lastname': self.auth_user.lastname,
+                    'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
+                    'id': self.auth_user.id,
+                    'firstname': self.auth_user.firstname,
+                    'is_online': True,
+                },
+                'id': resp['id'],
+                'relation': resp['relation'],
+                'object': {
+                    'id': media.id,
+                    'description': media.description,
+                    'duration': media.duration,
+                    'locations': [],
+                    'relation': {},
+                    'releasedate': media.release_date,
+                    'title': media.title,
+                    'title_orig': media.title_orig,
+                },
+                'text': resp['text'],
+            },
+            'relation': {'liked': None},
+            'text': stream_obj.text,
+            'type': stream_const.APP_STREAM_TYPE_MEDIA_C,
+            'user': {
+                'lastname': self.auth_user.lastname,
+                'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
+                'id': self.auth_user.id,
+                'firstname': self.auth_user.firstname,
+                'is_online': True,
+            }
+        }
+
         self.assertDictEqual(m_stream, response)
 
     def tearDown(self):
