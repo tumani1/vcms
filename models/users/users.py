@@ -3,9 +3,9 @@ import datetime
 from sqlalchemy.sql.expression import func
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
+from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType, Choice
 
-from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
+from constants import APP_USERS_GENDER_DEFAULT, APP_USERS_TYPE_GENDER
 
 from models.base import Base
 from models.locations import Cities, Countries
@@ -20,7 +20,7 @@ class Users(Base):
     id            = Column(Integer, primary_key=True)
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
-    gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
+    gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=Choice(*APP_USERS_GENDER_DEFAULT), nullable=False)
     password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
     city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'), nullable=False)
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
