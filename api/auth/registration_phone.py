@@ -31,19 +31,21 @@ def post(session, auth_user, **kwargs):
             smsc.send_sms(phone_number, message)
         else:
             u = filtered.first()
-            if u.attempts_count <= MAX_ATTEMPTS:
+            if u.attempts_count < MAX_ATTEMPTS:
                 isallowed = date.today() > u.deny_to if u.deny_to else True  # deny_to может быть None
                 if isallowed:
                     u.password = random_password
                     u.attempts_count += 1
-                    u.save()
+                    session.add(u)
+                    session.commit()
                     smsc.send_sms(phone_number, message)
                 else:
                     raise NotAllowed
             else:
                 u.deny_to = date.today() + timedelta(days=14)
                 u.attempts_count = 0
-                u.save()
+                session.add(u)
+                session.commit()
                 raise NotAllowed
 
     except NotAllowed:
