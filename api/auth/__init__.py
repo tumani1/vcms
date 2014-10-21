@@ -1,15 +1,15 @@
 # coding: utf-8
-from api.auth.login import post
-from api.auth.revoke import revoke
-from api.auth.session import get, delete
-from api.auth.registration_email import post as register
+from api.auth import login
+from api.auth import revoke
+from api.auth import session
+from api.auth import registration_email
 from api.auth import registration_phone
 
 
 routing = (
-    (r'^login$', {'post': post}),
-    (r'^session$', {'get': get, 'delete': delete}),
-    (r'^revoke$', {'get': revoke}),
-    (r'^register$', {'post': register}),
+    (r'^login$', {'post': login.post}),
+    (r'^session$', {'get': session.get, 'delete': session.delete}),
+    (r'^revoke$', {'get': revoke.revoke}),
+    (r'^register$', {'post': registration_email.post}),
     (r'^register_phone$', {'post': registration_phone.post})
 )
