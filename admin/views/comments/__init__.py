@@ -1,2 +1,0 @@
-from comments import CommentsModelView
-from users_comments import UsersCommentsModelView

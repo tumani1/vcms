@@ -1,0 +1,21 @@
+# coding: utf-8
+
+from media import MediaModelView
+from media_units import MediaUnitsModelView
+from media_in_unit import MediaInUnitModelView
+from persons_media import PersonsMediaModelView
+from users_media import UsersMediaModelView
+from users_media_units import UsersMediaUnitsModelView
+from media_locations import MediaLocationsModelView
+from media_access_countries import MediaAccessCountriesModelView
+from media_access_defaults import MediaAccessDefaultsModelView
+from media_access_defaults_countries import MediaAccessDefaultsCountriesModelView
+from media_units_access_countries import MediaUnitsAccessCountriesModelView
+
+__all__ = [
+    'MediaModelView', 'MediaUnitsModelView', 'MediaInUnitModelView',
+    'PersonsMediaModelView', 'UsersMediaModelView', 'UsersMediaUnitsModelView',
+    'MediaLocationsModelView', 'MediaAccessCountriesModelView',
+    'MediaAccessDefaultsModelView', 'MediaAccessDefaultsCountriesModelView',
+    'MediaUnitsAccessCountriesModelView'
+]

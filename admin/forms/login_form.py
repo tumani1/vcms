@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from wtforms import fields, form, validators
 
 from models.users import Users
