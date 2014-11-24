@@ -50,7 +50,7 @@ def install_all_repo():
         'repo_file': os.path.join(env.current_release, env.req_dir, 'reposytary.txt')
     })
 
-    run('sudo apt-get update')
+    fabtools.deb.update_index(False)
 
 
 def install_all_sys_packages():
