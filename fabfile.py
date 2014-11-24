@@ -63,7 +63,7 @@ def install_all_sys_packages():
     })
 
 
-def install_packages_and_repo(install_repo=True):
+def install_repo_and_packages(install_repo=True):
     """
     Установка системных пакетов с репозитариями
     """
