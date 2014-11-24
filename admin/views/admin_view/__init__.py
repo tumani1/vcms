@@ -5,4 +5,3 @@ from admin_index import AdminIndexView
 __all__ = [
     'AdminIndexView'
 ]
-

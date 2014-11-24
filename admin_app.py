@@ -6,9 +6,10 @@ from flask import Flask
 from flask.ext import login
 from flask.ext.mongoengine import MongoEngine
 
+from admin import session
 from admin.views import admin_view
+
 from models.users import Users
-from utils.connection import get_session
 
 from settings import DATABASE
 
@@ -19,8 +20,6 @@ if __name__ == '__main__':
     parser.add_argument('--port', dest='port', default=5000)
     parser.add_argument('--no-debug', dest='debug', action='store_false', default=True)
     args = parser.parse_args()
-
-    session = get_session()
 
     # Setup Flask app
     app = Flask(__name__, template_folder='admin/templates')
