@@ -13,8 +13,12 @@ libpq-dev
 postgresql
 postgresql-contrib
 mongodb-org
-python-dev
-python-virtualenv
-build-essential
 libzmq-dev
 nodejs
+node-gyp
+build-essential
+python-dev
+python-setuptools
+python-pip
+python-virtualenv
+add-apt-repository
