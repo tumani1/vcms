@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from admin.views.base import SqlAlModelView
 from flask.ext.admin.form import fields
 
@@ -11,15 +12,30 @@ class PersonsModelView(SqlAlModelView):
     category = u'Персоны'
     name = u'Персоны'
 
+    column_list = (
+        'firstname', 'lastname', 'status', 'bio', 'users',
+    )
+
+    column_labels = dict(
+        firstname=u'Имя',
+        lastname=u'Фамилия',
+        status=u'Статус персоны',
+        bio=u'Биография',
+        users=u'Пользователь'
+    )
+
+    column_filters = (
+        'id', 'users.id',
+        #'firstname', 'lastname',
+    )
+
+    form_columns = (
+        'firstname', 'lastname', 'status', 'bio', 'users',
+    )
+
     form_overrides = dict(
         status=fields.Select2Field
     )
-
-    column_labels = dict(firstname=u'Имя', lastname=u'Фамилия',
-                         status=u'Статус персоны',
-                         bio=u'Биография', users=u'Пользователь')
-
-    form_columns = column_list = ('firstname', 'lastname', 'status', 'bio', 'users', )
 
     form_args = dict(
         status=dict(

@@ -25,17 +25,14 @@ from admin_view import *
 # Admin
 admin_view = admin.Admin(name='NextTV', index_view=AdminIndexView(), base_template='admin_master.html')
 
-
 ###############################################################################
 # Users
-
 admin_view.add_view(UsersModelView())
 admin_view.add_view(UsersRelsModelView())
 admin_view.add_view(UsersSocialModelView())
 admin_view.add_view(UsersValuesModelView())
 admin_view.add_view(UsersExtrasModelView())
 admin_view.add_view(UsersTopicsModelView())
-
 
 ###############################################################################
 # Token

@@ -10,12 +10,12 @@ class UsersCommentsModelView(SqlAlModelView):
 
     column_list = ('users', 'comments', 'liked',)
 
-    form_columns = ('users', 'comments',)
-
     column_labels = dict(
-        users=u'Идентификатор пользователя',
-        comments=u'Идентификатор комментария',
+        users=u'ID пользователя',
+        comments=u'ID комментария',
         liked=u'Дата лайка',
     )
+
+    form_columns = ('users', 'comments',)
 
 

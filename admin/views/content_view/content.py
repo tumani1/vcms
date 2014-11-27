@@ -1,8 +1,10 @@
 # coding: utf-8
+
+from flask.ext.admin.form import fields
+
 from admin.views.base import SqlAlModelView
 from models.comments.constants import OBJECT_TYPES
 from models.content.content import Content
-from flask.ext.admin.form import fields
 
 
 class ContentModelView(SqlAlModelView):
@@ -10,7 +12,16 @@ class ContentModelView(SqlAlModelView):
     category = u'Контент'
     name = u'Контент'
 
-    column_list = form_columns = ('title', 'text', 'obj_type', 'obj_id', 'obj_name')
+    named_filter_urls = True
+
+    column_filters = (
+        'id', 'title',
+    )
+
+    column_list = (
+        'id', 'title', 'text', 'obj_type', 'obj_id', 'obj_name'
+    )
+
     column_labels = dict(
         title=u'Заголовок',
         text=u'Текст',
@@ -19,12 +30,16 @@ class ContentModelView(SqlAlModelView):
         obj_name=u'Название объекта',
     )
 
-    form_overrides = dict(
-        obj_type=fields.Select2Field,
-    )
-
     column_choices = dict(
         obj_type=OBJECT_TYPES,
+    )
+
+    form_columns = (
+        'title', 'text', 'obj_type', 'obj_id', 'obj_name'
+    )
+
+    form_overrides = dict(
+        obj_type=fields.Select2Field,
     )
 
     form_args = dict(

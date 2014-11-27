@@ -10,6 +10,9 @@ class ChatsModelView(SqlAlModelView):
     name = u'Чаты'
 
     column_display_pk = True
-    column_labels = dict(description=u'Дескриптор чата')
+
+    column_labels = dict(
+        description=u'Дескриптор чата'
+    )
 
     form_columns = ('description', )

@@ -18,21 +18,28 @@ class ChatMessagesModelView(MongoDBModelView):
     chats = list(session.query(Chats.id, Chats).all())
 
     object_id_converter = True
-    form_excluded_columns = ('id', )
 
-    column_labels = dict(text=u'Текст сообщения', created=u'Дата создания',
-                         user_id=u'Пользователь', chat_id=u'Чат')
+    column_list = ('id', 'user_id', 'chat_id', 'created', 'text', )
 
-    form_columns = column_list = ('id', 'user_id', 'chat_id', 'created', 'text', )
-
-    form_overrides = dict(
-        user_id=fields.Select2Field,
-        chat_id=fields.Select2Field
+    column_labels = dict(
+        text=u'Текст сообщения',
+        created=u'Дата создания',
+        user_id=u'Пользователь',
+        chat_id=u'Чат'
     )
 
     column_choices = dict(
         user_id=users,
         chat_id=chats,
+    )
+
+    form_excluded_columns = ('id', )
+
+    form_columns = ('id', 'user_id', 'chat_id', 'created', 'text', )
+
+    form_overrides = dict(
+        user_id=fields.Select2Field,
+        chat_id=fields.Select2Field
     )
 
     form_args = dict(
