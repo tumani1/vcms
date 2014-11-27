@@ -24,6 +24,7 @@ if __name__ == '__main__':
     # Setup Flask app
     app = Flask(__name__, template_folder='admin/templates')
     app.config['SECRET_KEY'] = 'rNAZvhgmFdKkt4dF3CHiooLPCIXxswkYpbQa'
+    app.config['MONGODB_SETTINGS'] = DATABASE['mongodb']
 
     # Setup manager
     login_manager = login.LoginManager()
@@ -32,7 +33,6 @@ if __name__ == '__main__':
 
     # Setup MongoDB
     db = MongoEngine()
-    app.config['MONGODB_SETTINGS'] = DATABASE['mongodb']
     db.init_app(app)
 
     admin_view.init_app(app)

@@ -16,7 +16,6 @@ env.git_clone = 'git@git.aaysm.com:developers/next_tv.git'
 
 ####################################################################
 # Environments
-
 def localhost_env():
     "Use the local virtual server"
     env.hosts = ['localhost']
@@ -32,6 +31,9 @@ def localhost_env():
     env.shell = '/bin/bash -c'
 
 
+def production_env():
+    pass
+
 ####################################################################
 def install_common_packages():
     """
@@ -41,7 +43,7 @@ def install_common_packages():
     fabtools.deb.install(globals()['common_packages'])
 
 
-def install_all_repo():
+def install_all_repo(**kwargs):
     """
     Установка репозитариев
     """
@@ -53,7 +55,7 @@ def install_all_repo():
     fabtools.deb.update_index(False)
 
 
-def install_all_sys_packages():
+def install_all_sys_packages(**kwargs):
     """
     Установка системных пакетов
     """
@@ -63,7 +65,7 @@ def install_all_sys_packages():
     })
 
 
-def install_repo_and_packages(install_repo=True):
+def install_repo_and_packages(install_repo=True, **kwargs):
     """
     Установка системных пакетов с репозитариями
     """
@@ -74,7 +76,7 @@ def install_repo_and_packages(install_repo=True):
     install_all_sys_packages()
 
 
-def install_packages_to_env():
+def install_packages_to_env(**kwargs):
     """
     Установка python пакетов в окружение
     """
@@ -90,3 +92,11 @@ def install_packages_to_env():
                 'pip': env.pip,
                 'path': os.path.join(env.current_release, env.req_dir, 'requirements.txt'),
             })
+
+
+def deploy(**kwargs):
+    require('hosts', provided_by=[localhost_env, production_env])
+    require('path')
+
+    install_repo_and_packages(**kwargs)
+    install_packages_to_env(**kwargs)
