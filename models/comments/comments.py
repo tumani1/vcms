@@ -12,6 +12,7 @@ from constants import OBJECT_TYPES
 
 class Comments(Base):
     __tablename__ = 'comments'
+
     id          = Column(Integer, primary_key=True)
     user_id     = Column(Integer, nullable=False)
     text        = Column(Text, nullable=False)

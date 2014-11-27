@@ -9,6 +9,7 @@ from models.comments.constants import OBJECT_TYPES
 
 class Content(Base):
     __tablename__ = 'content'
+
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=True)
     text = Column(Text, nullable=True)
