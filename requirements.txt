@@ -20,3 +20,4 @@ git+git://github.com/MongoEngine/flask-mongoengine.git@4f7c4c88d4af8b28c6063687b
 wtforms-html5
 geoip2
 pycountry
+BeautifulSoup4
