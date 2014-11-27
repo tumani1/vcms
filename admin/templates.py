@@ -17,7 +17,7 @@ UL_TEMPLATE = u"<li><a href='%s'>%s</a></li>"
 
 def topic_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.name), u'Медиа'),
+        UL_TEMPLATE % (url_for('mediaunits.index_view', flt1_0=model.name), u'Медиа'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
@@ -25,7 +25,7 @@ def topic_link_formatter(view, context, model, name):
 
 def person_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.name), u'Роли'),
+        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Роли'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
@@ -39,5 +39,13 @@ def user_link_formatter(view, context, model, name):
 
     if False:
         action.append(UL_TEMPLATE % (url_for('persons.index_view', flt1_0=model.id), u'Персона'))
+
+    return Markup(DROPDOWN_TEMPLATE % ''.join(action))
+
+
+def media_link_formatter(view, context, model, name):
+    action = [
+        UL_TEMPLATE % (url_for('medialocations.index_view'), u'Локации'),
+    ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))

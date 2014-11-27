@@ -95,7 +95,6 @@ admin_view.add_view(MediaUnitsAccessCountriesModelView())
 ###############################################################################
 # Comments
 admin_view.add_view(CommentsModelView())
-admin_view.add_view(UsersCommentsModelView())
 
 ###############################################################################
 # Msgr
