@@ -42,15 +42,14 @@ admin_view.add_view(GlobalTokenModelView())
 ###############################################################################
 # Persons
 admin_view.add_view(PersonsModelView())
-admin_view.add_view(PersonsUsersModelView())
-admin_view.add_view(PersonsValuesModelView())
-admin_view.add_view(PersonsExtrasModelView())
-admin_view.add_view(PersonsTopicsModelView())
+# admin_view.add_view(PersonsValuesModelView())
+# admin_view.add_view(PersonsExtrasModelView())
+# admin_view.add_view(PersonsTopicsModelView())
 
 ###############################################################################
 # Topics
 admin_view.add_view(TopicsModelView())
-admin_view.add_view(TopicsExtrasModelView())
+# admin_view.add_view(TopicsExtrasModelView())
 
 ###############################################################################
 # Chats

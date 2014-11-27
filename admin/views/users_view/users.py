@@ -2,30 +2,16 @@
 
 from pytz import common_timezones
 
-from jinja2 import Markup
-from flask import url_for
 from flask.ext.admin.form import fields
 
 from wtforms.fields import PasswordField, StringField
 from wtforms_html5 import EmailField
 
 from admin.views.base import SqlAlModelView
-from admin.templates import DROPDOWN_TEMPLATE, UL_TEMPLATE
+from admin.templates import user_link_formatter
 
 from models.users import Users
 from models.users.constants import APP_USERS_TYPE_GENDER
-
-
-def _user_formatter(view, context, model, name):
-    action = [
-        UL_TEMPLATE % (url_for('comments.index_view', flt1_0=model.id), u'Комментарии'),
-        UL_TEMPLATE % (url_for('chats.index_view', flt1_0=model.id), u'Сообщения в чате')
-    ]
-
-    if False:
-        action.append(UL_TEMPLATE % (url_for('persons.index_view', flt1_0=model.id), u'Персона'))
-
-    return Markup(DROPDOWN_TEMPLATE % ''.join(action))
 
 
 class UsersModelView(SqlAlModelView):
@@ -38,13 +24,13 @@ class UsersModelView(SqlAlModelView):
         lastname=u'Фамилия', address=u'Адресс', birthdate=u'Дата рождения',
         time_zone=u'Временная зона', created=u'Дата создания',
         phone=u'Телефон', last_visit=u'Последний визит',
-        action=u''
+        link=u''
     )
 
     column_list = (
         'id', 'firstname', 'lastname', 'gender', 'email',
         'city', 'is_manager', 'address', 'phone', 'birthdate',
-        'time_zone', 'action', 'created', 'last_visit',
+        'time_zone', 'link', 'created', 'last_visit',
     )
 
     column_choices = dict(
@@ -52,7 +38,7 @@ class UsersModelView(SqlAlModelView):
     )
 
     column_formatters = {
-        'action': _user_formatter
+        'link': user_link_formatter
     }
 
     named_filter_urls = True
