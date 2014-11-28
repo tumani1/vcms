@@ -1,23 +1,27 @@
 # coding: utf-8
-from admin.views.base import SqlAlModelView
+
+from pytz import common_timezones
+
 from flask.ext.admin.form import fields
 
+from admin.views.base import SqlAlModelView
 from models.locations import Cities
-from pytz import common_timezones
 
 
 class CitieModelView(SqlAlModelView):
     model = Cities
-    category = u'Локации'
+    category = u'Справочники'
     name = u'Города'
 
     form_overrides = dict(
         time_zone=fields.Select2Field
     )
 
-    column_labels = dict(country=u'Страна', name=u'Название',
-                         name_orig=u'Оригинальное название',
-                         time_zone=u'Временая зона', description=u'Описание')
+    column_labels = dict(
+        country=u'Страна', name=u'Название',
+        name_orig=u'Оригинальное название',
+        time_zone=u'Временая зона', description=u'Описание'
+    )
 
     form_args = dict(
         country=dict(
@@ -38,4 +42,13 @@ class CitieModelView(SqlAlModelView):
         )
     )
 
-    form_excluded_columns = ('users', )
+    form_columns = (
+        'country', 'name', 'name_orig',
+        'region', 'time_zone', 'description',
+    )
+
+    form_ajax_refs = dict(
+        country={
+            'fields': ('name',),
+        },
+    )

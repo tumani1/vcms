@@ -8,7 +8,7 @@ from models.cdn import CDN
 
 class CdnModelView(SqlAlModelView):
     model = CDN
-    category = u'CDN'
+    category = u'Справочники'
     name = u'CDN'
 
     named_filter_urls = True

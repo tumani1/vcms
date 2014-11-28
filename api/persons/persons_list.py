@@ -49,7 +49,7 @@ def get_person_list(auth_user, session, **kwargs):
 
     new_param = {
         'instance': instance,
-        'user':auth_user,
+        'user': auth_user,
         'session': session,
     }
 
