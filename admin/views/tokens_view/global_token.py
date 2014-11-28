@@ -10,11 +10,14 @@ class GlobalTokenModelView(SqlAlModelView):
 
     can_edit = False
 
-    column_list = ('token', 'users', 'created')
+    column_list = (
+        'token', 'users', 'created'
+    )
 
-    column_labels = dict(token=u'Токен', users=u'Пользователь',
-                         created=u'Дата создания')
+    column_labels = dict(
+        token=u'Токен',
+        users=u'Пользователь',
+        created=u'Дата создания'
+    )
 
     form_columns = ('users', )
-
-
