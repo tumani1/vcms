@@ -23,6 +23,9 @@ class Cities(Base):
 
     users       = relationship("Users", backref='city', cascade='all, delete')
 
+    def __str__(self):
+        return u"{0} - {1})>".format(self.id, self.name)
+
     def __repr__(self):
         return u"<Cities(id={0}, name={1})>".format(self.id, self.name)
 

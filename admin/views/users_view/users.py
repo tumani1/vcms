@@ -23,8 +23,7 @@ class UsersModelView(SqlAlModelView):
         city=u'Родной город', firstname=u'Имя', gender=u'Пол',
         lastname=u'Фамилия', address=u'Адресс', birthdate=u'Дата рождения',
         time_zone=u'Временная зона', created=u'Дата создания',
-        phone=u'Телефон', last_visit=u'Последний визит',
-        link=u''
+        phone=u'Телефон', last_visit=u'Последний визит', link=u'',
     )
 
     column_list = (
@@ -70,6 +69,12 @@ class UsersModelView(SqlAlModelView):
             label=u'Пол',
             choices=APP_USERS_TYPE_GENDER,
         ),
+    )
+
+    form_ajax_refs = dict(
+        city={
+            'fields': ('name',),
+        },
     )
 
     # # form_excluded_columns = ('password',)
