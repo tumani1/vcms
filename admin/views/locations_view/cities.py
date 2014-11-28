@@ -13,14 +13,14 @@ class CitieModelView(SqlAlModelView):
     category = u'Справочники'
     name = u'Города'
 
-    form_overrides = dict(
-        time_zone=fields.Select2Field
-    )
-
     column_labels = dict(
         country=u'Страна', name=u'Название',
         name_orig=u'Оригинальное название',
         time_zone=u'Временая зона', description=u'Описание'
+    )
+
+    column_filters = (
+        'id', 'name', 'region', 'country.id', 'country.name'
     )
 
     form_args = dict(
@@ -40,6 +40,10 @@ class CitieModelView(SqlAlModelView):
         description=dict(
             label=u'Описание'
         )
+    )
+
+    form_overrides = dict(
+        time_zone=fields.Select2Field
     )
 
     form_columns = (
