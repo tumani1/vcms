@@ -29,6 +29,7 @@ class Topics(Base):
     topic_user   = relationship('UsersTopics', backref='topics', cascade='all, delete')
     extra_topics = relationship('ExtrasTopics', backref='topics', cascade='all, delete')
     topic_person = relationship('PersonsTopics', backref='topic', cascade='all, delete')
+    topic_media  = relationship('MediaUnits', backref='topic', cascade='all, delete')
 
     @classmethod
     def tmpl_for_topics(cls, auth_user, session):
@@ -95,9 +96,11 @@ class Topics(Base):
     def get_unixtime_created(self):
         return time.mktime(self.releasedate.timetuple())
 
-
     def __repr__(self):
         return u'Topics(name={0}, type={1}, status={2})'.format(self.name, self.type, self.status)
+
+    def __str__(self):
+        return u'{}'.format(self.name)
 
 
 update_ts_vector = DDL('''

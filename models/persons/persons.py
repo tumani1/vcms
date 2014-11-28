@@ -1,6 +1,7 @@
 # coding: utf-8
+
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
@@ -19,6 +20,7 @@ class Persons(Base):
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE), default=APP_PERSONS_STATUS_TYPE_ACTIVE)
     bio       = Column(Text)
+    # fullname  = column_property(firstname + " " + lastname)
 
     person_values = relationship('PersonsValues', backref='persons', cascade='all, delete')
     person_topics = relationship('PersonsTopics', backref='persons', cascade='all, delete')
