@@ -19,6 +19,10 @@ class SessionTokenModelView(SqlAlModelView):
         is_active=u'Активность'
     )
 
+    column_filters = (
+        'users.id', 'users.firstname', 'users.lastname', 'is_active',
+    )
+
     form_columns = (
         'users', 'is_active',
     )

@@ -20,4 +20,8 @@ class GlobalTokenModelView(SqlAlModelView):
         created=u'Дата создания'
     )
 
+    column_filters = (
+        'users.id', 'users.firstname', 'users.lastname',
+    )
+
     form_columns = ('users', )
