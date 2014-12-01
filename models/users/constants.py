@@ -55,7 +55,7 @@ APP_USERSOCIAL_TYPE = (
     (APP_USERSOCIAL_TYPE_TWITTER, u'Twitter'),
 )
 
-
+##############################################################
 APP_USER_STATUS_ACTIVE = u'active'
 APP_USER_STATUS_BLOCKED = u'blocked'
 APP_USER_STATUS_NOT_SUB = u'notsub'
