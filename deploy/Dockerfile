@@ -60,7 +60,7 @@ RUN service postgresql start; echo "CREATE USER pgadmin WITH SUPERUSER CREATEDB 
 RUN locale; cd /root/next_tv/; service postgresql start; /root/nexttv/bin/python -m utils.next_tv_sync
 
 
-RUN cd /root/next_tv/; /root/nexttv/bin/python -m utils.next_tv_sync
+RUN service postgresql start; cd /root/next_tv/; /root/nexttv/bin/python utils/gen_configs.py
 
 RUN  cd /root/next_tv/generated_configs/; mv node_service.yaml ../nodeservices/
 RUN  cd /root/next_tv/generated_configs/; mv haproxy.conf /etc/haproxy/
