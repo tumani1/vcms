@@ -1,6 +1,4 @@
 # coding: utf-8
-import os
-import urllib2
 from utils.robots.support_functions import save_poster_to_file
 
 

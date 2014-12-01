@@ -7,8 +7,8 @@ import urllib
 from xml.dom.minidom import parseString
 from bs4 import BeautifulSoup
 import requests
-from crawler.dom2_fizruk_robots.dom2.parser_supp import get_episods_for_page, get_episode_quick_info
-from crawler.locrobots.save_util import save_loaded_data_to_file
+from utils.robots.dom2.parser_supp import get_episode_quick_info, get_episods_for_page
+from utils.robots.support_functions import save_loaded_data_to_file
 
 __author__ = 'vladimir'
 
@@ -220,10 +220,10 @@ def download_video_by_id(id, file_name):
     try:
         manifest_txt = requests.get(manifest_root_link)
         f4link =  get_manifest_f4_link(manifest_txt.content)
-        bashCommand = "php crawler/dom2_fizruk_robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
+        bashCommand = "php utils/robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
         process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
-        #print out
+        print out
         print "Downloading from rutube finished"
     except:
         if os.path.exists(BASE_PATH + file_name + ".flv"):

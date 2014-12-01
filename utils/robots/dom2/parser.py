@@ -2,12 +2,9 @@
 import json
 import locale
 from bs4 import BeautifulSoup
-import datetime
-from crawler.dom2_fizruk_robots.dom2.loader import load_video_info_page, load_old_actors_pages, load_current_actors_page, load_pages
-from crawler.dom2_fizruk_robots.dom2.parser_supp import get_episods_for_page, save_poster_to_file, \
-    get_b_big_panel_content_div
-from crawler.dom2_fizruk_robots.locale_manager import convert_orig_month_name_to_lib
-from utils.robots.support_functions import get_valid_date_for_str
+from utils.robots.dom2.loader import load_pages, load_video_info_page, load_old_actors_pages, load_current_actors_page
+from utils.robots.dom2.parser_supp import get_episods_for_page, get_b_big_panel_content_div
+from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file
 
 __author__ = 'vladimir'
 
