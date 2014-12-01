@@ -12,9 +12,8 @@ class UsersRelsModelView(SqlAlModelView):
     category = u'Пользователи'
     name = u'Отношения пользователей'
 
-    form_overrides = dict(
-        urStatus=fields.Select2Field,
-        blocked=fields.Select2Field,
+    column_list = (
+        'user', 'partner', 'urStatus', 'blocked', 'updated',
     )
 
     column_choices = dict(
@@ -22,12 +21,20 @@ class UsersRelsModelView(SqlAlModelView):
         blocked=APP_USERSRELS_TYPE_BLOCKED,
     )
 
-    column_labels = dict(user=u'Пользователь', partner=u'Партнёр',
-                         urStatus=u'Тип отношений',
-                         blocked=u'Статус блокировки',
-                         updated=u'Последнее обновление', )
+    column_labels = dict(
+        user=u'Пользователь', partner=u'Партнёр',
+        urStatus=u'Тип отношений', blocked=u'Статус блокировки',
+        updated=u'Последнее обновление',
+    )
 
-    column_list = form_columns = ('user', 'partner', 'urStatus', 'blocked', 'updated', )
+    form_columns = (
+        'user', 'partner', 'urStatus', 'blocked', 'updated',
+    )
+
+    form_overrides = dict(
+        urStatus=fields.Select2Field,
+        blocked=fields.Select2Field,
+    )
 
     form_args = dict(
         urStatus=dict(
@@ -36,8 +43,18 @@ class UsersRelsModelView(SqlAlModelView):
         blocked=dict(
             choices=APP_USERSRELS_TYPE_BLOCKED,
             default=APP_USERSRELS_BLOCK_TYPE_UNDEF,
-        )
-
+        ),
     )
 
-    form_excluded_columns = ('updated', )
+    form_excluded_columns = (
+        'updated',
+    )
+
+    form_ajax_refs = dict(
+        user={
+            'fields': ('firstname', 'lastname',),
+        },
+        partner={
+            'fields': ('firstname', 'lastname',),
+        },
+    )

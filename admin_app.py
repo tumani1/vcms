@@ -51,7 +51,6 @@ if __name__ == '__main__':
     admin_view.add_view(UsersSocialModelView())
     admin_view.add_view(UsersValuesModelView())
     admin_view.add_view(UsersExtrasModelView())
-    admin_view.add_view(UsersTopicsModelView())
 
     ###############################################################################
     # Token

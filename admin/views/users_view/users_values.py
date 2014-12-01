@@ -10,15 +10,30 @@ class UsersValuesModelView(SqlAlModelView):
     category = u'Пользователи'
     name = u'Дополнительная информация'
 
-    form_overrides = dict(
-        value_text=StringField,
+    column_list = (
+        'user', 'scheme', 'value_int', 'value_text', 'value_string',
     )
 
     column_labels = dict(
         scheme=u'Схема', user=u'Пользователь',
-        value_int=u'Значение (целое число)', value_text=u'Значени (текст)',
+        value_int=u'Значение (целое число)',
+        value_text=u'Значени (текст)',
         value_string=u'Значение (строка)'
     )
 
-    form_columns = column_list = ('user', 'scheme', 'value_int', 'value_text',
-                                  'value_string', )
+    form_columns = (
+        'user', 'scheme', 'value_int', 'value_text', 'value_string',
+    )
+
+    form_overrides = dict(
+        value_text=StringField,
+    )
+
+    form_ajax_refs = dict(
+        user={
+            'fields': ('firstname','lastname',),
+        },
+        scheme={
+            'fields': ('name',),
+        },
+    )
