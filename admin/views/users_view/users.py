@@ -7,11 +7,12 @@ from flask.ext.admin.form import fields
 from wtforms.fields import PasswordField, StringField
 from wtforms_html5 import EmailField
 
+from admin.filters import ChoiceEqualFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
 
 from models.users import Users
-from models.users.constants import APP_USERS_TYPE_GENDER
+from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
 
 
 class UsersModelView(SqlAlModelView):
@@ -24,16 +25,18 @@ class UsersModelView(SqlAlModelView):
         lastname=u'Фамилия', address=u'Адресс', birthdate=u'Дата рождения',
         time_zone=u'Временная зона', created=u'Дата создания',
         phone=u'Телефон', last_visit=u'Последний визит', link=u'',
+        status=u'Статус',
     )
 
     column_list = (
         'id', 'firstname', 'lastname', 'gender', 'email',
         'city', 'is_manager', 'address', 'phone', 'birthdate',
-        'time_zone', 'link', 'created', 'last_visit',
+        'time_zone', 'link', 'created', 'last_visit', 'status',
     )
 
     column_choices = dict(
         gender=APP_USERS_TYPE_GENDER,
+        status=APP_USER_STATUS_TYPE,
     )
 
     column_formatters = {
@@ -43,21 +46,25 @@ class UsersModelView(SqlAlModelView):
     named_filter_urls = True
 
     column_filters = (
-        'id', 'firstname', 'lastname', #'phone', #'status', 'country', 'is_person'
+        'id', 'firstname', 'lastname', 'city.id', 'city.name',
+        'city.region', 'city.country.name',
+        ChoiceEqualFilter(Users.status, u'Статус', APP_USER_STATUS_TYPE),
+        #'phone', 'is_person',
     )
 
     form_overrides = dict(
         time_zone=fields.Select2Field,
         gender=fields.Select2Field,
+        status=fields.Select2Field,
         password=PasswordField,
         phone=StringField,
         email=EmailField,
     )
 
     form_columns = (
-        'firstname', 'lastname', 'gender', 'password', 'email',
-        'city', 'is_manager', 'address', 'bio', 'phone',
-        'birthdate', 'time_zone', 'created', 'last_visit'
+        'firstname', 'lastname', 'gender', 'status', 'password',
+        'email', 'city', 'is_manager', 'address', 'bio', 'phone',
+        'birthdate', 'time_zone', 'created', 'last_visit',
     )
 
     form_args = dict(
@@ -69,6 +76,10 @@ class UsersModelView(SqlAlModelView):
             label=u'Пол',
             choices=APP_USERS_TYPE_GENDER,
         ),
+        status=dict(
+            label=u'Статус',
+            choices=APP_USER_STATUS_TYPE,
+        ),
     )
 
     form_ajax_refs = dict(
@@ -76,23 +87,3 @@ class UsersModelView(SqlAlModelView):
             'fields': ('name',),
         },
     )
-
-    # # form_excluded_columns = ('password',)
-    #
-    # def scaffold_form(self):
-    #     form_class = super(UsersModelView, self).scaffold_form()
-    #     form_class.password2 = PasswordField('New Password')
-    #     return form_class
-    #
-    # # def on_model_create(self, **kwargs):
-    # #     print "ok"
-    # #     pass
-    # #
-    # def on_model_change(self, form, model, **kwargs):
-    #     # self.form_overrides
-    #     if len(model.password2):
-    #         model.password = form.password2.data
-    #
-    # def edit_form(self, obj=None):
-    #     super(UsersModelView, self).edit_form(obj)
-
