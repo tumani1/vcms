@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from flask.ext.admin.contrib import sqla, mongoengine
 from flask.ext import login
+from flask.ext.admin.contrib import sqla, mongoengine
 
 from admin import session
 
@@ -16,6 +16,7 @@ class BaseModelView(object):
     @classmethod
     def get_model(cls):
         return cls.model
+
 
 
 class SqlAlModelView(sqla.ModelView, BaseModelView):

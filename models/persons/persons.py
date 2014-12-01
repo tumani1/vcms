@@ -21,7 +21,6 @@ class Persons(Base):
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE), default=APP_PERSONS_STATUS_TYPE_ACTIVE)
     bio       = Column(Text)
-    # fullname  = column_property(firstname + " " + lastname)
 
     person_values = relationship('PersonsValues', backref='persons', cascade='all, delete')
     person_topics = relationship('PersonsTopics', backref='persons', cascade='all, delete')

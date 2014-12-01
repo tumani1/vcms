@@ -61,7 +61,7 @@ def download_video_by_id(id, file_name):
     manifest_root_link = 'http://rutube.ru/api/play/options/{}/?format=xml'.format(id)
     manifest_txt = requests.get(manifest_root_link)
     f4link = get_manifest_f4_link(manifest_txt.content)
-    bashCommand = "php crawler/dom2_fizruk_robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
+    bashCommand = "php utils/robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
     process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     print out
