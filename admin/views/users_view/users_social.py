@@ -11,19 +11,25 @@ class UsersSocialModelView(SqlAlModelView):
     category = u'Пользователи'
     name = u'Социальные сети'
 
-    form_overrides = dict(
-        sType=fields.Select2Field
-    )
+    column_list = ('user', 'sType', 'sToken', 'created', 'updated', )
 
     column_choices = dict(
         sType=APP_USERSOCIAL_TYPE,
     )
 
-    column_labels = dict(user=u'Пользователь', sType=u'Социальная сеть',
-                         sToken=u'Токен пользователя', created=u'Дата создания',
-                         updated=u'Последнее обновление')
-    form_columns = ('user', 'sType', 'sToken', )
-    column_list = form_columns + ('created', 'updated', )
+    column_labels = dict(
+        user=u'Пользователь', sType=u'Социальная сеть',
+        sToken=u'Токен пользователя', created=u'Дата создания',
+        updated=u'Последнее обновление',
+    )
+
+    form_columns = (
+        'user', 'sType', 'sToken',
+    )
+
+    form_overrides = dict(
+        sType=fields.Select2Field
+    )
 
     form_args = dict(
         sType=dict(
@@ -31,3 +37,8 @@ class UsersSocialModelView(SqlAlModelView):
         )
     )
 
+    form_ajax_refs = dict(
+        user={
+            'fields': ('firstname', 'lastname',),
+        },
+    )

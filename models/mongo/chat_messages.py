@@ -1,6 +1,7 @@
 # coding: utf-8
-from mongoengine import Document, StringField, IntField, SequenceField, DateTimeField
+
 from datetime import datetime
+from mongoengine import Document, StringField, IntField, SequenceField, DateTimeField
 
 
 class ChatMessages(Document):
