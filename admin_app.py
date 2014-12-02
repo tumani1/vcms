@@ -64,7 +64,7 @@ if __name__ == '__main__':
     ###############################################################################
     # Chats
     admin_view.add_view(ChatsModelView())
-    admin_view.add_view(ChatMessagesModelView())
+    # admin_view.add_view(ChatMessagesModelView())
 
     ###############################################################################
     # Extras
@@ -89,14 +89,6 @@ if __name__ == '__main__':
     admin_view.add_view(MediaModelView())
     admin_view.add_view(MediaUnitsModelView())
     admin_view.add_view(MediaInUnitModelView())
-    # admin_view.add_view(PersonsMediaModelView())
-    # admin_view.add_view(UsersMediaModelView())
-    # admin_view.add_view(UsersMediaUnitsModelView())
-    # admin_view.add_view(MediaLocationsModelView())
-    # admin_view.add_view(MediaAccessCountriesModelView())
-    # admin_view.add_view(MediaAccessDefaultsModelView())
-    # admin_view.add_view(MediaAccessDefaultsCountriesModelView())
-    # admin_view.add_view(MediaUnitsAccessCountriesModelView())
 
     ###############################################################################
     # Comments
