@@ -8,7 +8,6 @@ from persons_view import *
 from extras_view import *
 from scheme_view import *
 from topics_view import *
-from cdn_view import *
 from chats_view import *
 from locations_view import *
 from stream_view import *
