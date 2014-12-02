@@ -17,7 +17,7 @@ geoip2
 pycountry
 flask
 flask-login
-flask-admin
+git+git://github.com/mrjoes/flask-admin
 flask-mongoengine
 wtforms-html5
 BeautifulSoup4
