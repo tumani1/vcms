@@ -90,6 +90,7 @@ if __name__ == '__main__':
     admin_view.add_view(MediaUnitsModelView())
     admin_view.add_view(MediaInUnitModelView())
     admin_view.add_view(MediaLocationsModelView())
+    admin_view.add_view(PersonsMediaModelView())
 
     ###############################################################################
     # Comments
