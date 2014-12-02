@@ -21,20 +21,25 @@ if __name__ == '__main__':
     parser.add_argument('--no-debug', dest='debug', action='store_false', default=True)
     args = parser.parse_args()
 
+    ###############################################################################
     # Setup Flask app
     app = Flask(__name__, template_folder='admin/templates')
     app.config['SECRET_KEY'] = 'rNAZvhgmFdKkt4dF3CHiooLPCIXxswkYpbQa'
     app.config['MONGODB_SETTINGS'] = DATABASE['mongodb']
 
+    ###############################################################################
     # Setup manager
     login_manager = login.LoginManager()
     login_manager.init_app(app)
     login_manager.user_loader(lambda user_id: db_session.query(Users).get(user_id))
 
+    ###############################################################################
     # Setup MongoDB
     db = MongoEngine()
     db.init_app(app)
 
+    ###############################################################################
+    # Setup callbacks
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         if not exception is None:
@@ -47,38 +52,19 @@ if __name__ == '__main__':
     ###############################################################################
     # Users
     admin_view.add_view(UsersModelView())
-    admin_view.add_view(UsersRelsModelView())
-    admin_view.add_view(UsersSocialModelView())
-    admin_view.add_view(UsersValuesModelView())
-    admin_view.add_view(UsersExtrasModelView())
-
-    ###############################################################################
-    # Token
-    admin_view.add_view(SessionTokenModelView())
-    admin_view.add_view(GlobalTokenModelView())
 
     ###############################################################################
     # Persons
     admin_view.add_view(PersonsModelView())
-    # admin_view.add_view(PersonsValuesModelView())
-    # admin_view.add_view(PersonsExtrasModelView())
-    # admin_view.add_view(PersonsTopicsModelView())
 
     ###############################################################################
     # Topics
     admin_view.add_view(TopicsModelView())
-    # admin_view.add_view(TopicsExtrasModelView())
 
     ###############################################################################
     # Chats
     admin_view.add_view(ChatsModelView())
-    admin_view.add_view(UsersChatModelView())
     admin_view.add_view(ChatMessagesModelView())
-
-    ###############################################################################
-    # Contents
-    admin_view.add_view(CitieModelView())
-    admin_view.add_view(CountryModelView())
 
     ###############################################################################
     # Extras
@@ -89,8 +75,10 @@ if __name__ == '__main__':
     admin_view.add_view(SchemeModelView())
 
     ###############################################################################
-    # CDN
+    # Dictionary
     admin_view.add_view(CdnModelView())
+    admin_view.add_view(CitieModelView())
+    admin_view.add_view(CountryModelView())
 
     ###############################################################################
     # Stream
@@ -101,24 +89,18 @@ if __name__ == '__main__':
     admin_view.add_view(MediaModelView())
     admin_view.add_view(MediaUnitsModelView())
     admin_view.add_view(MediaInUnitModelView())
-    admin_view.add_view(PersonsMediaModelView())
-    admin_view.add_view(UsersMediaModelView())
-    admin_view.add_view(UsersMediaUnitsModelView())
-    admin_view.add_view(MediaLocationsModelView())
-    admin_view.add_view(MediaAccessCountriesModelView())
-    admin_view.add_view(MediaAccessDefaultsModelView())
-    admin_view.add_view(MediaAccessDefaultsCountriesModelView())
-    admin_view.add_view(MediaUnitsAccessCountriesModelView())
+    # admin_view.add_view(PersonsMediaModelView())
+    # admin_view.add_view(UsersMediaModelView())
+    # admin_view.add_view(UsersMediaUnitsModelView())
+    # admin_view.add_view(MediaLocationsModelView())
+    # admin_view.add_view(MediaAccessCountriesModelView())
+    # admin_view.add_view(MediaAccessDefaultsModelView())
+    # admin_view.add_view(MediaAccessDefaultsCountriesModelView())
+    # admin_view.add_view(MediaUnitsAccessCountriesModelView())
 
     ###############################################################################
     # Comments
     admin_view.add_view(CommentsModelView())
-
-    ###############################################################################
-    # Msgr
-    admin_view.add_view(MsgrLogModelView())
-    admin_view.add_view(MsgrThreadsModelView())
-    admin_view.add_view(UsersMsgrThreadsModelView())
 
     ###############################################################################
     # Tags
