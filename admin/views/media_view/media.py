@@ -28,7 +28,7 @@ class MediaModelView(SqlAlModelView):
         'title', ChoiceEqualFilter(Media.type_, u'Тип', APP_MEDIA_TYPE),
         ChoiceEqualFilter(Media.access_type, u'Тип доступа', APP_MEDIA_LIST),
         'release_date', 'allow_mobile', 'allow_smarttv',
-        'allow_external', 'allow_anon',
+        'allow_external', 'allow_anon', 'media_units.id',
     )
 
     column_choices = dict(
