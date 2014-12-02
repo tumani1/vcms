@@ -25,7 +25,7 @@ def topic_link_formatter(view, context, model, name):
 
 def person_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Роли'),
+        UL_TEMPLATE % (url_for('personsmedia.index_view', flt0_id_id_equals=model.id), u'Роли'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
