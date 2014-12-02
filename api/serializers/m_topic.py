@@ -8,18 +8,20 @@ __all__ = ['mTopicSerializer']
 
 class mTopicSerializer(DefaultSerializer):
 
-    __read_fields = {
-        'name': '',
-        'title': '',
-        'title_orig': '',
-        'description': '',
-        'releasedate': '',
-        'type': '',
-        'relation': '',
-    }
-
-
     def __init__(self, **kwargs):
+        self.__read_fields = {
+            'name': '',
+            'title': '',
+            'title_orig': '',
+            'description': '',
+            'releasedate': '',
+            'type': '',
+            'relation': '',
+        }
+        if 'small' in kwargs:
+            if kwargs['small']:
+                del getattr(self, '_{0}__read_fields'.format(self.__class__.__name__))['description']
+
         if not kwargs['instance'] is None:
             key = ['topic', 'user', 'subscribed', 'liked']
             if isinstance(kwargs['instance'], list):

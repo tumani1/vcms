@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Float
 from models.base import Base
 
 
@@ -13,6 +13,7 @@ class UsersMedia(Base):
     views_cnt = Column(Integer, default=0)
     liked     = Column(DateTime)
     playlist  = Column(DateTime)
+    rating    = Column(Float, nullable=True)
     play_pos  = Column(Integer)
     watched   = Column(DateTime)
 

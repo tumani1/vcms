@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType
 from sqlalchemy.orm import relationship, contains_eager, backref
@@ -30,6 +30,8 @@ class Media(Base):
     description    = Column(Text, nullable=True)
     created        = Column(DateTime, default=datetime.datetime.utcnow)
     views_cnt      = Column(Integer, default=0)
+    rating         = Column(Float, default=0.0)
+    rating_votes   = Column(Integer, default=0)
     release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
