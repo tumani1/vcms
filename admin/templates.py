@@ -45,7 +45,7 @@ def user_link_formatter(view, context, model, name):
 
 def media_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('medialocations.index_view'), u'Локации'),
+        UL_TEMPLATE % (url_for('medialocations.index_view', flt0_id_id_equals=model.id), u'Локации'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
