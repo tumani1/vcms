@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from admin.views.base import SqlAlModelView
 from models.media.media_locations import MediaLocations
 
@@ -7,6 +8,8 @@ class MediaLocationsModelView(SqlAlModelView):
     model = MediaLocations
     category = u'Медиа-объекты'
     name = u'Локации медиа'
+
+    named_filter_urls = True
 
     column_list = ('cdn', 'media', 'quality', 'access_level', 'value',)
 

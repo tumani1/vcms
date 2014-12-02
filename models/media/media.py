@@ -130,6 +130,9 @@ class Media(Base):
         status_code = user_access_media(access, owner, is_auth, is_manager)
         return status_code
 
+    def __str__(self):
+        return u"{0} - {1}".format(self.id, self.title)
+
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)
 
