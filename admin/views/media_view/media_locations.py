@@ -22,7 +22,7 @@ class MediaLocationsModelView(SqlAlModelView):
     )
 
     column_filters = (
-        'media.title', 'media.owner_id', 'cdn.name', 'quality',
+        'media.id', 'media.title', 'media.owner_id', 'cdn.name', 'quality',
     )
 
     form_columns = ('cdn', 'media', 'quality', 'access_level', 'value',)
