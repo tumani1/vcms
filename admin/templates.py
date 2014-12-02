@@ -17,7 +17,7 @@ UL_TEMPLATE = u"<li><a href='%s'>%s</a></li>"
 
 def topic_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('mediaunits.index_view', flt1_0=model.name), u'Медиа'),
+        UL_TEMPLATE % (url_for('mediaunits.index_view', flt0_topics_name_equals=model.name), u'Медиаюниты'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
@@ -33,12 +33,10 @@ def person_link_formatter(view, context, model, name):
 
 def user_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('comments.index_view', flt1_0=model.id), u'Комментарии'),
-        UL_TEMPLATE % (url_for('chats.index_view', flt1_0=model.id), u'Сообщения в чате')
+        UL_TEMPLATE % (url_for('comments.index_view', flt0_id_equals=model.id), u'Комментарии'),
+        UL_TEMPLATE % (url_for('chats.index_view', flt0__equals=model.id), u'Сообщения в чате'),
+        UL_TEMPLATE % (url_for('persons.index_view', flt0_id_equals=model.id), u'Персона'),
     ]
-
-    if False:
-        action.append(UL_TEMPLATE % (url_for('persons.index_view', flt1_0=model.id), u'Персона'))
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
 
@@ -53,8 +51,8 @@ def media_link_formatter(view, context, model, name):
 
 def comment_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Пользователь'),
-        UL_TEMPLATE % (url_for('chats.index_view', flt1_0=model.id), u'Объект')
+        UL_TEMPLATE % (url_for('users.index_view', flt0_id_equals=model.id), u'Пользователь'),
+        UL_TEMPLATE % (url_for('chats.index_view', flt0_0=model.id), u'Объект')
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
@@ -62,7 +60,7 @@ def comment_link_formatter(view, context, model, name):
 
 def chat_messages_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Пользователь'),
+        UL_TEMPLATE % (url_for('users.index_view', flt0_id_equals=model.id), u'Пользователь'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
