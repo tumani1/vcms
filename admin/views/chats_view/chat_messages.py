@@ -62,18 +62,18 @@ class ChatMessagesModelView(MongoDBModelView):
     )
 
     form_overrides = dict(
-        # user_id=AjaxSelectField,
-        chat_id=AjaxSelectField,
+        user_id=fields.Select2Field,
+        chat_id=fields.Select2Field,
     )
 
-    # form_args = dict(
-    #     user_id=dict(
-    #         choices=users,
-    #     ),
-    #     chat_id=dict(
-    #         choices=chats,
-    #     ),
-    # )
+    form_args = dict(
+        user_id=dict(
+            choices=users,
+        ),
+        chat_id=dict(
+            choices=chats,
+        ),
+    )
 
     # form_ajax_refs = dict(
     #     chat_id=QueryAjaxModelLoader('chat_id', Chats, fields=['description']),
