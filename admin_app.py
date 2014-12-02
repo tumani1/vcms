@@ -88,7 +88,6 @@ if __name__ == '__main__':
     # Media
     admin_view.add_view(MediaModelView())
     admin_view.add_view(MediaUnitsModelView())
-    admin_view.add_view(MediaInUnitModelView())
     admin_view.add_view(MediaLocationsModelView())
     admin_view.add_view(PersonsMediaModelView())
 
@@ -96,10 +95,10 @@ if __name__ == '__main__':
     # Comments
     admin_view.add_view(CommentsModelView())
 
-    ###############################################################################
-    # Tags
-    admin_view.add_view(TagsModelView())
-    admin_view.add_view(TagsObjectsModelView())
+    # ###############################################################################
+    # # Tags
+    # admin_view.add_view(TagsModelView())
+    # admin_view.add_view(TagsObjectsModelView())
 
     ###############################################################################
     # Content

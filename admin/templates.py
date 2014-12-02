@@ -66,3 +66,11 @@ def chat_messages_formatter(view, context, model, name):
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
+
+
+def mediainits_link_formatter(view, context, model, name):
+    action = [
+        UL_TEMPLATE % (url_for('media.index_view', flt1_0=model.id), u'Медиа'),
+    ]
+
+    return Markup(DROPDOWN_TEMPLATE % ''.join(action))
