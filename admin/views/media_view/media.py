@@ -19,7 +19,7 @@ class MediaModelView(SqlAlModelView):
 
     column_list = (
         'title', 'type_', 'access_type', 'release_date',
-        'duration', 'user_owner', 'access', 'poster',
+        'duration', 'owner', 'access', 'poster',
         'views_cnt', 'allow_mobile', 'allow_smarttv',
         'allow_external', 'allow_anon', 'link', 'created',
     )
@@ -44,7 +44,7 @@ class MediaModelView(SqlAlModelView):
         allow_anon=u'Доступна анонимность',
         views_cnt=u'Количество просмотров',
         release_date=u'Дата выхода', poster=u'Постер',
-        duration=u'Продолжительность', user_owner=u'Владелец',
+        duration=u'Продолжительность', owner=u'Владелец',
         created=u'Дата создания', type_=u'Тип',
         access=u'Доступ', access_type=u'Тип доступа',
     )
@@ -55,7 +55,7 @@ class MediaModelView(SqlAlModelView):
 
     form_columns = (
         'title', 'title_orig', 'description', 'release_date',
-        'poster', 'duration', 'user_owner', 'type_', 'access',
+        'poster', 'duration', 'owner', 'type_', 'access',
         'access_type', 'allow_mobile', 'allow_smarttv',
         'allow_external', 'allow_anon',
     )
@@ -72,4 +72,10 @@ class MediaModelView(SqlAlModelView):
         access_type=dict(
             choices=APP_MEDIA_LIST,
         ),
+    )
+
+    form_ajax_refs = dict(
+        owner={
+            'fields': ('firstname', 'lastname',),
+        },
     )
