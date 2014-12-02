@@ -1,20 +1,25 @@
 from social.strategies.base import BaseStrategy, BaseTemplateStrategy
 
+TEST_URI = 'http://nexttv.com'
+
 
 class AuthTemplateStrategy(BaseTemplateStrategy):
     def render_template(self, tpl, context):
-        pass
+        return tpl
 
     def render_string(self, html, context):
-        pass
+        return html
 
 
 class AuthStrategy(BaseStrategy):
     DEFAULT_TEMPLATE_STRATEGY = AuthTemplateStrategy
 
-    def __init__(self, session, request=None, tpl=None):
+    def __init__(self, storage, session, backends, backend, request=None, tpl=None):
+        self.backend = backend(strategy=self)
+        self.backends = backends
         self.request = request
         self.session = session
+        self.storage = storage
 
     def request_data(self, merge=True):
         if not self.request:
@@ -27,12 +32,18 @@ class AuthStrategy(BaseStrategy):
             data = self.request.GET
         return data
 
+    def start(self):
+        if self.backend.uses_redirect():
+            return self.redirect(self.backend.auth_url())
+        else:
+            return self.html(self.backend.auth_html())
+
     def request_host(self):
         if self.request:
             return self.request['hosts']
 
     def session_get(self, name, default=None):
-        return self.session.get(name, default)
+        return u'/tokenize/?back_utl=/'
 
     def session_set(self, name, value):
         self.session[name] = value
@@ -46,9 +57,9 @@ class AuthStrategy(BaseStrategy):
         return self.session.setdefault(name, value)
 
     def build_absolute_uri(self, path=None):
-        if self.request:
-            return self.request.build_absolute_uri(path)
-        else:
+        path = path or ''
+        if path.startswith('http://') or path.startswith('https://'):
             return path
+        return TEST_URI + path
 
 

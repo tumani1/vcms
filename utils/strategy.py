@@ -3,7 +3,7 @@ from social.exceptions import MissingBackend
 from social.utils import module_member
 
 
-def get_strategy(strategy, storage, request=None, backend=None,
+def get_strategy(strategy, storage, session, request=None, backend=None,
                  *args, **kwargs):
     backends = ('social.backends.vk.VKOAuth2',
                 'social.backends.google.GoogleOAuth2',
@@ -17,6 +17,6 @@ def get_strategy(strategy, storage, request=None, backend=None,
         Backend = None
     Strategy = module_member(strategy)
     Storage = module_member(storage)
-    return Strategy(Storage, request, *args, **kwargs)
+    return Strategy(Storage, session, backends, Backend, request, *args, **kwargs)
 
 

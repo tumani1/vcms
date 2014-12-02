@@ -1,8 +1,8 @@
 # coding: utf-8
 
 from api.auth.login import post
-from api.auth.social_auth.vk_oauth import post as vk_oauth2_post
-from api.auth.social_auth.vk_oauth import complete_post as vk_oauth2_complete
+from api.auth.social_auth.vk_oauth import get as vk_oauth2_get
+from api.auth.social_auth.vk_oauth import complete_get as vk_oauth2_complete
 from api.auth.revoke import revoke
 from api.auth.session import get, delete
 from api.auth.registration import post as register
@@ -18,10 +18,10 @@ routing = (
     (r'^register$', {'post': register}),
 
     (r'^login/vk-oauth2$',
-        {'post': vk_oauth2_post}),
+        {'get': vk_oauth2_get}),
 
     (r'^complete/vk-oauth2$',
-        {'post': vk_oauth2_complete}),
+        {'get': vk_oauth2_complete}),
 
 
 )
