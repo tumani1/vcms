@@ -66,7 +66,7 @@ RUN  cd /root/next_tv/generated_configs/; mv node_service.yaml ../nodeservices/
 RUN  cd /root/next_tv/generated_configs/; mv haproxy.conf /etc/haproxy/
 RUN  cd /root/next_tv/generated_configs/; mv supervisord.conf /etc/supervisor/conf.d/
 RUN  cd /root/next_tv/generated_configs/; mv pr_haproxy.conf zerorpc_services.conf /etc/supervisor/conf.d/
-
+COPY docker_supervisor.conf /etc/supervisor/conf.d/
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
@@ -74,8 +74,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
-
-
 EXPOSE 22
 EXPOSE 80
 CMD ["/usr/sbin/sshd", "-D"]
+

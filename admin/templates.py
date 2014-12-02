@@ -45,7 +45,7 @@ def user_link_formatter(view, context, model, name):
 
 def media_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('medialocations.index_view'), u'Локации'),
+        UL_TEMPLATE % (url_for('medialocations.index_view', flt0_id_id_equals=model.id), u'Локации'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))
@@ -55,6 +55,22 @@ def comment_link_formatter(view, context, model, name):
     action = [
         UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Пользователь'),
         UL_TEMPLATE % (url_for('chats.index_view', flt1_0=model.id), u'Объект')
+    ]
+
+    return Markup(DROPDOWN_TEMPLATE % ''.join(action))
+
+
+def chat_messages_formatter(view, context, model, name):
+    action = [
+        UL_TEMPLATE % (url_for('users.index_view', flt1_0=model.id), u'Пользователь'),
+    ]
+
+    return Markup(DROPDOWN_TEMPLATE % ''.join(action))
+
+
+def mediainits_link_formatter(view, context, model, name):
+    action = [
+        UL_TEMPLATE % (url_for('media.index_view', flt0_media_in_unit_id_equals=model.id), u'Медиа'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))

@@ -3,6 +3,7 @@ import json
 import locale
 import datetime
 import os
+import urllib2
 from utils.robots.locale_manager import convert_orig_month_name_to_lib
 
 
@@ -52,3 +53,22 @@ def save_loaded_data_to_file(loaded_json_data, file_name, sub_dir_name):
         print "Saving failed with error:", traceback.print_exc()
         return None
     return site_dir + '/' + saved_file_name
+
+
+
+def save_poster_to_file(link, name):
+    file_name = None
+    directory = 'static/upload/dom2'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    try:
+        if 'dom2' not in link:
+            link = 'http://dom2.ru'+link
+        img = urllib2.urlopen(link)
+        with open(directory + '/' + name + '.jpg', 'wb') as localFile:
+            localFile.write(img.read())
+        file_name = name + '.jpg'
+    except Exception, e:
+        print e.message
+        print "Poster saving failed"
+    return file_name

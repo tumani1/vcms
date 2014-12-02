@@ -45,3 +45,9 @@ class ExtrasModelView(SqlAlModelView):
             choices=APP_EXTRA_TYPE
         )
     )
+
+    form_ajax_refs = dict(
+        cdn={
+            'fields': ('name',),
+        },
+    )

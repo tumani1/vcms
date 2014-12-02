@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType
-from sqlalchemy.orm import relationship, contains_eager
+from sqlalchemy.orm import relationship, contains_eager, backref
 
 from models.base import Base
 from models.media.users_media import UsersMedia
@@ -35,11 +35,12 @@ class Media(Base):
     release_date   = Column(DateTime, nullable=True)
     poster         = Column(Integer, nullable=True)
     duration       = Column(Integer, nullable=True)
-    owner          = Column(Integer, ForeignKey('users.id'), nullable=False)
+    owner_id       = Column(Integer, ForeignKey('users.id'), nullable=False)
     type_          = Column(ChoiceType(APP_MEDIA_TYPE), nullable=False)
     access         = Column(Integer, nullable=True)
     access_type    = Column(ChoiceType(APP_MEDIA_LIST), nullable=True)
 
+    owner           = relationship('Users', backref=backref('media', lazy='dynamic'))
     countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
     users_media     = relationship('UsersMedia', backref='media', cascade='all, delete')
     media_locations = relationship('MediaLocations', backref='media', cascade='all, delete')
@@ -130,6 +131,9 @@ class Media(Base):
         access = media.access
         status_code = user_access_media(access, owner, is_auth, is_manager)
         return status_code
+
+    def __str__(self):
+        return u"{0} - {1}".format(self.id, self.title)
 
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)

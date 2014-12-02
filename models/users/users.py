@@ -7,7 +7,7 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType, Choice
 
-from constants import APP_USERS_GENDER_DEFAULT, APP_USERS_TYPE_GENDER
+from constants import APP_USERS_GENDER_DEFAULT, APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE_DEFAULT, APP_USER_STATUS_TYPE
 
 from models.base import Base
 from models.locations import Cities, Countries
@@ -23,6 +23,7 @@ class Users(Base):
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
     gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=Choice(*APP_USERS_GENDER_DEFAULT), nullable=False)
+    status        = Column(ChoiceType(APP_USER_STATUS_TYPE), default=Choice(*APP_USER_STATUS_TYPE_DEFAULT), nullable=False)
     password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
     city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'))
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
@@ -36,7 +37,6 @@ class Users(Base):
     birthdate     = Column(Date)
     userpic_type  = Column(String(1))
     userpic_id    = Column(Integer)
-    # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
     attempts_count = Column(Integer)
     deny_to        = Column(Date)

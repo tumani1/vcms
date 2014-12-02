@@ -19,20 +19,18 @@ class PersonsModelView(SqlAlModelView):
 
     column_filters = (
         'id', 'firstname', 'lastname', 'users.id', 'users.firstname', 'users.lastname',
-        ChoiceEqualFilter(Persons.status, u'Статус', APP_PERSONS_STATUS_TYPE)
+        ChoiceEqualFilter(Persons.status, u'Статус', APP_PERSONS_STATUS_TYPE),
     )
 
     column_list = (
-        'id', 'firstname', 'lastname', 'status', 'bio', 'link', 'users'
+        'id', 'firstname', 'lastname', 'status',
+        'bio', 'link', 'users',
     )
 
     column_labels = dict(
-        firstname=u'Имя',
-        lastname=u'Фамилия',
-        status=u'Статус персоны',
-        bio=u'Биография',
-        users=u'Пользователь',
-        link=u''
+        firstname=u'Имя', lastname=u'Фамилия',
+        status=u'Статус персоны', link=u'',
+        bio=u'Биография', users=u'Пользователь',
     )
 
     column_formatters = {
@@ -51,4 +49,10 @@ class PersonsModelView(SqlAlModelView):
         status=dict(
             choices=APP_PERSONS_STATUS_TYPE,
         ),
+    )
+
+    form_ajax_refs = dict(
+        users={
+            'fields': ('firstname', 'lastname',),
+        },
     )
