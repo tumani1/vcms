@@ -69,6 +69,3 @@ APP_USER_STATUS_TYPE = (
     (APP_USER_STATUS_BLOCKED, u'Блокирован'),
     (APP_USER_STATUS_NOT_SUB, u'Не подтверждён'),
 )
-##############################################################
-APP_USER_LOGIN_FIELD_EMAIL = u'email'
-APP_USER_LOGIN_FIELD_PHONE = u'phone'

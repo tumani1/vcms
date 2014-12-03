@@ -182,3 +182,11 @@ def validate_eshop_sort(value, **kwargs):
         return value
     else:
         raise Invalid  # Неверный формат сортировки
+
+
+def validate_phone_number(value, **kwargs):
+    value = value.strip()
+    if value.isdigit():
+        return value
+    else:
+        raise Invalid
