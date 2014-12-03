@@ -24,5 +24,6 @@ class IsPersonFilterEqual(ChoiceEqualFilter):
     def apply(self, query, value):
         return self.join_method(query=query)
 
+
 class PhoneFilter(filters.FilterLike):
     pass
