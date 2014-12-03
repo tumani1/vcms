@@ -12,7 +12,13 @@ from models.media.constants import APP_MEDIA_LIST
 class MediaUnitsModelView(SqlAlModelView):
     model = MediaUnits
     category = u'Медиа-объекты'
-    name = u'Медиа юниты'
+    name = u'Mедиаюниты'
+
+    named_filter_urls = True
+
+    column_filters = (
+        'topic.name',
+    )
 
     column_list = (
         'title', 'title_orig', 'topic_name', 'description',

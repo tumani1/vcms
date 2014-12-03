@@ -8,6 +8,8 @@ class PersonsMediaModelView(SqlAlModelView):
     category = u'Медиа-объекты'
     name = u'Роль персоны'
 
+    named_filter_urls = True
+
     column_list = (
         'media', 'persons', 'role', 'type',
     )
@@ -24,7 +26,7 @@ class PersonsMediaModelView(SqlAlModelView):
     )
 
     column_filters = (
-        'media.title', 'media.owner_id', 'persons.id', 'role',
+        'media.id', 'media.title', 'media.owner_id', 'persons.id', 'role',
     )
 
     form_ajax_refs = dict(
