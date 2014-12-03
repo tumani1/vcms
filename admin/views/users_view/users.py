@@ -3,17 +3,15 @@
 from pytz import common_timezones
 
 from flask.ext.admin.form import fields
-from flask.ext.admin.contrib.sqla import filters
 
-from wtforms.fields import PasswordField, StringField
-from wtforms_html5 import EmailField
+from wtforms.fields import PasswordField
+from wtforms_html5 import EmailField, TelField
 
 from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
 
 from models.users import Users
-from models.persons import Persons
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
 
 
@@ -60,7 +58,7 @@ class UsersModelView(SqlAlModelView):
         gender=fields.Select2Field,
         status=fields.Select2Field,
         password=PasswordField,
-        phone=StringField,
+        phone=TelField,
         email=EmailField,
     )
 
