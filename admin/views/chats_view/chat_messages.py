@@ -1,7 +1,8 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
+from sqlalchemy.sql.functions import concat
 
+from admin.fields import select_factory
 from admin.views.base import MongoDBModelView
 from admin.templates import chat_messages_formatter
 
@@ -11,11 +12,6 @@ from models.chats import Chats
 
 from utils.connection import get_session
 
-from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
-from flask.ext.admin.model.fields import AjaxSelectField, InlineFieldList
-from flask.ext.admin.contrib.mongoengine.fields import ModelFormField
-
-
 
 class ChatMessagesModelView(MongoDBModelView):
     model = ChatMessages
@@ -23,8 +19,8 @@ class ChatMessagesModelView(MongoDBModelView):
     name = u'Сообщения чатов'
     session = get_session()
 
-    users = list(session.query(Users.id, Users).all())
-    chats = list(session.query(Chats.id, Chats).all())
+    users = list(session.query(Users.id, concat(Users.firstname, ' ', Users.lastname)).all())
+    chats = list(session.query(Chats.id, concat(Users.firstname, ' ', Users.lastname)).all())
 
     object_id_converter = True
 
@@ -62,19 +58,15 @@ class ChatMessagesModelView(MongoDBModelView):
     )
 
     form_overrides = dict(
-        user_id=fields.Select2Field,
-        chat_id=fields.Select2Field,
+        user_id=select_factory(coerce=int),
+        chat_id=select_factory(coerce=int),
     )
 
     form_args = dict(
         user_id=dict(
-            choices=map(lambda x: [str(x[0]),x[1]], users),
+            choices=users,
         ),
         chat_id=dict(
-            choices=map(lambda x: [str(x[0]),x[1]], chats),
+            choices=chats,
         ),
     )
-
-    # form_ajax_refs = dict(
-    #     chat_id=QueryAjaxModelLoader('chat_id', Chats, fields=['description']),
-    # )

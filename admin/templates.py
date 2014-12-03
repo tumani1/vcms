@@ -33,9 +33,9 @@ def person_link_formatter(view, context, model, name):
 
 def user_link_formatter(view, context, model, name):
     action = [
-        UL_TEMPLATE % (url_for('comments.index_view', flt0_id_equals=model.id), u'Комментарии'),
-        UL_TEMPLATE % (url_for('chats.index_view', flt0__equals=model.id), u'Сообщения в чате'),
-        UL_TEMPLATE % (url_for('persons.index_view', flt0_id_equals=model.id), u'Персона'),
+        UL_TEMPLATE % (url_for('commentsview.index_view', flt0_id_equals=model.id), u'Комментарии'),
+        UL_TEMPLATE % (url_for('chatmessagesview.index_view', flt0__equals=model.id), u'Сообщения в чате'),
+        UL_TEMPLATE % (url_for('personsview.index_view', flt0_id_equals=model.id), u'Персона'),
     ]
 
     return Markup(DROPDOWN_TEMPLATE % ''.join(action))

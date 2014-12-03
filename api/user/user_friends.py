@@ -1,3 +1,4 @@
+# coding: utf-8
 from api.users.users_friends import get as users_get_friends
 from utils import need_authorization
 

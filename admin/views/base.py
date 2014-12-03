@@ -18,7 +18,6 @@ class BaseModelView(object):
         return cls.model
 
 
-
 class SqlAlModelView(sqla.ModelView, BaseModelView):
 
     def __init__(self):

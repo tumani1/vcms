@@ -1,6 +1,9 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
 
+from sqlalchemy.sql.functions import concat
+
+from admin.fields import select_factory
+from admin.validators import StreamUserTypeValidator
 from admin.views.base import MongoDBModelView
 from models.users import Users
 from models.mongo.stream import Stream
@@ -13,7 +16,7 @@ class StreamModelView(MongoDBModelView):
     category = u'Поток'
     session = get_session()
 
-    users = list(session.query(Users.id, Users).all())
+    users = list(session.query(Users.id, concat(Users.firstname, ' ', Users.lastname)).all())
 
     object_id_converter = int
     form_excluded_columns = ('id', )
@@ -23,7 +26,7 @@ class StreamModelView(MongoDBModelView):
         user_id=u'Пользователь', object=u'Объект')
 
     form_overrides = dict(
-        user_id=fields.Select2Field,
+        user_id=select_factory(coerce=int, allow_blank=True, blank_text=u'Без пользователя'),
     )
 
     column_choices = dict(
@@ -32,6 +35,7 @@ class StreamModelView(MongoDBModelView):
 
     form_args = dict(
         user_id=dict(
-            choices=users
+            choices=users,
+            validators=[StreamUserTypeValidator('type', message=u'У данного типа событий должен быть пользователь'), ],
         )
     )
