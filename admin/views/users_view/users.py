@@ -3,15 +3,17 @@
 from pytz import common_timezones
 
 from flask.ext.admin.form import fields
+from flask.ext.admin.contrib.sqla import filters
 
 from wtforms.fields import PasswordField, StringField
 from wtforms_html5 import EmailField
 
-from admin.filters import ChoiceEqualFilter
+from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
 
 from models.users import Users
+from models.persons import Persons
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
 
 
@@ -34,10 +36,10 @@ class UsersModelView(SqlAlModelView):
         'time_zone', 'link', 'created', 'last_visit', 'status',
     )
 
-    column_choices = dict(
-        gender=APP_USERS_TYPE_GENDER,
-        status=APP_USER_STATUS_TYPE,
-    )
+    column_choices = {
+        'gender': APP_USERS_TYPE_GENDER,
+        'status': APP_USER_STATUS_TYPE,
+    }
 
     column_formatters = {
         'link': user_link_formatter
@@ -49,7 +51,8 @@ class UsersModelView(SqlAlModelView):
         'id', 'firstname', 'lastname', 'city.id', 'city.name',
         'city.region', 'city.country.name',
         ChoiceEqualFilter(Users.status, u'Статус', APP_USER_STATUS_TYPE),
-        #'phone', 'is_person',
+        IsPersonFilterEqual(Users.filter_users_person, Users.id, u'Персона', (('1', u'Yes'),)),
+        PhoneFilter(Users.phone, u'Телефон'),
     )
 
     form_overrides = dict(

@@ -108,7 +108,7 @@ class Users(Base):
         return query.join(Cities).join(Countries).filter(func.to_tsvector(Countries.name).match(text))
 
     @classmethod
-    def filter_users_person(cls, is_person, session, query=None):
+    def filter_users_person(cls, is_person=True, session=None, query=None):
         if query is None:
             query = cls.tmpl_for_users(session)
         query = query.outerjoin(Persons)
@@ -117,6 +117,7 @@ class Users(Base):
         else:
             query = query.filter(Persons.user_id == None)
         return query
+
 
     @property
     def get_full_name(self):
