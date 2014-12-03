@@ -5,17 +5,31 @@ import subprocess
 from bs4 import BeautifulSoup
 import requests
 from xml.dom.minidom import parse, parseString, Element
+from utils.robots.dom2.loader import remove_frag_files
 from utils.robots.support_functions import save_loaded_data_to_file
 
 __author__ = 'vladimir'
 
 URL_LOAD = 'http://fizruk.tnt-online.ru/video.html'
-
+SEASONS_COUNT = 2
 
 def get_info_pages():
+    i=1
+    all_pages = []
+    while(True):
+        response = requests.get(URL_LOAD+'?season={}'.format(i))
+        if i > SEASONS_COUNT:
+            break
+        print "Processing season {}".format(i)
+        beatiful_soup = BeautifulSoup(response.content)
+        season_pages = get_season_pages(beatiful_soup)
+        all_pages = all_pages + season_pages
+        i += 1
+    return all_pages, len(all_pages)
+
+
+def get_season_pages(beatiful_soup):
     pages = []
-    response = requests.get(URL_LOAD)
-    beatiful_soup = BeautifulSoup(response.content)
     tvbl_s = beatiful_soup.findAll('div', { "class" : "tvbl"})
     for one_tvbl in tvbl_s:
         text = one_tvbl.find('div', { "class" : "text"})
@@ -58,13 +72,19 @@ def download_video_by_id(id, file_name):
     BASE_PATH = os.path.join('static/upload/', 'Fizruk/')
     if not os.path.exists(BASE_PATH):
         os.makedirs(BASE_PATH)
-    manifest_root_link = 'http://rutube.ru/api/play/options/{}/?format=xml'.format(id)
-    manifest_txt = requests.get(manifest_root_link)
-    f4link = get_manifest_f4_link(manifest_txt.content)
-    bashCommand = "php utils/robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
-    process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = process.communicate()
-    print out
+    try:
+        manifest_root_link = 'http://rutube.ru/api/play/options/{}/?format=xml'.format(id)
+        manifest_txt = requests.get(manifest_root_link)
+        f4link = get_manifest_f4_link(manifest_txt.content)
+        bashCommand = "php utils/robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
+        process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = process.communicate()
+        print out
+    except:
+        if os.path.exists(BASE_PATH + file_name + ".flv"):
+            os.remove(BASE_PATH + file_name + ".flv")
+        print "#Downloading not finished! File deleted"
+    remove_frag_files()
 
 
 def get_manifest_f4_link(xml_root_file):
