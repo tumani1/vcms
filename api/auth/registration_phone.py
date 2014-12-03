@@ -16,16 +16,18 @@ MAX_ATTEMPTS = 3
 def post(session, auth_user, **kwargs):
     query = kwargs.get('query_params')
     phone_number = query.get('phone_number', '')
+    phone_number = '+' + phone_number.strip()
 
     try:
-        pn = parse('+'+phone_number)
+        # методом parse отлавливаем некоторые виды исключений, связанных с номерами телефонов
+        pn = parse(phone_number)
         smsc = SMSC(login=LOGIN, password=PASSWORD)
         random_password = ''.join((choice(ascii_letters+digits) for _ in range(8)))
         message = 'Ваш пароль для входа: '+random_password
 
-        filtered = session.query(Users).filter(Users.firstname==phone_number)
+        filtered = session.query(Users).filter(Users.phone == phone_number)
         if not session.query(filtered.exists()).scalar():
-            user = Users(firstname=phone_number, lastname=phone_number, password=random_password, attempts_count=1)
+            user = Users(phone=phone_number, firstname=phone_number, lastname=phone_number, password=random_password, attempts_count=1)
             session.add(user)
             session.commit()
             smsc.send_sms(phone_number, message)
