@@ -49,7 +49,7 @@ def complete_get(auth_user, session,**kwargs):
     url_vk_api = 'https://api.vk.com/method/users.get'
 
     data_user = request(method, url_vk_api, **vk_params).json()['response'][0]
-    user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], email='aassdzxc@mail.ru', city_id=1, password=data['access_token'])
+    user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], email='aasasdsdzxc@mail.ru', city_id=1, password=data['access_token'])
     session.add(user)
     session.commit()
 
