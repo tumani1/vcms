@@ -178,10 +178,7 @@ def download_dom2_videos():
             print "Error appears", e.message
             print "Not successful for", file_name
             continue
-
-    for fl in glob.glob("*Frag*"):
-        os.remove(fl)
-
+            
 
 def save_flv_to_disk(file_link, name):
     uploads_path = 'static/upload/Dom2/'
