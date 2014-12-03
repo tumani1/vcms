@@ -12,7 +12,7 @@ from models.chats import Chats
 from utils.connection import get_session
 
 from flask.ext.admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
-from flask.ext.admin.model.fields import AjaxSelectField
+from flask.ext.admin.model.fields import AjaxSelectField, InlineFieldList
 from flask.ext.admin.contrib.mongoengine.fields import ModelFormField
 
 
@@ -68,10 +68,10 @@ class ChatMessagesModelView(MongoDBModelView):
 
     form_args = dict(
         user_id=dict(
-            choices=users,
+            choices=map(lambda x: [str(x[0]),x[1]], users),
         ),
         chat_id=dict(
-            choices=chats,
+            choices=map(lambda x: [str(x[0]),x[1]], chats),
         ),
     )
 
