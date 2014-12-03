@@ -173,15 +173,12 @@ def download_dom2_videos():
                         video_url = generate_video_url(video_id)
                         file_link = get_video_file_link(video_url)
                         save_flv_to_disk(file_link, trimmed_fname)
+
         except Exception, e:
             print "Error appears", e.message
             print "Not successful for", file_name
             continue
-
-    for fl in glob.glob("*Frag*"):
-        os.remove(fl)
-
-
+            
 
 def save_flv_to_disk(file_link, name):
     uploads_path = 'static/upload/Dom2/'
@@ -229,7 +226,14 @@ def download_video_by_id(id, file_name):
         if os.path.exists(BASE_PATH + file_name + ".flv"):
             os.remove(BASE_PATH + file_name + ".flv")
         print "#Downloading not finished! File deleted"
+    remove_frag_files()
 
+
+def remove_frag_files():
+    bashCommand = "rm *Frag*"
+    process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = process.communicate()
+    print "Deleted Frag files"
 
 def get_manifest_f4_link(xml_root_file):
     dom = parseString(xml_root_file)

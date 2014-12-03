@@ -1,15 +1,28 @@
 # coding: utf-8
 from models.users import Users
 from models.tokens import GlobalToken
-from utils.exceptions import NotAuthorizedException
+from utils.exceptions import NotAuthorizedException, RequestErrorException
+from utils.validation import validate_phone_number
+import re
 
 
 def post(auth_user, session, **kwargs):
-    email = kwargs['query_params']['email']
-    password = kwargs['query_params']['password']
-    user = session.query(Users).filter(Users.email == email).first()
+    qp = kwargs.get('query_params')
+    login = qp.get('login')
+    password = qp.get('password')
 
-    if user.password == str(password):
-        return {'token': GlobalToken.generate_token(user.id, session)}
+    if login and password:
+            if re.search(ur'@', login):
+                user = session.query(Users).filter(Users.email == login).first()
+            else:
+                login = '+' + validate_phone_number(login)
+                user = session.query(Users).filter(Users.phone == login).first()
+
+            if user:
+                if user.password == password:
+                    return {'token': GlobalToken.generate_token(user.id, session)}
+                else:
+                    raise NotAuthorizedException
+            raise NotAuthorizedException
     else:
-        raise NotAuthorizedException
+        raise RequestErrorException
