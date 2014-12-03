@@ -13,10 +13,10 @@ class SessionToken(TokenMixin):
     __tablename__ = "session_tokens"
 
     is_active  = Column(Boolean, default=True)
-    os         = Column(Text)
-    browser    = Column(Text)
-    ip_address = Column(IPAddressType)
-    device     = Column(Text)
+    os         = Column(Text, default=u"")
+    browser    = Column(Text, default=u"")
+    ip_address = Column(IPAddressType, default=u"")
+    device     = Column(Text, default=u"")
 
 
     @classmethod

@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from utils.serializer import DefaultSerializer
 
 __all__ = ['mLocationSerializer']

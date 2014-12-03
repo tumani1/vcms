@@ -1,15 +1,18 @@
 # coding: utf-8
 import unittest
 import zerorpc
+
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker, scoped_session
+
 from tests.constants import ZERORPC_SERVICE_URI
 from models import Base, UsersMedia, SessionToken
-from utils.connection import db_connect, create_session
+from utils.connection import db_connect, create_session, mongo_connect
 from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons
 
 
 def setUpModule():
+    mongo_connect()
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
@@ -92,7 +95,18 @@ class MediaTestCase(unittest.TestCase):
                     'firstname': 'test',
                     'lastname': 'testov',
                     'relation': {},
-                    'user': {'lastvisit': '', 'city': 'Test', 'firstname': 'Test1', 'gender': 'n', 'is_online': True, 'regdate': 1325376000.0, 'lastname': 'Test1', 'country': u'Russian Federation', 'id': 1},
+                    'user': {
+                        'lastvisit': '',
+                        'city': 'Test',
+                        'firstname': 'Test1',
+                        'gender': 'n',
+                        'is_online': True,
+                        'regdate': 1325376000.0,
+                        'lastname': 'Test1',
+                        'country': u'Russian Federation',
+                        'id': 1,
+                        'relation': 'u',
+                        'person_id': 1},
                     'role': 'actor',
                     'type': '',
                     'id': 1

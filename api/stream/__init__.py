@@ -21,6 +21,6 @@ like = {
 
 routing = (
     (r'^list$', list),
-    (r'^info$', info),
-    (r'^like$', like)
+    (r'^(?P<id>\d+)/info$', info),
+    (r'^(?P<id>\d+)/like$', like)
 )

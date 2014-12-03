@@ -2,12 +2,12 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
     and_, SMALLINT, DDL
 from sqlalchemy.event import listen
-from sqlalchemy.orm import relationship, contains_eager
+from sqlalchemy.orm import relationship, contains_eager,backref
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
-from models.media.constants import APP_MEDIA_LIST
 from models.media.users_media_units import UsersMediaUnits
+from models.media.constants import APP_MEDIA_LIST
 from utils.common import user_access_media
 
 
@@ -15,7 +15,7 @@ class MediaUnits(Base):
     __tablename__ = 'media_units'
 
     id            = Column(Integer, primary_key=True)
-    topic_name    = Column(String, ForeignKey('topics.name'), nullable=False)
+    topic_id      = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
     title         = Column(String, nullable=False)
     title_orig    = Column(String, nullable=True)
     description   = Column(Text, nullable=True)
@@ -30,6 +30,7 @@ class MediaUnits(Base):
     countries_list   = relationship('MediaUnitsAccessCountries', backref='media_units', cascade='all, delete')
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
     unit_medias      = relationship('MediaInUnit', backref='media_units', cascade='all, delete')
+    topic_name       = relationship('Topics', backref=backref('media_units', lazy='dynamic'))
 
 
     @classmethod
@@ -57,23 +58,32 @@ class MediaUnits(Base):
             query = query.filter(cls.batch == batch)
 
         if not topic is None:
-            query = query.filter(cls.topic_name == topic)
+            query = query.filter(cls.topic_id == topic)
 
         return query
 
     @classmethod
     def get_media_unit_by_id(cls, user, session, id, **kwargs):
-        query = cls.tmpl_for_media_units(user, session).filter(cls.id == id).first()
+        query = cls.tmpl_for_media_units(user, session).\
+            filter(cls.id == id).\
+            first()
+
         return query
 
     @classmethod
     def get_prev_media_unit(cls, user, session, id, **kwargs):
-        query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.previous_unit).filter(cls.id == id).subquery()).first()
+        query = cls.tmpl_for_media_units(user, session).\
+            filter(cls.id == session.query(cls.previous_unit).filter(cls.id == id).subquery()).\
+            first()
+
         return query
 
     @classmethod
     def get_next_media_unit(cls, user, session, id, **kwargs):
-        query = cls.tmpl_for_media_units(user, session).filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).first()
+        query = cls.tmpl_for_media_units(user, session).\
+            filter(cls.id == session.query(cls.next_unit).filter(cls.id == id).subquery()).\
+            first()
+
         return query
 
     @classmethod
@@ -85,6 +95,14 @@ class MediaUnits(Base):
             if not status_code is None:
                 break
         return status_code
+
+    @classmethod
+    def get_users_media_unit(cls, user, session, media_id):
+        users_media = session.query(UsersMediaUnits).\
+            filter_by(user_id=user.id, media_id=media_id).\
+            first()
+
+        return users_media
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)

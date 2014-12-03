@@ -1,6 +1,8 @@
 # coding: utf-8
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import relationship
+
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, select
+from sqlalchemy.event import listen
+from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
@@ -14,7 +16,7 @@ class Persons(Base):
     __tablename__ = 'persons'
 
     id        = Column(Integer, primary_key=True)
-    user_id   = Column(Integer, ForeignKey('users.id'), unique=True, index=True)
+    user_id   = Column(Integer, ForeignKey('users.id'), nullable=True, index=True)
     firstname = Column(String(128), nullable=False)
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE), default=APP_PERSONS_STATUS_TYPE_ACTIVE)
@@ -96,5 +98,25 @@ class Persons(Base):
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
+    def __str__(self):
+        return u"{0} - {1}')>".format(self.id, self.get_full_name)
+    
     def __repr__(self):
         return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)
+
+
+def validate_values(mapper, connect, target):
+    # либо поле user_id пустое, либо оно не совпадает с уже имеющимися в таблице user_id
+    check = True
+    if target.user_id:
+        query = select([Persons.user_id]).where(Persons.user_id == target.user_id)
+        user_id = connect.execute(query).scalar()
+        if user_id == target.user_id:
+            check = False
+
+    if not check:
+        raise ValueError(u'Необходимо указать уникальный user_id или оставить поле user_id пустым')
+
+
+listen(Persons, 'before_insert', validate_values)
+listen(Persons, 'before_update', validate_values)

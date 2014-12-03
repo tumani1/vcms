@@ -1,4 +1,4 @@
-# coding=utf-8
+# coding: utf-8
 from models.chats import Chats
 from utils.exceptions import RequestErrorException
 

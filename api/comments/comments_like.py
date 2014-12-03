@@ -1,10 +1,12 @@
 # coding: utf-8
 import datetime
-from models.comments.comments import Comments
+
 from models.comments.users_comments import UsersComments
+from utils import need_authorization
 from utils.validation import validate_int
 
 
+@need_authorization
 def put(comment_id, auth_user, session, **kwargs):
     comment_id = validate_int(comment_id)
     u_comment = UsersComments.get_user_comments(auth_user.id, session, comment_id)
@@ -20,6 +22,7 @@ def put(comment_id, auth_user, session, **kwargs):
         session.commit()
 
 
+@need_authorization
 def delete(comment_id, auth_user, session, **kwargs):
     comment_id = validate_int(comment_id)
     u_comment = UsersComments.get_user_comments(auth_user.id, session, comment_id)

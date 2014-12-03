@@ -118,9 +118,7 @@ def validate_string(value, **kwargs):
     try:
          return str(value).strip()
     except Exception, e:
-        pass
-
-    return None
+        return None
 
 
 def validate_int(value, min_value=None, max_value=None, **kwargs):

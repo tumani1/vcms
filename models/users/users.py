@@ -1,11 +1,13 @@
 # coding: utf-8
-import datetime
-from sqlalchemy.sql.expression import func
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType
 
-from constants import APP_USERS_GENDER_UNDEF, APP_USERS_TYPE_GENDER
+import datetime
+
+from sqlalchemy.sql.expression import func
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, and_, event, Boolean, Date
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy_utils import ChoiceType, PhoneNumberType, TimezoneType, PasswordType, EmailType, Choice
+
+from constants import APP_USERS_GENDER_DEFAULT, APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE_DEFAULT, APP_USER_STATUS_TYPE
 
 from models.base import Base
 from models.locations import Cities, Countries
@@ -20,24 +22,25 @@ class Users(Base):
     id            = Column(Integer, primary_key=True)
     firstname     = Column(String(128), nullable=False)
     lastname      = Column(String(128), nullable=False)
-    gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=APP_USERS_GENDER_UNDEF, nullable=False)
+    gender        = Column(ChoiceType(APP_USERS_TYPE_GENDER), default=Choice(*APP_USERS_GENDER_DEFAULT), nullable=False)
+    status        = Column(ChoiceType(APP_USER_STATUS_TYPE), default=Choice(*APP_USER_STATUS_TYPE_DEFAULT), nullable=False)
     password      = Column(PasswordType(schemes=['sha256_crypt', ]), nullable=False)
-    city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'), nullable=False)
+    city_id       = Column(Integer, ForeignKey('cities.id', ondelete='CASCADE'))
     time_zone     = Column(TimezoneType(backend='pytz'), default=u'UTC')
     created       = Column(DateTime, default=datetime.datetime.utcnow)
-    email         = Column(EmailType(), unique=True, nullable=False)
+    email         = Column(EmailType(), unique=True)
     is_manager    = Column(Boolean, default=False)
     phone         = Column(PhoneNumberType())
     address       = Column(Text)
     bio           = Column(Text)
     last_visit    = Column(DateTime)
-    birthdate     = Column(DateTime)
+    birthdate     = Column(Date)
     userpic_type  = Column(String(1))
     userpic_id    = Column(Integer)
-    # status      = Column(ChoiceType(TYPE_STATUS))
     # type        = Column(ChoiceType(TYPE_TYPE))
+    attempts_count = Column(Integer)
+    deny_to        = Column(Date)
 
-    city          = relationship("Cities", backref='users', cascade='all, delete')
     users_chat    = relationship('UsersChat', backref='user', cascade='all, delete')
     social        = relationship('UsersSocial', backref='user', cascade='all, delete')
     users_extras  = relationship('UsersExtras', backref='user', cascade='all, delete')
@@ -49,14 +52,14 @@ class Users(Base):
     person        = relationship('Persons', backref='users', uselist=False, cascade='all, delete')
     user_persons  = relationship('UsersPersons', backref='users', cascade='all, delete')
     user_topics   = relationship('UsersTopics', backref='users', cascade='all, delete')
-    user_items   = relationship('UsersItems', backref='users', cascade='all, delete')
+    user_items    = relationship('UsersItems', backref='users', cascade='all, delete')
     user_comments = relationship('UsersComments', backref='users', cascade='all, delete')
     user_medias   = relationship('UsersMedia', backref='users', cascade='all, delete')
     user_units    = relationship('UsersMediaUnits', backref='users', cascade='all, delete')
-    user_media_owner = relationship('Media', backref='user_owner', cascade='all, delete')
-    user_msgr_thread_= relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
-    user_msgr_logs = relationship('MsgrLog', backref='users', cascade='all, delete')
-    user_carts = relationship('Carts', backref='users', cascade='all, delete')
+    user_media_owner  = relationship('Media', backref='user_owner', cascade='all, delete')
+    user_msgr_thread_ = relationship('UsersMsgrThreads', backref='users', cascade='all, delete')
+    user_msgr_logs    = relationship('MsgrLog', backref='users', cascade='all, delete')
+    user_carts        = relationship('Carts', backref='users', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users(cls, session):
@@ -130,6 +133,9 @@ class Users(Base):
 
     def get_id(self):
         return self.id
+
+    def __str__(self):
+        return u"{} - {}".format(self.id, self.get_full_name)
 
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)

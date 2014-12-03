@@ -1,3 +1,4 @@
+# coding: utf-8
 from comments_list import get as get_list
 from comments_info import get as get_info
 from comments_like import put as put_like, delete as delete_like

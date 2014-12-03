@@ -1,3 +1,4 @@
+# coding: utf-8
 from api.serializers.m_shop_cart_item import mShopCartItem
 from api.serializers.m_shop_cart_log import mShopCartLog
 from utils.serializer import DefaultSerializer

@@ -89,6 +89,24 @@ def create_cdn(session):
     session.commit()
 
 
+def create_one_media(session):
+    user = Users(firstname="Test", lastname="Test", password='Test', email='test@test.ru')
+    session.add(user)
+    session.commit()
+    media = Media(title='Test', type_='v', owner=user.id, title_orig='test_media1', description='test_desc1')
+    session.add(media)
+    session.commit()
+
+
+def create_persons_media(session):
+    user = Users(firstname="User", lastname="User", password='Test', email='user@test.ru')
+    media = Media(title='Test', type_='v', user_owner=user, title_orig='test_media1', description='test_desc1')
+    person = Persons(users=user, firstname='test', lastname='test', bio='test_bio')
+    person_media = PersonsMedia(media=media, persons=person, role='actor')
+    session.add_all([media, user, person, person_media])
+    session.commit()
+
+
 def create_extras(session):
     list_extras = [
         Extras(cdn_name='cdn1', type="v", location="russia", description="test test", title="test", title_orig="test", created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC)),
@@ -133,20 +151,27 @@ def create_person_extras(session):
 def create(session):
     country = session.query(Countries).get('RU')
 
-    city = Cities(country=country, name="Test", name_orig="Test", time_zone='UTC')
+    city = Cities(country=country, region="76", name="Test", name_orig="Test", time_zone='UTC')
     session.add(city)
     session.commit()
 
-    user = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test1@test.ru', created=datetime.datetime(2012,1,1,0,0,0,0, tzinfo=UTC))
+    user = Users(city=city, firstname="Test1", lastname="Test1", password='Test1', email='test1@test.ru', created=datetime.datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=UTC))
     session.add(user)
     session.commit()
 
-    user2 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test2@test.ru', created=datetime.datetime(2012,2,1,0,0,0,0, tzinfo=UTC))
-    user3 = Users(city=city, firstname="Test3", lastname="Test3", password='Test3', email='test3@test.ru', created=datetime.datetime(2012,3,1,0,0,0,0, tzinfo=UTC))
+    user2 = Users(city=city, firstname="Test2", lastname="Test2", password='Test2', email='test2@test.ru', created=datetime.datetime(2012, 2, 1, 0, 0, 0, 0, tzinfo=UTC))
+    user3 = Users(city=city, firstname="Test3", lastname="Test3", password='Test3', email='test3@test.ru', created=datetime.datetime(2012, 3, 1, 0, 0, 0, 0, tzinfo=UTC))
     session.add_all([user2, user3])
     session.commit()
 
     return user.id
+
+
+def create_person(session):
+    person = Persons(user_id=1, firstname='test', lastname='testov', bio='test_bio')
+    session.add(person)
+    session.commit()
+    return person
 
 
 def create_scheme(session):
@@ -331,6 +356,3 @@ def create_payments(session):
     payments = Payments(cart_id=1, status='active', cost=10, created='2014.02.02')
     session.add(payments)
     session.commit()
-
-
-

@@ -1,11 +1,15 @@
 # coding: utf-8
-from models.comments.comments import Comments
-from utils.validation import validate_int, validate_string, validate_obj_type
-from utils.exceptions import RequestErrorException
 import datetime
 
+from api.serializers import mCommentSerializer
+from models.mongo import Stream, constant
+from models.comments.comments import Comments
+from utils import need_authorization
+from utils.validation import validate_int, validate_string, validate_obj_type
+from utils.exceptions import RequestErrorException
 
 
+@need_authorization
 def post(auth_user, session, **kwargs):
     if 'text' in kwargs['query_params']:
         text = validate_string(kwargs['query_params']['text'])
@@ -42,6 +46,9 @@ def post(auth_user, session, **kwargs):
     session.add(new_comment)
     if session.new:
         session.commit()
+
+    Stream.signal(type_=constant.APP_STREAM_TYPE_MEDIA_C, object={'comment_id': new_comment.id}, user_id=auth_user.id)
+    return mCommentSerializer(instance=new_comment, user=auth_user, session=session).data
 
 
 def delete(auth_user, session, id, **kwargs):

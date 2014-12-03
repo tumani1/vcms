@@ -1,3 +1,4 @@
+# coding: utf-8
 from media import Media
 from persons_media import PersonsMedia
 from users_media import UsersMedia

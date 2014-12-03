@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from utils.common import datetime_to_unixtime
 from api.serializers.m_users_short import mUserShort
 
@@ -27,10 +26,10 @@ class mUser(mUserShort):
         return datetime_to_unixtime(obj.created)
 
     def transform_city(self, obj):
-        return obj.city.name
+        return None if obj.city is None else obj.city.name
 
     def transform_country(self, obj):
-        return obj.city.country.name
+        return None if obj.city is None else obj.city.country.name
 
     def transform_gender(self, obj):
         return obj.gender.code

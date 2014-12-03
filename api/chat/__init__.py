@@ -1,3 +1,4 @@
+# coding: utf-8
 from chat_info import get_chat_info
 from chat_stat import get_chat_stat
 from chat_stream import get_chat_stream

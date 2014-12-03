@@ -37,17 +37,6 @@ data['password'] = getpass.getpass()
 password2 = getpass.getpass(u"Password2: ")
 if data['password'] != password2:
     raise ValueError(u"Password doesn't equal!")
-# Select a city
-print u"Cities: "
-cities = session.query(Cities.id, Cities.name)
-for city in cities.all():
-    print u"{0}. {1}".format(city.id, city.name)
-city_id = int(raw_input(u"Pleas, enter numer of citie: "))
-if city_id in [city.id for city in cities]:
-    data['city_id'] = city_id
-else:
-    print "Not valid city ID"
-    sys.exit(1)
 # Create User object
 try:
     user = Users(**data)

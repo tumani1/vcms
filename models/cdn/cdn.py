@@ -8,7 +8,6 @@ from models import Base
 class CDN(Base):
     __tablename__ = 'cdn'
 
-
     name           = Column(String, primary_key=True)
     description    = Column(String)
     has_mobile     = Column(Boolean)
@@ -19,5 +18,8 @@ class CDN(Base):
 
     cdn_medias = relationship('MediaLocations', backref='cdn', cascade='all, delete')
 
+    def __str__(self):
+        return u'{}'.format(self.name)
+
     def __repr__(self):
-        return u'<CDN(name={0})>'.format(self.name)
+        return u'<CDN(name={})>'.format(self.name)

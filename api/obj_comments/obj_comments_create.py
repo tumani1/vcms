@@ -1,10 +1,11 @@
 # coding: utf-8
 from api.comments.comments_create import post as create_comments
+from utils import need_authorization
 from utils.exceptions import RequestErrorException
 
 
-def post(type, comment, auth_user, session, **kwargs):
-    query = kwargs['query_params']
+@need_authorization
+def post(type, comment, auth_user, session, query_params, **kwargs):
     id, name = None, None
 
     try:
@@ -12,8 +13,8 @@ def post(type, comment, auth_user, session, **kwargs):
     except ValueError:
         name = comment
 
-    if 'text' in query:
-        text = query['text']
+    if 'text' in query_params:
+        text = query_params['text']
     else:
         raise RequestErrorException
 
@@ -25,8 +26,7 @@ def post(type, comment, auth_user, session, **kwargs):
 
     if id:
         params['query_params'].update(obj_id=id)
-        return create_comments(**params)
-
     elif name:
         params['query_params'].update(obj_name=name)
-        return create_comments(**params)
+
+    return create_comments(**params)

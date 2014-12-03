@@ -1,0 +1,89 @@
+# coding: utf-8
+
+from pytz import common_timezones
+
+from flask.ext.admin.form import fields
+
+from wtforms.fields import PasswordField, StringField
+from wtforms_html5 import EmailField
+
+from admin.filters import ChoiceEqualFilter
+from admin.views.base import SqlAlModelView
+from admin.templates import user_link_formatter
+
+from models.users import Users
+from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
+
+
+class UsersModelView(SqlAlModelView):
+    model = Users
+    category = u'Пользователи'
+    name = u'Пользователи'
+
+    column_labels = dict(
+        city=u'Родной город', firstname=u'Имя', gender=u'Пол',
+        lastname=u'Фамилия', address=u'Адресс', birthdate=u'Дата рождения',
+        time_zone=u'Временная зона', created=u'Дата создания',
+        phone=u'Телефон', last_visit=u'Последний визит', link=u'',
+        status=u'Статус',
+    )
+
+    column_list = (
+        'id', 'firstname', 'lastname', 'gender', 'email',
+        'city', 'is_manager', 'address', 'phone', 'birthdate',
+        'time_zone', 'link', 'created', 'last_visit', 'status',
+    )
+
+    column_choices = dict(
+        gender=APP_USERS_TYPE_GENDER,
+        status=APP_USER_STATUS_TYPE,
+    )
+
+    column_formatters = {
+        'link': user_link_formatter
+    }
+
+    named_filter_urls = True
+
+    column_filters = (
+        'id', 'firstname', 'lastname', 'city.id', 'city.name',
+        'city.region', 'city.country.name',
+        ChoiceEqualFilter(Users.status, u'Статус', APP_USER_STATUS_TYPE),
+        #'phone', 'is_person',
+    )
+
+    form_overrides = dict(
+        time_zone=fields.Select2Field,
+        gender=fields.Select2Field,
+        status=fields.Select2Field,
+        password=PasswordField,
+        phone=StringField,
+        email=EmailField,
+    )
+
+    form_columns = (
+        'firstname', 'lastname', 'gender', 'status', 'password',
+        'email', 'city', 'is_manager', 'address', 'bio', 'phone',
+        'birthdate', 'time_zone', 'created', 'last_visit',
+    )
+
+    form_args = dict(
+        time_zone=dict(
+            label=u'Временная зона',
+            choices=[(i, i) for i in common_timezones]
+        ),
+        gender=dict(
+            label=u'Пол',
+            choices=APP_USERS_TYPE_GENDER,
+        ),
+        status=dict(
+            label=u'Статус',
+            choices=APP_USER_STATUS_TYPE,
+        ),
+    )
+
+    form_ajax_refs = dict(
+        city={
+            'fields': ('name',),
+        },
+    )

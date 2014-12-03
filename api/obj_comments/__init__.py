@@ -1,3 +1,4 @@
+# coding: utf-8
 from obj_comments_create import post as create_obj_comment
 from obj_comments_list import get as get_obj_comments_list
 
