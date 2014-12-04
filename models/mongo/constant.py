@@ -16,8 +16,10 @@ APP_STREAM_TYPE = (
     (APP_STREAM_TYPE_FILM_NW, u'Установлен признак “не смотреть”'),
     (APP_STREAM_TYPE_MEDIA_C, u'Комментарий к медиа'),
     (APP_STREAM_TYPE_PERS_S, u'Подписка на персону'),
-    (APP_STREAM_TYPE_PERS_O, u'появление медиа-материала с участием персоны обезличенное (юзер пустой)'),
+    (APP_STREAM_TYPE_PERS_O, u'Появление медиа-материала с участием персоны'),
     (APP_STREAM_TYPE_USER_A, u'Предложение дружить'),
     (APP_STREAM_TYPE_USER_F, u'Юзеры друзья'),
     (APP_STREAM_TYPE_SYS_A, u'Системное сообщение'),
 )
+
+APP_STREAM_TYPE_WITHOUT_USER = (APP_STREAM_TYPE_PERS_S, APP_STREAM_TYPE_SYS_A, )

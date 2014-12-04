@@ -156,7 +156,7 @@ def validate_email(value, **kwargs):
         if email_reg.match(email):
             return email
         else:
-            raise Invalid  # Некорректный e-mail
+            raise Invalid(u'Некорректный e-mail!')  # Некорректный e-mail
 
 
 def validate_eshop_price(value, **kwargs):
@@ -189,4 +189,4 @@ def validate_phone_number(value, **kwargs):
     if value.isdigit():
         return value
     else:
-        raise Invalid
+        raise Invalid(u'Неверный формат номера!')

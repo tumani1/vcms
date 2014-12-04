@@ -11,7 +11,7 @@ class Stream(Document):
     type        = StringField(verbose_name=u'Тип', max_length=10, choices=APP_STREAM_TYPE, )
     object      = DictField(verbose_name=u'Объект')
     text        = StringField(verbose_name=u'Текст')
-    user_id     = IntField(verbose_name=u'Пользователь')
+    user_id     = IntField(verbose_name=u'Пользователь', default=None)
     attachments = DictField(verbose_name=u'Приложение объекта')
 
     @classmethod
@@ -33,7 +33,6 @@ class Stream(Document):
                     query = query[:down]
         return query
 
-    # Юзеры друзья
     @classmethod
     def signal(cls, type_, user_id=None, **kwargs):
         stream_el = cls(type=type_, object=kwargs.get('object', {}), user_id=user_id, attachments=kwargs.get('attachments', {}))
