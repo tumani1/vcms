@@ -1,24 +1,21 @@
 import os
-import urllib2
+import urllib
 
 
-def save_avatar_to_file(link, name, token):
-    file_name = None
+def save_avatar_to_file(link, name, subdirectory):
     directory = 'upload'
 
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    directory = directory + '/' + token
+    directory = directory + '/' + subdirectory
     if not os.path.exists(directory):
         os.makedirs(directory)
-
+    exp = name.split('.')[1]
     try:
-        img = urllib2.urlopen(link)
-        with open(directory + '/' + name + '.jpg', 'wb') as localFile:
-            localFile.write(img.read())
-        file_name = name + '.jpg'
+        urllib.urlretrieve(link, directory + '/' + name + '.' + exp)
+
     except Exception, e:
         print e.message
         print "Avatar saving failed"
-    return file_name
+    return name
