@@ -17,6 +17,7 @@ class UsersSocial(Base):
     sToken  = Column(String(40), nullable=False)
     created = Column(DateTime, default=datetime.datetime.utcnow)
     updated = Column(DateTime, onupdate=datetime.datetime.utcnow, default=datetime.datetime.now)
+    social_user_id = Column(Integer, nullable=False)
 
     def __repr__(self):
         return u'<UsersSocial([{}] {} {})>'.format(self.id, self.user_id, self.sType.code)

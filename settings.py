@@ -5,6 +5,13 @@ import yaml
 DEBUG = False
 TEST = True
 
+###########################################################
+# Ключи для OAuth2 авторизации
+# Vkontakte
+SOCIAL_AUTH_VK_OAUTH2_KEY = '4643948'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'qa9kXSjeRTMybQCh6J2I'
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', ]
+
 BASE_PATH = os.path.dirname(__file__)
 
 # Base path for configs folder
