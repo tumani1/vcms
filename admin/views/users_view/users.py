@@ -10,7 +10,7 @@ from wtforms_html5 import EmailField, TelField, _Input
 from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
-from admin.admin_validators import custom_phone_validator, custom_email_validator
+from admin.validators import custom_phone_validator, custom_email_validator
 
 from models.users import Users
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
