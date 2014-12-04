@@ -5,7 +5,7 @@ from pytz import common_timezones
 from flask.ext.admin.form import fields
 
 from wtforms.fields import PasswordField
-from wtforms_html5 import EmailField, TelField, TelInput, TextField, _Input
+from wtforms_html5 import EmailField, TelField, _Input
 
 from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
@@ -16,7 +16,7 @@ from models.users import Users
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
 
 
-class MyTelInput(_Input):
+class PhoneInput(_Input):
     input_type = "tel"
 
     def __call__(self, field, **kwargs):
@@ -93,7 +93,7 @@ class UsersModelView(SqlAlModelView):
             choices=APP_USER_STATUS_TYPE,
         ),
         phone=dict(
-            widget=MyTelInput(),
+            widget=PhoneInput(),
             validators=[custom_phone_validator],
         ),
     )
