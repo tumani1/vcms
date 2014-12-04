@@ -6,7 +6,8 @@ from wtforms.validators import ValidationError
 
 
 def custom_phone_validator(form, field):
-    if re.compile(r'^\+?1?\d{9,15}$').match(field.data) is None:
+    template = r"^\+?1?\d{9,15}$"
+    if re.compile(template).match(field.data) is None:
         raise ValidationError(u"Формат ввода: '+999999999'")
 
 
