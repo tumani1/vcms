@@ -18,8 +18,13 @@ class Invalid(APIException):
     """
     400
     """
+    def __init__(self, message=None):
+        if message:
+            self.message = message
+        else:
+            self.message = 'Bad Request'
+
     code = 400
-    message = 'Bad Request'
 
 
 class SessionExpiredException(APIException):

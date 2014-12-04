@@ -44,4 +44,4 @@ class BaseService(object):
         finally:
             session.close()
 
-        return response
+        return response or {}

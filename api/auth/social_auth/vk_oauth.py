@@ -1,9 +1,11 @@
 # coding: utf-8
 from requests import request
 import requests
-from models import Users, UsersSocial, GlobalToken
+from models import Users, UsersSocial, GlobalToken, Extras, CDN
+from models.extras.constants import APP_EXTRA_TYPE_IMAGE
 from models.users.constants import APP_USERSOCIAL_TYPE_VK, APP_USERS_GENDER_UNDEF, APP_USER_STATUS_ACTIVE
 from utils import NotAuthorizedException
+from utils.avatar_save import save_avatar_to_file
 from utils.constants import VK_SECRET_KEY, VK_CLIENT_ID, VK_REDIRECT_URI
 
 
@@ -22,7 +24,7 @@ def get(auth_user, session, **kwargs):
     return {'redirect_url': url_auth, 'social': True}
 
 
-def complete_get(auth_user, session,**kwargs):
+def complete_get(auth_user, session, **kwargs):
     params = kwargs['query_params']
 
     if 'code' in params:
@@ -73,6 +75,14 @@ def complete_get(auth_user, session,**kwargs):
 
         session.add(user)
         session.commit()
+
+        avatar_path1 = save_avatar_to_file(data_user['photo'], 'photo', str(user.id))
+        avatar_path2 = save_avatar_to_file(data_user['photo_max_orig'], 'photo_max_orig', str(user.id))
+
+        cdn = session.query(CDN).filter().first()
+        extras1 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path1, description='', title='', title_orig='')
+        extras2 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path2, description='', title='', title_orig='')
+        session.add(extras1, extras2)
 
         users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_VK, sToken=' ', social_user_id=data['user_id'])
         session.add(users_social)
