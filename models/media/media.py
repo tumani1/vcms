@@ -13,7 +13,7 @@ from models.media.persons_media import PersonsMedia
 from models.persons.persons import Persons
 from models.media.media_units import MediaUnits
 from models.media.media_locations import MediaLocations
-from constants import APP_MEDIA_TYPE, APP_MEDIA_LIST
+from constants import APP_MEDIA_TYPE, APP_MEDIA_LIST, APP_MEDIA_LIST_ORDER_BY_VIEWS, APP_MEDIA_LIST_ORDER_TYPE_ASC
 from utils.common import user_access_media
 
 
@@ -61,7 +61,7 @@ class Media(Base):
         return query
 
     @classmethod
-    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None):
+    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None, morder=None, order=None):
         query = cls.tmpl_for_media(user, session)
 
         if not id is None:
@@ -95,6 +95,15 @@ class Media(Base):
 
         if not topic is None:
             query = query.join(MediaInUnit).join(MediaUnits).filter(MediaUnits.topic_name == topic)
+
+        if not morder is None:
+            query = query.join(MediaUnits).filter(MediaInUnit.m_order == morder)
+
+        if not order is None:
+            order_column = Media.views_cnt if order['order'] == APP_MEDIA_LIST_ORDER_BY_VIEWS else Media.created
+            order_func = order_column.asc if order['order_dir'] == APP_MEDIA_LIST_ORDER_TYPE_ASC else order_column.desc
+            query = query.order_by(order_func())
+
         return query
 
     @classmethod

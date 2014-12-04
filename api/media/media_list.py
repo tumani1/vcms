@@ -35,6 +35,15 @@ def get(auth_user=None, session=None, **kwargs):
     if 'persons' in query:
         params['persons'] = validate_list_int(query['persons'])
 
+    if 'morder' in query:
+        params['morder'] = validate_list_int(query['morder'])
+
+    if 'order' in query:
+        params['order'] = {
+            'order': query['order'],
+            'order_dir': query.get('order_dir', 'asc'),
+        }
+
     instance = Media.get_media_list(**params).all()
     if not instance is None:
         serializer_params = {
