@@ -151,12 +151,12 @@ def validate_obj_type(value, **kwargs):
 
 
 def validate_email(value, **kwargs):
-        email = value.strip()
-        email_reg = re.compile(r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$")
-        if email_reg.match(email):
-            return email
-        else:
-            raise Invalid  # Некорректный e-mail
+    email = value.strip()
+    email_reg = re.compile(r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$")
+    if email_reg.match(email):
+        return email
+    else:
+        raise Invalid  # Некорректный e-mail
 
 
 def validate_eshop_price(value, **kwargs):

@@ -5,14 +5,25 @@ from pytz import common_timezones
 from flask.ext.admin.form import fields
 
 from wtforms.fields import PasswordField
-from wtforms_html5 import EmailField, TelField
+from wtforms_html5 import EmailField, TelField, TelInput, TextField, _Input
 
 from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
+from admin.admin_validators import custom_phone_validator
 
 from models.users import Users
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USER_STATUS_TYPE
+
+
+class MyTelInput(_Input):
+    input_type = "tel"
+
+    def __call__(self, field, **kwargs):
+        if hasattr(field.data, 'e164'):
+            kwargs['value'] = field.data.e164
+
+        return _Input.__call__(self, field, **kwargs)
 
 
 class UsersModelView(SqlAlModelView):
@@ -40,7 +51,7 @@ class UsersModelView(SqlAlModelView):
     }
 
     column_formatters = {
-        'link': user_link_formatter
+        'link': user_link_formatter,
     }
 
     named_filter_urls = True
@@ -80,6 +91,10 @@ class UsersModelView(SqlAlModelView):
         status=dict(
             label=u'Статус',
             choices=APP_USER_STATUS_TYPE,
+        ),
+        phone=dict(
+            widget=MyTelInput(),
+            validators=[custom_phone_validator],
         ),
     )
 
