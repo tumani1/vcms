@@ -16,5 +16,7 @@ class StreamUserTypeValidator(object):
             other = form[self.fieldname]
         except KeyError:
             raise ValidationError(field.gettext("Invalid field name '%s'.") % self.fieldname)
-        if not (field.data is None and other.data in APP_STREAM_TYPE_WITHOUT_USER):
+        if field.data is None and other.data not in APP_STREAM_TYPE_WITHOUT_USER:
+            raise ValidationError(self.message)
+        elif field.data is not None and other.data in APP_STREAM_TYPE_WITHOUT_USER:
             raise ValidationError(self.message)
