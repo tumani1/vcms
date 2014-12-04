@@ -32,8 +32,7 @@ class BaseService(object):
             api_params = self.default_params.copy()
             api_params.update(params)
             response = api_method(**api_params)
-            if not response:
-                response = {}
+
         except APIException as e:
             session.rollback()
             response = {'exception': {'code': e.code,
@@ -45,4 +44,4 @@ class BaseService(object):
         finally:
             session.close()
 
-        return response
+        return response or {}
