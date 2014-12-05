@@ -1,20 +1,25 @@
+import hashlib
+import requests
 from utils.constants import VK_CLIENT_ID, VK_REDIRECT_URI
 
 
 def get(auth_user, session, **kwargs):
     url_auth = 'https://api.twitter.com/oauth/request_token'
+
+    md5_first_sig = hashlib.md5()
+    first_sig = 'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx'
+    md5_first_sig.update(first_sig)
+    md5_first_param = md5_first_sig.hexdigest()
+
     headers = {
         'realm': 'http%3A%2F%2Fapi.twitter.com%2F',
         'oauth_consumer_key': 'u7Vdu6ScezMQlpcCog3t7g7xx',
+        'oauth_signature ': md5_first_param,
         'oauth_signature_method': 'HMAC-SHA1',
-        'oauth_timestamp': '137131200',
-        'oauth_nonce' : '4572616e48616d6d65724c61686176',
         'oauth_version': '1.0',
-        'oauth_signature': 'wOJIO9A2W5mFwDgiDvZbTSMK%2FPY%3D'
-
     }
 
-    url_auth = url_auth.format(client_id=VK_CLIENT_ID, scope='email', redirect=VK_REDIRECT_URI)
+    requests.get(url_auth, headers)
     return {'redirect_url': url_auth, 'social': True}
 
 
