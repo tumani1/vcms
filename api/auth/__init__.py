@@ -13,9 +13,4 @@ routing = (
     (r'^revoke$', {'get': revoke}),
     (r'^register$', {'post': registration_email.post}),
     (r'^register_phone$', {'post': registration_phone.post}),
-    (r'^login/vk-oauth2$', {'get': vk_oauth.get}),
-    (r'^complete/vk-oauth2$', {'get': vk_oauth.complete_get}),
-    (r'^login/fb-oauth2$', {'get': fb_oauth.get}),
-    (r'^complete/fb-oauth2$', {'get': fb_oauth.complete_get}),
-
 )

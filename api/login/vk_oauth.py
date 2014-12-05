@@ -54,6 +54,8 @@ def complete_get(auth_user, session, **kwargs):
     method = 'GET'
     url_vk_api = 'https://api.vk.com/method/users.get'
 
+    user = ''
+
     if 'email' in data:
         email = data['email']
         user = session.query(Users).filter(Users.email == email).first()
