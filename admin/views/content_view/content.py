@@ -3,7 +3,7 @@
 from flask.ext.admin.form import fields
 
 from admin.views.base import SqlAlModelView
-from models.comments.constants import OBJECT_TYPES
+from models.comments.constants import CONTENT_OBJECT_TYPES
 from models.content.content import Content
 
 
@@ -31,7 +31,7 @@ class ContentModelView(SqlAlModelView):
     )
 
     column_choices = dict(
-        obj_type=OBJECT_TYPES,
+        obj_type=CONTENT_OBJECT_TYPES,
     )
 
     form_columns = (
@@ -44,7 +44,7 @@ class ContentModelView(SqlAlModelView):
 
     form_args = dict(
         obj_type=dict(
-            choices=OBJECT_TYPES,
+            choices=CONTENT_OBJECT_TYPES,
         ),
     )
 
