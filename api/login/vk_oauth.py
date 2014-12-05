@@ -85,14 +85,14 @@ def complete_get(auth_user, session, **kwargs):
             cdn = session.query(CDN).filter().first()
             extras1 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path1, description='', title='', title_orig='')
             extras2 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path2, description='', title='', title_orig='')
-            session.add(extras1, extras2)
+            session.add_all([extras1, extras2])
 
             session.commit()
 
             user_extras1 = UsersExtras(user_id=user.id, extra_id=extras1.id)
             user_extras2 = UsersExtras(user_id=user.id, extra_id=extras2.id)
 
-            session.add(user_extras1, user_extras2)
+            session.add_all([user_extras1, user_extras2])
 
             users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_VK, sToken=' ', social_user_id=data['user_id'])
             session.add(users_social)

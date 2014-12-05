@@ -10,7 +10,7 @@ class UsersExtras(Base):
     __table_args__ = (PrimaryKeyConstraint('user_id', 'extra_id', name='user_extra_id'), )
 
 
-    user_id    = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    user_id    = Column(Integer, ForeignKey('users.id'), nullable=False)
     extra_id   = Column(Integer, ForeignKey('extras.id'), nullable=False, unique=True)
 
     def __repr__(self):
