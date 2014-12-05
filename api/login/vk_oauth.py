@@ -1,7 +1,7 @@
 # coding: utf-8
 from requests import request
 import requests
-from models import Users, UsersSocial, GlobalToken, Extras, CDN
+from models import Users, UsersSocial, GlobalToken, Extras, CDN, UsersExtras
 from models.extras.constants import APP_EXTRA_TYPE_IMAGE
 from models.users.constants import APP_USERSOCIAL_TYPE_VK, APP_USERS_GENDER_UNDEF, APP_USER_STATUS_ACTIVE
 from utils import NotAuthorizedException
@@ -53,7 +53,7 @@ def complete_get(auth_user, session, **kwargs):
 
     method = 'GET'
     url_vk_api = 'https://api.vk.com/method/users.get'
-
+    user = None
     if 'email' in data:
         email = data['email']
         user = session.query(Users).filter(Users.email == email).first()
@@ -69,28 +69,39 @@ def complete_get(auth_user, session, **kwargs):
         return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
 
     else:
-        if user is None:
-            user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], password=data['access_token'], gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
+        try:
+            if user is None:
+                user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], password=data['access_token'], gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
 
-            if email != '':
-                user.email = email
+                if email != '':
+                    user.email = email
 
-            session.add(user)
+                session.add(user)
+                session.commit()
+
+            avatar_path1 = save_avatar_to_file(data_user['photo'], 'photo', str(user.id))
+            avatar_path2 = save_avatar_to_file(data_user['photo_max_orig'], 'photo_max_orig', str(user.id))
+
+            cdn = session.query(CDN).filter().first()
+            extras1 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path1, description='', title='', title_orig='')
+            extras2 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path2, description='', title='', title_orig='')
+            session.add_all([extras1, extras2])
+
             session.commit()
 
-        avatar_path1 = save_avatar_to_file(data_user['photo'], 'photo', str(user.id))
-        avatar_path2 = save_avatar_to_file(data_user['photo_max_orig'], 'photo_max_orig', str(user.id))
+            user_extras1 = UsersExtras(user_id=user.id, extra_id=extras1.id)
+            user_extras2 = UsersExtras(user_id=user.id, extra_id=extras2.id)
 
-        cdn = session.query(CDN).filter().first()
-        extras1 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path1, description='', title='', title_orig='')
-        extras2 = Extras(cdn_name=cdn.name, type=APP_EXTRA_TYPE_IMAGE, location=avatar_path2, description='', title='', title_orig='')
-        session.add(extras1, extras2)
+            session.add_all([user_extras1, user_extras2])
 
-        users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_VK, sToken=' ', social_user_id=data['user_id'])
-        session.add(users_social)
-        session.commit()
+            users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_VK, sToken=' ', social_user_id=data['user_id'])
+            session.add(users_social)
+            session.commit()
 
-        return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
+            return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
+        except Exception as e:
+            print(e)
+            raise NotAuthorizedException
 
 
 
