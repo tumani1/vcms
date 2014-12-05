@@ -145,7 +145,22 @@ class Media(Base):
 
     @classmethod
     def get_search_by_text(cls, session, text, limit=None, **kwargs):
-        pass
+        query = cls.tmpl_for_media(None, session)
+
+        # Full text search by text
+        query = query.filter(cls.search_name == text)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if limit[1]:
+                query = query.offset(limit[1])
+
+        return query
 
     def __str__(self):
         return u"{0} - {1}".format(self.id, self.title)
