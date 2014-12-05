@@ -1,9 +1,10 @@
 # coding: utf-8
+
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
     and_, SMALLINT, DDL
 from sqlalchemy.event import listen
-from sqlalchemy.orm import relationship, contains_eager,backref
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy.orm import relationship, contains_eager, backref
+from sqlalchemy_utils import ChoiceType, TSVectorType
 
 from models.base import Base
 from models.media.users_media_units import UsersMediaUnits
@@ -26,6 +27,8 @@ class MediaUnits(Base):
     batch         = Column(String, nullable=True)
     access        = Column(SMALLINT, default=None, nullable=True)
     access_type   = Column(ChoiceType(APP_MEDIA_LIST), default=None, nullable=True)
+
+    search_name   = Column(TSVectorType('title', 'title_orig', 'description'))
 
     countries_list   = relationship('MediaUnitsAccessCountries', backref='media_units', cascade='all, delete')
     user_media_units = relationship('UsersMediaUnits', backref='media_units', cascade='all, delete')
@@ -104,6 +107,10 @@ class MediaUnits(Base):
 
         return users_media
 
+    @classmethod
+    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+        pass
+
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)
 
@@ -119,6 +126,25 @@ END
 $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER media_units_update BEFORE UPDATE ON media_units
 FOR EACH ROW EXECUTE PROCEDURE media_units_update();
+
+CREATE FUNCTION mediaunits_name_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
+            new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE INDEX mediaunits_search_description_gin_idx ON media_units USING gin(search_name);
+
+CREATE TRIGGER mediaunits_search_name_update BEFORE INSERT OR UPDATE ON media_units
+FOR EACH ROW EXECUTE PROCEDURE mediaunits_name_update();
 """)
 
 listen(MediaUnits.__table__, 'after_create', update_media_units)

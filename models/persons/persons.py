@@ -1,9 +1,9 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, select
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, select, DDL
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, column_property
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy_utils import ChoiceType, TSVectorType
 
 from models.base import Base
 from models.topics import PersonsTopics
@@ -21,6 +21,9 @@ class Persons(Base):
     lastname  = Column(String(128), nullable=False)
     status    = Column(ChoiceType(APP_PERSONS_STATUS_TYPE), default=APP_PERSONS_STATUS_TYPE_ACTIVE)
     bio       = Column(Text)
+    full_name = column_property(firstname + " " + lastname)
+
+    search_name = Column(TSVectorType('firstname', 'lastname', 'bio'))
 
     person_values = relationship('PersonsValues', backref='persons', cascade='all, delete')
     person_topics = relationship('PersonsTopics', backref='persons', cascade='all, delete')
@@ -32,7 +35,6 @@ class Persons(Base):
     def tmpl_for_persons(cls, auth_user, session):
         return session.query(cls)
 
-
     @classmethod
     def get_persons_by_id(cls, auth_user, person, session, **kwargs):
         if not isinstance(person, list):
@@ -41,7 +43,6 @@ class Persons(Base):
         query = cls.tmpl_for_persons(auth_user, session).filter(cls.id.in_(person))
 
         return query
-
 
     @classmethod
     def get_persons_list(cls, session, id=None, text=None, is_online=None,
@@ -93,6 +94,9 @@ class Persons(Base):
 
         return query
 
+    @classmethod
+    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+        pass
 
     @property
     def get_full_name(self):
@@ -120,3 +124,27 @@ def validate_values(mapper, connect, target):
 
 listen(Persons, 'before_insert', validate_values)
 listen(Persons, 'before_update', validate_values)
+
+update_ts_vector = DDL('''
+CREATE FUNCTION person_name_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.firstname, '') || ' ' || COALESCE(NEW.lastname, '') || ' ' || COALESCE(NEW.bio, ''));
+    END IF;
+
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.bio <> OLD.bio OR NEW.firstname <> OLD.firstname OR NEW.lastname <> OLD.lastname THEN
+            new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.firstname, '') || ' ' || COALESCE(NEW.lastname, '') || ' ' || COALESCE(NEW.bio, ''));
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE INDEX persons_search_name_gin_idx ON persons USING gin(search_name);
+
+CREATE TRIGGER persons_search_name_update BEFORE INSERT OR UPDATE ON persons
+FOR EACH ROW EXECUTE PROCEDURE person_name_update();
+''')
+
+listen(Persons.__table__, 'after_create', update_ts_vector.execute_if(dialect='postgresql'))

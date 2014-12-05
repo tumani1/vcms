@@ -22,7 +22,10 @@ class LoginForm(form.Form):
     def validate_password(self, field):
         user = self.get_user()
 
-        if user.password != self.password.data:
+        if user is None:
+            raise validators.ValidationError("Invalid user")
+
+        if user.password != field.data:
             raise validators.ValidationError("Invalid password")
 
     def get_user(self):

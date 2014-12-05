@@ -10,11 +10,11 @@ from models.comments.constants import CONTENT_OBJECT_TYPES
 class Content(Base):
     __tablename__ = 'content'
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=True)
-    text = Column(Text, nullable=True)
+    id       = Column(Integer, primary_key=True)
+    title    = Column(String, nullable=True)
+    text     = Column(Text, nullable=True)
     obj_type = Column(ChoiceType(CONTENT_OBJECT_TYPES), nullable=False)
-    obj_id = Column(Integer, nullable=True)
+    obj_id   = Column(Integer, nullable=True)
     obj_name = Column(String, nullable=True)
 
     @classmethod
