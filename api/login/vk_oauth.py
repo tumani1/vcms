@@ -54,8 +54,11 @@ def complete_get(auth_user, session, **kwargs):
     method = 'GET'
     url_vk_api = 'https://api.vk.com/method/users.get'
 
+    user = ''
+
     if 'email' in data:
         email = data['email']
+        user = session.query(Users).filter(Users.email == email).first()
     else:
         email = ''
 
@@ -68,13 +71,14 @@ def complete_get(auth_user, session, **kwargs):
         return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
 
     else:
-        user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], password=data['access_token'], gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
+        if user is None:
+            user = Users(firstname=data_user['first_name'], lastname=data_user['last_name'], password=data['access_token'], gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
 
-        if email != '':
-            user.email = email
+            if email != '':
+                user.email = email
 
-        session.add(user)
-        session.commit()
+            session.add(user)
+            session.commit()
 
         avatar_path1 = save_avatar_to_file(data_user['photo'], 'photo', str(user.id))
         avatar_path2 = save_avatar_to_file(data_user['photo_max_orig'], 'photo_max_orig', str(user.id))
