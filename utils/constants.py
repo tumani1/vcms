@@ -12,5 +12,5 @@ HTTP_INTERNAL_SERVER_ERROR = 500
 #VK SOCIAL AUTH
 VK_CLIENT_ID = 4643948
 VK_SECRET_KEY = 'qa9kXSjeRTMybQCh6J2I'
-VK_REDIRECT_URI = 'http://serialov.tv/auth/complete/vk-oauth2'
+VK_REDIRECT_URI = 'http://serialov.tv/login/complete/vk-oauth2'
 
