@@ -87,7 +87,22 @@ class Topics(Base):
 
     @classmethod
     def get_search_by_text(cls, session, text, limit=None, **kwargs):
-        pass
+        query = cls.tmpl_for_persons(None, session)
+
+        # Full text search by text
+        query = query.filter(cls.search_name == text)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if limit[1]:
+                query = query.offset(limit[1])
+
+        return query
 
     @property
     def get_type_code(self):
@@ -109,15 +124,15 @@ CREATE FUNCTION topics_desc_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
-        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
     END IF;
     IF TG_OP = 'UPDATE' THEN
         IF NEW.description <> OLD.description THEN
             NEW.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
         END IF;
 
-        IF NEW.name <> OLD.name OR NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig THEN
-            NEW.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
+        IF NEW.description <> OLD.description OR NEW.name <> OLD.name OR NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig THEN
+            NEW.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
         END IF;
     END IF;
     RETURN NEW;
