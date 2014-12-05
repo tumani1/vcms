@@ -11,7 +11,10 @@ def save_avatar_to_file(link, name, subdirectory):
     directory = directory + '/' + subdirectory
     if not os.path.exists(directory):
         os.makedirs(directory)
-    exp = name.split('.')[1]
+    exp = link.split('.')
+    exp_len = len(exp)
+    exp = exp[exp_len-1]
+
     try:
         urllib.urlretrieve(link, directory + '/' + name + '.' + exp)
 
