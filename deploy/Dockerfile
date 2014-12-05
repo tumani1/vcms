@@ -51,22 +51,23 @@ RUN mongod --fork -f /etc/mongod.conf --smallfiles; cd /root/next_tv; mongo next
 RUN cd /root/next_tv/; git submodule update --init
 RUN cd /root/next_tv/; git submodule foreach git pull origin master
 RUN cd /root/next_tv/nodeservices/; npm install; 
-RUN cd /root/; virtualenv nexttv;
+RUN cd /root/; virtualenv nextvenv;
 RUN cp /root/next_tv/configs/db.yaml.example /root/next_tv/configs/db.yaml
-RUN cd /root/next_tv/; /root/nexttv/bin/pip install -r deploy/requirements.txt
+RUN cd /root/next_tv/; /root/nextvenv/bin/pip install -r deploy/requirements.txt
 RUN sudo -u postgres pg_dropcluster --stop 9.3 main
 RUN sudo -u postgres pg_createcluster --start 9.3 main --locale en_US.UTF-8
 RUN service postgresql start; echo "CREATE USER pgadmin WITH SUPERUSER CREATEDB CREATEROLE REPLICATION PASSWORD 'qwerty'; CREATE DATABASE next_tv WITH OWNER pgadmin; GRANT ALL PRIVILEGES ON DATABASE next_tv TO pgadmin;  " | sudo -u postgres psql
-RUN locale; cd /root/next_tv/; service postgresql start; /root/nexttv/bin/python -m utils.next_tv_sync
+RUN locale; cd /root/next_tv/; service postgresql start; /root/nextvenv/bin/python -m utils.next_tv_sync
 
 
-RUN service postgresql start; cd /root/next_tv/; /root/nexttv/bin/python utils/gen_configs.py
+RUN service postgresql start; cd /root/next_tv/; /root/nextvenv/bin/python utils/gen_configs.py
 
 RUN  cd /root/next_tv/generated_configs/; mv node_service.yaml ../nodeservices/
 RUN  cd /root/next_tv/generated_configs/; mv haproxy.conf /etc/haproxy/
-RUN  cd /root/next_tv/generated_configs/; mv supervisord.conf /etc/supervisor/conf.d/
 RUN  cd /root/next_tv/generated_configs/; mv pr_haproxy.conf zerorpc_services.conf /etc/supervisor/conf.d/
+
 COPY docker_supervisor.conf /etc/supervisor/conf.d/
+COPY admin.conf /etc/supervisor/conf.d/
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
