@@ -11,12 +11,13 @@ def save_avatar_to_file(link, name, subdirectory):
     directory = directory + '/' + subdirectory
     if not os.path.exists(directory):
         os.makedirs(directory)
-    exp = link.split('.')
-    exp_len = len(exp)
-    exp = exp[exp_len-1]
+    ext = os.path.splitext(link)[1]
+    if not ext:
+        photo_file = urllib.urlopen(link)
+        ext = '.' + photo_file.headers.subtype
 
     try:
-        urllib.urlretrieve(link, directory + '/' + name + '.' + exp)
+        urllib.urlretrieve(link, directory + '/' + name + ext)
 
     except Exception, e:
         print e.message

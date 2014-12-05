@@ -1,5 +1,6 @@
 from api.login import vk_oauth
 from api.login import fb_oauth
+from api.login import odnoklassniki_oauth
 
 
 routing = (
@@ -7,4 +8,6 @@ routing = (
     (r'^complete/vk-oauth2$', {'get': vk_oauth.complete_get}),
     (r'^fb-oauth2$', {'get': fb_oauth.get}),
     (r'^complete/fb-oauth2$', {'get': fb_oauth.complete_get}),
+    (r'^ok-oauth2$', {'get': odnoklassniki_oauth.get}),
+    (r'^complete/ok-oauth2$', {'get': odnoklassniki_oauth.complete_get}),
 )

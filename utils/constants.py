@@ -14,3 +14,9 @@ VK_CLIENT_ID = 4643948
 VK_SECRET_KEY = 'qa9kXSjeRTMybQCh6J2I'
 VK_REDIRECT_URI = 'http://serialov.tv/login/complete/vk-oauth2'
 
+#OK SOCIAL AUTH
+OK_CLIENT_ID = 1111175424
+OK_SECRET_KEY = 'F26F415CA79701D85F0F46FC'
+OK_PUBLIC_KEY = 'CBACDMDDEBABABABA'
+OK_REDIRECT_URI = 'http://serialov.tv/login/complete/ok-oauth2'
+
