@@ -24,5 +24,8 @@ class LoginForm(form.Form):
             if self.user and self.user.password != field.data:
                 raise validators.ValidationError(u"Invalid password")
 
-    def get_user(self, email):
-        self.user = session.query(Users).filter_by(email=email).first()
+    def get_user(self, email='EMPTYEMAIL'):
+        if email == 'EMPTYEMAIL':
+            self.user = session.query(Users).filter_by(email=self.email).first()
+        else:
+            self.user = session.query(Users).filter_by(email=email).first()
