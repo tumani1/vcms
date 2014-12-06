@@ -29,3 +29,4 @@ class LoginForm(form.Form):
             self.user = session.query(Users).filter_by(email=self.email.data).first()
         else:
             self.user = session.query(Users).filter_by(email=email).first()
+        return self.user
