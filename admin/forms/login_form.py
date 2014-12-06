@@ -26,6 +26,6 @@ class LoginForm(form.Form):
 
     def get_user(self, email='EMPTYEMAIL'):
         if email == 'EMPTYEMAIL':
-            self.user = session.query(Users).filter_by(email=self.email).first()
+            self.user = session.query(Users).filter_by(email=self.email.data).first()
         else:
             self.user = session.query(Users).filter_by(email=email).first()
