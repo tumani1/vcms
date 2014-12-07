@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy.orm import relationship, contains_eager, backref
@@ -19,6 +19,9 @@ from utils.common import user_access_media
 
 class Media(Base):
     __tablename__ = 'media'
+    __tablename__ = (
+        Index('media_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+    )
 
     id             = Column(Integer, primary_key=True)
     title          = Column(String, nullable=False)
@@ -173,17 +176,6 @@ Media.users_media_query = relationship('UsersMedia', lazy='dynamic')
 update_access_type = DDL("""
 CREATE FUNCTION media_update() RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.access_type != OLD.access_type THEN
-        DELETE FROM media_access_countries WHERE media_id = NEW.id;
-    END IF;
-    RETURN NEW;
-END
-$$ LANGUAGE 'plpgsql';
-CREATE TRIGGER media_update BEFORE UPDATE ON media
-FOR EACH ROW EXECUTE PROCEDURE media_update();
-
-CREATE FUNCTION media_name_update() RETURNS TRIGGER AS $$
-BEGIN
     IF TG_OP = 'INSERT' THEN
         new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
     END IF;
@@ -191,15 +183,17 @@ BEGIN
         IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
             new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
         END IF;
+
+        IF NEW.access_type != OLD.access_type THEN
+            DELETE FROM media_access_countries WHERE media_id = NEW.id;
+        END IF;
     END IF;
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
 
-CREATE INDEX media_search_name_gin_idx ON media USING gin(search_name);;
-
 CREATE TRIGGER media_search_name_update BEFORE INSERT OR UPDATE ON topics
-FOR EACH ROW EXECUTE PROCEDURE media_name_update();
+FOR EACH ROW EXECUTE PROCEDURE media_update();
 """)
 
 listen(Media.__table__, 'after_create', update_access_type)

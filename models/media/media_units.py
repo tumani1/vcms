@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
-    and_, SMALLINT, DDL
+    and_, SMALLINT, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, contains_eager, backref
 from sqlalchemy_utils import ChoiceType, TSVectorType
@@ -14,6 +14,9 @@ from utils.common import user_access_media
 
 class MediaUnits(Base):
     __tablename__ = 'media_units'
+    __tablename__ = (
+        Index('mediaunits_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+    )
 
     id            = Column(Integer, primary_key=True)
     topic_id      = Column(String, ForeignKey('topics.name'), nullable=False, index=True)
@@ -131,18 +134,7 @@ class MediaUnits(Base):
 
 
 update_media_units = DDL("""
-CREATE FUNCTION media_units_update() RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.access_type != OLD.access_type THEN
-        DELETE FROM media_units_access_countries WHERE media_unit_id = NEW.id;
-    END IF;
-    RETURN NEW;
-END
-$$ LANGUAGE 'plpgsql';
-CREATE TRIGGER media_units_update BEFORE UPDATE ON media_units
-FOR EACH ROW EXECUTE PROCEDURE media_units_update();
-
-CREATE FUNCTION mediaunits_name_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION mediaunits_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
@@ -151,15 +143,17 @@ BEGIN
         IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
             new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
         END IF;
+
+        IF NEW.access_type != OLD.access_type THEN
+            DELETE FROM media_units_access_countries WHERE media_unit_id = NEW.id;
+        END IF;
     END IF;
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
 
-CREATE INDEX mediaunits_search_description_gin_idx ON media_units USING gin(search_name);
-
 CREATE TRIGGER mediaunits_search_name_update BEFORE INSERT OR UPDATE ON media_units
-FOR EACH ROW EXECUTE PROCEDURE mediaunits_name_update();
+FOR EACH ROW EXECUTE PROCEDURE mediaunits_update();
 """)
 
 listen(MediaUnits.__table__, 'after_create', update_media_units)

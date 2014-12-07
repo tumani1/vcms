@@ -2,7 +2,7 @@
 
 import time
 
-from sqlalchemy import Column, String, DateTime, and_, DDL
+from sqlalchemy import Column, String, DateTime, and_, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
@@ -14,6 +14,10 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
+    __tablename__ = (
+        Index('topic_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+        Index('topic_search_description_gin_idx', 'search_description', postgresql_using='gin'),
+    )
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
@@ -24,7 +28,7 @@ class Topics(Base):
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
     search_description = Column(TSVectorType('description'))
-    search_name = Column(TSVectorType('name', 'title', 'title_orig'))
+    search_name = Column(TSVectorType('name', 'title', 'title_orig', 'description'))
 
     topic_values = relationship('TopicsValues', backref='topics', cascade='all, delete')
     topic_user   = relationship('UsersTopics', backref='topics', cascade='all, delete')
@@ -138,9 +142,6 @@ BEGIN
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
-
-CREATE INDEX topics_search_description_gin_idx ON topics USING gin(search_description);
-CREATE INDEX topics_search_name_gin_idx ON topics USING gin(search_name);
 
 CREATE TRIGGER topics_desc_vector_update BEFORE INSERT OR UPDATE ON topics
 FOR EACH ROW EXECUTE PROCEDURE topics_desc_update();

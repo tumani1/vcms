@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, select, DDL
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, select, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType, TSVectorType
@@ -14,6 +14,9 @@ from constants import APP_PERSONS_STATUS_TYPE, APP_PERSONS_STATUS_TYPE_ACTIVE
 
 class Persons(Base):
     __tablename__ = 'persons'
+    __tablename__ = (
+        Index('person_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+    )
 
     id        = Column(Integer, primary_key=True)
     user_id   = Column(Integer, ForeignKey('users.id'), nullable=True, index=True)
@@ -155,8 +158,6 @@ BEGIN
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
-
-CREATE INDEX persons_search_name_gin_idx ON persons USING gin(search_name);
 
 CREATE TRIGGER persons_search_name_update BEFORE INSERT OR UPDATE ON persons
 FOR EACH ROW EXECUTE PROCEDURE person_name_update();
