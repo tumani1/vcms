@@ -12,14 +12,14 @@ class News(Base):
     __tablename__ = 'news'
     __table_args__ = {'extend_existing': True}
 
-    id            = Column(Integer, primary_key=True)
-    comments_cnt  = Column(Integer, nullable=False)
-    published     = Column(DateTime, nullable=True)
-    created       = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
-    text          = Column(String(), nullable=False)
-    obj_id        = Column(Integer, nullable=True)
-    obj_name      = Column(String(256), nullable=True)
-    obj_type    = Column(ChoiceType(OBJECT_TYPES), nullable=False)
+    id           = Column(Integer, primary_key=True)
+    comments_cnt = Column(Integer, nullable=False)
+    published    = Column(DateTime, nullable=True)
+    created      = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
+    text         = Column(String(), nullable=False)
+    obj_id       = Column(Integer, nullable=True)
+    obj_name     = Column(String(256), nullable=True)
+    obj_type     = Column(ChoiceType(OBJECT_TYPES), nullable=False)
 
     @classmethod
     def tmpl_for_news(cls, session):
@@ -65,8 +65,6 @@ class News(Base):
 
         return query
 
-
-
     def validate_obj(self):
         count = 0
         if self.obj_id:
@@ -77,6 +75,9 @@ class News(Base):
         if not count:
             raise ValueError(u'Необходимо указать obj_id или obj_name')
         return self
+
+    def __repr__(self):
+        return u"<News(id={0},obj_id={1},obj_type={2})>".format(self.id, self.obj_id, self.obj_type.code)
 
 
 def validate_object(mapper, connect, target):
