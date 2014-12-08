@@ -14,7 +14,7 @@ from utils.common import user_access_media
 
 class MediaUnits(Base):
     __tablename__ = 'media_units'
-    __tablename__ = (
+    __table_args__ = (
         Index('mediaunits_search_name_gin_idx', 'search_name', postgresql_using='gin'),
     )
 
@@ -143,7 +143,6 @@ BEGIN
         IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
             new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
         END IF;
-
         IF NEW.access_type != OLD.access_type THEN
             DELETE FROM media_units_access_countries WHERE media_unit_id = NEW.id;
         END IF;

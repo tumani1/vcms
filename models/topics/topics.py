@@ -14,7 +14,7 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
-    __tablename__ = (
+    __table_args__ = (
         Index('topic_search_name_gin_idx', 'search_name', postgresql_using='gin'),
         Index('topic_search_description_gin_idx', 'search_description', postgresql_using='gin'),
     )

@@ -14,7 +14,7 @@ from constants import APP_PERSONS_STATUS_TYPE, APP_PERSONS_STATUS_TYPE_ACTIVE
 
 class Persons(Base):
     __tablename__ = 'persons'
-    __tablename__ = (
+    __table_args__ = (
         Index('person_search_name_gin_idx', 'search_name', postgresql_using='gin'),
     )
 

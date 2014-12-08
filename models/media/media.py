@@ -19,7 +19,7 @@ from utils.common import user_access_media
 
 class Media(Base):
     __tablename__ = 'media'
-    __tablename__ = (
+    __table_args__ = (
         Index('media_search_name_gin_idx', 'search_name', postgresql_using='gin'),
     )
 
@@ -183,7 +183,6 @@ BEGIN
         IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
             new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
         END IF;
-
         IF NEW.access_type != OLD.access_type THEN
             DELETE FROM media_access_countries WHERE media_id = NEW.id;
         END IF;
@@ -192,7 +191,7 @@ BEGIN
 END
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER media_search_name_update BEFORE INSERT OR UPDATE ON topics
+CREATE TRIGGER media_search_name_update BEFORE INSERT OR UPDATE ON media
 FOR EACH ROW EXECUTE PROCEDURE media_update();
 """)
 
