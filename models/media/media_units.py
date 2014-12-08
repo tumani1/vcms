@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, contains_eager, backref
 from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_searchable import search
 
 from models.base import Base
 from models.media.users_media_units import UsersMediaUnits
@@ -115,7 +116,7 @@ class MediaUnits(Base):
         query = cls.tmpl_for_media_units(None, session)
 
         # Full text search by text
-        query = query.filter(cls.search_name == text)
+        query = search(query, text)
 
         # Set limit and offset filter
         if not limit is None:

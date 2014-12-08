@@ -1,10 +1,12 @@
 # coding: utf-8
+
 import datetime
 
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy.orm import relationship, contains_eager, backref
+from sqlalchemy_searchable import search
 
 from models.base import Base
 from models.media.users_media import UsersMedia
@@ -151,7 +153,7 @@ class Media(Base):
         query = cls.tmpl_for_media(None, session)
 
         # Full text search by text
-        query = query.filter(cls.search_name == text)
+        query = search(query, text)
 
         # Set limit and offset filter
         if not limit is None:

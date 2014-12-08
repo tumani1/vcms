@@ -4,6 +4,8 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, select, DDL, I
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_searchable import search
+
 
 from models.base import Base
 from models.topics import PersonsTopics
@@ -102,7 +104,7 @@ class Persons(Base):
         query = cls.tmpl_for_persons(None, session)
 
         # Full text search by text
-        query = query.filter(cls.search_name == text)
+        query = search(query, text)
 
         # Set limit and offset filter
         if not limit is None:

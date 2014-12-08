@@ -6,6 +6,7 @@ from sqlalchemy import Column, String, DateTime, and_, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_searchable import search
 
 from models.base import Base
 from topics_users import UsersTopics
@@ -91,10 +92,10 @@ class Topics(Base):
 
     @classmethod
     def get_search_by_text(cls, session, text, limit=None, **kwargs):
-        query = cls.tmpl_for_persons(None, session)
+        query = cls.tmpl_for_topics(None, session)
 
         # Full text search by text
-        query = query.filter(cls.search_name == text)
+        query = search(query, text)
 
         # Set limit and offset filter
         if not limit is None:
