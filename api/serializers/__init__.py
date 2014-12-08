@@ -17,6 +17,7 @@ from m_content import mContentSerializer
 from m_chat import mChatSerializer
 from m_chat_msg import mChatMsgSerializer
 from m_shop_payment import mShopPayment
+from m_news import mNewsSerializer
 
 
 __all__ = [
@@ -25,5 +26,5 @@ __all__ = [
     'mMsgrThread', 'mMediaUnitsSerializer', 'mMediaSerializer',
     'mLocationSerializer', 'mContentSerializer', 'mCommentSerializer',
     'mChatSerializer', 'mChatMsgSerializer', 'mSession', 'mShopPayment',
-    'mAttach',
+    'mAttach', 'mNewsSerializer'
 ]
