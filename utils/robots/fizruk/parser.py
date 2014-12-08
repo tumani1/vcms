@@ -221,12 +221,13 @@ def get_or_create_topic(name, title, releasedate = datetime.datetime.today().dat
     topic = None
     try:
         topic = session.query(Topics).filter(Topics.name == name).filter(Topics.title == title).one()
+        print "after"
     except NoResultFound:
-        topic = Topics(name=name, title=title, releasedate=releasedate, status=u'Активен', type=u'Сериал')
+        topic = Topics(name=name, title=title, releasedate=releasedate, status=u'a', type=u'serial')
         session.add(topic)
         session.commit()
     except Exception, e:
-        print "EEE" + e.message
+        print "EEE t " + e.message
         session.rollback()
         session.flush()
     return topic
@@ -253,10 +254,11 @@ def get_or_create_user(fname, lname, gender, password):
     try:
         user = session.query(Users).filter(Users.firstname == fname).filter(Users.lastname == lname).one()
     except NoResultFound:
-        user = Users(firstname=fname, lastname=lname, gender=u'Мужской', password=password)
+        user = Users(firstname=fname, lastname=lname, gender=APP_USERS_GENDER_MAN, password=password)
         session.add(user)
         session.commit()
     except Exception, e:
+        print "fuser err" + e.message
         session.rollback()
         session.flush()
     return user
@@ -314,6 +316,12 @@ def get_or_create_media(title, description, release_date, type_, owner):
 
 if __name__ =="__main__":
 
+    # files = os.listdir('saved_pages/fizruk/')
+    #
+    # import subprocess
+    # for f in files:
+    #     os.makedirs(f.split('.')[0].split('_')[3])
+    #     os.system("mv {1} {0}/".format(f.split('.')[0].split('_')[3],'saved_pages/fizruk/'+f))
 
     parser = argparse.ArgumentParser("Import utility.")
 
