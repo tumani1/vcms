@@ -2,8 +2,12 @@
 import json
 import locale
 from bs4 import BeautifulSoup
+from models.media.constants import APP_MEDIA_TYPE_VIDEO
+from models.users.constants import APP_USERS_GENDER_MAN
 from utils.robots.dom2.loader import load_pages, load_video_info_page, load_old_actors_pages, load_current_actors_page
 from utils.robots.dom2.parser_supp import get_episods_for_page, get_b_big_panel_content_div
+from utils.robots.fizruk.parser import get_or_create_user, get_or_create_media, get_or_create_person, \
+    get_or_create_persons_media
 from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file
 
 __author__ = 'vladimir'
@@ -46,6 +50,14 @@ def parse_one_episode(episod_quick_info, all_actors):
     beatiful_soup = BeautifulSoup(json_page['html'])
     episod_info = parse_video_page(beatiful_soup)
     episod_info['actors'] = get_actors_for_episode(episod_info['date'], all_actors)
+    fake_user = get_or_create_user("Дом2", "Админ", APP_USERS_GENDER_MAN, 'password')
+    media = get_or_create_media(episod_info['label'], episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
+    for pers in episod_info['actors']:
+        name_surname = pers.split(' ')
+        name = name_surname[0]
+        surname = name_surname[1]
+        person = get_or_create_person(name, surname)
+        pers_media = get_or_create_persons_media(media.id, person.id)
     print "Parsed ", episod_quick_info['label']
     return episod_info
 
