@@ -16,9 +16,5 @@ OBJECT_TYPES = (
     (OBJECT_TYPE_MEDIA_UNIT, u'Медиаюнит'),
     (OBJECT_TYPE_STRIP, u'Лента'),
     (OBJECT_TYPE_NEWS, u'Новости'),
-
-)
-
-CONTENT_OBJECT_TYPES = OBJECT_TYPES + (
     (OBJECT_TYPE_TOPIC, u'Топик'),
 )
