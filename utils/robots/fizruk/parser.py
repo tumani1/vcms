@@ -77,25 +77,23 @@ def parse_all_series(filenames_iterator):
     cdn = get_or_create_cdn("Своя CDN", "http://cdn.serialov.tv/")
     topic = get_or_create_topic("fizruk", "Физрук")
     for file_name in filenames_iterator:
-        m_unit = get_or_create_media_unit('Сезон {}'.format(file_name.split('_')[1]), topic.id)
+        print file_name.split('/')[len(file_name.split('/'))-1].split('_')[1]
+        m_unit = get_or_create_media_unit('Сезон {}'.format(file_name.split('/')[len(file_name.split('/'))-1].split('_')[1]), topic.name)
         one_info = parse_one_info_page(file_name)
         fake_user = get_or_create_user("Физрук", "Админ", APP_USERS_GENDER_MAN, 'password')
         media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
-        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}'.format(id=media.id), one_info['label'], ' ', one_info['description'])
+        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), one_info['label'], ' ', one_info['description'])
 
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]
             surname = name_surname[1]
             person = get_or_create_person(name, surname)
-
             get_or_create_persons_media(media.id, person.id)
 
         print json.dumps({'id':media.id,'filename':os.path.basename(file_name)})
         #print media.title, media.description, media.release_date, media.type_
-
-
 
 
     
@@ -177,12 +175,13 @@ def get_all_actors():
 def get_or_create_cdn(name, url):
     cdn = None
     try:
-        cdn = session.query().filter(CDN.name == name).filter(CDN.url == url).one()
+        cdn = session.query(CDN).filter(CDN.name == name).filter(CDN.url == url).one()
     except NoResultFound:
         cdn = CDN(name=name, url=url)
         session.add(cdn)
         session.commit()
     except Exception, e:
+        print "EEE cdn" + e.message
         session.rollback()
         session.flush()
     return cdn
@@ -197,6 +196,7 @@ def get_or_create_extras(cdn_name, url, title, title_orig='', description='', ty
         session.add(extras)
         session.commit()
     except Exception, e:
+        print "EEE ex" + e.message
         session.rollback()
         session.flush()
     return extras
@@ -211,6 +211,7 @@ def get_or_create_media_in_unit(media_id, media_unit_id):
         session.add(media_in_unit)
         session.commit()
     except Exception, e:
+        print "EEE" + e.message
         session.rollback()
         session.flush()
     return media_in_unit
@@ -219,9 +220,9 @@ def get_or_create_media_in_unit(media_id, media_unit_id):
 def get_or_create_topic(name, title, releasedate = datetime.datetime.today().date()):
     topic = None
     try:
-        topic = session.query(Topics).filter(Topics.name == name).filter(Users.title == title).one()
+        topic = session.query(Topics).filter(Topics.name == name).filter(Topics.title == title).one()
     except NoResultFound:
-        topic = Topics(name=name, title=title, releasedate=releasedate, status=u'a', type=u'serial')
+        topic = Topics(name=name, title=title, releasedate=releasedate, status=u'Активен', type=u'Сериал')
         session.add(topic)
         session.commit()
     except Exception, e:
@@ -240,6 +241,7 @@ def get_or_create_media_unit(title, topic_id):
         session.add(m_unit)
         session.commit()
     except Exception, e:
+        print "EEE" + e.message
         session.rollback()
         session.flush()
     return m_unit
@@ -251,7 +253,7 @@ def get_or_create_user(fname, lname, gender, password):
     try:
         user = session.query(Users).filter(Users.firstname == fname).filter(Users.lastname == lname).one()
     except NoResultFound:
-        user = Users(firstname=fname, lastname=lname, gender=gender, password=password)
+        user = Users(firstname=fname, lastname=lname, gender=u'Мужской', password=password)
         session.add(user)
         session.commit()
     except Exception, e:
@@ -293,24 +295,19 @@ def get_or_create_persons_media(media_id, person_id):
 def get_or_create_media(title, description, release_date, type_, owner):
     media = None
     try:
-
         owner_sa  = session.query(Users).filter(Users.id == owner).one()
         media = session.query(Media).filter(Media.title == title).one()
-
-
     except NoResultFound:
         try:
-            media = Media(title=title,
-                          description=description,
-                          release_date=release_date,
-                          type_=type_,
-                          owner=owner_sa)
-        except:
+            media = Media(title=title, description=description, release_date=release_date, type_=type_, owner=owner_sa)
+        except Exception, e:
+            print "EEE" + e.message
             import traceback
             traceback.print_exc()
         session.add(media)
         session.commit()
     except Exception, e:
+        print "EEE" + e.message
         session.rollback()
         session.flush()
     return media
