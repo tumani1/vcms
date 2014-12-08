@@ -20,7 +20,7 @@ class mUser(mUserShort):
     }
 
     def transform_lastvisit(self, obj):
-        return datetime_to_unixtime(obj.last_visit.timetuple()) if not obj.last_visit is None else ''
+        return datetime_to_unixtime(obj.last_visit) if not obj.last_visit is None else ''
 
     def transform_regdate(self, obj):
         return datetime_to_unixtime(obj.created)

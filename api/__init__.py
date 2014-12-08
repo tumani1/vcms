@@ -19,6 +19,8 @@ from api.comments import routing as comments_routing
 from api.obj_comments import routing as obj_comments_routing
 from api.eshop import routing as eshop_routing
 from api.internal import routing as internal_routing
+from api.login import routing as login_routing
+from api.service import routing as service_routing
 
 
 rest_routes = {
@@ -37,6 +39,8 @@ rest_routes = {
     'comments': comments_routing,
     'obj_comments': obj_comments_routing,
     'eshop': eshop_routing,
+    'login': login_routing,
+    'service': service_routing,
 }
 
 internal_routes = {

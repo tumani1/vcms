@@ -1,5 +1,6 @@
 SQLAlchemy
 git+git://github.com/kvesteri/sqlalchemy-utils
+git+git://github.com/kvesteri/sqlalchemy-searchable
 pyyaml
 psycopg2
 pytz

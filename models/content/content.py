@@ -1,21 +1,37 @@
 # coding: utf-8
 
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, Index, DDL
 from sqlalchemy.event import listen
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_searchable import search
+
 from models.base import Base
 from models.comments.constants import CONTENT_OBJECT_TYPES
 
 
 class Content(Base):
     __tablename__ = 'content'
+    __table_args__ = (
+        Index('content_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+    )
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=True)
-    text = Column(Text, nullable=True)
+    id       = Column(Integer, primary_key=True)
+    title    = Column(String, nullable=True)
+    text     = Column(Text, nullable=True)
     obj_type = Column(ChoiceType(CONTENT_OBJECT_TYPES), nullable=False)
-    obj_id = Column(Integer, nullable=True)
+    obj_id   = Column(Integer, nullable=True)
     obj_name = Column(String, nullable=True)
+
+    search_name = Column(TSVectorType('title', 'text', 'obj_name'))
+
+    @classmethod
+    def tmpl_for_content(cls, user, session):
+        query = session.query(cls)
+
+        if not user is None:
+            pass
+
+        return query
 
     @classmethod
     def get_content_list(cls, session, id=None, obj_type=None, obj_id=None, obj_name=None):
@@ -34,6 +50,25 @@ class Content(Base):
 
         return query.all()
 
+    @classmethod
+    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+        query = cls.tmpl_for_content(None, session)
+
+        # Full text search by text
+        query = search(query, text)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if limit[1]:
+                query = query.offset(limit[1])
+
+        return query
+
     def validate_obj(self):
         count = 0
         if self.obj_id:
@@ -50,3 +85,25 @@ def validate_object(mapper, connect, target):
     target.validate_obj()
 
 listen(Content, 'before_insert', validate_object)
+
+
+update_media_units = DDL("""
+CREATE FUNCTION content_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.text, '') || ' ' || COALESCE(NEW.obj_name, ''));
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.title <> OLD.title OR NEW.text <> OLD.text OR NEW.obj_name <> OLD.obj_name THEN
+            new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.text, '') || ' ' || COALESCE(NEW.obj_name, ''));
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER content_search_name_update BEFORE INSERT OR UPDATE ON content
+FOR EACH ROW EXECUTE PROCEDURE content_update();
+""")
+
+listen(Content.__table__, 'after_create', update_media_units)

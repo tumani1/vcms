@@ -38,6 +38,6 @@ class StreamModelView(MongoDBModelView):
     form_args = dict(
         user_id=dict(
             choices=users,
-            validators=[StreamUserTypeValidator('type', message=u'У данного типа событий должен быть пользователь'), ],
+            validators=[StreamUserTypeValidator('type', message=u'Неверно выбран пользователь'), ],
         )
     )

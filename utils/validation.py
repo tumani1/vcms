@@ -116,7 +116,7 @@ def validate_list_string(value, **kwargs):
 
 def validate_string(value, **kwargs):
     try:
-         return str(value).strip()
+        return str(value).strip()
     except Exception, e:
         return None
 

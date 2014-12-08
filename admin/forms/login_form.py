@@ -11,19 +11,18 @@ class LoginForm(form.Form):
     password = fields.PasswordField("Password", [validators.required()])
 
     def validate_email(self, field):
-        user = self.get_user()
+        self.get_user(field.data)
 
-        if user is None:
-            raise validators.ValidationError("Invalid user")
+        if self.user is None:
+            raise validators.ValidationError(u"Invalid user")
 
-        if not user.is_manager:
-            raise validators.ValidationError("Access denied")
+        if not self.user.is_manager:
+            raise validators.ValidationError(u"Access denied")
 
     def validate_password(self, field):
-        user = self.get_user()
+        if not len(self.errors.keys()):
+            if self.user and self.user.password != field.data:
+                raise validators.ValidationError(u"Invalid password")
 
-        if user.password != self.password.data:
-            raise validators.ValidationError("Invalid password")
-
-    def get_user(self):
-        return session.query(Users).filter_by(email=self.email.data).first()
+    def get_user(self, email):
+        self.user = session.query(Users).filter_by(email=email).first()

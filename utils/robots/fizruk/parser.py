@@ -1,6 +1,7 @@
 #coding: utf-8
 import json
 import os
+import argparse
 from bs4 import BeautifulSoup
 import datetime
 from multi_key_dict import multi_key_dict
@@ -14,29 +15,30 @@ from models.users.constants import APP_USERS_TYPE_GENDER, APP_USERS_GENDER_MAN
 from utils.connection import get_session, mongo_connect
 from utils.robots.support_functions import get_valid_date_for_str
 
-__author__ = 'vladimir'
-
 session = get_session()
 mongodb_session = mongo_connect()
 
 
 
-def parse_all_series(jsons_directory):
-    files = os.listdir(jsons_directory)
-    for file_name in files:
-        one_info = parse_one_info_page(jsons_directory+file_name)
-        fake_user = get_or_create_user("Физрук", "Админ", APP_USERS_GENDER_MAN, 'password')
-        media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
-        for pers in one_info['actors']:
-            name_surname = pers.split(' ')
-            name = name_surname[0]
-            surname = name_surname[1]
-            person = get_or_create_person(name, surname)
-            pers_media = get_or_create_persons_media(media.id, person.id)
-        #print media.title, media.description, media.release_date, media.type_
+
+def datadir_fileiterator(datadir):
+
+    for subdir in os.listdir(datadir):
+        subdir_full = os.path.abspath(
+                    os.path.join(datadir,
+                                 subdir))
+        
+        filepath = next(jsonfile for jsonfile in os.listdir(subdir_full) if jsonfile.endswith('.json'))
+        
+
+        full_filepath = os.path.join(subdir_full,filepath)
+        if os.path.exists(full_filepath):
+            yield full_filepath
 
 
-def parse_one_info_page(page):
+
+
+def parse_one_info_page(filepath):
     page_info = {
         'label': '',
         'value': '',
@@ -45,7 +47,6 @@ def parse_one_info_page(page):
         'date': None,
         'actors': []
     }
-
     with open(filepath) as  opened_page:
         try:
             json_page = json.load(opened_page)
@@ -71,6 +72,7 @@ def parse_one_info_page(page):
             traceback.print_exc()
 
 
+
 def parse_all_series(filenames_iterator):
     cdn = get_or_create_cdn("Своя CDN", "http://cdn.serialov.tv/")
     topic = get_or_create_topic("fizruk", "Физрук")
@@ -81,11 +83,13 @@ def parse_all_series(filenames_iterator):
         media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}'.format(id=media.id), one_info['label'], ' ', one_info['description'])
+
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]
             surname = name_surname[1]
             person = get_or_create_person(name, surname)
+
             get_or_create_persons_media(media.id, person.id)
 
         print json.dumps({'id':media.id,'filename':os.path.basename(file_name)})
@@ -93,6 +97,8 @@ def parse_all_series(filenames_iterator):
 
 
 
+
+    
 def get_video_code(center_block):
     video_player_now = center_block.find('div', { "id" : "video-player-now"})
     iframe = video_player_now.find('iframe')
@@ -144,7 +150,6 @@ def get_actors_names(tags):
             act_name = all_actors[tag]
             if act_name not in actors_names:
                 actors_names = actors_names + [act_name]
-                print act_name
         except KeyError, e:
             continue
     return actors_names
@@ -250,10 +255,8 @@ def get_or_create_user(fname, lname, gender, password):
         session.add(user)
         session.commit()
     except Exception, e:
-        print "User:", e.message
         session.rollback()
         session.flush()
-    print user.id
     return user
 
 
@@ -268,7 +271,6 @@ def get_or_create_person(name, surname):
     except Exception, e:
         import traceback
         traceback.print_exc()
-        print "Person:", e.message
         session.rollback()
         session.flush()
     return person
@@ -283,7 +285,6 @@ def get_or_create_persons_media(media_id, person_id):
         session.add(pers_media)
         session.commit()
     except Exception, e:
-        print "Pers_Media:", e.message
         session.rollback()
         session.flush()
     return pers_media
@@ -296,12 +297,32 @@ def get_or_create_media(title, description, release_date, type_, owner):
         owner_sa  = session.query(Users).filter(Users.id == owner).one()
         media = session.query(Media).filter(Media.title == title).one()
 
+
     except NoResultFound:
-        media = Media(title=title, description=description, release_date=release_date, type_=type_, owner=owner)
+        try:
+            media = Media(title=title,
+                          description=description,
+                          release_date=release_date,
+                          type_=type_,
+                          owner=owner_sa)
+        except:
+            import traceback
+            traceback.print_exc()
         session.add(media)
         session.commit()
     except Exception, e:
-        print "Media:", e.message
         session.rollback()
         session.flush()
     return media
+
+if __name__ =="__main__":
+
+
+    parser = argparse.ArgumentParser("Import utility.")
+
+    parser.add_argument('datadir', type=str, help = 'Directory containing subdirs, every subdir expected to contain json and mp4 file with same name')
+
+    args = parser.parse_args()
+
+    parse_all_series(datadir_fileiterator(args.datadir))
+    

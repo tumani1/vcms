@@ -2,10 +2,11 @@
 
 import time
 
-from sqlalchemy import Column, String, DateTime, and_, DDL# Index
+from sqlalchemy import Column, String, DateTime, and_, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_searchable import search
 
 from models.base import Base
 from topics_users import UsersTopics
@@ -14,6 +15,10 @@ from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
 
 class Topics(Base):
     __tablename__ = 'topics'
+    __table_args__ = (
+        Index('topic_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+        Index('topic_search_description_gin_idx', 'search_description', postgresql_using='gin'),
+    )
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
     title       = Column(String, nullable=False, index=True)
@@ -23,7 +28,8 @@ class Topics(Base):
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
-    search_description = Column(TSVectorType('description'), index=True)
+    search_description = Column(TSVectorType('description'))
+    search_name = Column(TSVectorType('name', 'title', 'title_orig', 'description'))
 
     topic_values = relationship('TopicsValues', backref='topics', cascade='all, delete')
     topic_user   = relationship('UsersTopics', backref='topics', cascade='all, delete')
@@ -31,12 +37,12 @@ class Topics(Base):
     topic_person = relationship('PersonsTopics', backref='topic', cascade='all, delete')
     topic_media  = relationship('MediaUnits', backref='topic', cascade='all, delete')
 
+
     @classmethod
     def tmpl_for_topics(cls, auth_user, session):
         query = session.query(cls)
 
         return query
-
 
     @classmethod
     def join_with_user_topics(cls, auth_user, session):
@@ -50,13 +56,11 @@ class Topics(Base):
 
         return query
 
-
     @classmethod
     def get_topics_by_name(cls, auth_user, name, session, **kwargs):
         query = cls.join_with_user_topics(auth_user, session).filter(cls.name == name).first()
 
         return query
-
 
     @classmethod
     def get_topics_list(cls, user, session, name=None, text=None, _type=None, limit=None, **kwargs):
@@ -86,11 +90,28 @@ class Topics(Base):
 
         return query
 
+    @classmethod
+    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+        query = cls.tmpl_for_topics(None, session)
+
+        # Full text search by text
+        query = search(query, text)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if limit[1]:
+                query = query.offset(limit[1])
+
+        return query
 
     @property
     def get_type_code(self):
         return self.type.code
-
 
     @property
     def get_unixtime_created(self):
@@ -108,10 +129,15 @@ CREATE FUNCTION topics_desc_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
     END IF;
     IF TG_OP = 'UPDATE' THEN
         IF NEW.description <> OLD.description THEN
-            new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+            NEW.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+        END IF;
+
+        IF NEW.description <> OLD.description OR NEW.name <> OLD.name OR NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig THEN
+            NEW.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
         END IF;
     END IF;
     RETURN NEW;
@@ -122,4 +148,4 @@ CREATE TRIGGER topics_desc_vector_update BEFORE INSERT OR UPDATE ON topics
 FOR EACH ROW EXECUTE PROCEDURE topics_desc_update();
 ''')
 
-listen(Topics.__table__, 'after_create', update_ts_vector)
+listen(Topics.__table__, 'after_create', update_ts_vector.execute_if(dialect='postgresql'))
