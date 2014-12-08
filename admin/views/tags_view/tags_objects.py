@@ -1,6 +1,6 @@
 # coding: utf-8
 from admin.views.base import SqlAlModelView
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 from models.tags.tags_objects import TagsObjects
 from flask.ext.admin.form import fields
 

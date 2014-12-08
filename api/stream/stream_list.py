@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from api.serializers import mStraemElement
+from api.serializers import mStreamElement
 
 from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimitId
@@ -28,5 +28,5 @@ def get(auth_user, session, **kwargs):
         except Exception as e:
             raise RequestErrorException(e)
 
-    return mStraemElement(instance=stream_el, user=auth_user, session=session).data
+    return mStreamElement(instance=stream_el, user=auth_user, session=session).data
 

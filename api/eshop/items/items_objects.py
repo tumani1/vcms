@@ -1,6 +1,6 @@
 # coding: utf-8
 from api.serializers import mMediaUnitsSerializer, mMediaSerializer, mPersonSerializer, mContentSerializer, \
-    mStraemElement
+    mStreamElement
 from models import MediaUnits, Media, Persons, Stream, Content
 from models.eshop.items.items import Items
 from utils.validation import validate_int
@@ -12,7 +12,7 @@ def get(item_id, auth_user, session, **kwargs):
             'm': (Media, mMediaSerializer),
             'p': (Persons, mPersonSerializer),
             'c': (Content, mContentSerializer),
-            's': (Stream, mStraemElement),
+            's': (Stream, mStreamElement),
     }
     data = []
     item_id = validate_int(item_id, min_value=1)

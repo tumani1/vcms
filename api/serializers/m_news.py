@@ -1,13 +1,18 @@
 #coding: utf-8
+
 from utils.serializer import DefaultSerializer
 from models.media import MediaUnits, Media
 from models.persons import Persons
 from models.content import Content
 from models.mongo import Stream
 from models import Topics
+from api.serializers.m_media import mMediaSerializer
+from api.serializers.m_persons import mPersonSerializer
+from api.serializers.m_media_unit import mMediaUnitsSerializer
+from api.serializers.m_content import mContentSerializer
+from api.serializers.m_topic import mTopicSerializer
+from api.serializers.m_stream_element_m_comment import mStreamElement
 
-
-from api import serializers
 __all__ = ['mNewsSerializer']
 
 
@@ -23,12 +28,12 @@ class mNewsSerializer(DefaultSerializer):
 
     def __init__(self, **kwargs):
         self.object_types = {
-            'mu': (MediaUnits, serializers.mMediaUnitsSerializer),
-            'm': (Media, serializers.mMediaSerializer),
-            'p': (Persons, serializers.mPersonSerializer),
-            'c': (Content, serializers.mContentSerializer),
-            's': (Stream, serializers.mStraemElement),
-            't': (Topics, serializers.mTopicSerializer)
+            'mu': (MediaUnits, mMediaUnitsSerializer),
+            'm': (Media, mMediaSerializer),
+            'p': (Persons, mPersonSerializer),
+            'c': (Content, mContentSerializer),
+            's': (Stream, mStreamElement),
+            't': (Topics, mTopicSerializer)
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
         self.fields = self.__read_fields

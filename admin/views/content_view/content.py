@@ -3,7 +3,7 @@
 from flask.ext.admin.form import fields
 
 from admin.views.base import SqlAlModelView
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 from models.content.content import Content
 
 

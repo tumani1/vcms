@@ -34,7 +34,7 @@ class mCommentSerializer(DefaultSerializer):
             'm': (Media, serializers.mMediaSerializer),
             'p': (Persons, serializers.mPersonSerializer),
             'c': (Content, serializers.mContentSerializer),
-            's': (Stream, serializers.mStraemElement),
+            's': (Stream, serializers.mStreamElement),
             't': (Topics, serializers.mTopicSerializer),
             'n': (News, serializers.mNewsSerializer)
         }

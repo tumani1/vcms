@@ -1,10 +1,13 @@
 # coding: utf-8
+from api.serializers import mNewsSerializer
 
 from models import News
 
 
 def get(auth_user, session=None, **kwargs):
+
     data = {}
+
     params = {
         'session': session,
         'id': None,
@@ -41,15 +44,16 @@ def get(auth_user, session=None, **kwargs):
     if 'obj_name' in query:
         params['obj_name'] = query['obj_name']
 
-    news_list = News.get_news_list(**params)
+    news_list = News.get_news_list(**params).all()
 
     if not news_list is None:
-        data_instance = {
+        serializer_params = {
+            'with_obj': params['with_obj'],
             'instance': news_list,
             'user': auth_user,
             'session': session,
         }
-    # TO do
+        data = mNewsSerializer(**serializer_params).data
 
     return data
 

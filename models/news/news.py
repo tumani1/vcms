@@ -3,7 +3,9 @@
 import datetime
 from sqlalchemy import Column, Integer, DateTime, String, desc
 from sqlalchemy.event import listen
-from models import Base
+from sqlalchemy_utils import ChoiceType
+from models.base import Base
+from utils.constants import OBJECT_TYPES
 
 
 class News(Base):
@@ -15,25 +17,25 @@ class News(Base):
     published     = Column(DateTime, nullable=True)
     created       = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     text          = Column(String(), nullable=False)
-    obj_id        = Column(Integer, nullable=False)
-    obj_name      = Column(String(256), nullable=False)
-    obj_type      = Column(String(256), nullable=True)
+    obj_id        = Column(Integer, nullable=True)
+    obj_name      = Column(String(256), nullable=True)
+    obj_type    = Column(ChoiceType(OBJECT_TYPES), nullable=False)
 
     @classmethod
-    def tmpl_for_msgr_threads(cls, session):
+    def tmpl_for_news(cls, session):
         query = session.query(cls)
 
         return query
 
     @classmethod
     def get_news_by_id(cls, session, news_id):
-        return cls.tmpl_for_msgr_threads(session).filter(cls.id == news_id)
+        return cls.tmpl_for_news(session).filter(cls.id == news_id)
 
     @classmethod
     def get_news_list(cls, session, id=None, limit=None, sort=None, with_obj=None,
                       obj_type=None, obj_id=None, obj_name=None, **kwargs):
 
-        query = cls.tmpl_for_msgr_threads(session)
+        query = cls.tmpl_for_news(session)
 
         if not id is None:
             query = query.filter(cls.id.in_(id))

@@ -7,7 +7,7 @@ from sqlalchemy_utils import ChoiceType
 
 from models.base import Base
 
-from constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class Comments(Base):

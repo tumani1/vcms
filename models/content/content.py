@@ -6,7 +6,7 @@ from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy_searchable import search
 
 from models.base import Base
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class Content(Base):
