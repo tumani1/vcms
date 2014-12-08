@@ -22,25 +22,27 @@ def get_info_pages():
             break
         print "Processing season {}".format(i)
         beatiful_soup = BeautifulSoup(response.content)
-        season_pages = get_season_pages(beatiful_soup)
+        season_pages = get_season_pages(i, beatiful_soup)
         all_pages = all_pages + season_pages
         i += 1
     return all_pages, len(all_pages)
 
 
-def get_season_pages(beatiful_soup):
+def get_season_pages(season_num, beatiful_soup):
     pages = []
     tvbl_s = beatiful_soup.findAll('div', { "class" : "tvbl"})
     for one_tvbl in tvbl_s:
         text = one_tvbl.find('div', { "class" : "text"})
         h4 = text.find('h4')
         a = h4.find('a')
-        label = a.text
+        label = a.text.encode('utf-8')
+        str(label.split('№')[1].split('.')[0])
+        s_label =  "S_" + str(season_num) + "_video_" + str(label.split('№')[1].split('.')[0])
         link = 'http://fizruk.tnt-online.ru/' + a['href']
         info_page_response = requests.get(link)
         prepared_json = generate_json(info_page_response.content, link)
         if prepared_json:
-            file_name = save_loaded_data_to_file(prepared_json, label, 'fizruk')
+            file_name = save_loaded_data_to_file(prepared_json, s_label, 'fizruk')
             pages = pages + [file_name]
     return pages
 

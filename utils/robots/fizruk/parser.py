@@ -2,11 +2,14 @@
 import json
 import os
 from bs4 import BeautifulSoup
+import datetime
 from multi_key_dict import multi_key_dict
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from models import Media, Users, Persons, PersonsMedia
+from models import Media, Users, Persons, PersonsMedia, Topics, MediaUnits, MediaInUnit, CDN, Extras
+from models.extras.constants import APP_EXTRA_TYPE_VIEDO
 from models.media.constants import APP_MEDIA_TYPE_VIDEO
+from models.topics.constants import TOPIC_STATUS
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USERS_GENDER_MAN
 from utils.connection import get_session, mongo_connect
 from utils.robots.support_functions import get_valid_date_for_str
@@ -42,24 +45,52 @@ def parse_one_info_page(page):
         'date': None,
         'actors': []
     }
-    opened_page = open(page)
-    json_page = json.load(opened_page)
-    beatiful_soup = BeautifulSoup(json_page['html'])
-    all = beatiful_soup.find('div', { "id" : "all"})
-    content = all.find('div', { "id" : "content"})
-    center_block = content.find('div', { "id" : "center-block"})
-    date = get_date(center_block)
-    decription = get_description(center_block)
-    value = get_video_code(center_block)
-    caption = get_caption(center_block)
-    all_tags = get_actors_tags(center_block)
-    actors_names = get_actors_names(all_tags)
-    page_info['label'] = caption
-    page_info['value'] = value
-    page_info['description'] = decription
-    page_info['date'] = date
-    page_info['actors'] = actors_names
-    return page_info
+
+    with open(filepath) as  opened_page:
+        try:
+            json_page = json.load(opened_page)
+            beatiful_soup = BeautifulSoup(json_page['html'])
+            all = beatiful_soup.find('div', { "id" : "all"})
+            content = all.find('div', { "id" : "content"})
+            center_block = content.find('div', { "id" : "center-block"})
+            date = get_date(center_block)
+            decription = get_description(center_block)
+            value = get_video_code(center_block)
+            caption = get_caption(center_block)
+            all_tags = get_actors_tags(center_block)
+            actors_names = get_actors_names(all_tags)
+            page_info['label'] = caption
+            page_info['value'] = value
+            page_info['description'] = decription
+            page_info['date'] = date
+            page_info['actors'] = actors_names
+            return page_info
+        except :
+
+            import traceback
+            traceback.print_exc()
+
+
+def parse_all_series(filenames_iterator):
+    cdn = get_or_create_cdn("Своя CDN", "http://cdn.serialov.tv/")
+    topic = get_or_create_topic("fizruk", "Физрук")
+    for file_name in filenames_iterator:
+        m_unit = get_or_create_media_unit('Сезон {}'.format(file_name.split('_')[1]), topic.id)
+        one_info = parse_one_info_page(file_name)
+        fake_user = get_or_create_user("Физрук", "Админ", APP_USERS_GENDER_MAN, 'password')
+        media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
+        get_or_create_media_in_unit(media.id, m_unit.id)
+        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}'.format(id=media.id), one_info['label'], ' ', one_info['description'])
+        for pers in one_info['actors']:
+            name_surname = pers.split(' ')
+            name = name_surname[0]
+            surname = name_surname[1]
+            person = get_or_create_person(name, surname)
+            get_or_create_persons_media(media.id, person.id)
+
+        print json.dumps({'id':media.id,'filename':os.path.basename(file_name)})
+        #print media.title, media.description, media.release_date, media.type_
+
 
 
 def get_video_code(center_block):
@@ -138,6 +169,78 @@ def get_all_actors():
     return all_actors
 
 
+def get_or_create_cdn(name, url):
+    cdn = None
+    try:
+        cdn = session.query().filter(CDN.name == name).filter(CDN.url == url).one()
+    except NoResultFound:
+        cdn = CDN(name=name, url=url)
+        session.add(cdn)
+        session.commit()
+    except Exception, e:
+        session.rollback()
+        session.flush()
+    return cdn
+
+
+def get_or_create_extras(cdn_name, url, title, title_orig='', description='', type = APP_EXTRA_TYPE_VIEDO):
+    extras = None
+    try:
+        extras = session.query(Extras).filter(Extras.cdn_name == cdn_name).filter(Extras.location == url).one()
+    except NoResultFound:
+        extras = Extras(cdn_name=cdn_name, location=url, title=title, title_orig= title_orig, description=description, type=type)
+        session.add(extras)
+        session.commit()
+    except Exception, e:
+        session.rollback()
+        session.flush()
+    return extras
+
+
+def get_or_create_media_in_unit(media_id, media_unit_id):
+    media_in_unit = None
+    try:
+        media_in_unit = session.query(MediaInUnit).filter(MediaInUnit.media_unit_id == media_unit_id).filter(MediaInUnit.media_id == media_id).one()
+    except NoResultFound:
+        media_in_unit = MediaInUnit(media_id=media_id, media_unit_id=media_unit_id)
+        session.add(media_in_unit)
+        session.commit()
+    except Exception, e:
+        session.rollback()
+        session.flush()
+    return media_in_unit
+
+
+def get_or_create_topic(name, title, releasedate = datetime.datetime.today().date()):
+    topic = None
+    try:
+        topic = session.query(Topics).filter(Topics.name == name).filter(Users.title == title).one()
+    except NoResultFound:
+        topic = Topics(name=name, title=title, releasedate=releasedate, status=u'a', type=u'serial')
+        session.add(topic)
+        session.commit()
+    except Exception, e:
+        print "EEE" + e.message
+        session.rollback()
+        session.flush()
+    return topic
+
+
+def get_or_create_media_unit(title, topic_id):
+    m_unit = None
+    try:
+        m_unit = session.query(MediaUnits).filter(MediaUnits.title == title).filter(MediaUnits.topic_id == topic_id).one()
+    except NoResultFound:
+        m_unit = MediaUnits(title=title, topic_id=topic_id)
+        session.add(m_unit)
+        session.commit()
+    except Exception, e:
+        session.rollback()
+        session.flush()
+    return m_unit
+
+
+
 def get_or_create_user(fname, lname, gender, password):
     user = None
     try:
@@ -189,8 +292,10 @@ def get_or_create_persons_media(media_id, person_id):
 def get_or_create_media(title, description, release_date, type_, owner):
     media = None
     try:
-        media = session.query(Media).filter(Media.title == title, Media.description == description,
-                              Media.release_date == release_date, Media.type_ == type_, Media.owner == owner).one()
+
+        owner_sa  = session.query(Users).filter(Users.id == owner).one()
+        media = session.query(Media).filter(Media.title == title).one()
+
     except NoResultFound:
         media = Media(title=title, description=description, release_date=release_date, type_=type_, owner=owner)
         session.add(media)
