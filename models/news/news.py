@@ -13,6 +13,7 @@ class News(Base):
     __table_args__ = {'extend_existing': True}
 
     id            = Column(Integer, primary_key=True)
+    title      = Column(String(), nullable=True)
     comments_cnt  = Column(Integer, nullable=False)
     published     = Column(DateTime, nullable=True)
     created       = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
