@@ -79,7 +79,7 @@ def get_search_list(auth_user, session, **kwargs):
     #     print "Result: %s" % queue.get()
     #     append(convert_result_search(queue.get()))
 
-    for key, val in mds:
+    for key, val in mds.items():
         list_ids = content_ids.get(val[0], [])
         if len(list_ids):
             params.update({'list_ids': list_ids})
