@@ -16,14 +16,14 @@ class NewsModelView(SqlAlModelView):
 
     column_labels = dict(
         comments_cnt=u"Кол-во комментариев", published=u"Публикация", created=u"Дата создания",
-        text=u"Текст", obj_id=u"Id объекта", obj_name=u"Название объекта", obj_type=u"Тип объекта"
+        text=u"Текст", obj_id=u"Id объекта", obj_name=u"Название объекта", obj_type=u"Тип объекта", title=u"Заголовок"
     )
 
     column_choices = dict(
         obj_type=OBJECT_TYPES
     )
 
-    form_columns = ('comments_cnt', 'published', 'created', 'text', 'obj_id', 'obj_name', 'obj_type')
+    form_columns = ('comments_cnt', 'published', 'created', 'text', 'obj_id', 'obj_name', 'obj_type', 'title')
 
     form_overrides = dict(
         obj_type=fields.Select2Field,
