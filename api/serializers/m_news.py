@@ -20,6 +20,7 @@ class mNewsSerializer(DefaultSerializer):
 
     __read_fields = {
         'id': '',
+        'title': '',
         'text': '',
         'published': '',
         'object': '',
@@ -41,6 +42,9 @@ class mNewsSerializer(DefaultSerializer):
 
     def transform_id(self, instance, **kwargs):
         return instance.id
+
+    def transform_title(self, instance, **kwargs):
+        return instance.title
 
     def transform_text(self, instance, **kwargs):
         return instance.text

@@ -1,7 +1,7 @@
 # coding: utf-8
 from api.serializers.m_media import mMediaSerializer
 from models.media.media import Media
-from utils.validation import validate_list_int
+from utils.validation import validate_list_int, validate_mLimitId
 
 
 def get(auth_user=None, session=None, **kwargs):
@@ -43,13 +43,18 @@ def get(auth_user=None, session=None, **kwargs):
             'order': query['order'],
             'order_dir': query.get('order_dir', 'asc'),
         }
+    if 'limit' in query:
+        params['limit'] = validate_mLimitId(query['limit'])
+    else:
+        params['limit'] = validate_mLimitId('12')
 
-    instance = Media.get_media_list(**params).all()
+    instance = Media.get_media_list(**params)
+    instance = Media.mLimitId(instance, params['limit'])
     if not instance is None:
         serializer_params = {
             'user': auth_user,
             'session': session,
-            'instance': instance,
+            'instance': instance.all(),
         }
         data = mMediaSerializer(**serializer_params).data
 

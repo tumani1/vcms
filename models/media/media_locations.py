@@ -15,3 +15,4 @@ class MediaLocations(Base):
 
     def __repr__(self):
         return u"<MediaLocation(id={0}, cdn={1}, media={2})>".format(self.id, self.cdn_name, self.media_id)
+
