@@ -149,7 +149,10 @@ class Media(Base):
         return status_code
 
     @classmethod
-    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+    def get_search_by_text(cls, session, text, list_ids=None, limit=None, **kwargs):
+        if list_ids is None or not len(list_ids):
+            return []
+
         query = cls.tmpl_for_media(None, session)
 
         # Full text search by text
