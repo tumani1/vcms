@@ -68,7 +68,7 @@ class Media(Base):
         return query
 
     @classmethod
-    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None, morder=None, order=None):
+    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None, morder=None, order=None, limit = (12,None,None,None)):
         query = cls.tmpl_for_media(user, session)
 
         if not id is None:
@@ -149,7 +149,27 @@ class Media(Base):
         return status_code
 
     @classmethod
-    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+    def mLimitId(cls, elements, limit):
+        if limit:
+            if limit['id_dwn'] != 0 and limit['id_top'] != 0:
+                elements = elements.filter(and_(cls.id <= limit['id_top'], cls.id >= limit['id_dwn']))
+            elif limit['id_dwn'] != 0:
+                elements = elements.filter(cls.id >= limit['id_dwn'])
+            elif limit['id_top']:
+                elements = elements.filter(cls.id <= limit['id_top'])
+            top, lim = limit['top'], limit['limit']
+            if lim:
+                elements = elements.limit(lim)
+            if top:
+                elements = elements.offset(top)
+
+        return elements
+
+    @classmethod
+    def get_search_by_text(cls, session, text, list_ids=None, limit=None, **kwargs):
+        if list_ids is None or not len(list_ids):
+            return []
+
         query = cls.tmpl_for_media(None, session)
 
         # Full text search by text
@@ -168,7 +188,7 @@ class Media(Base):
         return query
 
     def __str__(self):
-        return "{0} - {1}".format(self.id, self.title.encode('utf-8'))
+        return u"{0} - {1}".format(self.id, self.title)
 
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)

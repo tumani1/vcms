@@ -100,21 +100,22 @@ class Persons(Base):
         return query
 
     @classmethod
-    def get_search_by_text(cls, session, text, limit=None, **kwargs):
+    def get_search_by_text(cls, session, text, list_ids=None, limit=None, **kwargs):
+        if list_ids is None or not len(list_ids):
+            return []
+
         query = cls.tmpl_for_persons(None, session)
 
         # Full text search by text
         query = search(query, text)
 
-        # Set limit and offset filter
-        if not limit is None:
-            # Set Limit
-            if limit[0]:
-                query = query.limit(limit[0])
+        # Set Limit
+        if limit[0]:
+            query = query.limit(limit[0])
 
-            # Set Offset
-            if limit[1]:
-                query = query.offset(limit[1])
+        # Set Offset
+        if limit[1]:
+            query = query.offset(limit[1])
 
         return query
 
@@ -123,7 +124,7 @@ class Persons(Base):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
     def __str__(self):
-        return u"{0} - {1}')>".format(self.id, self.get_full_name)
+        return u"{0} - {1}'>".format(self.id, self.get_full_name)
     
     def __repr__(self):
         return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)

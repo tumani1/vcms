@@ -78,3 +78,4 @@ class mMediaSerializer(DefaultSerializer):
 
     def transform_rating_votes(self, instance, **kwargs):
         return instance.rating_votes
+        
