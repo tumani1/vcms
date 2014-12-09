@@ -1,13 +1,15 @@
 # coding: utf-8
-
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.orm import relationship
 from sqlalchemy.event import listen
+from sqlalchemy import event
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_
 from sqlalchemy_utils import ChoiceType
+from models import News
 
 from models.base import Base
 
-from utils.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES, OBJECT_TYPE_NEWS
 
 
 class Comments(Base):
@@ -77,6 +79,31 @@ class Comments(Base):
         if not count:
             raise ValueError(u'Необходимо указать obj_id или obj_name')
         return self
+
+
+@event.listens_for(Comments, 'after_insert')
+def increment_news_comments_cnt(mapper, connect, target, **kwargs):
+    session = scoped_session(sessionmaker(bind=connect.engine, expire_on_commit=False))()
+    if target.obj_type == OBJECT_TYPE_NEWS:
+        if target.obj_id:
+            news = session.query(News).filter(News.id == target.obj_id).first()
+        else:
+            news = session.query(News).filter(News.title == target.obj_name).first()
+        news.comments_cnt += 1
+        session.commit()
+
+
+@event.listens_for(Comments, 'after_delete')
+def decrement_news_comments_cnt(mapper, connect, target):
+    session = scoped_session(sessionmaker(bind=connect.engine, expire_on_commit=False))()
+    if target.obj_type == OBJECT_TYPE_NEWS:
+        if target.obj_id:
+            news = session.query(News).filter(News.id == target.obj_id).first()
+        else:
+            news = session.query(News).filter(News.title == target.obj_name).first()
+        if news.comments_cnt > 0:
+            news.comments_cnt -= 1
+            session.commit()
 
 
 def validate_object(mapper, connect, target):
