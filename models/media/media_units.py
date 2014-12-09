@@ -121,6 +121,12 @@ class MediaUnits(Base):
 
         return query
 
+    @property
+    def as_dict(self):
+        return {
+
+        }
+
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)
 

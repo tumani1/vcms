@@ -30,7 +30,7 @@ class News(Base):
 
     @classmethod
     def get_news_by_id(cls, session, news_id):
-        return cls.tmpl_for_news(session).filter(cls.id == news_id)
+        return cls.tmpl_for_news(session).get(news_id)
 
     @classmethod
     def get_news_list(cls, session, id=None, limit=None, sort=None, with_obj=None,
