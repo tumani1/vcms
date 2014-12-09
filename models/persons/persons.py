@@ -119,7 +119,7 @@ class Persons(Base):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
     def __str__(self):
-        return u"{0} - {1}'>".format(self.id, self.get_full_name)
+        return u"{0} - {1}".format(self.id, self.get_full_name)
     
     def __repr__(self):
         return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)
