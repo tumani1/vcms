@@ -20,4 +20,12 @@ sudo make install
 # Move Nginx file
 sudo mv /usr/share/nginx/nginx/sbin/nginx /usr/sbin/
 
+# Restart Nginx
+sudo service nginx restart
+
+# Restart memcached
+sudo service memcached restart
+
+nginx -V
+
 exit 0
