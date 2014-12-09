@@ -12,6 +12,7 @@ from api.serializers.m_media_unit import mMediaUnitsSerializer
 from api.serializers.m_content import mContentSerializer
 from api.serializers.m_topic import mTopicSerializer
 from api.serializers.m_stream_element_m_comment import mStreamElement
+from utils.common import datetime_to_unixtime as convert_date
 
 __all__ = ['mNewsSerializer']
 
@@ -50,7 +51,7 @@ class mNewsSerializer(DefaultSerializer):
         return instance.text
 
     def transform_published(self, instance, **kwargs):
-        return instance.published
+        return convert_date(instance.published)
 
     def transform_comments_cnt(self, instance, **kwargs):
         return instance.comments_cnt

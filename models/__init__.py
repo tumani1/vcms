@@ -15,7 +15,8 @@ from extras import *
 from tags import *
 from content import *
 from tokens import *
+from news import *
 from comments import *
 from mongo import *
 from eshop import *
-from news import *
+
