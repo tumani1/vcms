@@ -13,5 +13,6 @@ class MediaLocations(Base):
     access_level = Column(SMALLINT, default=None, nullable=True)
     value        = Column(String, nullable=True)
 
+    def __repr__(self):
+        return u"<MediaLocation(id={0}, cdn={1}, media={2})>".format(self.id, self.cdn_name, self.media_id)
 
-    

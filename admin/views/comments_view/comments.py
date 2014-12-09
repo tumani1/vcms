@@ -7,7 +7,7 @@ from admin.views.base import SqlAlModelView
 from admin.templates import comment_link_formatter
 
 from models.comments.comments import Comments
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class CommentsModelView(SqlAlModelView):

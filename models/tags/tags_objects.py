@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy_utils import ChoiceType
 from models import Base
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 from sqlalchemy.event import listen
 
 

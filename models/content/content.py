@@ -6,7 +6,7 @@ from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy_searchable import search
 
 from models.base import Base
-from models.comments.constants import CONTENT_OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class Content(Base):
@@ -18,7 +18,7 @@ class Content(Base):
     id       = Column(Integer, primary_key=True)
     title    = Column(String, nullable=True)
     text     = Column(Text, nullable=True)
-    obj_type = Column(ChoiceType(CONTENT_OBJECT_TYPES), nullable=False)
+    obj_type = Column(ChoiceType(OBJECT_TYPES), nullable=False)
     obj_id   = Column(Integer, nullable=True)
     obj_name = Column(String, nullable=True)
 

@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from models import Base
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class ItemsObjects(Base):

@@ -21,6 +21,7 @@ from api.eshop import routing as eshop_routing
 from api.internal import routing as internal_routing
 from api.login import routing as login_routing
 from api.service import routing as service_routing
+from api.news import routing as news_routing
 
 
 rest_routes = {
@@ -41,6 +42,7 @@ rest_routes = {
     'eshop': eshop_routing,
     'login': login_routing,
     'service': service_routing,
+    'news': news_routing,
 }
 
 internal_routes = {

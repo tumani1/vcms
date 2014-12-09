@@ -18,7 +18,7 @@ from api.serializers.m_content import mContentSerializer
 from utils.common import datetime_to_unixtime as convert_date
 
 
-class mStraemElement(DefaultSerializer):
+class mStreamElement(DefaultSerializer):
 
     __read_fields = {
         'id': '',
@@ -32,7 +32,7 @@ class mStraemElement(DefaultSerializer):
     }
 
     def __init__(self, user=None, **kwargs):
-        super(mStraemElement, self).__init__(user=user, **kwargs)
+        super(mStreamElement, self).__init__(user=user, **kwargs)
         if user is None:
             del self.fields['relation']
 
@@ -109,7 +109,7 @@ class mCommentSerializer(DefaultSerializer):
             'm': (Media, mMediaSerializer),
             'p': (Persons, mPersonSerializer),
             'c': (Content, mContentSerializer),
-            's': (Stream, mStraemElement),
+            's': (Stream, mStreamElement),
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
         self.fields = self.__read_fields

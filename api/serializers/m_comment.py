@@ -2,6 +2,8 @@
 from sqlalchemy import and_
 
 from models.users import Users
+from models import Topics
+from models import News
 from models.comments import UsersComments
 from models.media import MediaUnits, Media
 from models.persons import Persons
@@ -32,7 +34,9 @@ class mCommentSerializer(DefaultSerializer):
             'm': (Media, serializers.mMediaSerializer),
             'p': (Persons, serializers.mPersonSerializer),
             'c': (Content, serializers.mContentSerializer),
-            's': (Stream, serializers.mStraemElement),
+            's': (Stream, serializers.mStreamElement),
+            't': (Topics, serializers.mTopicSerializer),
+            'n': (News, serializers.mNewsSerializer)
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
         self.fields = self.__read_fields

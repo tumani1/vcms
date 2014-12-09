@@ -1,6 +1,6 @@
 # coding: utf-8
 import re
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 from utils.exceptions import Invalid
 
 

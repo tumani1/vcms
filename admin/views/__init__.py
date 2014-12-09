@@ -18,6 +18,7 @@ from tags_view import *
 from content_view import *
 from eshop_view import *
 from admin_view import *
+from news_view import *
 
 # import models
 # ###############################################################################
