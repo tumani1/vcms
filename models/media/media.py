@@ -101,7 +101,7 @@ class Media(Base):
             query = query.filter(cls.id.in_(subquery))
 
         if not topic is None:
-            query = query.join(MediaInUnit).join(MediaUnits).filter(MediaUnits.topic_name == topic)
+            query = query.join(MediaInUnit).join(MediaUnits).filter(MediaUnits.topic_id == topic)
 
         if not morder is None:
             query = query.join(MediaUnits).filter(MediaInUnit.m_order == morder)
