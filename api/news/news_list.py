@@ -2,6 +2,7 @@
 from api.serializers import mNewsSerializer
 from utils.validation import validate_mLimit
 from models import News
+from utils.validation import validate_mLimit
 
 
 def get(auth_user, session=None, **kwargs):
