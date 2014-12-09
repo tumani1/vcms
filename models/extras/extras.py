@@ -136,7 +136,7 @@ BEGIN
         new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        IF NEW.bio <> OLD.bio THEN
+        IF NEW.description <> OLD.description THEN
             new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
         END IF;
     END IF;
