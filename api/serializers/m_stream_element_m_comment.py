@@ -155,7 +155,10 @@ class mCommentSerializer(DefaultSerializer):
                 else:
                     obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(id=instance.obj_id).first()
             else:
-                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_id).first()
+                if instance.obj_type.code == 't':
+                    obj = self.object_types[instance.obj_type.code][0].get_topics_by_name(self.user, instance.obj_name, self.session)
+                else:
+                    obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
             if instance.obj_type.code == 'c':
                 return self.object_types[instance.obj_type.code][1](obj).get_data()
             else:
@@ -237,7 +240,10 @@ class mNewsSerializer(DefaultSerializer):
                 else:
                     obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(id=instance.obj_id).first()
             else:
-                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
+                if instance.obj_type.code == 't':
+                    obj = self.object_types[instance.obj_type.code][0].get_topics_by_name(self.user, instance.obj_name, self.session)
+                else:
+                    obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
             if instance.obj_type.code == 'c':
                 return self.object_types[instance.obj_type.code][1](obj).get_data()
             else:
