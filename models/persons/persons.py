@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy_searchable import search
 
-
 from models.base import Base
 from models.topics import PersonsTopics
 from models.tokens import SessionToken
@@ -108,6 +107,12 @@ class Persons(Base):
         query = query.filter(cls.id.in_(list_ids))
 
         return query
+
+    @property
+    def as_dict(self):
+        return {
+
+        }
 
     @property
     def get_full_name(self):

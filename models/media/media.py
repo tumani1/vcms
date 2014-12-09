@@ -175,6 +175,12 @@ class Media(Base):
 
         return query
 
+    @property
+    def as_dict(self):
+        return {
+
+        }
+
     def __str__(self):
         return u"{0} - {1}".format(self.id, self.title)
 
