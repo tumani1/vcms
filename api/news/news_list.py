@@ -2,6 +2,7 @@
 from api.serializers import mNewsSerializer
 
 from models import News
+from utils.validation import validate_mLimit
 
 
 def get(auth_user, session=None, **kwargs):
@@ -25,7 +26,7 @@ def get(auth_user, session=None, **kwargs):
         params['id'] = query['id']
 
     if 'limit' in query:
-        params['limit'] = query['limit']
+        params['limit'] = validate_mLimit(query['limit'])
 
     if 'sort' in query:
         params['sort'] = query['sort']
