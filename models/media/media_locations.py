@@ -12,3 +12,6 @@ class MediaLocations(Base):
     quality      = Column(String, nullable=True)
     access_level = Column(SMALLINT, default=None, nullable=True)
     value        = Column(String, nullable=True)
+
+
+    
