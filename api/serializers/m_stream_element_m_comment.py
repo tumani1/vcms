@@ -8,6 +8,8 @@ from models.comments import Comments, UsersComments
 from models.persons import Persons
 from models.content import Content
 from models.mongo import constant, Stream
+from models.topics import Topics
+from models.news import News
 from utils.serializer import DefaultSerializer
 from api.serializers.m_users_short import mUserShort
 from api.serializers.m_attach import mAttach
@@ -15,6 +17,7 @@ from api.serializers.m_media import mMediaSerializer
 from api.serializers.m_persons import mPersonSerializer
 from api.serializers.m_media_unit import mMediaUnitsSerializer
 from api.serializers.m_content import mContentSerializer
+from api.serializers.m_topic import mTopicSerializer
 from utils.common import datetime_to_unixtime as convert_date
 
 
@@ -95,23 +98,29 @@ class mStreamElement(DefaultSerializer):
 
 class mCommentSerializer(DefaultSerializer):
 
-    __read_fields = {
-        'id': '',
-        'user': '',
-        'text': '',
-        'object': '',
-        'relation': '',
-    }
-
     def __init__(self, **kwargs):
+        self.__read_fields = {
+            'id': '',
+            'user': '',
+            'text': '',
+            'object': '',
+            'relation': '',
+        }
         self.object_types = {
             'mu': (MediaUnits, mMediaUnitsSerializer),
             'm': (Media, mMediaSerializer),
             'p': (Persons, mPersonSerializer),
             'c': (Content, mContentSerializer),
             's': (Stream, mStreamElement),
+            't': (Topics, mTopicSerializer),
+            'n': (News, mNewsSerializer)
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
+
+        if not self.with_obj:
+            cl = '_{0}__read_fields'.format(self.__class__.__name__)
+            del getattr(self, cl)['object']
+
         self.fields = self.__read_fields
         super(mCommentSerializer, self).__init__(**kwargs)
         self.users_ids, self.comment_ids = self.get_users_and_comment_ids_by_comments(self.instance)
@@ -159,9 +168,10 @@ class mCommentSerializer(DefaultSerializer):
 
     def transform_relation(self, instance, **kwargs):
         relation = {}
-        if instance.id in self.rel_dict.keys():
-            if self.rel_dict[instance.id].liked:
-                relation = {'liked': convert_date(self.rel_dict[instance.id].liked)}
+        if self.is_auth:
+            if instance.id in self.rel_dict.keys():
+                if self.rel_dict[instance.id].liked:
+                    relation = {'liked': convert_date(self.rel_dict[instance.id].liked)}
         return relation
 
     def get_users_and_comment_ids_by_comments(self, comments):
@@ -173,3 +183,67 @@ class mCommentSerializer(DefaultSerializer):
             users_ids.append(com.user_id)
             com_ids.append(com.id)
         return users_ids, com_ids
+
+
+class mNewsSerializer(DefaultSerializer):
+
+    def __init__(self, **kwargs):
+        self.__read_fields = {
+            'id': '',
+            'title': '',
+            'text': '',
+            'published': '',
+            'object': '',
+            'comments_cnt': '',
+        }
+        self.object_types = {
+            'mu': (MediaUnits, mMediaUnitsSerializer),
+            'm': (Media, mMediaSerializer),
+            'p': (Persons, mPersonSerializer),
+            'c': (Content, mContentSerializer),
+            's': (Stream, mStreamElement),
+            't': (Topics, mTopicSerializer)
+        }
+        self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
+
+        if not self.with_obj:
+            cl = '_{0}__read_fields'.format(self.__class__.__name__)
+            del getattr(self, cl)['object']
+
+        self.fields = self.__read_fields
+        super(mNewsSerializer, self).__init__(**kwargs)
+
+    def transform_id(self, instance, **kwargs):
+        return instance.id
+
+    def transform_title(self, instance, **kwargs):
+        return instance.title
+
+    def transform_text(self, instance, **kwargs):
+        return instance.text
+
+    def transform_published(self, instance, **kwargs):
+        return convert_date(instance.published)
+
+    def transform_comments_cnt(self, instance, **kwargs):
+        return instance.comments_cnt
+
+    def transform_object(self, instance, **kwargs):
+        if self.with_obj:
+
+            if instance.obj_id:
+                if instance.obj_type.code == 's':
+                    obj = self.object_types[instance.obj_type.code][0].objects.get(id=instance.obj_id)
+                else:
+                    obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(id=instance.obj_id).first()
+            else:
+                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
+            if instance.obj_type.code == 'c':
+                return self.object_types[instance.obj_type.code][1](obj).get_data()
+            else:
+                params = {
+                    'instance': obj,
+                    'user': self.user,
+                    'session': self.session,
+                }
+                return self.object_types[instance.obj_type.code][1](**params).data

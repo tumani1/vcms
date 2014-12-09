@@ -69,7 +69,7 @@ class mNewsSerializer(DefaultSerializer):
                 else:
                     obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(id=instance.obj_id).first()
             else:
-                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.name).first()
+                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
             if instance.obj_type.code == 'c':
                 return self.object_types[instance.obj_type.code][1](obj).get_data()
             else:
