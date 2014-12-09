@@ -62,6 +62,8 @@ if not result then
         body = ""
     })
 
+     ngx.log(ngx.ERR, "Recieve body: " .. resp.body)
+
     -- Проверка статуса запроса
     if (not resp or resp.status ~= ngx.HTTP_OK) then
         ngx.log(ngx.ERR, "Recieved failed to request")
@@ -73,13 +75,20 @@ if not result then
     --     ngx.log(ngx.ERR, "Recived not json response: " .. resp.headers['Content-Type'])
     -- end
 
+    local location;
     local json = require "cjson"
     local result = json.decode(resp.body)
 
-    if (result and result.location and #result.location > 0) then
-        location = result.location
+    if (result and result.location) then
+        location = result.location;
+        if (#location > 0) then
+            location = result.location
+        else
+            ngx.log(ngx.ERR, "Recieved empty result")
+            return_not_found()
+        end
     else
-        ngx.log(ngx.ERR, "Json response error: " .. result)
+        ngx.log(ngx.ERR, "Error json convert")
         return_not_found()
     end
 
@@ -94,6 +103,8 @@ if not result then
 
     -- Перенаправление на url
     return ngx.redirect(concat_url(location))
-end
 
-return_not_found()
+else
+    ngx.log(ngx.ERR, "Error in lua applivation")
+    return_not_found()
+end

@@ -48,7 +48,7 @@ def get(auth_user=None, session=None, **kwargs):
     else:
         params['limit'] = validate_mLimitId('12')
 
-    instance = Media.get_media_list(**params).all()
+    instance = Media.get_media_list(**params)
     instance = Media.mLimitId(instance, params['limit'])
     if not instance is None:
         serializer_params = {
