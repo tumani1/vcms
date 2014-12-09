@@ -20,15 +20,14 @@ __all__ = ['mCommentSerializer']
 
 class mCommentSerializer(DefaultSerializer):
 
-    __read_fields = {
-        'id': '',
-        'user': '',
-        'text': '',
-        'object': '',
-        'relation': '',
-    }
-
     def __init__(self, **kwargs):
+        self.__read_fields = {
+            'id': '',
+            'user': '',
+            'text': '',
+            'object': '',
+            'relation': '',
+        }
         self.object_types = {
             'mu': (MediaUnits, serializers.mMediaUnitsSerializer),
             'm': (Media, serializers.mMediaSerializer),
@@ -39,6 +38,11 @@ class mCommentSerializer(DefaultSerializer):
             'n': (News, serializers.mNewsSerializer)
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
+
+        if not self.with_obj:
+            cl = '_{0}__read_fields'.format(self.__class__.__name__)
+            del getattr(self, cl)['object']
+
         self.fields = self.__read_fields
         super(mCommentSerializer, self).__init__(**kwargs)
         self.users_ids, self.comment_ids = self.get_users_and_comment_ids_by_comments(self.instance)
