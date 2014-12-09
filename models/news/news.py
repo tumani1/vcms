@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import datetime
-from sqlalchemy import Column, Integer, DateTime, String, desc
+from sqlalchemy import Column, Integer, DateTime, String, desc, Text
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType
 from models.base import Base
@@ -13,7 +13,7 @@ class News(Base):
     __table_args__ = {'extend_existing': True}
 
     id            = Column(Integer, primary_key=True)
-    title      = Column(String(), nullable=True)
+    title      = Column(Text, nullable=True)
     comments_cnt  = Column(Integer, nullable=False)
     published     = Column(DateTime, nullable=True)
     created       = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
