@@ -45,6 +45,8 @@ def get(auth_user=None, session=None, **kwargs):
         }
     if 'limit' in query:
         params['limit'] = validate_mLimitId(query['limit'])
+    else:
+        params['limit'] = validate_mLimitId('12')
 
     instance = Media.get_media_list(**params).all()
     instance = Media.mLimitId(instance, params['limit'])
@@ -52,7 +54,7 @@ def get(auth_user=None, session=None, **kwargs):
         serializer_params = {
             'user': auth_user,
             'session': session,
-            'instance': instance,
+            'instance': instance.all(),
         }
         data = mMediaSerializer(**serializer_params).data
 
