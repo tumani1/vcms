@@ -122,6 +122,10 @@ if __name__ == '__main__':
     admin_view.add_view(PaymentsModelView())
 
     ###############################################################################
+    # News
+    admin_view.add_view(NewsModelView())
+
+    ###############################################################################
     # Init admin app
     admin_view.init_app(app)
 

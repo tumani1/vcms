@@ -1,6 +1,6 @@
 # coding: utf-8
 import re
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 from utils.exceptions import Invalid
 
 
@@ -116,7 +116,7 @@ def validate_list_string(value, **kwargs):
 
 def validate_string(value, **kwargs):
     try:
-         return str(value).strip()
+        return str(value).strip()
     except Exception, e:
         return None
 

@@ -2,7 +2,7 @@
 from flask.ext.admin.form import fields
 from admin.views.base import SqlAlModelView
 from models.eshop.items.items_objects import ItemsObjects
-from models.comments.constants import OBJECT_TYPES
+from utils.constants import OBJECT_TYPES
 
 
 class ItemsObjectsModelView(SqlAlModelView):

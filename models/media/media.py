@@ -1,10 +1,12 @@
 # coding: utf-8
+
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
 from sqlalchemy.event import listen
-from sqlalchemy_utils import ChoiceType
+from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy.orm import relationship, contains_eager, backref
+from sqlalchemy_searchable import search
 
 from models.base import Base
 from models.media.users_media import UsersMedia
@@ -19,6 +21,9 @@ from utils.common import user_access_media
 
 class Media(Base):
     __tablename__ = 'media'
+    __table_args__ = (
+        Index('media_search_name_gin_idx', 'search_name', postgresql_using='gin'),
+    )
 
     id             = Column(Integer, primary_key=True)
     title          = Column(String, nullable=False)
@@ -39,6 +44,8 @@ class Media(Base):
     type_          = Column(ChoiceType(APP_MEDIA_TYPE), nullable=False)
     access         = Column(Integer, nullable=True)
     access_type    = Column(ChoiceType(APP_MEDIA_LIST), nullable=True)
+
+    search_name    = Column(TSVectorType('title', 'title_orig', 'description'))
 
     owner           = relationship('Users', backref=backref('media', lazy='dynamic'))
     countries_list  = relationship('MediaAccessCountries', backref='media', cascade='all, delete')
@@ -141,6 +148,28 @@ class Media(Base):
         status_code = user_access_media(access, owner, is_auth, is_manager)
         return status_code
 
+    @classmethod
+    def get_search_by_text(cls, session, text, list_ids=None, limit=None, **kwargs):
+        if list_ids is None or not len(list_ids):
+            return []
+
+        query = cls.tmpl_for_media(None, session)
+
+        # Full text search by text
+        query = search(query, text)
+
+        # Set limit and offset filter
+        if not limit is None:
+            # Set Limit
+            if limit[0]:
+                query = query.limit(limit[0])
+
+            # Set Offset
+            if limit[1]:
+                query = query.offset(limit[1])
+
+        return query
+
     def __str__(self):
         return u"{0} - {1}".format(self.id, self.title)
 
@@ -152,13 +181,22 @@ Media.users_media_query = relationship('UsersMedia', lazy='dynamic')
 update_access_type = DDL("""
 CREATE FUNCTION media_update() RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.access_type != OLD.access_type THEN
-        DELETE FROM media_access_countries WHERE media_id = NEW.id;
+    IF TG_OP = 'INSERT' THEN
+        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig OR NEW.description <> OLD.description THEN
+            new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.description, ''));
+        END IF;
+        IF NEW.access_type != OLD.access_type THEN
+            DELETE FROM media_access_countries WHERE media_id = NEW.id;
+        END IF;
     END IF;
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
-CREATE TRIGGER media_update BEFORE UPDATE ON media
+
+CREATE TRIGGER media_search_name_update BEFORE INSERT OR UPDATE ON media
 FOR EACH ROW EXECUTE PROCEDURE media_update();
 """)
 
