@@ -35,7 +35,7 @@ def get_search_list(auth_user, session, **kwargs):
         params['text'] = validate_string(query['text'])
 
     if 'limit' in query:
-        params['limit'] = validate_mLimit(query.get('limit', ''))
+        params['limit'] = validate_mLimit(query['limit'])
 
     if params['text'] is None:
         raise RequestErrorException(u'Empty text field')
