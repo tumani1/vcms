@@ -1,11 +1,9 @@
 # coding: utf-8
 
-import json
 from Queue import Queue
 from threading import Thread
 
 from models import Persons, Topics, Media, MediaUnits, Content
-from utils.constants import OBJECT_TYPE_PERSON, OBJECT_TYPE_TOPIC, OBJECT_TYPE_MEDIA_UNIT, OBJECT_TYPE_MEDIA
 
 from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit, validate_string
@@ -13,13 +11,8 @@ from utils.validation import validate_mLimit, validate_string
 __all__ = ['get_search_list']
 
 
-def convert_result_search(type_obj, obj):
-    return {'type': type_obj, 'obj': obj.as_dict}
-
-
 def gq(model, *args, **kwargs):
-    return model.get_search_by_text(**kwargs)
-
+    return model.get_search_by_text(**kwargs).all()
 
 def get_search_list(auth_user, session, **kwargs):
     # Params
@@ -27,7 +20,6 @@ def get_search_list(auth_user, session, **kwargs):
         'limit': None,
         'text': None,
         'session': session,
-        'list_ids': [],
     }
 
     query = kwargs['query_params']
@@ -44,48 +36,51 @@ def get_search_list(auth_user, session, **kwargs):
     if text is None:
         raise RequestErrorException(u'Empty text field')
 
-    mds = {
-        Persons: (OBJECT_TYPE_PERSON, 'person',),
-        Topics: (OBJECT_TYPE_TOPIC, 'topic',),
-        Media: (OBJECT_TYPE_MEDIA, 'media',),
-        MediaUnits: (OBJECT_TYPE_MEDIA_UNIT, 'mediaunit',),
-    }
-
-    result = []
-    append = result.append
-
-    content_ids = {}
-    con = Content.get_search_by_text(**params)
-    for i in con:
-        if not i.obj_type.code in content_ids:
-            content_ids[i.obj_type.code] = []
-
-        content_ids[i.obj_type.code].append(i.obj_id)
-
     # workers = []
     # queue = Queue()
+    # mds = [Persons, Topics, Media, MediaUnits]
     #
-    # for md in mds.keys():
-    #     list_ids = content_ids.get(mds[Persons], [])
-    #     if len(list_ids):
-    #         params.update({'list_ids': list_ids})
-    #         workers.append(Thread(target=lambda q, arg, kw: q.put(gq(*arg, **kw)), args=(queue, md,), kwargs=params))
-    #         workers[-1].start()
+    # for md in mds:
+    #     workers.append(Thread(target=lambda q, arg, kw: q.put(gq(*arg, **kw)), args=(queue, md,), kwargs=params))
+    #     workers[-1].start()
     #
     # for w in workers:
     #     w.join()
     #
+    result = []
+    append = result.append
     # while not queue.empty():
     #     print "Result: %s" % queue.get()
-    #     append(convert_result_search(queue.get()))
 
-    for key, val in mds:
-        list_ids = content_ids.get(val[0], [])
-        if len(list_ids):
-            params.update({'list_ids': list_ids})
-            obj_search = key.get_search_by_text(**params)
+    r = {}
+    con = Content.get_search_by_text(**params).all()
+    for i in con:
+        if not i.obj_type in r:
+            r[i.obj_type] = []
 
-            for item in obj_search:
-                append(convert_result_search(val[1], item))
+        r[i.obj_type].append(i.obj_id)
+
+
+    def convert_result_search(type_obj, obj):
+        return {
+            'type': type_obj,
+            'obj': obj.__dict__,
+        }
+
+    obj_search = Persons.get_search_by_text(list_ids=r.get('', []), **params)
+    for item in obj_search:
+        append(convert_result_search('person', item))
+
+    obj_search = Topics.get_search_by_text(list_ids=r.get('', []), **params)
+    for item in obj_search:
+        append(convert_result_search('topic', item))
+
+    obj_search = Media.get_search_by_text(list_ids=r.get('', []), **params)
+    for item in obj_search:
+        append(convert_result_search('media', item))
+
+    obj_search = MediaUnits.get_search_by_text(list_ids=r.get('', []), **params)
+    for item in obj_search:
+        append(convert_result_search('mediaunit', item))
 
     return result
