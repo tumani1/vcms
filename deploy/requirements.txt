@@ -22,3 +22,4 @@ git+git://github.com/mrjoes/flask-admin
 flask-mongoengine
 wtforms-html5
 BeautifulSoup4
+alembic
