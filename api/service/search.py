@@ -36,12 +36,9 @@ def get_search_list(auth_user, session, **kwargs):
         params['text'] = validate_string(query['text'])
 
     if 'limit' in query:
-        # limit = query.get('limit', '')
-        # limit, top = validate_mLimit(limit)
-        params['limit'] = 10
+        params['limit'] = validate_mLimit(query.get('limit', ''))
 
-    text = params['text']
-    if text is None:
+    if params['text'] is None:
         raise RequestErrorException(u'Empty text field')
 
     mds = {
@@ -83,9 +80,8 @@ def get_search_list(auth_user, session, **kwargs):
         list_ids = content_ids.get(val[0], [])
         if len(list_ids):
             params.update({'list_ids': list_ids})
-            obj_search = key.get_search_by_text(**params)
 
-            for item in obj_search:
+            for item in key.get_search_by_text(**params):
                 append(convert_result_search(val[1], item))
 
     return result
