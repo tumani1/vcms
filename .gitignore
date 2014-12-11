@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 *.yaml
+alembic.ini
 
 *.py[cod]
 

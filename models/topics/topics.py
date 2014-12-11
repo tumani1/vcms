@@ -96,19 +96,7 @@ class Topics(Base):
             return []
 
         query = cls.tmpl_for_topics(None, session)
-
-        # Full text search by text
-        query = search(query, text)
-
-        # Set limit and offset filter
-        if not limit is None:
-            # Set Limit
-            if limit[0]:
-                query = query.limit(limit[0])
-
-            # Set Offset
-            if limit[1]:
-                query = query.offset(limit[1])
+        query = query.filter(cls.id.in_(list_ids))
 
         return query
 
@@ -119,6 +107,12 @@ class Topics(Base):
     @property
     def get_unixtime_created(self):
         return time.mktime(self.releasedate.timetuple())
+
+    @property
+    def as_dict(self):
+        return {
+
+        }
 
     def __repr__(self):
         return u'Topics(name={0}, type={1}, status={2})'.format(self.name, self.type, self.status)

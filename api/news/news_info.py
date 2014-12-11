@@ -8,7 +8,7 @@ def get(news_id, auth_user, session, **kwargs):
     data = {}
 
     news_id = validate_int(news_id, min_value=1)
-    instance = News.get_news_by_id(session, news_id).all()
+    instance = News.get_news_by_id(session, news_id)
 
     if not instance is None:
         serializer_params = {
@@ -19,5 +19,3 @@ def get(news_id, auth_user, session, **kwargs):
         data = mNewsSerializer(**serializer_params).data
 
     return data
-
-

@@ -9,18 +9,22 @@ from utils import need_authorization
 def get(auth_user, session=None, **kwargs):
     user = session.query(Users).filter_by(id=auth_user.id).first()
     city = session.query(Cities).filter_by(id=user.city_id).first()
-    country = session.query(Countries).filter_by(id=city.country_id).first()
+    country = session.query(Countries).filter_by(id=city.country_id).first() if city else None
     result = {
         'id': user.id,
         'firstname': user.firstname,
         'lastname': user.lastname,
         'userpic': user.firstname,
         'time_zone': str(user.time_zone),
-        'country': country.name,
-        'city': city.name,
+        'city': '',
+        'country': ''
     }
-    return result
+    if city:
+        result['city'] = city.name
+    if country:
+        result['country'] = country.name
 
+    return result
 
 
 @need_authorization

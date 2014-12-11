@@ -1,6 +1,6 @@
 # coding: utf-8
 from api.serializers import mNewsSerializer
-
+from utils.validation import validate_mLimit
 from models import News
 from utils.validation import validate_mLimit
 
@@ -32,7 +32,12 @@ def get(auth_user, session=None, **kwargs):
         params['sort'] = query['sort']
 
     if 'with_obj' in query:
-        params['with_obj'] = query['with_obj']
+        with_obj = query['with_obj'].lower()
+
+        if with_obj == 'false':
+            params['with_obj'] = False
+        else:
+            params['with_obj'] = True
     else:
         params['with_obj'] = False
 

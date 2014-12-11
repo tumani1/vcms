@@ -19,16 +19,15 @@ __all__ = ['mNewsSerializer']
 
 class mNewsSerializer(DefaultSerializer):
 
-    __read_fields = {
-        'id': '',
-        'title': '',
-        'text': '',
-        'published': '',
-        'object': '',
-        'comments_cnt': '',
-    }
-
     def __init__(self, **kwargs):
+        self.__read_fields = {
+            'id': '',
+            'title': '',
+            'text': '',
+            'published': '',
+            'object': '',
+            'comments_cnt': '',
+        }
         self.object_types = {
             'mu': (MediaUnits, mMediaUnitsSerializer),
             'm': (Media, mMediaSerializer),
@@ -38,6 +37,11 @@ class mNewsSerializer(DefaultSerializer):
             't': (Topics, mTopicSerializer)
         }
         self.with_obj = kwargs['with_obj'] if 'with_obj' in kwargs else False
+
+        if not self.with_obj:
+            cl = '_{0}__read_fields'.format(self.__class__.__name__)
+            del getattr(self, cl)['object']
+
         self.fields = self.__read_fields
         super(mNewsSerializer, self).__init__(**kwargs)
 
@@ -65,7 +69,7 @@ class mNewsSerializer(DefaultSerializer):
                 else:
                     obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(id=instance.obj_id).first()
             else:
-                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.name).first()
+                obj = self.session.query(self.object_types[instance.obj_type.code][0]).filter_by(name=instance.obj_name).first()
             if instance.obj_type.code == 'c':
                 return self.object_types[instance.obj_type.code][1](obj).get_data()
             else:

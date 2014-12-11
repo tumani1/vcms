@@ -117,21 +117,15 @@ class MediaUnits(Base):
             return []
 
         query = cls.tmpl_for_media_units(None, session)
-
-        # Full text search by text
-        query = search(query, text)
-
-        # Set limit and offset filter
-        if not limit is None:
-            # Set Limit
-            if limit[0]:
-                query = query.limit(limit[0])
-
-            # Set Offset
-            if limit[1]:
-                query = query.offset(limit[1])
+        query = query.filter(cls.id.in_(list_ids))
 
         return query
+
+    @property
+    def as_dict(self):
+        return {
+
+        }
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)
