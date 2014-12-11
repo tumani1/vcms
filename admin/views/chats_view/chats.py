@@ -12,7 +12,8 @@ class ChatsModelView(SqlAlModelView):
     column_display_pk = True
 
     column_labels = dict(
-        description=u'Дескриптор чата'
+        name=u'Название чата',
+        description=u'Дескриптор чата',
     )
 
-    form_columns = ('description', )
+    form_columns = ('name', 'description', )
