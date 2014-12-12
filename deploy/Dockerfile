@@ -72,6 +72,9 @@ COPY admin.conf /etc/supervisor/conf.d/
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
+RUN cd /root/next_tv/lua_nginx/; install.sh;
+
+
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 

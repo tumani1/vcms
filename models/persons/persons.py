@@ -6,7 +6,6 @@ from sqlalchemy.orm import relationship, column_property
 from sqlalchemy_utils import ChoiceType, TSVectorType
 from sqlalchemy_searchable import search
 
-
 from models.base import Base
 from models.topics import PersonsTopics
 from models.tokens import SessionToken
@@ -110,11 +109,17 @@ class Persons(Base):
         return query
 
     @property
+    def as_dict(self):
+        return {
+
+        }
+
+    @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
     def __str__(self):
-        return u"{0} - {1}'>".format(self.id, self.get_full_name)
+        return u"{0} - {1}".format(self.id, self.get_full_name)
     
     def __repr__(self):
         return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)

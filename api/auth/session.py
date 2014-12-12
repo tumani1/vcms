@@ -17,7 +17,7 @@ def get(auth_user, session, meta, **kwargs):
 
     result = {
         'id': sid,
-        'session_token': token,
+        'x-token': token,
         'expire': created + datetime.timedelta(minutes=TOKEN_LIFETIME)
     }
 

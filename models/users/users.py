@@ -138,7 +138,7 @@ class Users(Base):
         return self.id
 
     def __str__(self):
-        return u"{} - {}".format(self.id, self.get_full_name)
+        return "{} - {}".format(self.id, self.get_full_name.encode('utf8'))
 
     def __repr__(self):
         return u'<User(id={0}, full_name={1})>'.format(self.id, self.get_full_name)

@@ -108,6 +108,12 @@ class Topics(Base):
     def get_unixtime_created(self):
         return time.mktime(self.releasedate.timetuple())
 
+    @property
+    def as_dict(self):
+        return {
+
+        }
+
     def __repr__(self):
         return u'Topics(name={0}, type={1}, status={2})'.format(self.name, self.type, self.status)
 

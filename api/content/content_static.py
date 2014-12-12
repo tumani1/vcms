@@ -12,7 +12,7 @@ def get_content_users_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location}
+        return {'location': query.location.strip()}
 
     return {'location': ''}
 

@@ -1,11 +1,23 @@
 # coding: utf-8
 
-from models import Persons, Topics, Media, MediaUnits
+from Queue import Queue
+from threading import Thread
+
+from models import Persons, Topics, Media, MediaUnits, Content
+from utils.constants import OBJECT_TYPE_PERSON, OBJECT_TYPE_TOPIC, OBJECT_TYPE_MEDIA_UNIT, OBJECT_TYPE_MEDIA
 
 from utils.exceptions import RequestErrorException
 from utils.validation import validate_mLimit, validate_string
 
 __all__ = ['get_search_list']
+
+
+def convert_result_search(type_obj, obj):
+    return {'type': type_obj, 'obj': obj.as_dict}
+
+
+def gq(model, *args, **kwargs):
+    return model.get_search_by_text(**kwargs)
 
 
 def get_search_list(auth_user, session, **kwargs):
@@ -14,6 +26,7 @@ def get_search_list(auth_user, session, **kwargs):
         'limit': None,
         'text': None,
         'session': session,
+        'list_ids': [],
     }
 
     query = kwargs['query_params']
@@ -22,19 +35,53 @@ def get_search_list(auth_user, session, **kwargs):
         params['text'] = validate_string(query['text'])
 
     if 'limit' in query:
-        params['limit'] = 10
+        params['limit'] = validate_mLimit(query['limit'])
 
-    text = params['text']
-    if text is None:
+    if params['text'] is None:
         raise RequestErrorException(u'Empty text field')
 
+    mds = {
+        Persons: (OBJECT_TYPE_PERSON, 'person',),
+        Topics: (OBJECT_TYPE_TOPIC, 'topic',),
+        Media: (OBJECT_TYPE_MEDIA, 'media',),
+        MediaUnits: (OBJECT_TYPE_MEDIA_UNIT, 'mediaunit',),
+    }
 
-    Persons.get_search_by_text(**params).all()
-    Topics.get_search_by_text(**params).all()
-    Media.get_search_by_text(**params).all()
-    MediaUnits.get_search_by_text(**params).all()
+    result = []
+    append = result.append
 
+    content_ids = {}
+    con = Content.get_search_by_text(**params)
+    for i in con:
+        if not i.obj_type.code in content_ids:
+            content_ids[i.obj_type.code] = []
 
+        content_ids[i.obj_type.code].append(i.obj_id)
 
+    # workers = []
+    # queue = Queue()
+    #
+    # for md in mds.keys():
+    #     list_ids = content_ids.get(mds[Persons], [])
+    #     if len(list_ids):
+    #         params.update({'list_ids': list_ids})
+    #         workers.append(Thread(target=lambda q, arg, kw: q.put(gq(*arg, **kw)), args=(queue, md,), kwargs=params))
+    #         workers[-1].start()
+    #
+    # for w in workers:
+    #     w.join()
+    #
+    # while not queue.empty():
+    #     print "Result: %s" % queue.get()
+    #     append(convert_result_search(queue.get()))
 
-    # query = PersonsValues.get_person_values(**params).all()
+    for key, val in mds.items():
+        list_ids = content_ids.get(val[0], [])
+        if len(list_ids):
+            params.update({'list_ids': list_ids})
+
+            for item in key.get_search_by_text(**params):
+                append(convert_result_search(val[1], item))
+
+    return result
+

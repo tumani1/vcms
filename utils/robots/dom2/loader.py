@@ -8,7 +8,7 @@ from xml.dom.minidom import parseString
 from bs4 import BeautifulSoup
 import requests
 from utils.robots.dom2.parser_supp import get_episode_quick_info, get_episods_for_page
-from utils.robots.support_functions import save_loaded_data_to_file
+from utils.robots.support_functions import save_loaded_data_to_file, format_dom_2_name_str
 
 __author__ = 'vladimir'
 
@@ -140,7 +140,7 @@ def download_dom2_videos():
     files = os.listdir(json_path)
     for file_name in files:
         try:
-            trimmed_fname = file_name.split('.')[0]
+            trimmed_fname = format_dom_2_name_str(file_name.split('.')[0])
             if os.path.exists(uploads_path + trimmed_fname + ".flv"):
                 print "Skipped ", trimmed_fname
             if not os.path.exists(uploads_path + trimmed_fname + ".flv") and ('video_info_page' in file_name):
@@ -167,14 +167,16 @@ def download_dom2_videos():
                     #print "Video link:", video_link
                     if 'rutube.ru' in video_link:
                         id = get_id_by_embedded_link(video_link)
-                        download_video_by_id(id, trimmed_fname)
+                        download_video_by_id(id, format_dom_2_name_str(trimmed_fname))
                     else:
                         video_id = get_video_id_by_page_url(json_page['url'])
                         video_url = generate_video_url(video_id)
                         file_link = get_video_file_link(video_url)
-                        save_flv_to_disk(file_link, trimmed_fname)
+                        save_flv_to_disk(file_link, format_dom_2_name_str(trimmed_fname))
 
         except Exception, e:
+            import traceback
+            traceback.print_exc()
             print "Error appears", e.message
             print "Not successful for", file_name
             continue
@@ -218,13 +220,15 @@ def download_video_by_id(id, file_name):
         manifest_txt = requests.get(manifest_root_link)
         f4link =  get_manifest_f4_link(manifest_txt.content)
         bashCommand = "php utils/robots/AdobeHDS.php --manifest \"{}\" --outfile \"{}.mp4\"".format(f4link, BASE_PATH + file_name)
-        process = subprocess.Popen(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(bashCommand, shell=True)
         out, err = process.communicate()
         print out
         print "Downloading from rutube finished"
-    except:
+    except Exception, e:
         if os.path.exists(BASE_PATH + file_name + ".flv"):
             os.remove(BASE_PATH + file_name + ".flv")
+        import traceback
+        traceback.print_exc()
         print "#Downloading not finished! File deleted"
     remove_frag_files()
 

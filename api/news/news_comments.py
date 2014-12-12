@@ -6,7 +6,10 @@ from utils.validation import validate_string
 
 
 def get(news_id, auth_user, session=None, **kwargs):
+    qp = kwargs['query_params']
     params = {'query_params': {'obj_id': news_id, 'obj_type': OBJECT_TYPE_NEWS}}
+    if 'with_obj' in qp:
+        params['query_params'].update(with_obj=qp['with_obj'])
     return get_comments(auth_user, session, **params)
 
 
