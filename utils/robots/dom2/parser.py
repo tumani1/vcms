@@ -7,8 +7,9 @@ from models.users.constants import APP_USERS_GENDER_MAN
 from utils.robots.dom2.loader import load_pages, load_video_info_page, load_old_actors_pages, load_current_actors_page
 from utils.robots.dom2.parser_supp import get_episods_for_page, get_b_big_panel_content_div
 from utils.robots.fizruk.parser import get_or_create_user, get_or_create_media, get_or_create_person, \
-    get_or_create_persons_media
-from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file
+    get_or_create_persons_media, get_or_create_cdn, get_or_create_topic, get_or_create_media_unit, \
+    get_or_create_media_in_unit, get_or_create_extras, get_or_create_media_location
+from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file, format_dom_2_name_str
 
 __author__ = 'vladimir'
 
@@ -31,11 +32,15 @@ def parse_one_page(page, all_actors):
     json_page = json.load(opned_page)
     beatiful_soup = BeautifulSoup(json_page['html'])
     episods = get_episods_for_page(beatiful_soup)
+
     for episode in episods:
         try:
             episod_quick_info = get_episode_quick_info(episode)
             episods_informations = episods_informations + [parse_one_episode(episod_quick_info, all_actors)]
-        except:
+
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
             continue
     return episods_informations
 
@@ -50,14 +55,23 @@ def parse_one_episode(episod_quick_info, all_actors):
     beatiful_soup = BeautifulSoup(json_page['html'])
     episod_info = parse_video_page(beatiful_soup)
     episod_info['actors'] = get_actors_for_episode(episod_info['date'], all_actors)
+
+    cdn = get_or_create_cdn("Своя CDN", "http://cdn.serialov.tv/")
+    topic = get_or_create_topic("dom2", "Дом 2")
+    m_unit = get_or_create_media_unit('Все серии',topic.name)
     fake_user = get_or_create_user("Дом2", "Админ", APP_USERS_GENDER_MAN, 'password')
-    media = get_or_create_media(episod_info['label'], episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
+    if u"день" in episod_info['label']:
+        media = get_or_create_media(format_dom_2_name_str(episod_info['label']), episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
+        get_or_create_media_in_unit(media.id, m_unit.id)
+        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), episod_info['label'], ' ', episod_info['description'])
+        get_or_create_media_location(cdn.name, media.id)
     for pers in episod_info['actors']:
-        name_surname = pers.split(' ')
+        name_surname = pers['name'].split(' ')
         name = name_surname[0]
         surname = name_surname[1]
-        person = get_or_create_person(name, surname)
-        pers_media = get_or_create_persons_media(media.id, person.id)
+        if u"день" in episod_info['label']:
+            person = get_or_create_person(name, surname)
+            get_or_create_persons_media(media.id, person.id)
     print "Parsed ", episod_quick_info['label']
     return episod_info
 
@@ -76,7 +90,7 @@ def get_episode_quick_info(episode):
     img = a_tag.find('img')
     if img:
         poster_link = img['src']
-        quick_info['poster'] = save_poster_to_file(poster_link, quick_info['label'])
+        quick_info['poster'] = save_poster_to_file(poster_link, format_dom_2_name_str(quick_info['label']))
     return quick_info
 
 

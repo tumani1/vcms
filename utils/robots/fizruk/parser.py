@@ -7,7 +7,7 @@ import datetime
 from multi_key_dict import multi_key_dict
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from models import Media, Users, Persons, PersonsMedia, Topics, MediaUnits, MediaInUnit, CDN, Extras
+from models import Media, Users, Persons, PersonsMedia, Topics, MediaUnits, MediaInUnit, CDN, Extras, MediaLocations
 from models.extras.constants import APP_EXTRA_TYPE_VIEDO
 from models.media.constants import APP_MEDIA_TYPE_VIDEO
 from models.topics.constants import TOPIC_STATUS
@@ -84,7 +84,7 @@ def parse_all_series(filenames_iterator):
         media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), one_info['label'], ' ', one_info['description'])
-
+        get_or_create_media_location(cdn.name, media.id)
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]
@@ -220,7 +220,7 @@ def get_or_create_media_in_unit(media_id, media_unit_id):
 def get_or_create_topic(name, title, releasedate = datetime.datetime.today().date()):
     topic = None
     try:
-        topic = session.query(Topics).filter(Topics.name == name).filter(Topics.title == title).one()
+        topic = session.query(Topics).filter(Topics.name == name).one()
         print "after"
     except NoResultFound:
         topic = Topics(name=name, title=title, releasedate=releasedate, status=u'a', type=u'serial')
@@ -313,6 +313,20 @@ def get_or_create_media(title, description, release_date, type_, owner):
         session.rollback()
         session.flush()
     return media
+
+
+def get_or_create_media_location(cdn_name, media_id):
+    media_location = None
+    try:
+        media_location = session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).one()
+    except NoResultFound:
+        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name)
+        session.add(media_location)
+        session.commit()
+    except Exception, e:
+        session.rollback()
+        session.flush()
+    return media_location
 
 if __name__ =="__main__":
 
