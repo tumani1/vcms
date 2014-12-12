@@ -19,5 +19,3 @@ def get(news_id, auth_user, session, **kwargs):
         data = mNewsSerializer(**serializer_params).data
 
     return data
-
-

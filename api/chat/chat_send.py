@@ -1,15 +1,14 @@
-#coding:utf-8
+# coding:utf-8
 from models.mongo import ChatMessages
+from models.chats import Chats
 from utils import need_authorization
-from utils.validation import validate_int
 from utils.exceptions import RequestErrorException
 
 
 @need_authorization
-def chat_send(chat_id, **kwargs):
-    chat_id = validate_int(chat_id, min_value=1)
-    auth_user = kwargs.get('auth_user')
+def chat_send(auth_user, chat_name, session, **kwargs):
     text = kwargs['query_params'].get('text', '').strip()
+    chat = session.query(Chats).filter_by(Chats.name == chat_name).first()
     if not text:
         raise RequestErrorException
-    ChatMessages.objects.create(text=text, user_id=auth_user.id, chat_id=chat_id)
+    ChatMessages.objects.create(text=text, user_id=auth_user.id, chat_id=chat.id)

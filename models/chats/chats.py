@@ -11,6 +11,7 @@ class Chats(Base):
     __table_args__ = {'extend_existing': True}
 
     id          = Column(Integer, primary_key=True)
+    name        = Column(String(128), unique=True, nullable=False, default='')
     description = Column(String(128), nullable=False)
 
     users_chats = relationship('UsersChat', backref='chat')

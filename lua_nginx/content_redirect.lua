@@ -32,7 +32,7 @@ local function concat_url(location)
     if width and height and width ~= "" and height ~= "" then
         location = location .. "?width=" .. width .. "&height=" .. height
     end
-
+    ngx.log(ngx.INFO, "URL for redirect: " .. location)
     return location
 end
 
@@ -62,18 +62,13 @@ if not result then
         body = ""
     })
 
-     ngx.log(ngx.ERR, "Recieve body: " .. resp.body)
+     ngx.log(ngx.INFO, "Recieve body: " .. resp.body)
 
     -- Проверка статуса запроса
     if (not resp or resp.status ~= ngx.HTTP_OK) then
         ngx.log(ngx.ERR, "Recieved failed to request")
         return_not_found()
     end
-
-    -- Проверка типа заголовка
-    -- if (resp.headers['Content-Type'] != 'application/json') then
-    --     ngx.log(ngx.ERR, "Recived not json response: " .. resp.headers['Content-Type'])
-    -- end
 
     local location;
     local json = require "cjson"
