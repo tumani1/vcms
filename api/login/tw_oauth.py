@@ -48,7 +48,7 @@ def get(auth_user, session, **kwargs):
     url = to_native_string(normalized_uri)
     response = requests.get(url, headers=headers)
 
-    print response
+    return response
 
 
 def complete_get(auth_user, session, **kwargs):
