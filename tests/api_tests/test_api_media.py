@@ -4,6 +4,7 @@ import zerorpc
 
 from sqlalchemy import and_
 from sqlalchemy.orm import sessionmaker, scoped_session
+from settings import DATABASE
 
 from tests.constants import ZERORPC_SERVICE_URI
 from models import Base, UsersMedia, SessionToken
@@ -12,9 +13,10 @@ from tests.fixtures import create_media_units, create_topic, create, create_medi
 
 
 def setUpModule():
-    mongo_connect()
+    mongo_engine = mongo_connect()
     engine = db_connect()
     engine.execute("drop schema public cascade; create schema public;")
+    mongo_engine.drop_database(DATABASE['mongodb']['db'])
     session = create_session(bind=engine)
 
     # Create table
@@ -30,7 +32,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 class MediaTestCase(unittest.TestCase):
@@ -51,14 +53,35 @@ class MediaTestCase(unittest.TestCase):
                     'query_params': {}
         }
         temp = {
+            'rating': 0.0,
             'description': 'test_desc1',
-            'title': 'media1',
-            'locations': [],
+            'title': 'media1', 'locations': [],
+            'id': 1,
             'releasedate': None,
-            'title_orig': 'test_media1',
             'duration': None,
-            'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'pos': 50},
-            'id': 1
+            'title_orig': 'test_media1',
+            'units': [
+                {
+                    'topic': {
+                        'name': 'test1',
+                        'title': 'test1',
+                        'releasedate': 1388534400.0,
+                        'relation': {
+                            'liked': 0,
+                            'subscribed': False
+                        },
+                    'title_orig': None,
+                    'type': 'news'
+                    },
+                'title_orig': '2',
+                'relation': {'watched': 1388534400.0},
+                'id': 2,
+                'title': 'mu2'
+                }
+            ],
+            'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'playlist': 50, 'pos': 50},
+            'rating_votes': 0,
+            'views_cnt': 0
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -70,16 +93,39 @@ class MediaTestCase(unittest.TestCase):
                     'x_token': self.session_token[1],
                     'query_params': {'text': u'media1'}
         }
-        temp = [{
-            'description': 'test_desc1',
-            'title': 'media1',
-            'locations': [],
-            'releasedate': None,
-            'title_orig': 'test_media1',
-            'duration': None,
-            'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'pos': 50},
-            'id': 1
-        }]
+        temp = [
+                {
+                    'rating': 0.0,
+                    'description': 'test_desc1',
+                    'title': 'media1', 'locations': [],
+                    'id': 1,
+                    'releasedate': None,
+                    'duration': None,
+                    'title_orig': 'test_media1',
+                    'units': [
+                        {
+                            'topic': {
+                                'name': 'test1',
+                                'title': 'test1',
+                                'releasedate': 1388534400.0,
+                                'relation': {
+                                    'liked': 0,
+                                    'subscribed': False
+                                },
+                            'title_orig': None,
+                            'type': 'news'
+                            },
+                        'title_orig': '2',
+                        'relation': {'watched': 1388534400.0},
+                        'id': 2,
+                        'title': 'mu2'
+                        }
+                    ],
+                    'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'playlist': 50, 'pos': 50},
+                    'rating_votes': 0,
+                    'views_cnt': 0
+            }
+        ]
         resp = self.cl.route(IPC_pack)
         self.assertListEqual(resp, temp)
 
@@ -122,18 +168,27 @@ class MediaTestCase(unittest.TestCase):
                     'x_token': self.session_token[1],
                     'query_params': {}
         }
-        temp = [{
-                    'enddate': 1391212800.0,
-                    'description': 'test2',
-                    'title': 'mu2',
-                    'batch': 'batch1',
-                    'next': 3,
-                    'releasedate': 1325376000.0,
-                    'title_orig': '2',
-                    'relation': {'watched': 1388534400.0},
-                    'prev': 1,
-                    'id': 2
-                }]
+        temp = [
+            {
+                'topic': {
+                    'description': 'test test',
+                    'title': 'test1',
+                    'releasedate': 1388534400.0,
+                    'relation': {'liked': 0, 'subscribed': False},
+                    'title_orig': None,
+                    'type': 'news',
+                    'name': 'test1'
+                },
+                'enddate': 1391212800.0,
+                'description': 'test2',
+                'title': 'mu2', 'batch': 'batch1',
+                'next': 3, 'releasedate': 1325376000.0,
+                'title_orig': '2',
+                'relation': {'watched': 1388534400.0},
+                'prev': 1,
+                'id': 2
+            }
+        ]
         resp = self.cl.route(IPC_pack)
         self.assertListEqual(resp, temp)
 

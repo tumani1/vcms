@@ -7,6 +7,7 @@ from models.users import Users
 
 from utils import need_authorization
 from utils.validation import validate_mLimitId
+from utils.common import datetime_to_unixtime as convert_date
 
 
 @need_authorization
@@ -29,7 +30,7 @@ def get(id, auth_user, session, **kwargs):
             'id': msg.id,
             'text': msg.text,
             'user': mUserShort(**params).data,
-            'created': msg.created.strftime('%Y-%m-%d'),
+            'created': convert_date(msg.created),
             'attach': msg.attachments,
             'thread': msg.msgr_threads_id
         }

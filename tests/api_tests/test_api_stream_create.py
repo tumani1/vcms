@@ -5,7 +5,6 @@ import unittest
 from models import Base
 from models.tokens import SessionToken
 from models.media import Media
-from models.comments import constants as comments_const
 from models.mongo import Stream, constant as stream_const
 from models.users import constants as user_const, Users
 from models.persons import Persons
@@ -14,6 +13,7 @@ from tests.fixtures import create_one_media, create_persons_media, create_person
 from tests.create_test_user import create
 from utils.common import datetime_to_unixtime, get_or_create
 from utils.connection import db_connect, create_session, mongo_connect
+from utils.constants import OBJECT_TYPE_MEDIA
 
 
 def setUpModule():
@@ -160,6 +160,10 @@ class StreamCreateTestCase(unittest.TestCase):
                     'liked': datetime_to_unixtime(users_media.liked),
                 },
                 'locations': [],
+                'units': [],
+                'views_cnt': 0,
+                'rating': 0.0,
+                'rating_votes': 0
             },
             'user': {
                 'lastname': self.auth_user.lastname,
@@ -177,7 +181,7 @@ class StreamCreateTestCase(unittest.TestCase):
         self.ipc_pack['query_params'] = {}
         self.ipc_pack['api_type'] = "post"
         resp = self.client.route(self.ipc_pack)
-        self.assertIsNone(resp)
+        self.assertDictEqual(resp, {})
         try:
             stream_obj = Stream.objects().get(type=stream_const.APP_STREAM_TYPE_PERS_S)
         except:
@@ -207,7 +211,7 @@ class StreamCreateTestCase(unittest.TestCase):
                    'person_id': person.id,
                    'regdate': datetime_to_unixtime(person.users.created),
                    'relation': user_const.APP_USERSRELS_TYPE_UNDEF,
-                }
+                },
             },
             'relation': {'liked': None},
             'text': None,
@@ -274,13 +278,17 @@ class StreamCreateTestCase(unittest.TestCase):
                 'releasedate': None,
                 'title': media.title,
                 'title_orig': media.title_orig,
+                'units': [],
+                'views_cnt': 0,
+                'rating': 0.0,
+                'rating_votes': 0
             }
         }
         self.assertDictEqual(m_stream, response)
 
     def test_create_comments(self):
         media = self.session.query(Media).filter_by(title='Test').first()
-        self.ipc_pack['api_method'] = '/obj_comments/{0}/{1}/create'.format(comments_const.OBJECT_TYPE_MEDIA, media.id)
+        self.ipc_pack['api_method'] = '/obj_comments/{0}/{1}/create'.format(OBJECT_TYPE_MEDIA, media.id)
         self.ipc_pack['api_type'] = 'post'
         self.ipc_pack['query_params'] = {'text': 'test_create'}
         resp = self.client.route(self.ipc_pack)
@@ -316,6 +324,10 @@ class StreamCreateTestCase(unittest.TestCase):
                     'releasedate': media.release_date,
                     'title': media.title,
                     'title_orig': media.title_orig,
+                    'units': [],
+                    'views_cnt': 0,
+                    'rating': 0.0,
+                    'rating_votes': 0
                 },
                 'text': resp['text'],
             },

@@ -3,6 +3,7 @@
 import datetime
 from models.msgr import MsgrLog, UsersMsgrThreads, MsgrThreads
 from utils import need_authorization
+from utils.exceptions import RequestErrorException
 
 
 @need_authorization
@@ -10,7 +11,7 @@ def put(id, auth_user, session, **kwargs):
     msgr_thread = MsgrThreads.get_msgr_threads_by_id(session, id).first()
 
     if msgr_thread is None:
-        return {'code': 400}
+        raise RequestErrorException
 
     query = kwargs['query_params']
     if 'text' in query:
@@ -19,7 +20,7 @@ def put(id, auth_user, session, **kwargs):
         if 'attach' in query:
             msgr_log = MsgrLog(msgr_threads_id=id, user_id=auth_user.id, attachments=query['attach'])
         else:
-            return {'code': 400}
+            raise RequestErrorException
 
     session.add(msgr_log)
     date = datetime.datetime.now()

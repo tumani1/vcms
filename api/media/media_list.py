@@ -5,7 +5,7 @@ from utils.validation import validate_list_int, validate_mLimitId
 
 
 def get(auth_user=None, session=None, **kwargs):
-    data = {}
+    data = []
     params = {
         'user': auth_user,
         'session': session,

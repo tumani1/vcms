@@ -44,4 +44,4 @@ class BaseService(object):
         finally:
             session.close()
 
-        return response or {}
+        return response or ([] if isinstance(response, list) else {})
