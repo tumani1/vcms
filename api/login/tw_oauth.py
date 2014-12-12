@@ -1,37 +1,54 @@
 import base64
 import hashlib
+import random
 from urllib import urlencode
+from oauthlib.common import unicode_type, generate_timestamp, CaseInsensitiveDict
+from oauthlib.oauth1.rfc5849 import signature
+from oauthlib.oauth1.rfc5849.parameters import prepare_headers
+from oauthlib.oauth1.rfc5849.signature import sign_hmac_sha1
 import requests
 import time
-
-from utils.constants import VK_CLIENT_ID, VK_REDIRECT_URI
+from requests.utils import to_native_string
 
 
 def get(auth_user, session, **kwargs):
-    url_auth = 'https://api.twitter.com/oauth/request_token'
-    ts = time.time()
-    sha1_first_sig = hashlib.sha1()
-    first_sig = 'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&'
-    sha1_first_sig.update(first_sig)
-    sha1_first_param = sha1_first_sig.hexdigest()
+    url_auth = u'https://api.twitter.com/oauth/request_token'
+    ts = unicode_type(int(time.time()))
 
+    collected_params = [
+        (u'realm', u'http://api.twitter.com/'),
+        (u'oauth_nonce', unicode_type(unicode_type(random.getrandbits(64)) + generate_timestamp())),
+        (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth2'),
+        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_signature_method', u'HMAC-SHA1'),
+        (u'oauth_timestamp', unicode(ts)),
+        (u'oauth_version',  u'1.0',)
+    ]
 
-    url = 'https://api.twitter.com/oauth/request_token?oauth_consumer_key=u7Vdu6ScezMQlpcCog3t7g7xx&oauth_signature_method=HMAC-SHA1&' \
-          'oauth_timestamp={0}&oauth_version=1.0'.format(ts)
-    url = urlencode(url)
-    sha1_first_sig.update(url)
+    normalized_params = signature.normalize_parameters(collected_params)
+    normalized_uri = signature.normalize_base_string_uri(url_auth, None)
+    base_string = signature.construct_base_string(u'GET', normalized_uri, normalized_params)
 
-    headers = {
-        'realm': 'http%3A%2F%2Fapi.twitter.com%2F',
-        'oauth_consumer_key': 'u7Vdu6ScezMQlpcCog3t7g7xx',
-        'oauth_signature ': base64.b64encode(sha1_first_param),
-        'oauth_signature_method': 'HMAC-SHA1',
-        'oauth_timestamp': ts,
-        'oauth_version': '1.0',
-    }
+    sig = sign_hmac_sha1(base_string,
+                          u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx',
+                          None)
 
-    requests.get(url_auth, headers=headers)
-    return {'redirect_url': url_auth, 'social': True}
+    headers = [
+        (u'realm', u'http://api.twitter.com/'),
+        (u'oauth_nonce', unicode_type(unicode_type(random.getrandbits(64)) + generate_timestamp())),
+        (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth2'),
+        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_signature_method', u'HMAC-SHA1'),
+        (u'oauth_timestamp', ts),
+        (u'oauth_version', u'1.0'),
+        (u'oauth_signature', sig)
+    ]
+    headers = prepare_headers(headers)
+    # headers = CaseInsensitiveDict((to_native_string(name), value) for name, value in headers.items())
+    url = to_native_string(normalized_uri)
+    response = requests.get(url, headers=headers)
+
+    print response
 
 
 def complete_get(auth_user, session, **kwargs):
