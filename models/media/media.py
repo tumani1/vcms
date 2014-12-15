@@ -4,7 +4,7 @@ import datetime
 
 from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
 from sqlalchemy.event import listen
-from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy.orm import relationship, contains_eager, backref
 from sqlalchemy_searchable import search
 
@@ -177,12 +177,18 @@ class Media(Base):
 
     @property
     def as_dict(self):
-        return {
+        temp = {}
+        for k,v in self.__table__.columns._data.items():
+            val = getattr(self, k)
+            if isinstance(val, Choice):
+                temp[k] = val.code
+            else:
+                temp[k] = val
 
-        }
+        return temp
 
     def __str__(self):
-        return "{0} - {1}".format(self.id, self.title.encode('utf-8'))
+        return u"{0} - {1}".format(self.id, self.title.encode('utf-8'))
 
     def __repr__(self):
         return u"<Media(id={0}, title={1})>".format(self.id, self.title)
