@@ -64,7 +64,7 @@ def parse_one_episode(episod_quick_info, all_actors):
         media = get_or_create_media(format_dom_2_name_str(episod_info['label']), episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), episod_info['label'], ' ', episod_info['description'])
-        get_or_create_media_location(cdn.name, media.id)
+        get_or_create_media_location(cdn.name, media.id, cdn.url)
     for pers in episod_info['actors']:
         name_surname = pers['name'].split(' ')
         name = name_surname[0]
