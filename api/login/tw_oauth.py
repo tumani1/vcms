@@ -13,6 +13,7 @@ from requests.utils import to_native_string
 
 def get(auth_user, session, **kwargs):
     url_auth = u'https://api.twitter.com/oauth/request_token'
+    url_login = u'https://api.twitter.com/oauth/authenticate?'
     ts = unicode_type(int(time.time()))
     nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
     collected_params = [
@@ -56,8 +57,9 @@ def get(auth_user, session, **kwargs):
     # headers = urlencode(headers)
     response = requests.get(url, headers=headers).text
     oauth_token = response.split('&')[0].split('=')[1]
-
-    return {'redirect_url': 'https://api.twitter.com/oauth/authenticate?redirect_uri=http%3A%2F%2Fserialov.tv%2Fcomplete%2Ftwitter%2F&oauth_token='+oauth_token, 'social': True}
+    redirect_url = {'redirect_uri':'http://serialov.tv/login/complete/tw-oauth2'}
+    redirect_url = urlencode(redirect_url)
+    return {'redirect_url': url_login+redirect_url+'&oauth_token='+oauth_token, 'social': True}
 
 
 def complete_get(auth_user, session, **kwargs):
