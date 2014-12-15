@@ -13,7 +13,7 @@ from models.media.constants import APP_MEDIA_TYPE_VIDEO
 from models.topics.constants import TOPIC_STATUS
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USERS_GENDER_MAN
 from utils.connection import get_session, mongo_connect
-from utils.robots.support_functions import get_valid_date_for_str
+from utils.robots.support_functions import get_valid_date_for_str, implement_media_structure
 
 session = get_session()
 mongodb_session = mongo_connect()
@@ -85,6 +85,7 @@ def parse_all_series(filenames_iterator):
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), one_info['label'], ' ', one_info['description'])
         get_or_create_media_location(cdn.name, media.id, cdn.url)
+        implement_media_structure(media, '/cdn/downloads/next_tv/static/upload/Fizruk/')
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]

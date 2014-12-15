@@ -6,8 +6,7 @@ import select
 import paramiko
 
 
-def exec_commands_at_host(commands):
-    host = 'cdn@cdn.serialov.tv'
+def exec_commands_at_host(commands, host ='cdn@cdn.serialov.tv'):
     i = 1
 
     #
