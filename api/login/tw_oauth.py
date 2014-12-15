@@ -63,4 +63,10 @@ def get(auth_user, session, **kwargs):
 
 
 def complete_get(auth_user, session, **kwargs):
-    pass
+    if 'oauth_token' in kwargs:
+        oauth_token = kwargs['oauth_token']
+
+    if 'oauth_verifier' in kwargs:
+        oauth_verifier = kwargs['oauth_verifier']
+
+    return {'token': oauth_verifier, 'verifier': oauth_verifier}
