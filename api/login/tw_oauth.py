@@ -54,9 +54,10 @@ def get(auth_user, session, **kwargs):
     # }
     #
     # headers = urlencode(headers)
-    response = requests.get(url, headers=headers)
-    # oauth_token = response.json()
-    return {'text': response}
+    response = requests.get(url, headers=headers).text
+    oauth_token = response.split('&')[0].split('=')[1]
+
+    return {'redirect_url': 'api.twitter.com/oauth/authorize?oauth_token='+oauth_token, 'social': True}
 
 
 def complete_get(auth_user, session, **kwargs):
