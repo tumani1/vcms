@@ -84,7 +84,7 @@ def parse_all_series(filenames_iterator):
         media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), one_info['label'], ' ', one_info['description'])
-        get_or_create_media_location(cdn.name, media.id)
+        get_or_create_media_location(cdn.name, media.id, cdn.url)
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]
@@ -315,12 +315,12 @@ def get_or_create_media(title, description, release_date, type_, owner):
     return media
 
 
-def get_or_create_media_location(cdn_name, media_id):
+def get_or_create_media_location(cdn_name, cdn_url, media_id):
     media_location = None
     try:
         media_location = session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).one()
     except NoResultFound:
-        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name)
+        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=cdn_url+'v/upload/media/{id}/hd.mp4'.format(id=media.id))
         session.add(media_location)
         session.commit()
     except Exception, e:

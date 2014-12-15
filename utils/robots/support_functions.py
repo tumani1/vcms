@@ -119,3 +119,4 @@ def process_dom2_data_for_cdn(poster_dir = u'static/upload/dom2/', video_dir = u
         except Exception, e:
             traceback.print_exc()
             continue
+
