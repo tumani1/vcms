@@ -19,16 +19,12 @@ MODELS_TO_PARAMS = {
     MediaUnits: (OBJECT_TYPE_MEDIA_UNIT, 'mediaunit',),
 }
 
-
-def convert_result_search(type_obj, obj):
-    return {'type': type_obj, 'obj': obj.as_dict}
+convert_result_search = lambda type_obj, obj: {'type': type_obj, 'obj': obj.as_dict}
 
 
 def gq(model, *args, **kwargs):
     type_row = MODELS_TO_PARAMS[model]
-    result = [convert_result_search(type_row[1], item) for item in model.get_search_by_text(**kwargs)]
-
-    return result
+    return [convert_result_search(type_row[1], item) for item in model.get_search_by_text(**kwargs)]
 
 
 def get_search_list(auth_user, session, **kwargs):
@@ -83,8 +79,9 @@ def get_search_list(auth_user, session, **kwargs):
         list_ids = content_ids.get(val[0], [])
         if len(list_ids):
             params.update({'list_ids': list_ids})
+            temp = [convert_result_search(val[1], item) for item in key.get_search_by_text(**params)]
 
-            for item in key.get_search_by_text(**params):
-                append(convert_result_search(val[1], item))
+            if len(temp):
+                result.extend(temp)
 
     return result

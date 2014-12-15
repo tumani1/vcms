@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,\
     and_, SMALLINT, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, contains_eager, backref
-from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy_searchable import search
 
 from models.base import Base
@@ -123,9 +123,15 @@ class MediaUnits(Base):
 
     @property
     def as_dict(self):
-        return {
+        temp = {}
+        for k,v in self.__table__.columns._data.items():
+            val = getattr(self, k)
+            if isinstance(val, Choice):
+                temp[k] = val.code
+            else:
+                temp[k] = val
 
-        }
+        return temp
 
     def __repr__(self):
         return u'<MediaUnits(id={0}, title={1})>'.format(self.id, self.title)
