@@ -55,7 +55,7 @@ def get(auth_user, session, **kwargs):
     #
     # headers = urlencode(headers)
     response = requests.get(url, headers=headers)
-    oauth_token = response.json()['oauth_token']
+    oauth_token = response.json()
     return {'text': oauth_token}
 
 
