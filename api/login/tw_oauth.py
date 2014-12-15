@@ -63,11 +63,43 @@ def get(auth_user, session, **kwargs):
 
 
 def complete_get(auth_user, session, **kwargs):
+    url_auth = u'https://api.twitter.com/oauth/access_token'
+    ts = unicode_type(int(time.time()))
+    nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
+
     params = kwargs['query_params']
     if 'oauth_token' in params:
-        oauth_token = params['oauth_token']
+        oauth_token = unicode(params['oauth_token'])
 
     if 'oauth_verifier' in params:
-        oauth_verifier = params['oauth_verifier']
+        oauth_verifier = unicode(params['oauth_verifier'])
 
-    return {'token': oauth_token, 'verifier': oauth_verifier}
+    collected_params = [
+        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_nonce', nonce),
+        (u'oauth_signature_method', u'HMAC-SHA1'),
+        (u'oauth_timestamp', unicode(ts)),
+        (u'oauth_verifier', oauth_verifier),
+        (u'oauth_version',  u'1.0',)
+    ]
+
+    normalized_params = signature.normalize_parameters(collected_params)
+    normalized_uri = signature.normalize_base_string_uri(url_auth, None)
+    base_string = signature.construct_base_string(u'GET', normalized_uri, normalized_params)
+
+    sig = sign_hmac_sha1(base_string, u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx', None)
+
+    headers = [
+        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_nonce', nonce),
+        (u'oauth_token', oauth_token),
+        (u'oauth_verifier', oauth_verifier),
+        (u'oauth_signature', sig),
+        (u'oauth_signature_method', u'HMAC-SHA1'),
+        (u'oauth_timestamp', ts),
+        (u'oauth_version', u'1.0'),
+
+    ]
+    headers = prepare_headers(headers)
+    response = requests.get(url_auth, headers=headers)
+    return {'token': response.text}
