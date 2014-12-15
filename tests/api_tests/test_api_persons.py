@@ -296,18 +296,18 @@ class PersonSubscribeTestCase(unittest.TestCase):
 
 
     def test_echo_delete(self):
-        person = 2
+        person_id = 3
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
         IPC_pack = {
-            "api_method": "/persons/%s/subscribe" % (person),
+            "api_method": "/persons/%s/subscribe" % (person_id),
             "x_token": self.session_token[1],
             "api_type": "delete",
             "query_params": {}
         }
-        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
         resp = self.zero_client.route(IPC_pack)
         self.assertEqual(resp, {})
-        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
-        self.assertEqual(0, len(person))
+        person = UsersPersons.get_user_person(user=user, person_id=person_id, session=self.session).first()
+        self.assertEqual(person.subscribed, None)
 
 
 ##################################################################################

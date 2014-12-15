@@ -4,7 +4,7 @@ import unittest
 
 from tests.fixtures import create, create_users_rels, create_scheme, create_topic, \
     create_users_values
-from models import Base
+from models import Base, SessionToken
 from models.users import Users, UsersRels, UsersExtras
 from models.users.constants import APP_USERSRELS_BLOCK_TYPE_RECIEVE, APP_USERSRELS_BLOCK_TYPE_SEND
 from models.extras import Extras
@@ -17,7 +17,7 @@ from utils.common import datetime_to_unixtime
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
     # Create table
     Base.metadata.create_all(bind=engine)
@@ -49,8 +49,7 @@ class UsersTestCase(unittest.TestCase):
 
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(1, session=self.session)[1]
 
     def tearDown(self):
         self.session.close()
@@ -65,7 +64,7 @@ class UsersTestCase(unittest.TestCase):
     def test_users_list_get(self):
         resp = self.req_sess.get(self.fullpath + '/users/list', params={'country': 'Russian'})
         users = self.session.query(Users).join(Cities).filter(Cities.name == 'Test')
-        resp_dicts = resp.json()[0]
+        resp_dicts = resp.json()
         self.assertEqual(len(resp_dicts), users.count())
         users_dict = []
         for user in users:
@@ -73,7 +72,7 @@ class UsersTestCase(unittest.TestCase):
                 'id': user.id,
                 'firstname': user.firstname,
                 'lastname': user.lastname,
-                'is_online': False,
+                'is_online': True if user.id == 1 else False,
                 'gender': user.gender.code,
                 'regdate': datetime_to_unixtime(user.created),
                 'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
@@ -94,7 +93,7 @@ class UsersTestCase(unittest.TestCase):
             u'id': user.id,
             u'firstname': user.firstname,
             u'lastname': user.lastname,
-            u'is_online': False,
+            u'is_online': True,
             u'gender': user.gender.code,
             u'regdate': datetime_to_unixtime(user.created),
             u'lastvisit': datetime_to_unixtime(user.last_visit) if user.last_visit else '',
@@ -105,16 +104,16 @@ class UsersTestCase(unittest.TestCase):
 
     def test_users_friendship_get(self):
         id = 2
-        resp = self.req_sess.get(self.fullpath + '/users/{0}/friendship'.format(id), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/users/{0}/friendship'.format(id), headers={'x-token': self.token}, params={})
         self.assertEqual(resp.json(), APP_USERSRELS_TYPE_FRIEND)
         id = 3
-        resp = self.req_sess.get(self.fullpath + '/users/{0}/friendship'.format(id), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/users/{0}/friendship'.format(id), headers={'x-token': self.token}, params={})
         self.assertEqual(resp.json(), APP_USERSRELS_TYPE_UNDEF)
 
     def test_users_friends_get(self):
         id = 1
         resp = self.req_sess.get(self.fullpath + '/users/{0}/friends'.format(id), params={})
-        resp_dicts = resp.json()[0]
+        resp_dicts = resp.json()
         subquery = self.session.query(UsersRels.partner_id).filter_by(user_id=1, urStatus=APP_USERSRELS_TYPE_FRIEND).subquery()
         friends = self.session.query(Users).filter(Users.id.in_(subquery)).all()
         users_dict = []
@@ -132,7 +131,7 @@ class UsersTestCase(unittest.TestCase):
     def test_users_extras_get(self):
         id = 1
         resp = self.req_sess.get(self.fullpath + '/users/{0}/extras'.format(id), params={})
-        resp_dicts = resp.json()[0]
+        resp_dicts = resp.json()
         extras = self.session.query(Extras).join(UsersExtras).filter(UsersExtras.user_id == id).all()
         extras_dict = []
         for extra in extras:
@@ -153,7 +152,7 @@ class UsersTestCase(unittest.TestCase):
     def test_users_blacklist_post(self):
         data = {}
         id = 2
-        resp = self.req_sess.post(self.fullpath + '/users/{0}/blacklist'.format(id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.post(self.fullpath + '/users/{0}/blacklist'.format(id), headers={'x-token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
         self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_SEND)
@@ -162,7 +161,7 @@ class UsersTestCase(unittest.TestCase):
     def test_users_blacklist_delete(self):
         data = {}
         id = 3
-        resp = self.req_sess.delete(self.fullpath + '/users/{0}/blacklist'.format(id), headers={'token': self.token}, params=data)
+        resp = self.req_sess.delete(self.fullpath + '/users/{0}/blacklist'.format(id), headers={'x-token': self.token}, params=data)
         user_rels =self.session.query(UsersRels).filter_by(user_id=self.user_id, partner_id=id).first()
         partner_rels = self.session.query(UsersRels).filter_by(user_id=id, partner_id=self.user_id).first()
         self.assertEqual(user_rels.blocked.code, APP_USERSRELS_BLOCK_TYPE_RECIEVE)

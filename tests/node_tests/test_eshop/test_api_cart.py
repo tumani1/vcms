@@ -34,7 +34,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class CartStatTestCase(unittest.TestCase):
@@ -45,7 +45,7 @@ class CartStatTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -76,7 +76,7 @@ class CartItemsTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -139,7 +139,7 @@ class CartsTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 

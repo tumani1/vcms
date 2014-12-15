@@ -55,6 +55,9 @@ def create_persons(session):
 
     session.add_all(persons)
     session.commit()
+    up = UsersPersons(user_id=1, person_id=3, subscribed=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    session.add(up)
+    session.commit()
 
 def create_comments(session):
     com1 = Comments(user_id=1, text=u'Тест', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), obj_type='m', obj_id=1)
@@ -214,7 +217,8 @@ def create_users_rels(session):
 
 def create_users_msgr_threads(session):
     users_msgr = [
-        UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1),
+        UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=0),
+        UsersMsgrThreads(user_id=1, msgr_threads_id=2, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=0),
     ]
 
     session.add_all(users_msgr)
@@ -270,13 +274,13 @@ def create_content(session):
 
 
 def create_chat(session):
-    c = Chats(description='chat for testing')
+    c = Chats(description='chat for testing', name='test')
     session.add(c)
     session.commit()
 
 
 def create_users_chat(session):
-    uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
+    uc = UsersChat(user_id=1, chat_id=1, cuStatus='null')
     session.add(uc)
     session.commit()
 

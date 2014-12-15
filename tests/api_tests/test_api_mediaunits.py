@@ -162,6 +162,7 @@ class MediaUnitsTestCase(unittest.TestCase):
                 'id': 1
             }
         resp = self.cl.route(IPC_pack)
+        self.assertEqual(len(resp), 1)
         self.assertDictEqual(resp[0], temp)
 
     def tearDown(self):

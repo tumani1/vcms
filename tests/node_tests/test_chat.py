@@ -36,7 +36,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
     ChatMessages.objects.delete()
 
 
@@ -52,7 +52,7 @@ class ChatInfoTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
 
     def test_get_info(self):
-        resp = self.req_sess.get(self.fullpath + '/chat/1/info')
+        resp = self.req_sess.get(self.fullpath + '/chat/test/info')
         resp = resp.json()
         self.assertEqual(resp['description'], u'chat for testing')
 
@@ -75,13 +75,13 @@ class ChatStatTestCase(unittest.TestCase):
         self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'})
         self.gl_token = resp.json()['token']
 
     def test_get_stat(self):
         ch = self.session.query(Chats).first()
         ChatMessages.objects.create(text='for stat', chat_id=ch.id, created=datetime.utcnow()+timedelta(1,0,0))
-        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stat'.format(ch.id), headers={'token': self.gl_token})
+        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stat'.format(ch.name), headers={'token': self.gl_token})
         resp = resp.json()
         self.assertEqual(resp['new_msgs'], 1)
 
@@ -109,7 +109,7 @@ class ChatStreamTestCase(unittest.TestCase):
         self.cm = ChatMessages.objects.create(text='test', chat_id=1, user_id=self.u.id)
 
     def test_get_stream(self):
-        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stream'.format(self.ch.id))
+        resp = self.req_sess.get(self.fullpath+'/chat/{0}/stream'.format(self.ch.name))
         resp = resp.json()
         self.assertEqual(len(resp), 1)
 
@@ -128,13 +128,13 @@ class ChatSendTestCase(unittest.TestCase):
         self.h, self.p = NODE['rest_ws_serv']['host'], NODE['rest_ws_serv']['port']
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
+        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'})
         self.gl_token = resp.json()['token']
 
     def test_chat_send(self):
         data={'text': 'for send'}
         ch = self.session.query(Chats).first()
-        resp = self.req_sess.put(self.fullpath+'/chat/{0}/send'.format(ch.id),
+        resp = self.req_sess.put(self.fullpath+'/chat/{0}/send'.format(ch.name),
                                  headers={'token': self.gl_token}, data=data)
         m = ChatMessages.objects.first()
         self.assertEqual(m.text, data['text'])
