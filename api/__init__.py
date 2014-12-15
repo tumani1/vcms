@@ -64,6 +64,7 @@ def authorize(IPC_pack, session=None):
         user_id = GlobalToken.get_user_id_by_token(token_string=IPC_pack['token'], session=session)
 
     user = None
-    if user_id:
+    if not user_id is None:
         user = session.query(Users).get(user_id)
+
     return user
