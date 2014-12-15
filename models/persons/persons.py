@@ -3,7 +3,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, select, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship, column_property
-from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy_searchable import search
 
 from models.base import Base
@@ -110,19 +110,25 @@ class Persons(Base):
 
     @property
     def as_dict(self):
-        return {
+        temp = {}
+        for k,v in self.__table__.columns._data.items():
+            val = getattr(self, k)
+            if isinstance(val, Choice):
+                temp[k] = val.code
+            else:
+                temp[k] = val
 
-        }
+        return temp
 
     @property
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
     def __str__(self):
-        return u"{0} - {1}".format(self.id, self.get_full_name)
+        return "{0} - {1}".format(self.id, self.get_full_name)
     
     def __repr__(self):
-        return u"Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)
+        return "Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)
 
 
 def validate_values(mapper, connect, target):

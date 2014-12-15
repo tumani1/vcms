@@ -12,12 +12,19 @@ from utils.validation import validate_mLimit, validate_string
 __all__ = ['get_search_list']
 
 
-def convert_result_search(type_obj, obj):
-    return {'type': type_obj, 'obj': obj.as_dict}
+MODELS_TO_PARAMS = {
+    Persons: (OBJECT_TYPE_PERSON, 'person',),
+    Topics: (OBJECT_TYPE_TOPIC, 'topic',),
+    Media: (OBJECT_TYPE_MEDIA, 'media',),
+    MediaUnits: (OBJECT_TYPE_MEDIA_UNIT, 'mediaunit',),
+}
+
+convert_result_search = lambda type_obj, obj: {'type': type_obj, 'obj': obj.as_dict}
 
 
 def gq(model, *args, **kwargs):
-    return model.get_search_by_text(**kwargs)
+    type_row = MODELS_TO_PARAMS[model]
+    return [convert_result_search(type_row[1], item) for item in model.get_search_by_text(**kwargs)]
 
 
 def get_search_list(auth_user, session, **kwargs):
@@ -39,13 +46,6 @@ def get_search_list(auth_user, session, **kwargs):
 
     if params['text'] is None:
         raise RequestErrorException(u'Empty text field')
-
-    mds = {
-        Persons: (OBJECT_TYPE_PERSON, 'person',),
-        Topics: (OBJECT_TYPE_TOPIC, 'topic',),
-        Media: (OBJECT_TYPE_MEDIA, 'media',),
-        MediaUnits: (OBJECT_TYPE_MEDIA_UNIT, 'mediaunit',),
-    }
 
     result = []
     append = result.append
@@ -75,13 +75,13 @@ def get_search_list(auth_user, session, **kwargs):
     #     print "Result: %s" % queue.get()
     #     append(convert_result_search(queue.get()))
 
-    for key, val in mds.items():
+    for key, val in MODELS_TO_PARAMS.items():
         list_ids = content_ids.get(val[0], [])
         if len(list_ids):
             params.update({'list_ids': list_ids})
+            temp = [convert_result_search(val[1], item) for item in key.get_search_by_text(**params)]
 
-            for item in key.get_search_by_text(**params):
-                append(convert_result_search(val[1], item))
+            if len(temp):
+                result.extend(temp)
 
     return result
-

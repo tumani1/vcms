@@ -122,16 +122,17 @@ def user_access_media(access, owner, is_auth, is_manager):
 
 def get_api_by_url(routes, IPC_pack):
     path_parse = IPC_pack['api_method'].split('/', 2)
-
     group = routes.get(path_parse[1])
     if group is None:
         raise NoSuchMethodException
 
+    method = IPC_pack['api_type'].lower()
+    our_url = u'/'.join(path_parse[2:])
     for item in group:
-        method = IPC_pack['api_type'].lower()
-        match = re.match(item[0], u'/'.join(path_parse[2:]))
-
-        if match and method in item[1]:
-            return match.groupdict(), item[1][method]
+        our_func = item[1].get(method)
+        if not our_func is None:
+            match = re.match(item[0], our_url)
+            if not match is None:
+                return match.groupdict(), our_func
 
     raise NoSuchMethodException
