@@ -5,7 +5,7 @@ import time
 from sqlalchemy import Column, String, DateTime, and_, DDL, Index
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
-from sqlalchemy_utils import ChoiceType, TSVectorType
+from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy_searchable import search
 
 from models.base import Base
@@ -110,9 +110,15 @@ class Topics(Base):
 
     @property
     def as_dict(self):
-        return {
+        temp = {}
+        for k,v in self.__table__.columns._data.items():
+            val = getattr(self, k)
+            if isinstance(val, Choice):
+                temp[k] = val.code
+            else:
+                temp[k] = val
 
-        }
+        return temp
 
     def __repr__(self):
         return u'Topics(name={0}, type={1}, status={2})'.format(self.name, self.type, self.status)
