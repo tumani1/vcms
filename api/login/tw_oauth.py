@@ -57,7 +57,7 @@ def get(auth_user, session, **kwargs):
     response = requests.get(url, headers=headers).text
     oauth_token = response.split('&')[0].split('=')[1]
 
-    return {'redirect_url': 'http://api.twitter.com/oauth/authorize?oauth_token='+oauth_token, 'social': True}
+    return {'redirect_url': 'https://api.twitter.com/oauth/authenticate?redirect_uri=http%3A%2F%2Fserialov.tv%2Fcomplete%2Ftwitter%2F&oauth_token='+oauth_token, 'social': True}
 
 
 def complete_get(auth_user, session, **kwargs):
