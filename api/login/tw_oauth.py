@@ -29,32 +29,32 @@ def get(auth_user, session, **kwargs):
     base_string = signature.construct_base_string(u'GET', normalized_uri, normalized_params)
     sig = sign_hmac_sha1(base_string, u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx', None)
 
-    # headers = [
-    #     (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth2'),
-    #     (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
-    #     (u'oauth_nonce', nonce),
-    #     (u'oauth_signature', sig),
-    #     (u'oauth_signature_method', u'HMAC-SHA1'),
-    #     (u'oauth_timestamp', ts),
-    #     (u'oauth_version', u'1.0'),
+    headers = [
+        (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth2'),
+        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_nonce', nonce),
+        (u'oauth_signature', sig),
+        (u'oauth_signature_method', u'HMAC-SHA1'),
+        (u'oauth_timestamp', ts),
+        (u'oauth_version', u'1.0'),
+
+    ]
+    headers = prepare_headers(headers)
+    # headers = CaseInsensitiveDict((to_native_string(name), value) for name, value in headers.items())
+    url = to_native_string(normalized_uri)
+
+    # headers = {
+    #     u'oauth_callback': u'http://serialov.tv/login/complete/tw-oauth2',
+    #     u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
+    #     u'oauth_nonce': nonce,
+    #     u'oauth_signature': sig,
+    #     u'oauth_signature_method': u'HMAC-SHA1',
+    #     u'oauth_timestamp': ts,
+    #     u'oauth_version': u'1.0',
+    # }
     #
-    # ]
-    # headers = prepare_headers(headers)
-    # # headers = CaseInsensitiveDict((to_native_string(name), value) for name, value in headers.items())
-    # url = to_native_string(normalized_uri)
-
-    headers = {
-        u'oauth_callback': u'http://serialov.tv/login/complete/tw-oauth2',
-        u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
-        u'oauth_nonce': nonce,
-        u'oauth_signature': sig,
-        u'oauth_signature_method': u'HMAC-SHA1',
-        u'oauth_timestamp': ts,
-        u'oauth_version': u'1.0',
-    }
-
-    headers = urlencode(headers)
-    response = requests.get(url_auth + '?' + headers)
+    # headers = urlencode(headers)
+    response = requests.get(url, headers=headers)
 
     return {'text': response.text}
 
