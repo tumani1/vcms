@@ -81,23 +81,23 @@ def save_poster_to_file(link, name, directory='static/upload/dom2'):
 
 
 def format_dom_2_name_str(inp):
-    return re.sub("\D", "", inp) + ' день'
+    return re.sub("\D", "", inp) + u' день'
 
 
-def implement_media_structure(media, video_dir): #/cdn/downloads/next_tv/static/upload/
-    exec_commands_at_host()
+def implement_media_structure(media, video_dir):
     cdn_vdir = u'/cdn/cdn/storage/v'
     try:
         day_number = re.sub("\D", "", media.title)
-        exec_commands_at_host(u"mkdir -p {dir_name}".format(dir_name=cdn_vdir + unicode(media.id) + u'/'))
-        encoding_command = u'avconv -y -threads 6 -i {} -codec copy \"{out}\"'.format(out=cdn_vdir + unicode(media.id) + u'/' + u'hd.mp4')
-        exec_commands_at_host(u"find {video_dir} -name '*{day}*.*' -exec {encoding_command}".format(video_dir=video_dir, day=day_number,
-                                                                                                    encoding_command = encoding_command))
+        exec_commands_at_host([u"mkdir -p {dir_name}".format(dir_name=cdn_vdir + unicode(media.id) + u'/')])
+        encoding_command = u'avconv -y -threads 6 -i {}' + u' -codec copy {out}'.format(out=cdn_vdir + unicode(media.id) + u'/' + u'hd.mp4')
+        exec_commands_at_host([u"find {video_dir} -name '*{day}*.*' -exec {encoding_command} \;".format(video_dir=video_dir, day=day_number,
+                                                                                                    encoding_command = encoding_command)])
+
 
         #shutil.move(poster_dir + p, dom_2_files+unicode(m.id) + u'/' + poster_name)
-        create_poster_command = u'avconv -ss 300 -r 25 -i {} -t 0.01 \"{poster_file}\"'.format(poster_file=cdn_vdir + unicode(media.id) + u'/' + u'poster.jpg')
-        exec_commands_at_host(u"find {flv_video} -name '*{day}*.*' -exec {poster_command}".format(flv_video=video_dir, day = day_number,
-                                                                                                   poster_command=create_poster_command))
+        create_poster_command = u'avconv -ss 300 -r 25 -i {}'+ u' -t 0.01 {poster_file}'.format(poster_file=cdn_vdir + unicode(media.id) + u'/' + u'poster.jpg')
+        exec_commands_at_host([u"find {flv_video} -name '*{day}*.*' -exec {poster_command} \;".format(flv_video=video_dir, day = day_number,
+                                                                                                   poster_command=create_poster_command)])
     except Exception, e:
         traceback.print_exc()
 
