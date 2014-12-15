@@ -65,9 +65,9 @@ def get(auth_user, session, **kwargs):
 def complete_get(auth_user, session, **kwargs):
     params = kwargs['query_params']
     if 'oauth_token' in params:
-        oauth_token = kwargs['oauth_token']
+        oauth_token = params['oauth_token']
 
     if 'oauth_verifier' in params:
-        oauth_verifier = kwargs['oauth_verifier']
+        oauth_verifier = params['oauth_verifier']
 
     return {'token': oauth_token, 'verifier': oauth_verifier}
