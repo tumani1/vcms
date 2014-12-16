@@ -8,7 +8,7 @@ from utils.exceptions import RequestErrorException
 @need_authorization
 def chat_send(auth_user, chat_name, session, **kwargs):
     text = kwargs['query_params'].get('text', '').strip()
-    chat = session.query(Chats).filter_by(Chats.name == chat_name).first()
+    chat = session.query(Chats).filter(Chats.name == chat_name).first()
     if not text:
         raise RequestErrorException
     ChatMessages.objects.create(text=text, user_id=auth_user.id, chat_id=chat.id)

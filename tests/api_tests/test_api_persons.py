@@ -186,7 +186,7 @@ class PersonLikeTestCase(unittest.TestCase):
         }
 
         resp = self.zero_client.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -220,7 +220,7 @@ class PersonLikeTestCase(unittest.TestCase):
         }
 
         resp = self.zero_client.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -284,7 +284,7 @@ class PersonSubscribeTestCase(unittest.TestCase):
         }
 
         resp = self.zero_client.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -296,21 +296,18 @@ class PersonSubscribeTestCase(unittest.TestCase):
 
 
     def test_echo_delete(self):
-        person = 2
+        person_id = 3
+        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
         IPC_pack = {
-            "api_method": "/persons/%s/subscribe" % (person),
+            "api_method": "/persons/%s/subscribe" % (person_id),
             "x_token": self.session_token[1],
             "api_type": "delete",
             "query_params": {}
         }
-
         resp = self.zero_client.route(IPC_pack)
-        self.assertEqual(resp, None)
-
-        user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
-
-        person = UsersPersons.get_user_person(user=user, person_id=person, session=self.session).all()
-        self.assertEqual(0, len(person))
+        self.assertEqual(resp, {})
+        person = UsersPersons.get_user_person(user=user, person_id=person_id, session=self.session).first()
+        self.assertEqual(person.subscribed, None)
 
 
 ##################################################################################
@@ -436,14 +433,26 @@ class PersonMediaTestCase(unittest.TestCase):
         resp = self.zero_client.route(IPC_pack)
         temp = [
             {
+                'rating': 0.0,
                 'description': 'test_desc1',
                 'title': 'media1',
                 'locations': [],
+                'id': 1,
                 'releasedate': None,
-                'title_orig': 'test_media1',
                 'duration': None,
+                'title_orig': 'test_media1',
+                'units': [
+                    {
+                        'topic': {'name': 'test1', 'title': 'test1', 'releasedate': 1388534400.0, 'relation': {}, 'title_orig': None, 'type': 'news'},
+                        'title_orig': '2',
+                        'relation': {},
+                        'id': 2,
+                        'title': 'mu2'
+                    }
+                ],
                 'relation': {},
-                'id': 1
+                'rating_votes': 0,
+                'views_cnt': 0
             }
         ]
 

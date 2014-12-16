@@ -18,4 +18,4 @@ def post(parent_id, auth_user, session, **kwargs):
         }
     }
 
-    return create_comment(auth_user, session, **params)
+    return create_comment(auth_user=auth_user, session=session, **params)

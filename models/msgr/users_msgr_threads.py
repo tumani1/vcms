@@ -21,7 +21,7 @@ class UsersMsgrThreads(Base):
     last_visit      = Column(DateTime)
     new_msgs        = Column(Integer)
 
-    msgr_threads = relationship('MsgrThreads', backref='users_msgr_threads', cascade='all, delete')
+    user_msgr_threads = relationship('MsgrThreads', backref='users_msgr_threads', cascade='all, delete')
 
     @classmethod
     def tmpl_for_users_msgr_threads(cls, session):
@@ -37,11 +37,11 @@ class UsersMsgrThreads(Base):
         if 'user_author' in kwargs:
             query = cls.tmpl_for_users_msgr_threads(session).\
                 outerjoin(MsgrThreads, and_(UsersMsgrThreads.msgr_threads_id==MsgrThreads.id, UsersMsgrThreads.user_id.in_(kwargs['user_author']))).\
-                options(contains_eager(UsersMsgrThreads.msgr_threads)).order_by(UsersMsgrThreads.last_msg_sent)
+                options(contains_eager(UsersMsgrThreads.user_msgr_threads)).order_by(UsersMsgrThreads.last_msg_sent)
         else:
             query = cls.tmpl_for_users_msgr_threads(session).\
                 outerjoin(MsgrThreads, and_(UsersMsgrThreads.msgr_threads_id==MsgrThreads.id, UsersMsgrThreads.user_id==user_id)).\
-                options(contains_eager(UsersMsgrThreads.msgr_threads)).order_by(UsersMsgrThreads.last_msg_sent)
+                options(contains_eager(UsersMsgrThreads.user_msgr_threads)).order_by(UsersMsgrThreads.last_msg_sent)
 
         return query
 

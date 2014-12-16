@@ -9,7 +9,8 @@ from utils.robots.dom2.parser_supp import get_episods_for_page, get_b_big_panel_
 from utils.robots.fizruk.parser import get_or_create_user, get_or_create_media, get_or_create_person, \
     get_or_create_persons_media, get_or_create_cdn, get_or_create_topic, get_or_create_media_unit, \
     get_or_create_media_in_unit, get_or_create_extras, get_or_create_media_location
-from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file, format_dom_2_name_str
+from utils.robots.support_functions import get_valid_date_for_str, save_poster_to_file, format_dom_2_name_str, \
+    implement_media_structure
 
 __author__ = 'vladimir'
 
@@ -65,6 +66,7 @@ def parse_one_episode(episod_quick_info, all_actors):
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), episod_info['label'], ' ', episod_info['description'])
         get_or_create_media_location(cdn.name, media.id, cdn.url)
+        implement_media_structure(media, '/cdn/downloads/next_tv/static/upload/Dom2/')
     for pers in episod_info['actors']:
         name_surname = pers['name'].split(' ')
         name = name_surname[0]
