@@ -2,7 +2,8 @@
 
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, \
+    ForeignKey, Boolean, DDL, Float, Index, func
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy.orm import relationship, contains_eager, backref
@@ -174,6 +175,15 @@ class Media(Base):
         query = query.filter(cls.id.in_(list_ids))
 
         return query
+
+    @classmethod
+    def media_cnt(cls, session):
+        query = session.query(
+            func.count(cls.id).label('media_cnt'),
+            func.sum(cls.views_cnt).label('views_cnt')
+        )
+
+        return query.first()
 
     @property
     def as_dict(self):

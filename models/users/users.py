@@ -120,6 +120,10 @@ class Users(Base):
             query = query.filter(Persons.user_id == None)
         return query
 
+    @classmethod
+    def users_cnt(cls, session):
+        query = session.query(func.count(cls.id).label('users_cnt'))
+        return query.first()
 
     @property
     def get_full_name(self):
