@@ -10,6 +10,9 @@ from oauthlib.oauth1.rfc5849.signature import sign_hmac_sha1
 import requests
 import time
 from requests.utils import to_native_string
+from models import UsersSocial, Users, GlobalToken
+from models.users.constants import APP_USERS_GENDER_UNDEF, APP_USER_STATUS_ACTIVE, APP_USERSOCIAL_TYPE_TWITTER
+from utils import NotAuthorizedException
 
 
 def get(auth_user, session, **kwargs):
@@ -117,36 +120,57 @@ def complete_get(auth_user, session, **kwargs):
     if 'screen_name' in data[3]:
         screen_name = data[3].split('=')[1]
 
-    ts = unicode_type(int(time.time()))
-    nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
+    users_social = session.query(UsersSocial).filter(UsersSocial.social_user_id == user_id).first()
 
-    collected_params = [
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
-        (u'oauth_nonce', nonce),
-        (u'oauth_signature_method', u'HMAC-SHA1'),
-        (u'oauth_timestamp', unicode(ts)),
-        (u'oauth_token', unicode(oauth_token)),
-        (u'oauth_version',  u'1.0'),
-        (u'screen_name',  unicode(screen_name))
-    ]
+    if not users_social is None:
+        user = session.query(Users).filter(Users.id == users_social.user_id).first()
+        return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
 
-    normalized_params = signature.normalize_parameters(collected_params)
+    try:
+        user = Users(firstname=screen_name, lastname='', password=data['access_token'],
+                     gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
 
-    base_string = signature.construct_base_string(u'GET', u'https://api.twitter.com/1.1/users/show.json', normalized_params)
-    key = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&' + unicode(oauth_token_secret)
-    sig = sign_hmac_sha1(base_string, key, None)
+        session.add(user)
+        session.commit()
+        users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_TWITTER, sToken=' ', social_user_id=data['user_id'])
+        session.add(users_social)
+        session.commit()
+        return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
 
-    headers = {
-        u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
-        u'oauth_nonce': nonce,
-        u'oauth_signature': sig,
-        u'oauth_signature_method': u'HMAC-SHA1',
-        u'oauth_timestamp': unicode(ts),
-        u'oauth_token': unicode(oauth_token),
-        u'oauth_version': u'1.0',
-        u'screen_name': unicode(screen_name)
-    }
-    headers = urlencode(headers)
-    response = requests.get(u'https://api.twitter.com/1.1/users/show.json?'+headers)
+    except Exception as e:
+        print(e)
+        raise NotAuthorizedException
 
-    return {'text': response.json()}
+    # ts = unicode_type(int(time.time()))
+    # nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
+    #
+    # collected_params = [
+    #     (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+    #     (u'oauth_nonce', nonce),
+    #     (u'oauth_signature_method', u'HMAC-SHA1'),
+    #     (u'oauth_timestamp', unicode(ts)),
+    #     (u'oauth_token', unicode(oauth_token)),
+    #     (u'oauth_version',  u'1.0'),
+    #     (u'screen_name',  unicode(screen_name))
+    # ]
+    #
+    # normalized_params = signature.normalize_parameters(collected_params)
+    #
+    # base_string = signature.construct_base_string(u'GET', u'https://api.twitter.com/1.1/users/show.json', normalized_params)
+    # key = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&' + unicode(oauth_token_secret)
+    # sig = sign_hmac_sha1(base_string, key, None)
+    #
+    # headers = {
+    #     u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
+    #     u'oauth_nonce': nonce,
+    #     u'oauth_signature': sig,
+    #     u'oauth_signature_method': u'HMAC-SHA1',
+    #     u'oauth_timestamp': unicode(ts),
+    #     u'oauth_token': unicode(oauth_token),
+    #     u'oauth_version': u'1.0',
+    #     u'screen_name': unicode(screen_name)
+    # }
+    # headers = urlencode(headers)
+    # response = requests.get(u'https://api.twitter.com/1.1/users/show.json?'+headers)
+    #
+    # return {'text': response.json()}
