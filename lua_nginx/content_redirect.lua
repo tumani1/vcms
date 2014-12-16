@@ -1,16 +1,16 @@
-local conf = require "common.config"
+local conf = require "common.config";
 
 local function return_not_found(msg)
-    ngx.status = ngx.HTTP_NOT_FOUND
+    ngx.status = ngx.HTTP_NOT_FOUND;
     if msg then
-        ngx.header["X-Message"] = msg
+        ngx.header["X-Message"] = msg;
     end
     ngx.exit(0)
 end
 
 local function get_memc(conf)
-    local memcached = require "resty.memcached"
-    local memc, err = memcached:new()
+    local memcached = require "resty.memcached";
+    local memc, err = memcached:new();
     if not memc then
         ngx.log(ngx.ERR, "Failed to init memc: " .. err)
         return nil
@@ -18,7 +18,7 @@ local function get_memc(conf)
 
     memc:set_timeout(1000)
 
-    local ok, err = memc:connect(conf['host'], conf['port'])
+    local ok, err = memc:connect(conf['host'], conf['port']);
     if not ok then
         ngx.log(ngx.ERR, "Failed to connect memcache: " .. err)
         return nil
@@ -28,12 +28,12 @@ local function get_memc(conf)
 end
 
 local function concat_url(location)
-    local width, height = ngx.var.width, ngx.var.height
+    local width, height = ngx.var.width, ngx.var.height;
     if width and height and width ~= "" and height ~= "" then
-        location = location .. "?width=" .. width .. "&height=" .. height
+        location = location .. "?width=" .. width .. "&height=" .. height;
     end
-    ngx.log(ngx.INFO, "URL for redirect: " .. location)
-    return location
+    ngx.log(ngx.INFO, "URL for redirect: " .. location);
+    return location;
 end
 
 -- Инициализируем memcache и зададим ключ кеширования

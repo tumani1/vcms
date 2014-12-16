@@ -8,9 +8,10 @@ import users_stream
 import users_list
 import users_black_list_action
 
-friendship = {'get': users_friendship_action.get,
-              'post': users_friendship_action.post,
-              'delete': users_friendship_action.delete,
+friendship = {
+    'get': users_friendship_action.get,
+    'post': users_friendship_action.post,
+    'delete': users_friendship_action.delete,
 }
 
 info = {
