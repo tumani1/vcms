@@ -149,4 +149,4 @@ def complete_get(auth_user, session, **kwargs):
     headers = prepare_headers(headers)
     response = requests.get(u'https://api.twitter.com/1.1/users/show.json', headers=headers)
 
-    return {response}
+    return {response.text}
