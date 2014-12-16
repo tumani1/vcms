@@ -1,7 +1,7 @@
 # coding: utf-8
-import re
 from utils.constants import OBJECT_TYPES
 from utils.exceptions import Invalid
+from validate_email import validate_email as is_valid_email
 
 
 def validate_mLimit(limit, **kwargs):
@@ -152,8 +152,7 @@ def validate_obj_type(value, **kwargs):
 
 def validate_email(value, **kwargs):
     email = value.strip()
-    email_reg = re.compile(r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$")
-    if email_reg.match(email):
+    if is_valid_email(email, check_mx=True):
         return email
     else:
         raise Invalid(u'Некорректный e-mail!')  # Некорректный e-mail
