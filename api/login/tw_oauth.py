@@ -131,7 +131,7 @@ def complete_get(auth_user, session, **kwargs):
     ]
 
     normalized_params = signature.normalize_parameters(collected_params)
-    normalized_uri = signature.normalize_base_string_uri(url_auth, None)
+
     base_string = signature.construct_base_string(u'GET', u'https://api.twitter.com/1.1/users/show.json', normalized_params)
     key = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&' + oauth_token_secret
     sig = sign_hmac_sha1(base_string, key, None)
@@ -147,6 +147,6 @@ def complete_get(auth_user, session, **kwargs):
         (u'screen_name',  unicode(screen_name))
     ]
     headers = prepare_headers(headers)
-    response = requests.get(u'https://api.twitter.com/1.1/users/show.json', headers=headers)
+    response = requests.get(u'https://api.twitter.com/1.1/users/show.json', headers=headers).code
 
-    return {'text': response.text}
+    return {'text': response}
