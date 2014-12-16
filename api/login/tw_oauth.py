@@ -127,7 +127,7 @@ def complete_get(auth_user, session, **kwargs):
         return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
 
     try:
-        user = Users(firstname=screen_name, lastname='', password=data['access_token'],
+        user = Users(firstname=screen_name, lastname='', password=oauth_token_secret,
                      gender=APP_USERS_GENDER_UNDEF, status=APP_USER_STATUS_ACTIVE)
 
         session.add(user)
