@@ -23,8 +23,8 @@ convert_result_search = lambda type_obj, obj: {'type': type_obj, 'obj': obj.as_d
 
 
 def gq(model, *args, **kwargs):
-    type_row = MODELS_TO_PARAMS[model]
-    return [convert_result_search(type_row[1], item) for item in model.get_search_by_text(**kwargs)]
+    our_type, ext_type = MODELS_TO_PARAMS[model]
+    return [convert_result_search(our_type, item) for item in model.get_search_by_text(**kwargs)]
 
 
 def get_search_list(auth_user, session, **kwargs):
@@ -76,10 +76,11 @@ def get_search_list(auth_user, session, **kwargs):
     #     append(convert_result_search(queue.get()))
 
     for key, val in MODELS_TO_PARAMS.items():
-        list_ids = content_ids.get(val[0], [])
+        our_type, ext_type = val
+        list_ids = content_ids.get(our_type, [])
         if len(list_ids):
             params.update({'list_ids': list_ids})
-            temp = [convert_result_search(val[1], item) for item in key.get_search_by_text(**params)]
+            temp = [convert_result_search(ext_type, item) for item in key.get_search_by_text(**params)]
 
             if len(temp):
                 result.extend(temp)

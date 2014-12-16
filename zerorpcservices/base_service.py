@@ -1,11 +1,12 @@
 # coding: utf-8
 
 from api import authorize
+from sqlalchemy.orm import sessionmaker, scoped_session
 from zerorpcservices.additional import raven_report
 
 from utils.common import get_api_by_url
 from utils.exceptions import APIException
-from utils.connection import create_session, db_connect, mongo_connect
+from utils.connection import db_connect, mongo_connect
 
 
 class BaseService(object):
@@ -14,11 +15,12 @@ class BaseService(object):
         self.routes = routes
         self.default_params = {}
         self.connect = db_connect()
+        self.__session = scoped_session(sessionmaker(self.connect, expire_on_commit=False))
         self.mongodb_session = mongo_connect()
 
     @raven_report
     def route(self, IPC_pack):
-        session = create_session(bind=self.connect, expire_on_commit=False)
+        session = self.__session()
         try:
             auth_user = authorize(IPC_pack, session=session)
 

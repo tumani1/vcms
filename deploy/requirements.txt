@@ -23,4 +23,6 @@ flask-mongoengine
 wtforms-html5
 BeautifulSoup4
 alembic
+validate_email
+pyDNSalembic
 oauthlib

@@ -20,7 +20,7 @@ class ChatMessagesModelView(MongoDBModelView):
     session = get_session()
 
     users = list(session.query(Users.id, concat(Users.firstname, ' ', Users.lastname)).all())
-    chats = list(session.query(Chats.id, concat(Users.firstname, ' ', Users.lastname)).all())
+    chats = list(session.query(Chats.id, Chats.name).all())
 
     object_id_converter = True
 

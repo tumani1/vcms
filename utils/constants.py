@@ -31,11 +31,11 @@ OBJECT_TYPE_TOPIC = u't'
 OBJECT_TYPE_NEWS = u'n'
 
 OBJECT_TYPES = (
+    (OBJECT_TYPE_TOPIC, u'Топик'),
     (OBJECT_TYPE_CONTENT, u'Контент'),
     (OBJECT_TYPE_PERSON, u'Персона'),
     (OBJECT_TYPE_MEDIA, u'Медиа'),
     (OBJECT_TYPE_MEDIA_UNIT, u'Медиаюнит'),
     (OBJECT_TYPE_STRIP, u'Лента'),
     (OBJECT_TYPE_NEWS, u'Новости'),
-    (OBJECT_TYPE_TOPIC, u'Топик'),
 )

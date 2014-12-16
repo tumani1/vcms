@@ -2,7 +2,8 @@
 
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, and_, ForeignKey, Boolean, DDL, Float, Index
+from sqlalchemy import Column, Integer, String, Text, DateTime, and_, \
+    ForeignKey, Boolean, DDL, Float, Index, func
 from sqlalchemy.event import listen
 from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
 from sqlalchemy.orm import relationship, contains_eager, backref
@@ -28,10 +29,11 @@ class Media(Base):
     id             = Column(Integer, primary_key=True)
     title          = Column(String, nullable=False)
     title_orig     = Column(String, nullable=True)
-    allow_mobile   = Column(Boolean, default=False)
-    allow_smarttv  = Column(Boolean, default=False)
-    allow_external = Column(Boolean, default=False)
-    allow_anon     = Column(Boolean, default=False)
+    order          = Column(Integer, nullable=False, default=0)
+    allow_mobile   = Column(Boolean, default=True)
+    allow_smarttv  = Column(Boolean, default=True)
+    allow_external = Column(Boolean, default=True)
+    allow_anon     = Column(Boolean, default=True)
     description    = Column(Text, nullable=True)
     created        = Column(DateTime, default=datetime.datetime.utcnow)
     views_cnt      = Column(Integer, default=0)
@@ -175,10 +177,19 @@ class Media(Base):
 
         return query
 
+    @classmethod
+    def media_cnt(cls, session):
+        query = session.query(
+            func.count(cls.id).label('media_cnt'),
+            func.sum(cls.views_cnt).label('views_cnt')
+        )
+
+        return query.first()
+
     @property
     def as_dict(self):
         temp = {}
-        for k,v in self.__table__.columns._data.items():
+        for k, v in self.__table__.columns._data.items():
             val = getattr(self, k)
             if isinstance(val, Choice):
                 temp[k] = val.code
@@ -187,11 +198,14 @@ class Media(Base):
 
         return temp
 
+    def __unicode__(self):
+        return u"{0} - {1}".format(self.id, self.title)
+
     def __str__(self):
-        return u"{0} - {1}".format(self.id, self.title.encode('utf-8'))
+        return "{0} - {1}".format(self.id, self.title.encode('utf-8'))
 
     def __repr__(self):
-        return u"<Media(id={0}, title={1})>".format(self.id, self.title)
+        return "<Media(id={0}, title={1})>".format(self.id, self.title.encode("utf-8"))
 
 Media.users_media_query = relationship('UsersMedia', lazy='dynamic')
 

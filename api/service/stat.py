@@ -1,13 +1,15 @@
 # coding: utf-8
 
-from models.persons import Persons
-from models.topics.constants import TOPIC_TYPE
-
-from utils.validation import validate_list_int, validate_mLimit, validate_string
-from api.serializers import mPersonSerializer, mPersonRoleSerializer
+from models import Users, Media
 
 __all__ = ['get_stat_list']
 
 
 def get_stat_list(auth_user, session, **kwargs):
-    pass
+    media_cnt, views_cnt = Media.media_cnt(session)
+
+    return {
+        'users_cnt': Users.users_cnt(session)[0],
+        'media_cnt': media_cnt,
+        'views_cnt': views_cnt,
+    }

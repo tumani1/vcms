@@ -5,6 +5,7 @@ from sqlalchemy.sql.functions import concat
 from admin.fields import select_factory
 from admin.validators import StreamUserTypeValidator
 from admin.views.base import MongoDBModelView
+from admin.fields import CKTextAreaField
 
 from models.users import Users
 from models.mongo.stream import Stream
@@ -24,11 +25,14 @@ class StreamModelView(MongoDBModelView):
     form_excluded_columns = ('id', )
 
     column_labels = dict(
-        created=u'Дата создания', type=u'Тип', text=u'Техт',
-        user_id=u'Пользователь', object=u'Объект')
+        type=u'Тип', text=u'Техт', object=u'Объект',
+        user_id=u'Пользователь')
+
+    form_columns = ('user_id', 'type', 'object', 'attachments', 'text')
 
     form_overrides = dict(
         user_id=select_factory(coerce=int, allow_blank=True, blank_text=u'Без пользователя'),
+        text=CKTextAreaField,
     )
 
     column_choices = dict(
