@@ -117,36 +117,36 @@ def complete_get(auth_user, session, **kwargs):
     if 'screen_name' in data[3]:
         screen_name = data[3].split('=')[1]
 
-    ts = unicode_type(int(time.time()))
-    nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
+    # ts = unicode_type(int(time.time()))
+    # nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
+    #
+    # collected_params = [
+    #     (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+    #     (u'oauth_nonce', nonce),
+    #     (u'oauth_signature_method', u'HMAC-SHA1'),
+    #     (u'oauth_timestamp', unicode(ts)),
+    #     (u'oauth_token', unicode(oauth_token)),
+    #     (u'oauth_version',  u'1.0'),
+    #     (u'screen_name',  unicode(screen_name))
+    # ]
+    #
+    # normalized_params = signature.normalize_parameters(collected_params)
+    #
+    # base_string = signature.construct_base_string(u'GET', u'https://api.twitter.com/1.1/users/show.json', normalized_params)
+    # key = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&' + oauth_token_secret
+    # sig = sign_hmac_sha1(base_string, key, None)
+    #
+    # headers = {
+    #     u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
+    #     u'oauth_nonce': nonce,
+    #     u'oauth_signature': sig,
+    #     u'oauth_signature_method': u'HMAC-SHA1',
+    #     u'oauth_timestamp': unicode(ts),
+    #     u'oauth_token': unicode(oauth_token),
+    #     u'oauth_version': u'1.0',
+    #     u'screen_name': unicode(screen_name)
+    # }
+    # headers = urlencode(headers)
+    # response = requests.get(u'https://api.twitter.com/1.1/users/show.json?'+headers)
 
-    collected_params = [
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
-        (u'oauth_nonce', nonce),
-        (u'oauth_signature_method', u'HMAC-SHA1'),
-        (u'oauth_timestamp', unicode(ts)),
-        (u'oauth_token', unicode(oauth_token)),
-        (u'oauth_version',  u'1.0'),
-        (u'screen_name',  unicode(screen_name))
-    ]
-
-    normalized_params = signature.normalize_parameters(collected_params)
-
-    base_string = signature.construct_base_string(u'GET', u'https://api.twitter.com/1.1/users/show.json', normalized_params)
-    key = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx&' + oauth_token_secret
-    sig = sign_hmac_sha1(base_string, key, None)
-
-    headers = {
-        u'oauth_consumer_key': u'u7Vdu6ScezMQlpcCog3t7g7xx',
-        u'oauth_nonce': nonce,
-        u'oauth_signature': sig,
-        u'oauth_signature_method': u'HMAC-SHA1',
-        u'oauth_timestamp': unicode(ts),
-        u'oauth_token': unicode(oauth_token),
-        u'oauth_version': u'1.0',
-        u'screen_name': unicode(screen_name)
-    }
-    headers = urlencode(headers)
-    response = requests.get(u'https://api.twitter.com/1.1/users/show.json?'+headers)
-
-    return {'text': response.content}
+    return {'text': content}
