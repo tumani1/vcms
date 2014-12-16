@@ -102,5 +102,19 @@ def complete_get(auth_user, session, **kwargs):
 
     ]
     headers = prepare_headers(headers)
-    response = requests.get(url_auth, headers=headers)
-    return {'token': json.dumps(response.content)}
+    content = requests.get(url_auth, headers=headers).content
+    data = content.split('&')
+
+    if 'oauth_token' in data[0]:
+        oauth_token = data[0].split('=')[1]
+
+    if 'oauth_token_secret' in data[1]:
+        oauth_token_secret = data[1].split('=')[1]
+
+    if 'user_id' in data[2]:
+        user_id = data[2].split('=')[1]
+
+    if 'screen_name' in data[3]:
+        screen_name = data[3].split('=')[1]
+
+    return {'oauth_token': oauth_token, 'oauth_token_secret': oauth_token_secret, 'user_id': user_id, 'screen_name': screen_name}
