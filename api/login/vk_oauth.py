@@ -62,7 +62,7 @@ def complete_get(auth_user, session, **kwargs):
 
     data_user = request(method, url_vk_api, **vk_params).json()['response'][0]
     user_id = data['user_id']
-    users_social = session.query(UsersSocial).filter(UsersSocial.social_user_id == user_id).first()
+    users_social = session.query(UsersSocial).filter(UsersSocial.social_user_id == str(user_id)).first()
 
     if not users_social is None:
         user = session.query(Users).filter(Users.id == users_social.user_id).first()
