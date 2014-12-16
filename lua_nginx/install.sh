@@ -7,9 +7,9 @@ cd /tmp
 sudo apt-get install gcc make cmake luarocks lua-cjson-dev libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl memcached libgd-dev libgeoip-dev libxslt-dev
 
 # Extract Openresty
-wget http://openresty.org/download/ngx_openresty-1.7.2.1.tar.gz
-tar xzvf ngx_openresty-1.7.2.1.tar.gz
-cd ngx_openresty-1.7.2.1/
+wget http://openresty.org/download/ngx_openresty-1.7.7.1.tar.gz
+tar xzvf ngx_openresty-1.7.7.1.tar.gz
+cd ngx_openresty-1.7.7.1/
 
 # Install Openresty
 make clean

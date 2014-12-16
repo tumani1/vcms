@@ -2,6 +2,8 @@
 
 from flask.ext.admin.contrib.sqla import filters
 
+from models.media import MediaInUnit
+
 
 class ChoiceEqualFilter(filters.FilterEqual):
 
@@ -23,6 +25,11 @@ class IsPersonFilterEqual(ChoiceEqualFilter):
 
     def apply(self, query, value):
         return self.join_method(query=query)
+
+
+class MediaUnitFilter(filters.FilterInList):
+    def apply(self, query, value):
+        return query.join(MediaInUnit).filter(MediaInUnit.media_unit_id.in_(value))
 
 
 class PhoneFilter(filters.FilterLike):

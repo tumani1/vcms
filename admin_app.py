@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     ###############################################################################
     # Setup Flask app
-    app = Flask(__name__, template_folder='admin/templates')
+    app = Flask(__name__, template_folder='admin/templates', static_folder='admin/static')
     app.config['SECRET_KEY'] = 'rNAZvhgmFdKkt4dF3CHiooLPCIXxswkYpbQa'
     app.config['MONGODB_SETTINGS'] = DATABASE['mongodb']
 

@@ -2,11 +2,10 @@
 
 from flask.ext.admin.form import fields
 
-from wtforms.fields import TextAreaField
-
 from admin.filters import ChoiceEqualFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import topic_link_formatter
+from admin.fields import CKTextAreaField
 
 from models.topics import Topics
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
@@ -50,14 +49,14 @@ class TopicsModelView(SqlAlModelView):
     }
 
     form_columns = (
-        'name', 'title', 'title_orig', 'description',
-        'releasedate', 'status', 'type'
+        'name', 'title', 'title_orig', 'releasedate',
+        'status', 'type', 'description',
     )
 
     form_overrides = dict(
         status=fields.Select2Field,
         type=fields.Select2Field,
-        description=TextAreaField,
+        description=CKTextAreaField,
     )
 
     form_args = dict(

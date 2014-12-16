@@ -2,6 +2,7 @@
 
 from flask.ext.admin.form import fields
 
+from admin.fields import CKTextAreaField
 from admin.views.base import SqlAlModelView
 from utils.constants import OBJECT_TYPES
 from models.content.content import Content
@@ -35,11 +36,12 @@ class ContentModelView(SqlAlModelView):
     )
 
     form_columns = (
-        'title', 'text', 'obj_type', 'obj_id', 'obj_name'
+        'title', 'obj_type', 'obj_id', 'obj_name', 'text'
     )
 
     form_overrides = dict(
         obj_type=fields.Select2Field,
+        text=CKTextAreaField,
     )
 
     form_args = dict(

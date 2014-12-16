@@ -124,8 +124,11 @@ class Persons(Base):
     def get_full_name(self):
         return u'{0} {1}'.format(self.firstname, self.lastname)
 
+    def __unicode__(self):
+        return u"{0} - {1}".format(self.id, self.get_full_name)
+
     def __str__(self):
-        return "{0} - {1}".format(self.id, self.get_full_name)
+        return "{0} - {1}".format(self.id, self.get_full_name.encode("utf-8"))
     
     def __repr__(self):
         return "Person(id='{0}', fullname='{1}')>".format(self.id, self.get_full_name)

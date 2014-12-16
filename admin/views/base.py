@@ -20,6 +20,9 @@ class BaseModelView(object):
 
 class SqlAlModelView(sqla.ModelView, BaseModelView):
 
+    create_template = 'create.html'
+    edit_template = 'edit.html'
+
     def __init__(self):
         super(SqlAlModelView, self).__init__(self.model, session, self.name, self.category, self.endpoint, self.url)
 
@@ -28,6 +31,9 @@ class SqlAlModelView(sqla.ModelView, BaseModelView):
 
 
 class MongoDBModelView(mongoengine.ModelView, BaseModelView):
+
+    create_template = 'create.html'
+    edit_template = 'edit.html'
 
     def __init__(self):
         super(MongoDBModelView, self).__init__(self.model, self.name, self.category, self.endpoint, self.url)
