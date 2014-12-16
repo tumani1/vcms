@@ -141,6 +141,9 @@ class Users(Base):
     def get_id(self):
         return self.id
 
+    def __unicode__(self):
+        return u"{} - {}".format(self.id, self.get_full_name)
+
     def __str__(self):
         return "{} - {}".format(self.id, self.get_full_name.encode('utf8'))
 

@@ -4,6 +4,7 @@ from flask.ext.admin.form import fields
 
 from admin.views.base import SqlAlModelView
 from admin.templates import mediainits_link_formatter
+from admin.fields import CKTextAreaField
 
 from models.media.media_units import MediaUnits
 from models.media.constants import APP_MEDIA_LIST
@@ -39,13 +40,14 @@ class MediaUnitsModelView(SqlAlModelView):
     }
 
     form_columns = (
-        'title', 'title_orig', 'description', 'topic_name',
-        'previous_unit', 'next_unit', 'release_date',
-        'end_date', 'batch', 'access', 'access_type',
+        'title', 'title_orig', 'topic_name', 'previous_unit', 'next_unit',
+        'release_date', 'end_date', 'batch', 'access',
+        'access_type', 'description',
     )
 
     form_overrides = dict(
         access_type=fields.Select2Field,
+        description=CKTextAreaField,
     )
 
     column_choices = dict(

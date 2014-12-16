@@ -5,8 +5,8 @@ APP_MEDIA_TYPE_PICTURE = u'p'
 APP_MEDIA_TYPE_DEFAULT = u'd'
 
 APP_MEDIA_TYPE = (
-    (APP_MEDIA_TYPE_AUDIO, u'Аудио'),
     (APP_MEDIA_TYPE_VIDEO, u'Видео'),
+    (APP_MEDIA_TYPE_AUDIO, u'Аудио'),
     (APP_MEDIA_TYPE_PICTURE, u'Картинка'),
 )
 

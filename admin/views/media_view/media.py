@@ -2,7 +2,8 @@
 
 from flask.ext.admin.form import fields
 
-from admin.filters import ChoiceEqualFilter
+from admin.filters import ChoiceEqualFilter, MediaUnitFilter
+from admin.fields import CKTextAreaField
 from admin.views.base import SqlAlModelView
 from admin.templates import media_link_formatter
 
@@ -28,7 +29,7 @@ class MediaModelView(SqlAlModelView):
         'title', ChoiceEqualFilter(Media.type_, u'Тип', APP_MEDIA_TYPE),
         ChoiceEqualFilter(Media.access_type, u'Тип доступа', APP_MEDIA_LIST),
         'release_date', 'allow_mobile', 'allow_smarttv',
-        'allow_external', 'allow_anon', 'media_units.id',
+        'allow_external', 'allow_anon', MediaUnitFilter(Media.id, u'Media Unit'),
     )
 
     column_choices = dict(
@@ -38,6 +39,7 @@ class MediaModelView(SqlAlModelView):
 
     column_labels = dict(
         title=u'Заголовок', link=u'',
+        title_orig=u'Оригинальное название',
         allow_mobile=u'Доступны на моб.телефонах',
         allow_smarttv=u'Доступны на Smart TV',
         allow_external=u'Доступны внешние ссылки',
@@ -47,6 +49,7 @@ class MediaModelView(SqlAlModelView):
         duration=u'Продолжительность', owner=u'Владелец',
         created=u'Дата создания', type_=u'Тип',
         access=u'Доступ', access_type=u'Тип доступа',
+        description=u'Описание',
     )
 
     column_formatters = {
@@ -54,15 +57,16 @@ class MediaModelView(SqlAlModelView):
     }
 
     form_columns = (
-        'title', 'title_orig', 'description', 'release_date',
-        'poster', 'duration', 'owner', 'type_', 'access',
+        'title', 'title_orig', 'release_date', 'poster',
+        'duration', 'owner', 'type_', 'access',
         'access_type', 'allow_mobile', 'allow_smarttv',
-        'allow_external', 'allow_anon',
+        'allow_external', 'allow_anon', 'description',
     )
 
     form_overrides = dict(
         type_=fields.Select2Field,
         access_type=fields.Select2Field,
+        description=CKTextAreaField,
     )
 
     form_args = dict(
