@@ -15,7 +15,7 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
         self.req_sess = requests.Session()
         self.ws = create_connection('ws://{}:{}'.format(self.h, self.p))
-        db_sess = get_session()
+        self.db_sess = get_session()
 
     def test_echo_get(self):
         params = {'message': 'hello'}
@@ -56,3 +56,4 @@ class RestWsNodeServiceTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.ws.close()
+        self.db_sess.close()

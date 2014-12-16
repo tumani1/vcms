@@ -1,10 +1,11 @@
 # coding: utf-8
 import zerorpc
 import unittest
+from settings import DATABASE
 from models import Base, SessionToken, Comments, UsersComments
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import and_
-from utils.connection import db_connect, create_session
+from utils.connection import db_connect, create_session, mongo_connect
 
 from tests.constants import ZERORPC_SERVICE_URI
 from tests.fixtures import create_media_units, create_topic, create, create_media, create_persons, create_comments
@@ -12,6 +13,9 @@ from tests.fixtures import create_media_units, create_topic, create, create_medi
 
 def setUpModule():
     engine = db_connect()
+    mongo_engine = mongo_connect()
+    mongo_engine.drop_database(DATABASE['mongodb']['db'])
+
     engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
@@ -29,7 +33,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 class CommentsTestCase(unittest.TestCase):
@@ -52,7 +56,6 @@ class CommentsTestCase(unittest.TestCase):
         }
         temp = {
             'text': 'Тест',
-            'object': None,
             'relation': {},
             'id': 1,
             'user': {'firstname': 'Test1', 'lastname': 'Test1', 'relation': 'u', 'is_online': True, 'person_id': 1,'id': 1
@@ -68,13 +71,47 @@ class CommentsTestCase(unittest.TestCase):
                 'x_token': self.session_token[1],
                 'query_params': {'obj_type': 'm', 'obj_id': 1, 'with_obj': True}
         }
-        temp = [{
-                    'text': 'Тест',
-                    'object': {'description': 'test_desc1', 'title': 'media1', 'locations': [], 'releasedate': None, 'title_orig': 'test_media1', 'duration': None, 'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'pos': 50}, 'id': 1},
-                    'relation': {},
-                    'id': 1,
-                    'user': {'firstname': 'Test1', 'lastname': 'Test1', 'relation': 'u', 'is_online': True, 'person_id': 1,'id': 1}
-                }]
+        temp = [
+            {
+                'text': 'Тест',
+                'object':
+                    {
+                        'rating': 0.0,
+                        'description': 'test_desc1',
+                        'title': 'media1',
+                        'locations': [],
+                        'id': 1,
+                        'releasedate': None,
+                        'duration': None,
+                        'title_orig': 'test_media1',
+                        'units': [
+                            {
+                                'topic':
+                                    {
+                                        'name': 'test1',
+                                        'title': 'test1',
+                                        'releasedate': 1388534400.0,
+                                        'relation':
+                                            {
+                                                'liked': 0,
+                                                'subscribed': False
+                                            },
+                                        'title_orig': None,
+                                        'type': 'news'
+                                    },
+                                'title_orig': '2',
+                                'relation': {'watched': 1388534400.0},
+                                'id': 2,
+                                'title': 'mu2'
+                            }
+                        ],
+                        'relation': {'watched': 1356998400.0, 'liked': 1388534400.0, 'playlist': 50, 'pos': 50},
+                        'rating_votes': 0,
+                        'views_cnt': 0
+                    },
+                'relation': {},
+                'id': 1,
+                'user': {'firstname': 'Test1', 'lastname': 'Test1', 'relation': 'u', 'is_online': True, 'person_id': 1, 'id': 1}}]
         resp = self.cl.route(IPC_pack)
         self.assertListEqual(resp, temp)
 

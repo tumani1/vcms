@@ -13,7 +13,7 @@ class MsgrThreads(Base):
     id       = Column(Integer, primary_key=True)
     msg_cnt  = Column(Integer, default=0)
 
-    # msgr_thread_users = relationship('UsersMsgrThreads', backref='msgr_threads', cascade='all, delete')
+    msgr_thread_users = relationship('UsersMsgrThreads', backref='msgr_threads', cascade='all, delete')
     msgr_thread_logs = relationship('MsgrLog', backref='msgr_threads', cascade='all, delete')
 
     @classmethod

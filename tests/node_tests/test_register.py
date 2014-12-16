@@ -11,7 +11,7 @@ from tests.constants import NODE
 
 def setUpModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -42,7 +42,6 @@ class RegisterTestCase(unittest.TestCase):
             'email': 'petrov@mail.ru',
             'pswd1': 'test',
             'pswd2': 'test',
-            'city_id': 1
         }
         resp = self.req_sess.post(self.fullpath+'/auth/register', params=data)
         self.session.close()
@@ -51,7 +50,6 @@ class RegisterTestCase(unittest.TestCase):
         self.assertEqual(data['firstname'], new_user.firstname)
         self.assertEqual(data['lastname'], new_user.lastname)
         self.assertEqual(data['email'], new_user.email)
-        self.assertEqual(data['city_id'], new_user.city_id)
 
     def tearDown(self):
         self.session.remove()

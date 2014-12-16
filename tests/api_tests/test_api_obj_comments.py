@@ -52,7 +52,6 @@ class ObjCommentsTestCase(unittest.TestCase):
         }
         temp = [{
                     'text': 'Тест',
-                    'object': None,
                     'relation': {},
                     'id': 1,
                     'user': {'firstname': 'Test1', 'lastname': 'Test1', 'relation': 'u', 'is_online': True, 'person_id': 1, 'id': 1}

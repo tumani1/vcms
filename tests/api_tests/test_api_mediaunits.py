@@ -24,7 +24,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
 
 
 class MediaUnitsTestCase(unittest.TestCase):
@@ -46,16 +46,25 @@ class MediaUnitsTestCase(unittest.TestCase):
                     'query_params': {}
         }
         temp = {
-            'id': 2,
-            'title': 'mu2',
-            'title_orig': '2',
+            'topic': {
+                'description': 'test test',
+                'title': 'test1',
+                'releasedate': 1388534400.0,
+                'relation': {'liked': 0, 'subscribed': False},
+                'title_orig': None,
+                'type': 'news',
+                'name': 'test1'
+            },
+            'enddate': 1391212800.0,
             'description': 'test2',
-            'prev': 1,
+            'title': 'mu2',
+            'batch': 'batch1',
             'next': 3,
             'releasedate': 1325376000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
+            'title_orig': '2',
             'relation': {'watched': 1388534400.0},
+            'prev': 1,
+            'id': 2
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -69,16 +78,25 @@ class MediaUnitsTestCase(unittest.TestCase):
                     'query_params': {}
                     }
         temp = {
-            'id': 3,
-            'title': 'mu3',
-            'title_orig': '3',
+            'topic': {
+                'description': 'test test',
+                'title': 'test1',
+                'releasedate': 1388534400.0,
+                'relation': {'liked': 0, 'subscribed': False},
+                'title_orig': None,
+                'type': 'news',
+                'name': 'test1'
+            },
+            'enddate': 1391212800.0,
             'description': 'test3',
-            'prev': 2,
+            'title': 'mu3',
+            'batch': 'batch1',
             'next': None,
             'releasedate': 1356998400.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
+            'title_orig': '3',
             'relation': {},
+            'prev': 2,
+            'id': 3
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -92,16 +110,25 @@ class MediaUnitsTestCase(unittest.TestCase):
                     'query_params': {}
                     }
         temp = {
-            'id': 2,
-            'title': 'mu2',
-            'title_orig': '2',
+            'topic': {
+                'description': 'test test',
+                'title': 'test1',
+                'releasedate': 1388534400.0,
+                'relation': {'liked': 0, 'subscribed': False},
+                'title_orig': None,
+                'type': 'news',
+                'name': 'test1'
+            },
+            'enddate': 1391212800.0,
             'description': 'test2',
-            'prev': 1,
+            'title': 'mu2',
+            'batch': 'batch1',
             'next': 3,
             'releasedate': 1325376000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
+            'title_orig': '2',
             'relation': {'watched': 1388534400.0},
+            'prev': 1,
+            'id': 2
         }
         resp = self.cl.route(IPC_pack)
         self.assertDictEqual(resp, temp)
@@ -113,19 +140,29 @@ class MediaUnitsTestCase(unittest.TestCase):
                     'x_token': self.session_token[1],
                     'query_params': {'text': 'mu1',}
                     }
-        temp = {
-            'id': 1,
-            'title': 'mu1',
-            'title_orig': '1',
-            'description': 'test1',
-            'prev': None,
-            'next': 2,
-            'releasedate': 1293840000.0,
-            'enddate': 1391212800.0,
-            'batch': 'batch1',
-            'relation': {'watched': 1388534400.0},
-        }
+        temp =  {
+                'topic': {
+                    'description': 'test test',
+                    'title': 'test1',
+                    'releasedate': 1388534400.0,
+                    'relation': {'liked': 0, 'subscribed': False},
+                    'title_orig': None,
+                    'type': 'news',
+                    'name': 'test1'
+                },
+                'enddate': 1391212800.0,
+                'description': 'test1',
+                'title': 'mu1',
+                'batch': 'batch1',
+                'next': 2,
+                'releasedate': 1293840000.0,
+                'title_orig': '1',
+                'relation': {'watched': 1388534400.0},
+                'prev': None,
+                'id': 1
+            }
         resp = self.cl.route(IPC_pack)
+        self.assertEqual(len(resp), 1)
         self.assertDictEqual(resp[0], temp)
 
     def tearDown(self):
