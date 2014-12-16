@@ -124,7 +124,7 @@ class TopicLikeTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -142,7 +142,7 @@ class TopicLikeTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -195,7 +195,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -213,7 +213,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
         }
 
         resp = self.cl.route(IPC_pack)
-        self.assertEqual(resp, None)
+        self.assertEqual(resp, {})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 

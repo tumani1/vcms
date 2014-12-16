@@ -8,9 +8,9 @@ UTC = pytz.utc
 
 
 def create_media_units(session):
-    mu1 = MediaUnits(topic_name='test1', title='mu1', title_orig=1, description='test1', next_unit=2, release_date=datetime.datetime(2011,1,1,0,0,0,tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
-    mu2 = MediaUnits(topic_name='test1', title='mu2', title_orig=2, description='test2', previous_unit=1, next_unit=3, release_date=datetime.datetime(2012,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
-    mu3 = MediaUnits(topic_name='test1', title='mu3', title_orig=3, description='test3', previous_unit=2, release_date=datetime.datetime(2013,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
+    mu1 = MediaUnits(topic_id='test1', title='mu1', title_orig=1, description='test1', next_unit=2, release_date=datetime.datetime(2011,1,1,0,0,0,tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
+    mu2 = MediaUnits(topic_id='test1', title='mu2', title_orig=2, description='test2', previous_unit=1, next_unit=3, release_date=datetime.datetime(2012,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
+    mu3 = MediaUnits(topic_id='test1', title='mu3', title_orig=3, description='test3', previous_unit=2, release_date=datetime.datetime(2013,1,1,0,0,0, tzinfo=UTC), end_date=datetime.datetime(2014,2,1,0,0,0, tzinfo=UTC), batch='batch1')
     user_mu1 = UsersMediaUnits(media_unit_id=1, user_id=1, watched=datetime.datetime(2014,1,1,0,0,0, tzinfo=UTC))
     user_mu2 = UsersMediaUnits(media_unit_id=2, user_id=1, watched=datetime.datetime(2014,1,1,0,0,0, tzinfo=UTC))
 
@@ -19,21 +19,29 @@ def create_media_units(session):
 
 
 def create_media(session):
-    media1 = Media(title='media1', type_='v', owner=1, title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
-    media2 = Media(title='media2', type_='v', owner=1, title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media3 = Media(title='media3', type_='v', owner=1, title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
-    media4 = Media(title='media4', type_='v', owner=1, title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media1 = Media(title='media1', type_='v', owner_id=1, title_orig='test_media1', description='test_desc1', created=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    media2 = Media(title='media2', type_='v', owner_id=1, title_orig='test_media2', description='test_desc2', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media3 = Media(title='media3', type_='v', owner_id=1, title_orig='test_media3', description='test_desc3', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+    media4 = Media(title='media4', type_='v', owner_id=1, title_orig='test_media4', description='test_desc4', created=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC))
+
+    session.add_all([media1, media2, media3,media4,])
+    session.commit()
 
     m_in_u1 = MediaInUnit(media_id=1, media_unit_id=2)
     m_in_u2 = MediaInUnit(media_id=2, media_unit_id=1)
+    session.add_all([m_in_u1, m_in_u2,])
 
     user_m1 = UsersMedia(media_id=1, user_id=1, views_cnt=5, play_pos=50, playlist=datetime.datetime(2013,2,1,0,0,0,0, tzinfo=UTC), liked=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), watched=datetime.datetime(2013,1,1,0,0,0,0, tzinfo=UTC))
     user_m2 = UsersMedia(media_id=2, user_id=1, views_cnt=10, watched=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
     user_m3 = UsersMedia(media_id=3, user_id=1, views_cnt=10, play_pos=20, playlist=datetime.datetime(2014,2,1,0,0,0,0, tzinfo=UTC), watched=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
     user_m4 = UsersMedia(media_id=4, user_id=1, views_cnt=5, play_pos=50, playlist=datetime.datetime(2013,2,1,0,0,0,0, tzinfo=UTC), liked =datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), watched=datetime.datetime(2013,1,1,0,0,0,0, tzinfo=UTC))
-    pers_m1 = PersonsMedia(media_id=1, person_id=1, role='actor')
 
-    session.add_all([media1, media2, media3,media4, m_in_u1, m_in_u2, user_m1, user_m2, user_m3, user_m4, pers_m1])
+    session.add_all([user_m1, user_m2, user_m3, user_m4,])
+    session.commit()
+
+    pers_m1 = PersonsMedia(media_id=1, person_id=1, role='actor')
+    #
+    session.add_all([pers_m1])
     session.commit()
 
 def create_persons(session):
@@ -46,6 +54,9 @@ def create_persons(session):
     ]
 
     session.add_all(persons)
+    session.commit()
+    up = UsersPersons(user_id=1, person_id=3, subscribed=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC))
+    session.add(up)
     session.commit()
 
 def create_comments(session):
@@ -93,7 +104,7 @@ def create_one_media(session):
     user = Users(firstname="Test", lastname="Test", password='Test', email='test@test.ru')
     session.add(user)
     session.commit()
-    media = Media(title='Test', type_='v', owner=user.id, title_orig='test_media1', description='test_desc1')
+    media = Media(title='Test', type_='v', owner_id=user.id, title_orig='test_media1', description='test_desc1')
     session.add(media)
     session.commit()
 
@@ -206,8 +217,8 @@ def create_users_rels(session):
 
 def create_users_msgr_threads(session):
     users_msgr = [
-        UsersMsgrThreads(user_id=1, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0,tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1),
-        UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=1),
+        UsersMsgrThreads(user_id=2, msgr_threads_id=1, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=0),
+        UsersMsgrThreads(user_id=1, msgr_threads_id=2, last_msg_sent=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), last_visit=datetime.datetime(2014,1,1,0,0,0,0, tzinfo=UTC), new_msgs=0),
     ]
 
     session.add_all(users_msgr)
@@ -215,9 +226,9 @@ def create_users_msgr_threads(session):
 
 
 def create_msgr_threads(session):
-    msgr_threads = MsgrThreads(msg_cnt=2)
-
-    session.add(msgr_threads)
+    msgr_threads1 = MsgrThreads(msg_cnt=2)
+    msgr_threads2 = MsgrThreads(msg_cnt=0)
+    session.add_all([msgr_threads1, msgr_threads2])
     session.commit()
 
 
@@ -263,13 +274,13 @@ def create_content(session):
 
 
 def create_chat(session):
-    c = Chats(description='chat for testing')
+    c = Chats(description='chat for testing', name='test')
     session.add(c)
     session.commit()
 
 
 def create_users_chat(session):
-    uc = UsersChat(user_id=1, chat_id=1, cuStatus='1')
+    uc = UsersChat(user_id=1, chat_id=1, cuStatus='null')
     session.add(uc)
     session.commit()
 

@@ -3,7 +3,7 @@ import requests
 import unittest
 
 from tests.constants import NODE
-from models import Base, UsersTopics, Users
+from models import Base, UsersTopics, Users, SessionToken
 from utils.connection import db_connect, create_session
 from tests.fixtures import create, create_topic, create_user_topic, create_cdn, \
     create_extras, create_topic_extras, create_topic_values, create_scheme
@@ -11,7 +11,7 @@ from tests.fixtures import create, create_topic, create_user_topic, create_cdn, 
 
 def setUpModule():
     engine = db_connect().connect()
-    # engine.execute("drop schema public cascade; create schema public;")
+    engine.execute("drop schema public cascade; create schema public;")
     session = create_session(bind=engine)
 
     # Create table
@@ -49,12 +49,11 @@ class TopicInfoTestCase(unittest.TestCase):
 
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/info'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/info'.format(topic), headers={'x-token': self.token}, params={})
 
         temp = {
             u'name': u'test',
@@ -90,12 +89,11 @@ class TopicLikeTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo_get(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/like'.format(topic), headers={'x-token': self.token}, params={})
         temp = {
             'liked': 0
         }
@@ -103,7 +101,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_post(self):
         topic = "test1"
-        self.req_sess.post(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, data={})
+        self.req_sess.post(self.fullpath + '/topics/{0}/like'.format(topic), headers={'x-token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -112,7 +110,7 @@ class TopicLikeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test2"
-        self.req_sess.delete(self.fullpath + '/topics/{0}/like'.format(topic), headers={'token': self.token}, params={})
+        self.req_sess.delete(self.fullpath + '/topics/{0}/like'.format(topic), headers={'x-token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -138,12 +136,11 @@ class TopicSubscribeTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo_get(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'x-token': self.token}, params={})
 
         temp = {'subscribed': 0}
 
@@ -151,7 +148,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_post(self):
         topic = "test2"
-        resp = self.req_sess.post(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, data={})
+        resp = self.req_sess.post(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'x-token': self.token}, data={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -160,7 +157,7 @@ class TopicSubscribeTestCase(unittest.TestCase):
 
     def test_echo_delete(self):
         topic = "test1"
-        resp = self.req_sess.delete(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.delete(self.fullpath + '/topics/{0}/subscribe'.format(topic), headers={'x-token': self.token}, params={})
 
         user = Users.get_users_by_id(session=self.session, users_id=[self.user_id]).first()
 
@@ -184,13 +181,12 @@ class TopicExtrasTestCase(unittest.TestCase):
         self.fullpath = 'http://{}:{}'.format(self.h, self.p)
 
         self.req_sess = requests.Session()
-
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.user_id = 1
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo(self):
         topic = 'test'
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/extras'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/extras'.format(topic), headers={'x-token': self.token}, params={})
 
         temp = [
             {
@@ -233,26 +229,25 @@ class TopicListTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo(self):
-        resp = self.req_sess.get(self.fullpath + '/topics/list', headers={'token': self.token}, params={'type': 'news'})
+        resp = self.req_sess.get(self.fullpath + '/topics/list', params={'type': 'news'})
 
         temp = [
             {
                 'description': 'test test',
                 'title': 'test1',
-                'releasedate': 1388534400,
-                'relation': {'liked': 0, 'subscribed': True},
+                'releasedate': 1388534400.0,
+                'relation': {},
                 'title_orig': None,
                 'type': 'news',
                 'name': 'test1'
             }, {
                 'description': 'test test',
                 'title': 'test',
-                'releasedate': 1388534400,
-                'relation': {'liked': 0, 'subscribed': False},
+                'releasedate': 1388534400.0,
+                'relation': {},
                 'title_orig': None,
                 'type': 'news',
                 'name': 'test'
@@ -279,12 +274,11 @@ class TopicValuesTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/values'.format(topic), headers={'token': self.token}, params={'scheme_name': 't'})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/values'.format(topic), headers={'x-token': self.token}, params={'scheme_name': 't'})
 
         temp = []
 
@@ -309,13 +303,12 @@ class TopicMediaTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/media'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/media'.format(topic), headers={'x-token': self.token}, params={})
 
         temp = []
 
@@ -340,12 +333,11 @@ class TopicPersonsTestCase(unittest.TestCase):
         self.req_sess = requests.Session()
         self.user_id = 1
 
-        resp = self.req_sess.post(self.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'})
-        self.token = resp.json()['token']
+        self.token = SessionToken.generate_token(self.user_id, session=self.session)[1]
 
     def test_echo(self):
         topic = "test"
-        resp = self.req_sess.get(self.fullpath + '/topics/{0}/persons'.format(topic), headers={'token': self.token}, params={})
+        resp = self.req_sess.get(self.fullpath + '/topics/{0}/persons'.format(topic), headers={'x-token': self.token}, params={})
 
         temp = []
 

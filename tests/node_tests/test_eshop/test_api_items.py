@@ -36,7 +36,7 @@ def setUpModule():
 
 def tearDownModule():
     engine = db_connect()
-    #engine.execute("drop schema public cascade; create schema public;")
+    # engine.execute("drop schema public cascade; create schema public;")
 
 
 class ItemsInfoTestCase(unittest.TestCase):
@@ -47,7 +47,7 @@ class ItemsInfoTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -92,7 +92,7 @@ class ItemsVariantsTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -142,7 +142,7 @@ class ItemsBookTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -178,7 +178,7 @@ class ItemsListTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -370,7 +370,7 @@ class ItemsObjectsTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 
@@ -394,7 +394,7 @@ class ItemsExtrasTestCase(unittest.TestCase):
         cls.req_sess = requests.Session()
         cls.engine = db_connect()
         cls.session = scoped_session(sessionmaker(bind=cls.engine))
-        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'email': 'test1@test.ru', 'password': 'Test1'}).content
+        token_str = cls.req_sess.post(cls.fullpath+'/auth/login', data={'login': 'test1@test.ru', 'password': 'Test1'}).content
         cls.token = json.loads(token_str)['token']
         cls.engine = db_connect()
 

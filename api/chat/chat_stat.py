@@ -8,7 +8,7 @@ from api.serializers import mPersonSerializer as mP
 
 
 def get_chat_stat(auth_user, chat_name, session, **kwargs):
-    chat = session.query(Chats).filter_by(Chats.name == chat_name).first()
+    chat = session.query(Chats).filter(Chats.name == chat_name).first()
     users = session.query(Users).join(UsersChat).filter(UsersChat.chat_id == chat.id)
     on_users = SessionToken.filter_users_is_online(True, users)
     on_users_count = int(on_users.count())  # тип - long
@@ -17,7 +17,7 @@ def get_chat_stat(auth_user, chat_name, session, **kwargs):
     p_data = mp.data
     data = {'user_cnt': on_users_count, 'persons': p_data}
     if auth_user:
-        uc = session.query(UsersChat).filter_by(user_id=auth_user.id).one()
+        uc = session.query(UsersChat).filter(UsersChat.user_id == auth_user.id).one()
         last_update = uc.last_update
         new_msgs_count = ChatMessages.objects.filter(chat_id=chat.id, created__gt=last_update).count()
         data.update({'new_msgs': new_msgs_count})

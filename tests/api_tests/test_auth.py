@@ -53,7 +53,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
 
         auth_resp = self.cl.route(Auth_IPC_pack)
 
-        session_token = auth_resp['session_token']
+        session_token = auth_resp['x-token']
         
         IPC_pack = {
             'api_method': '/test/echoauth',
@@ -75,7 +75,7 @@ class ZeroRpcServiceAuthTestCase(unittest.TestCase):
         }
         auth_resp = self.cl.route(Auth_IPC_pack)
 
-        session_token = auth_resp['session_token']
+        session_token = auth_resp['x-token']
         Del_IPC_pack = {
             'api_method': '/auth/session',
             'api_type': 'delete',

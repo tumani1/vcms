@@ -1,5 +1,6 @@
 # coding: utf-8
 from models.users.users import Users
+from models.tokens import GlobalToken
 from utils.exceptions import Invalid
 from utils.validation import validate_email, validate_int
 
@@ -22,5 +23,6 @@ def post(auth_user, session, **kwargs):
         user = Users(firstname=firstname, lastname=lastname, email=email, password=password)
         session.add(user)
         session.commit()
+        return {'token': GlobalToken.generate_token(user.id, session)}
     else:
         raise Invalid(u'Имя и фамилия обязательные поля!')
