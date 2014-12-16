@@ -102,4 +102,4 @@ def complete_get(auth_user, session, **kwargs):
     ]
     headers = prepare_headers(headers)
     response = requests.get(url_auth, headers=headers)
-    return {'token': response.text}
+    return {'token': response.content}
