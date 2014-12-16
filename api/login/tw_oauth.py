@@ -132,7 +132,7 @@ def complete_get(auth_user, session, **kwargs):
 
         session.add(user)
         session.commit()
-        users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_TWITTER, sToken=' ', social_user_id=data['user_id'])
+        users_social = UsersSocial(user_id=user.id, sType=APP_USERSOCIAL_TYPE_TWITTER, sToken=' ', social_user_id=user_id)
         session.add(users_social)
         session.commit()
         return {'token': GlobalToken.generate_token(user.id, session), 'social_token': True}
