@@ -147,6 +147,6 @@ def complete_get(auth_user, session, **kwargs):
         (u'screen_name',  unicode(screen_name))
     ]
     headers = prepare_headers(headers)
-    response = requests.get(u'https://api.twitter.com/1.1/users/show.json', headers=headers).json()
+    response = requests.get(u'https://api.twitter.com/1.1/users/show.json', headers=headers)
 
     return {response}
