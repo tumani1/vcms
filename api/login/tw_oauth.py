@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import json
 import random
 from urllib import urlencode
 from oauthlib.common import unicode_type, generate_timestamp, CaseInsensitiveDict
@@ -102,4 +103,4 @@ def complete_get(auth_user, session, **kwargs):
     ]
     headers = prepare_headers(headers)
     response = requests.get(url_auth, headers=headers)
-    return {'token': response.content}
+    return {'token': json.dumps(response.content)}
