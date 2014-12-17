@@ -48,10 +48,16 @@ def get(auth_user, session, **kwargs):
     url = to_native_string(normalized_uri)
 
     response = requests.get(url, headers=headers).text
+
     oauth_token = response.split('&')[0].split('=')[1]
+
     redirect_url = {'redirect_uri': 'http://serialov.tv/login/complete/tw-oauth'}
+
     redirect_url = urlencode(redirect_url)
-    return {'redirect_url': url_login+redirect_url+'&oauth_token='+oauth_token, 'social': True}
+
+    url = url_login+redirect_url+'&oauth_token='+oauth_token
+
+    return {'redirect_url': url, 'social': True}
 
 
 def complete_get(auth_user, session, **kwargs):
@@ -129,6 +135,7 @@ def complete_get(auth_user, session, **kwargs):
         print(e)
         raise NotAuthorizedException
 
+    #Получение доступа к аватарке пользователя и прочим данным расширеным
     # ts = unicode_type(int(time.time()))
     # nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
     #
