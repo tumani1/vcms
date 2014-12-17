@@ -1,3 +1,4 @@
+#coding:utf-8
 import hashlib
 import random
 from urllib import urlencode
