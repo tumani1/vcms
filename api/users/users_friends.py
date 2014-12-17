@@ -1,7 +1,9 @@
 # coding: utf-8
+
 from models.users import Users, UsersRels
 from models.tokens import SessionToken
 from models.users.constants import APP_USERSRELS_TYPE_FRIEND
+
 from utils.validation import validate_mLimit
 from api.serializers import mUserShort
 

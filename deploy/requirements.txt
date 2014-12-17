@@ -24,5 +24,5 @@ wtforms-html5
 BeautifulSoup4
 alembic
 validate_email
-pyDNSalembic
+pyDNS
 oauthlib
