@@ -1,7 +1,6 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from admin.filters import ChoiceEqualFilter
 from admin.templates import person_link_formatter
@@ -42,7 +41,7 @@ class PersonsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        status=fields.Select2Field
+        status=SelectField
     )
 
     form_args = dict(

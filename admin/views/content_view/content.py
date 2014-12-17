@@ -1,8 +1,6 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
-from admin.fields import CKTextAreaField
+from admin.fields import CKTextAreaField, SelectField
 from admin.views.base import SqlAlModelView
 from utils.constants import OBJECT_TYPES
 from models.content.content import Content
@@ -40,7 +38,7 @@ class ContentModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        obj_type=fields.Select2Field,
+        obj_type=SelectField,
         text=CKTextAreaField,
     )
 

@@ -1,9 +1,7 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
 from admin.filters import ChoiceEqualFilter, MediaUnitFilter
-from admin.fields import CKTextAreaField, select_factory
+from admin.fields import CKTextAreaField, select_factory, SelectField
 from admin.views.base import SqlAlModelView
 from admin.templates import media_link_formatter
 
@@ -72,8 +70,8 @@ class MediaModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        type_=fields.Select2Field,
-        access_type=fields.Select2Field,
+        type_=SelectField,
+        access_type=SelectField,
         poster=select_factory(coerce=int, allow_blank=True, blank_text=u'Без постера', ),
         description=CKTextAreaField,
     )

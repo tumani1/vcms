@@ -1,6 +1,6 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
 
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from models.scheme import Scheme
 from models.scheme.constants import KLASS_TYPE
@@ -12,7 +12,7 @@ class SchemeModelView(SqlAlModelView):
     name = u'Схема'
 
     form_overrides = dict(
-        klass=fields.Select2Field,
+        klass=SelectField,
     )
 
     column_choices = dict(

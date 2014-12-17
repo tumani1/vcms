@@ -1,8 +1,9 @@
 # coding: utf-8
+
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from utils.constants import OBJECT_TYPES
 from models.tags.tags_objects import TagsObjects
-from flask.ext.admin.form import fields
 
 
 class TagsObjectsModelView(SqlAlModelView):
@@ -19,7 +20,7 @@ class TagsObjectsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        obj_type=fields.Select2Field,
+        obj_type=SelectField,
     )
 
     column_choices = dict(

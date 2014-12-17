@@ -1,5 +1,6 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
+
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from models.media.constants import APP_MEDIA_TYPE_WITH_DEFAULT, APP_MEDIA_LIST
 from models.media.media_access_defaults import MediaAccessDefaults
@@ -19,8 +20,8 @@ class MediaAccessDefaultsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        name=fields.Select2Field,
-        access_type=fields.Select2Field,
+        name=SelectField,
+        access_type=SelectField,
     )
 
     column_choices = dict(

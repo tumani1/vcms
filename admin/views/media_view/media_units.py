@@ -1,10 +1,8 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
 from admin.views.base import SqlAlModelView
 from admin.templates import mediainits_link_formatter
-from admin.fields import CKTextAreaField
+from admin.fields import CKTextAreaField, SelectField
 
 from models.media.media_units import MediaUnits
 from models.media.constants import APP_MEDIA_LIST
@@ -46,7 +44,7 @@ class MediaUnitsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        access_type=fields.Select2Field,
+        access_type=SelectField,
         description=CKTextAreaField,
     )
 
