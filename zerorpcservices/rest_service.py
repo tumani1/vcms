@@ -1,6 +1,8 @@
 # coding: utf-8
+
 import argparse
 import zerorpc
+import memcache
 
 import settings as conf
 from api import rest_routes
@@ -8,7 +10,10 @@ from base_service import BaseService
 
 
 class ZeroRpcRestApiService(BaseService):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        super(ZeroRpcRestApiService, self).__init__(*args, **kwargs)
+        self.mc = memcache.Client(['127.0.0.1:11211'], debug=0)
 
 
 if __name__ == '__main__':
