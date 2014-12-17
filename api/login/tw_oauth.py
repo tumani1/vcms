@@ -11,6 +11,7 @@ from requests.utils import to_native_string
 from models import UsersSocial, Users, GlobalToken
 from models.users.constants import APP_USERS_GENDER_UNDEF, APP_USER_STATUS_ACTIVE, APP_USERSOCIAL_TYPE_TWITTER
 from utils import NotAuthorizedException
+from utils.constants import TW_CONSUMER_KEY, TW_SECRET_CONSUMER_KEY
 
 
 def get(auth_user, session, **kwargs):
@@ -20,7 +21,7 @@ def get(auth_user, session, **kwargs):
     nonce = unicode_type(hashlib.md5(unicode_type(random.getrandbits(64)) + generate_timestamp()))
     collected_params = [
         (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth'),
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_consumer_key', TW_CONSUMER_KEY),
         (u'oauth_nonce', nonce),
         (u'oauth_signature_method', u'HMAC-SHA1'),
         (u'oauth_timestamp', unicode(ts)),
@@ -30,11 +31,11 @@ def get(auth_user, session, **kwargs):
     normalized_params = signature.normalize_parameters(collected_params)
     normalized_uri = signature.normalize_base_string_uri(url_auth, None)
     base_string = signature.construct_base_string(u'GET', normalized_uri, normalized_params)
-    sig = sign_hmac_sha1(base_string, u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx', None)
+    sig = sign_hmac_sha1(base_string, TW_SECRET_CONSUMER_KEY, None)
 
     headers = [
         (u'oauth_callback', u'http://serialov.tv/login/complete/tw-oauth'),
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_consumer_key', TW_CONSUMER_KEY),
         (u'oauth_nonce', nonce),
         (u'oauth_signature', sig),
         (u'oauth_signature_method', u'HMAC-SHA1'),
@@ -73,7 +74,7 @@ def complete_get(auth_user, session, **kwargs):
         oauth_verifier = unicode(params['oauth_verifier'])
 
     collected_params = [
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_consumer_key', TW_CONSUMER_KEY),
         (u'oauth_nonce', nonce),
         (u'oauth_signature_method', u'HMAC-SHA1'),
         (u'oauth_timestamp', unicode(ts)),
@@ -85,10 +86,10 @@ def complete_get(auth_user, session, **kwargs):
     normalized_uri = signature.normalize_base_string_uri(url_auth, None)
     base_string = signature.construct_base_string(u'GET', normalized_uri, normalized_params)
 
-    sig = sign_hmac_sha1(base_string, u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx', None)
+    sig = sign_hmac_sha1(base_string, TW_SECRET_CONSUMER_KEY, None)
 
     headers = [
-        (u'oauth_consumer_key', u'u7Vdu6ScezMQlpcCog3t7g7xx'),
+        (u'oauth_consumer_key', TW_CONSUMER_KEY),
         (u'oauth_nonce', nonce),
         (u'oauth_token', oauth_token),
         (u'oauth_verifier', oauth_verifier),
