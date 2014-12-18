@@ -72,6 +72,10 @@ def parse_one_info_page(filepath):
             traceback.print_exc()
 
 
+def parse_for_dir(jsons_dir = None):
+    files = os.listdir(jsons_dir)
+    parse_all_series(files)
+
 
 def parse_all_series(filenames_iterator):
     cdn = get_or_create_cdn("Своя CDN", "http://cdn.serialov.tv/")
@@ -321,7 +325,7 @@ def get_or_create_media_location(cdn_name, cdn_url, media_id):
     try:
         media_location = session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).one()
     except NoResultFound:
-        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=cdn_url+'v/upload/media/{id}/hd.mp4'.format(id=media.id))
+        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=cdn_url+'v/upload/media/{id}/hd.mp4'.format(id=media_id))
         session.add(media_location)
         session.commit()
     except Exception, e:
