@@ -84,30 +84,43 @@ def format_dom_2_name_str(inp):
     return re.sub("\D", "", inp) + u' день'
 
 
-def implement_media_structure(media, video_dir):
+def implement_media_structure_dom2(media, video_dir):
     cdn_vdir = u'/cdn/cdn/storage/v'
+    cdn_pdir = u'/cdn/cdn/storage/p'
     try:
         day_number = re.sub("\D", "", media.title)
         exec_commands_at_host([u"mkdir -p {dir_name}".format(dir_name=cdn_vdir + unicode(media.id) + u'/')])
         encoding_command = u'avconv -y -threads 6 -i {}' + u' -codec copy {out}'.format(out=cdn_vdir + unicode(media.id) + u'/' + u'hd.mp4')
         exec_commands_at_host([u"find {video_dir} -name '*{day}*.*' -exec {encoding_command} \;".format(video_dir=video_dir, day=day_number,
                                                                                                     encoding_command = encoding_command)])
-        exec_commands_at_host([u"find {video_dir} -name '*Серия*.*' -exec {encoding_command} \;".format(video_dir=video_dir, encoding_command = encoding_command)])
         print "Converted"
 
         #shutil.move(poster_dir + p, dom_2_files+unicode(m.id) + u'/' + poster_name)
-        create_poster_command = u'avconv -ss 300 -r 25 -i {}'+ u' -t 0.01 {poster_file}'.format(poster_file=cdn_vdir + unicode(media.id) + u'/' + u'poster.jpg')
+        create_poster_command = u'avconv -ss 300 -r 25 -i {}'+ u' -t 0.01 {poster_file}'.format(poster_file=cdn_pdir + unicode(media.id) + u'/' + u'poster.jpg')
         exec_commands_at_host([u"find {flv_video} -name '*{day}*.*' -exec {poster_command} \;".format(flv_video=video_dir, day = day_number,
                                                                                                    poster_command=create_poster_command)])
-        exec_commands_at_host([u"find {flv_video} -name '*Серия*.*' -exec {poster_command} \;".format(flv_video=video_dir, poster_command=create_poster_command)])
         print "Poster created"
     except Exception, e:
         print("#Error in remote:")
         traceback.print_exc()
 
 
+def implement_media_structure_fizruk(id, video_dir):
+    cdn_vdir = u'/cdn/cdn/storage/v'
+    cdn_pdir = u'/cdn/cdn/storage/p'
+    try:
+        exec_commands_at_host([u"mkdir -p {dir_name}".format(dir_name=cdn_vdir + unicode(id) + u'/')])
+        encoding_command = u'avconv -y -threads 6 -i {}' + u' -codec copy {out}'.format(out=cdn_vdir + unicode(id) + u'/' + u'hd.mp4')
+        exec_commands_at_host([u"find {video_dir} -name '*Серия*.*' -exec {encoding_command} \;".format(video_dir=video_dir, encoding_command = encoding_command)])
+        print "Converted"
 
-
+        #shutil.move(poster_dir + p, dom_2_files+unicode(m.id) + u'/' + poster_name)
+        create_poster_command = u'avconv -ss 300 -r 25 -i {}'+ u' -t 0.01 {poster_file}'.format(poster_file=cdn_pdir + unicode(id) + u'/' + u'poster.jpg')
+        exec_commands_at_host([u"find {flv_video} -name '*Серия*.*' -exec {poster_command} \;".format(flv_video=video_dir, poster_command=create_poster_command)])
+        print "Poster created"
+    except Exception, e:
+        print("#Error in remote:")
+        traceback.print_exc()
 
 def process_dom2_data_for_cdn(poster_dir = u'static/upload/dom2/', video_dir = u'static/upload/Dom2/'):
     session = get_session()
