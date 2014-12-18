@@ -20,6 +20,10 @@ OK_SECRET_KEY = 'F26F415CA79701D85F0F46FC'
 OK_PUBLIC_KEY = 'CBACDMDDEBABABABA'
 OK_REDIRECT_URI = 'http://serialov.tv/login/complete/ok-oauth2'
 
+#TW SOCIAL AUTH
+TW_CONSUMER_KEY = u'u7Vdu6ScezMQlpcCog3t7g7xx'
+TW_SECRET_CONSUMER_KEY = u'L8ejYRiZZOgUz0jvalLU1xGdm7jwjrrfMJ8U5FtexFQBt74DBx'
+
 
 ################################################################################
 OBJECT_TYPE_CONTENT = u'c'

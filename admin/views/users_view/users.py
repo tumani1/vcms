@@ -7,6 +7,7 @@ from flask.ext.admin.form import fields
 from wtforms.fields import PasswordField
 from wtforms_html5 import EmailField, TelField, _Input
 
+from admin.fields import SelectField
 from admin.filters import ChoiceEqualFilter, IsPersonFilterEqual, PhoneFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import user_link_formatter
@@ -66,8 +67,8 @@ class UsersModelView(SqlAlModelView):
 
     form_overrides = dict(
         time_zone=fields.Select2Field,
-        gender=fields.Select2Field,
-        status=fields.Select2Field,
+        gender=SelectField,
+        status=SelectField,
         password=PasswordField,
         phone=TelField,
         email=EmailField,

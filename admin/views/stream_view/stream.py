@@ -2,10 +2,9 @@
 
 from sqlalchemy.sql.functions import concat
 
-from admin.fields import select_factory
 from admin.validators import StreamUserTypeValidator
 from admin.views.base import MongoDBModelView
-from admin.fields import CKTextAreaField
+from admin.fields import CKTextAreaField, select_factory
 
 from models.users import Users
 from models.mongo.stream import Stream

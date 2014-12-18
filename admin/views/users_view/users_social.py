@@ -1,6 +1,7 @@
 # coding: utf-8
+
 from admin.views.base import SqlAlModelView
-from flask.ext.admin.form import fields
+from admin.fields import SelectField
 
 from models.users import UsersSocial
 from models.users.constants import APP_USERSOCIAL_TYPE
@@ -28,7 +29,7 @@ class UsersSocialModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        sType=fields.Select2Field
+        sType=SelectField
     )
 
     form_args = dict(

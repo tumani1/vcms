@@ -1,11 +1,9 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
 from admin.filters import ChoiceEqualFilter
 from admin.views.base import SqlAlModelView
 from admin.templates import topic_link_formatter
-from admin.fields import CKTextAreaField
+from admin.fields import CKTextAreaField, SelectField
 
 from models.topics import Topics
 from models.topics.constants import TOPIC_STATUS, TOPIC_TYPE
@@ -54,8 +52,8 @@ class TopicsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        status=fields.Select2Field,
-        type=fields.Select2Field,
+        status=SelectField,
+        type=SelectField,
         description=CKTextAreaField,
     )
 

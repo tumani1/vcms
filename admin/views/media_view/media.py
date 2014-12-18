@@ -1,14 +1,15 @@
 # coding: utf-8
 
-from flask.ext.admin.form import fields
-
 from admin.filters import ChoiceEqualFilter, MediaUnitFilter
-from admin.fields import CKTextAreaField
+from admin.fields import CKTextAreaField, select_factory, SelectField
 from admin.views.base import SqlAlModelView
 from admin.templates import media_link_formatter
 
 from models.media.media import Media
+from models.extras import constants, Extras
 from models.media.constants import APP_MEDIA_TYPE, APP_MEDIA_LIST
+
+from utils.connection import get_session
 
 
 class MediaModelView(SqlAlModelView):
@@ -32,9 +33,14 @@ class MediaModelView(SqlAlModelView):
         'allow_external', 'allow_anon', MediaUnitFilter(Media.id, u'Media Unit'),
     )
 
+    session = get_session()
+
+    extras = list(session.query(Extras.id, Extras.title).filter(Extras.type == constants.APP_EXTRA_TYPE_IMAGE).all())
+
     column_choices = dict(
         type_=APP_MEDIA_TYPE,
         access_type=APP_MEDIA_LIST,
+        poster=extras,
     )
 
     column_labels = dict(
@@ -64,8 +70,9 @@ class MediaModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        type_=fields.Select2Field,
-        access_type=fields.Select2Field,
+        type_=SelectField,
+        access_type=SelectField,
+        poster=select_factory(coerce=int, allow_blank=True, blank_text=u'Без постера', ),
         description=CKTextAreaField,
     )
 
@@ -76,6 +83,9 @@ class MediaModelView(SqlAlModelView):
         access_type=dict(
             choices=APP_MEDIA_LIST,
         ),
+        poster=dict(
+            choices=extras,
+        )
     )
 
     form_ajax_refs = dict(
