@@ -22,20 +22,16 @@ mongodb_session = mongo_connect()
 
 
 def datadir_fileiterator(datadir):
-
     for subdir in os.listdir(datadir):
         subdir_full = os.path.abspath(
                     os.path.join(datadir,
                                  subdir))
         
         filepath = next(jsonfile for jsonfile in os.listdir(subdir_full) if jsonfile.endswith('.json'))
-        
 
         full_filepath = os.path.join(subdir_full,filepath)
         if os.path.exists(full_filepath):
             yield full_filepath
-
-
 
 
 def parse_one_info_page(filepath):
@@ -74,7 +70,11 @@ def parse_one_info_page(filepath):
 
 def parse_for_dir(jsons_dir = None):
     files = os.listdir(jsons_dir)
-    parse_all_series(files)
+    fl = []
+    for f in files:
+        f = jsons_dir + f
+        fl = fl + [f]
+    parse_all_series(fl)
 
 
 def parse_all_series(filenames_iterator):
@@ -97,7 +97,7 @@ def parse_all_series(filenames_iterator):
             person = get_or_create_person(name, surname)
             get_or_create_persons_media(media.id, person.id)
 
-        print json.dumps({'id':media.id,'filename':os.path.basename(file_name)})
+        print json.dumps({'id':media.id, 'filename': os.path.basename(file_name)})
         #print media.title, media.description, media.release_date, media.type_
 
 
@@ -343,10 +343,7 @@ if __name__ =="__main__":
     #     os.system("mv {1} {0}/".format(f.split('.')[0].split('_')[3],'saved_pages/fizruk/'+f))
 
     parser = argparse.ArgumentParser("Import utility.")
-
     parser.add_argument('datadir', type=str, help = 'Directory containing subdirs, every subdir expected to contain json and mp4 file with same name')
-
     args = parser.parse_args()
-
     parse_all_series(datadir_fileiterator(args.datadir))
     
