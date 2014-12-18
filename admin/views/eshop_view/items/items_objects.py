@@ -1,5 +1,6 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
+
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from models.eshop.items.items_objects import ItemsObjects
 from utils.constants import OBJECT_TYPES
@@ -20,7 +21,7 @@ class ItemsObjectsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        obj_type=fields.Select2Field,
+        obj_type=SelectField,
     )
 
     column_choices = dict(

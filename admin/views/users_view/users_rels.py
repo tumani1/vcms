@@ -1,6 +1,7 @@
 # coding: utf-8
+
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
-from flask.ext.admin.form import fields
 
 from models.users import UsersRels
 from models.users.constants import APP_USERSRELS_TYPE, \
@@ -32,8 +33,8 @@ class UsersRelsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        urStatus=fields.Select2Field,
-        blocked=fields.Select2Field,
+        urStatus=SelectField,
+        blocked=SelectField,
     )
 
     form_args = dict(

@@ -1,5 +1,6 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
+
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from models.msgr.constants import TYPE_STATUS
 from models.msgr.users_msgr_threads import UsersMsgrThreads
@@ -22,7 +23,7 @@ class UsersMsgrThreadsModelView(SqlAlModelView):
     )
 
     form_overrides = dict(
-        umtStatus=fields.Select2Field,
+        umtStatus=SelectField,
     )
 
     column_choices = dict(

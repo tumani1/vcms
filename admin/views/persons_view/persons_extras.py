@@ -1,6 +1,6 @@
 # coding: utf-8
-from flask.ext.admin.form import fields
 
+from admin.fields import SelectField
 from admin.views.base import SqlAlModelView
 from models.extras import PersonsExtras
 from models.extras.constants import APP_PERSONS_EXTRA_TYPE, \
@@ -13,7 +13,7 @@ class PersonsExtrasModelView(SqlAlModelView):
     name = u'Дополнительные материлы'
 
     form_overrides = dict(
-        extra_type=fields.Select2Field,
+        extra_type=SelectField,
     )
 
     column_choices = dict(
