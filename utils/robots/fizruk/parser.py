@@ -89,7 +89,7 @@ def parse_all_series(filenames_iterator):
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn, cdn.url+'content/media/{id}/poster.jpg', one_info['label'], ' ', one_info['description'], type=APP_EXTRA_TYPE_IMAGE)
         #get_or_create_extras(cdn, cdn.url+'v/{id}/hd.mp4', one_info['label'], ' ', one_info['description'])
-        get_or_create_media_location(cdn.name, media.id, cdn.url+'v/{id}/hd.mp4'.format(media.id))
+        get_or_create_media_location(cdn.name, media.id, cdn.url+'v/{id}/hd.mp4'.format(id=media.id))
         implement_media_structure_fizruk(media, '/cdn/downloads/next_tv/static/upload/Fizruk/')   #'~/next_tv/static/upload/Fizruk/'
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
