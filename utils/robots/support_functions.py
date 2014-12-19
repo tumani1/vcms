@@ -112,8 +112,8 @@ def implement_media_structure_dom2(media, video_dir):
 
 
 def implement_media_structure_fizruk(media, video_dir):
-    cdn_vdir = u'~/cdn/v/' #u'/cdn/cdn/storage/v/'
-    cdn_pdir = u'~/cdn/p/' #u'/cdn/cdn/storage/p/'
+    cdn_vdir =  u'/cdn/cdn/storage/v/' #u'~/cdn/v/'
+    cdn_pdir = u'/cdn/cdn/storage/p/' #u'~/cdn/p/'
     try:
         print u"Processing {}".format(media.title)
         day_number = re.sub("\D", "", media.title)

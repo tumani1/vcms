@@ -66,8 +66,8 @@ def parse_one_episode(episod_quick_info, all_actors):
         media = get_or_create_media(format_dom_2_name_str(episod_info['label']), episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
         get_or_create_extras(cdn.name, cdn.url+'p/{id}/poster.jpg', episod_info['label'], ' ', episod_info['description'],type=APP_EXTRA_TYPE_IMAGE)
-        get_or_create_extras(cdn.name, cdn.url+'v/{id}/hd.mp4', episod_info['label'], ' ', episod_info['description'])
-        get_or_create_media_location(cdn.name, media.id)
+        #get_or_create_extras(cdn.name, cdn.url+'v/{id}/hd.mp4', episod_info['label'], ' ', episod_info['description'])
+        get_or_create_media_location(cdn.name, media.id, cdn.url+'v/{id}/hd.mp4'.format(media.id))
         implement_media_structure_dom2(media, '/cdn/downloads/next_tv/static/upload/Dom2/')
     for pers in episod_info['actors']:
         name_surname = pers['name'].split(' ')
