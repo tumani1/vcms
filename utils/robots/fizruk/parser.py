@@ -8,7 +8,7 @@ from multi_key_dict import multi_key_dict
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from models import Media, Users, Persons, PersonsMedia, Topics, MediaUnits, MediaInUnit, CDN, Extras, MediaLocations
-from models.extras.constants import APP_EXTRA_TYPE_VIEDO
+from models.extras.constants import APP_EXTRA_TYPE_VIEDO, APP_EXTRA_TYPE_IMAGE
 from models.media.constants import APP_MEDIA_TYPE_VIDEO
 from models.topics.constants import TOPIC_STATUS
 from models.users.constants import APP_USERS_TYPE_GENDER, APP_USERS_GENDER_MAN
@@ -87,9 +87,10 @@ def parse_all_series(filenames_iterator):
         fake_user = get_or_create_user("Физрук", "Админ", APP_USERS_GENDER_MAN, 'password')
         media = get_or_create_media(one_info['label'], one_info['description'], one_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
-        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), one_info['label'], ' ', one_info['description'])
-        get_or_create_media_location(cdn.name, media.id, cdn.url)
-        implement_media_structure_fizruk(media.id, '/cdn/downloads/next_tv/static/upload/Fizruk/')
+        get_or_create_extras(cdn, cdn.url+'p/{id}/poster.jpg', one_info['label'], ' ', one_info['description'], type=APP_EXTRA_TYPE_IMAGE)
+        get_or_create_extras(cdn, cdn.url+'v/{id}/hd.mp4', one_info['label'], ' ', one_info['description'])
+        get_or_create_media_location(cdn.name, media.id)
+        implement_media_structure_fizruk(media, '~/next_tv/static/upload/Fizruk/')  #'/cdn/downloads/next_tv/static/upload/Fizruk/'
         for pers in one_info['actors']:
             name_surname = pers.split(' ')
             name = name_surname[0]
@@ -192,18 +193,29 @@ def get_or_create_cdn(name, url):
     return cdn
 
 
-def get_or_create_extras(cdn_name, url, title, title_orig='', description='', type = APP_EXTRA_TYPE_VIEDO):
+def get_or_create_extras(cdn, url, title, title_orig='', description='', type = APP_EXTRA_TYPE_VIEDO):
     extras = None
     try:
-        extras = session.query(Extras).filter(Extras.cdn_name == cdn_name).filter(Extras.location == url).one()
+        extras = session.query(Extras).filter(Extras.cdn_name == cdn.name).filter(Extras.title == title).filter(Extras.type == type).one()
     except NoResultFound:
-        extras = Extras(cdn_name=cdn_name, location=url, title=title, title_orig= title_orig, description=description, type=type)
+        extras = Extras(cdn_name=cdn.name, location='', title=title, title_orig= title_orig, description=description, type=type)
+        session.add(extras)
+        session.commit()
+
+    except MultipleResultsFound:
+        session.query(Extras).filter(Extras.cdn_name == cdn.name).filter(Extras.title == title).filter(Extras.type == type).delete(False)
+        session.commit()
+        extras = Extras(cdn_name=cdn.name, location='', title=title, title_orig= title_orig, description=description, type=type)
         session.add(extras)
         session.commit()
     except Exception, e:
         print "EEE ex" + e.message
         session.rollback()
         session.flush()
+
+    extras.location = url.format(id=extras.id)
+    session.commit()
+    print "URL:", extras.location
     return extras
 
 
@@ -320,12 +332,12 @@ def get_or_create_media(title, description, release_date, type_, owner):
     return media
 
 
-def get_or_create_media_location(cdn_name, cdn_url, media_id):
+def get_or_create_media_location(cdn_name, media_id):
     media_location = None
     try:
         media_location = session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).one()
     except NoResultFound:
-        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=cdn_url+'v/upload/media/{id}/hd.mp4'.format(id=media_id))
+        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value='')
         session.add(media_location)
         session.commit()
     except Exception, e:

@@ -2,6 +2,7 @@
 import json
 import locale
 from bs4 import BeautifulSoup
+from models.extras.constants import APP_EXTRA_TYPE_IMAGE
 from models.media.constants import APP_MEDIA_TYPE_VIDEO
 from models.users.constants import APP_USERS_GENDER_MAN
 from utils.robots.dom2.loader import load_pages, load_video_info_page, load_old_actors_pages, load_current_actors_page
@@ -64,8 +65,9 @@ def parse_one_episode(episod_quick_info, all_actors):
     if u"день" in episod_info['label']:
         media = get_or_create_media(format_dom_2_name_str(episod_info['label']), episod_info['description'], episod_info['date'], APP_MEDIA_TYPE_VIDEO, fake_user.id)
         get_or_create_media_in_unit(media.id, m_unit.id)
-        get_or_create_extras(cdn.name, cdn.url+'s/upload/media/{id}/poster.jpg'.format(id=media.id), episod_info['label'], ' ', episod_info['description'])
-        get_or_create_media_location(cdn.name, media.id, cdn.url)
+        get_or_create_extras(cdn.name, cdn.url+'p/{id}/poster.jpg', episod_info['label'], ' ', episod_info['description'],type=APP_EXTRA_TYPE_IMAGE)
+        get_or_create_extras(cdn.name, cdn.url+'v/{id}/hd.mp4', episod_info['label'], ' ', episod_info['description'])
+        get_or_create_media_location(cdn.name, media.id)
         implement_media_structure_dom2(media, '/cdn/downloads/next_tv/static/upload/Dom2/')
     for pers in episod_info['actors']:
         name_surname = pers['name'].split(' ')

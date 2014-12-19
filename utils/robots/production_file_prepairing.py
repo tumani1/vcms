@@ -6,7 +6,7 @@ import select
 import paramiko
 
 
-def exec_commands_at_host(commands, host ='cdn.serialov.tv'):
+def exec_commands_at_host(commands, host ='localhost'): #host ='cdn.serialov.tv'
     i = 1
 
     #
@@ -19,7 +19,7 @@ def exec_commands_at_host(commands, host ='cdn.serialov.tv'):
         try:
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(host, username="cdn")
+            ssh.connect(host, username="vladimir") #username="cdn"
             print "Connected to %s" % host
             break
         except paramiko.AuthenticationException:
