@@ -336,7 +336,15 @@ def get_or_create_media_location(cdn_name, media_id, url=''):
     media_location = None
     try:
         media_location = session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).one()
+        media_location.location = url
+        session.commit()
     except NoResultFound:
+        media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=url)
+        session.add(media_location)
+        session.commit()
+    except MultipleResultsFound:
+        session.query(MediaLocations).filter(MediaLocations.media_id == media_id, MediaLocations.cdn_name == cdn_name).delete(False)
+        session.commit()
         media_location = MediaLocations(media_id=media_id, cdn_name=cdn_name, value=url)
         session.add(media_location)
         session.commit()
