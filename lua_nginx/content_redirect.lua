@@ -30,7 +30,7 @@ end
 local function concat_url(location)
     local width, height = ngx.var.width, ngx.var.height;
     if width and height and width ~= "" and height ~= "" then
-        location = location .. "?width=" .. width .. "&height=" .. height;
+        location = location .. "_" .. width .. "x" .. height;
     end
     ngx.log(ngx.INFO, "URL for redirect: " .. location);
     return location;
@@ -61,8 +61,6 @@ if not result then
         method = ngx.req.get_method(),
         body = ""
     })
-
-     ngx.log(ngx.INFO, "Recieve body: " .. resp.body)
 
     -- Проверка статуса запроса
     if (not resp or resp.status ~= ngx.HTTP_OK) then
