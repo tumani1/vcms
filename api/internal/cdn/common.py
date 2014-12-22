@@ -32,7 +32,6 @@ def user_access(user, media, session):
 def geo_access(ip_address, media, session, reader):
     country_name = reader.country(ip_address).country.iso_code
     country = session.query(Countries).filter_by(id=country_name).first()
-
     status_code = MediaAccessCountries.access_media(media, country, session)
 
     if status_code is None:
@@ -57,4 +56,3 @@ def access(user, ip_address, media, session, reader):
         status_code = geo_access(ip_address, media, session, reader)
 
     return status_code
-

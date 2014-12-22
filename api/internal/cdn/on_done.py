@@ -1,10 +1,12 @@
 # coding: utf-8
+
+from datetime import datetime
+
 from models.media import Media, UsersMedia
+
 from utils.exceptions import RequestErrorException
 from utils.common import get_or_create
 from utils.constants import HTTP_OK
-
-from datetime import datetime
 
 
 def get(auth_user, session, query, **kwargs):
@@ -12,8 +14,10 @@ def get(auth_user, session, query, **kwargs):
         media = session.query(Media).get(query['media_id'])
     else:
         raise RequestErrorException
+
     if media is None:
         raise RequestErrorException
+
     media.views_cnt += 1
     if auth_user:
         users_media = get_or_create(session=session, model=UsersMedia,
