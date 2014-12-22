@@ -22,3 +22,4 @@ python-setuptools
 python-pip
 python-virtualenv
 add-apt-repository
+memcached
