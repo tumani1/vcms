@@ -19,8 +19,9 @@ class ZeroRpcInternalApiService(BaseService):
         response = super(ZeroRpcInternalApiService, self).route(IPC_pack)
         try:
             self.reader_geoip.close()
-        except:
+        except Exception, e:
             pass
+
         return response
 
 if __name__ == '__main__':

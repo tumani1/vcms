@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import memcache
+
 from api import authorize
 from sqlalchemy.orm import sessionmaker, scoped_session
 from zerorpcservices.additional import raven_report
@@ -14,9 +16,13 @@ class BaseService(object):
     def __init__(self, routes):
         self.routes = routes
         self.default_params = {}
+
         self.connect = db_connect()
         self.__session = scoped_session(sessionmaker(self.connect, expire_on_commit=False))
+
         self.mongodb_session = mongo_connect()
+
+        self.mc = memcache.Client(['127.0.0.1:11211'], debug=0)
 
     @raven_report
     def route(self, IPC_pack):
