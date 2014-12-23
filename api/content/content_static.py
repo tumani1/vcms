@@ -2,7 +2,7 @@
 
 from sqlalchemy import and_
 
-from models import Extras, ExtrasTopics, UsersExtras, PersonsExtras, ExtrasMedia, ExtrasMediaUnits
+from models import Extras, ExtrasTopics, UsersExtras, PersonsExtras, ExtrasMedia, ExtrasMediaUnits, Vars
 from models.extras.constants import APP_EXTRA_TYPE_IMAGE
 
 
@@ -14,9 +14,9 @@ def get_content_users_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    # query = session.query(Extras).\
+    query = session.query(Vars).filter(Vars.variable == 'default_user_pic').first()
     return {
-        'location': '',
+        'location': query.text.strip() if not query is None and len(query.text) else '',
         'empty': True,
     }
 
@@ -29,9 +29,9 @@ def get_content_persons_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    # query = session.query(Extras).\
+    query = session.query(Vars).filter(Vars.variable == 'default_person_pic').first()
     return {
-        'location': '',
+        'location': query.text.strip() if not query is None and len(query.text) else '',
         'empty': True,
     }
 
@@ -44,9 +44,9 @@ def get_content_topics_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    # query = session.query(Extras).\
+    query = session.query(Vars).filter(Vars.variable == 'default_topic_pic').first()
     return {
-        'location': '',
+        'location':  query.text.strip() if not query is None and len(query.text) else '',
         'empty': True,
     }
 
@@ -59,9 +59,9 @@ def get_content_media_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    # query = session.query(Extras).\
+    query = session.query(Vars).filter(Vars.variable == 'default_media_pic').first()
     return {
-        'location': '',
+        'location': query.text.strip() if not query is None and len(query.text) else '',
         'empty': True,
     }
 
@@ -74,8 +74,8 @@ def get_content_mediaunits_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    # query = session.query(Extras).\
+    query = session.query(Vars).filter(Vars.variable == 'default_mediaunits_pic').first()
     return {
-        'location': '',
+        'location': query.text.strip() if not query is None and len(query.text) else '',
         'empty': True,
     }

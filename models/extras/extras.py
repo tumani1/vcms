@@ -13,10 +13,26 @@ from models.extras.extras_persons import PersonsExtras
 
 from models.extras.constants import APP_EXTRA_TYPE
 
+class Vars(Base):
+    __tablename__ = 'vars'
+
+    id          = Column(Integer, primary_key=True)
+    variable    = Column(String, unique=True, nullable=False)
+    text        = Column(String, nullable=False)
+
+insert_vars = DDL('''
+INSERT INTO vars (variable,text) VALUES ('default_user_pic', 'http://cdn.serialov.tv/notfound/users');
+INSERT INTO vars (variable,text) VALUES ('default_person_pic', 'http://cdn.serialov.tv/notfound/persons');
+INSERT INTO vars (variable,text) VALUES ('default_topic_pic', 'http://cdn.serialov.tv/notfound/');
+INSERT INTO vars (variable,text) VALUES ('default_media_pic', 'http://cdn.serialov.tv/notfound/media');
+INSERT INTO vars (variable,text) VALUES ('default_mediaunits_pic', 'http://cdn.serialov.tv/notfound/');
+
+''')
+listen(Vars.__table__, 'after_create', insert_vars)
+
 
 class Extras(Base):
     __tablename__ = 'extras'
-
 
     id          = Column(Integer, primary_key=True)
     cdn_name    = Column(String, ForeignKey('cdn.name'), nullable=False)
