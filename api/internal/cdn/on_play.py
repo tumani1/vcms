@@ -24,8 +24,10 @@ def get(auth_user, session, query_params, reader, **kwargs):
 
     try:
         status_code = access(auth_user, query_params['ip_address'], media, session, reader)
+
     except APIException, e:
         status_code = e.code
+
     except Exception, e:
         if media.access_type.code == APP_MEDIA_ACCESS_LIST:
             status_code = HTTP_OK

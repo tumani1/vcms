@@ -20,9 +20,12 @@ def get(auth_user, session, query_params, **kwargs):
 
     media.views_cnt += 1
     if auth_user:
-        users_media = get_or_create(session=session, model=UsersMedia,
-                                    filter={'media_id': media.id, 'user_id': auth_user.id},
-                                    create={'media_id': media.id, 'user_id': auth_user.id, 'views_cnt': 0})[0]
+        users_media = get_or_create(
+            session=session, model=UsersMedia,
+            filter={'media_id': media.id, 'user_id': auth_user.id},
+            create={'media_id': media.id, 'user_id': auth_user.id, 'views_cnt': 0}
+        )[0]
+
         users_media.watched = datetime.utcnow()
         users_media.views_cnt += 1
 
