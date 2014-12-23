@@ -29,7 +29,7 @@ local function get_memc(conf)
 end
 
 local function concat_url(location)
-    local width, height = ngx.var.width, ngx.var.height;
+    local width, height = ngx.var.width, ngx.var.height
     if width and height and width ~= "" and height ~= "" then
         location = location .. "_" .. width .. "x" .. height
     end
