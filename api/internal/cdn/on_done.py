@@ -9,9 +9,9 @@ from utils.common import get_or_create
 from utils.constants import HTTP_OK
 
 
-def get(auth_user, session, query, **kwargs):
-    if 'media_id' in query:
-        media = session.query(Media).get(query['media_id'])
+def get(auth_user, session, query_params, **kwargs):
+    if 'media_id' in query_params:
+        media = session.query(Media).get(query_params['media_id'])
     else:
         raise RequestErrorException
 

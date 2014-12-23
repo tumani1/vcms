@@ -9,9 +9,9 @@ from utils.exceptions import RequestErrorException, APIException
 from utils.constants import HTTP_OK, HTTP_INTERNAL_SERVER_ERROR
 
 
-def get(auth_user, session, query, reader, **kwargs):
-    if 'media_id' in query and 'ip_address' in query:
-        media_id = query['media_id']
+def get(auth_user, session, query_params, reader, **kwargs):
+    if 'media_id' in query_params and 'ip_address' in query_params:
+        media_id = query_params['media_id']
     else:
         raise RequestErrorException
 
@@ -20,7 +20,7 @@ def get(auth_user, session, query, reader, **kwargs):
         raise RequestErrorException
 
     try:
-        status_code = access(auth_user, query['ip_address'], media, session, reader)
+        status_code = access(auth_user, query_params['ip_address'], media, session, reader)
     except APIException, e:
         status_code = e.code
     except Exception, e:
