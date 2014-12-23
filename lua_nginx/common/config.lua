@@ -19,7 +19,7 @@ local conf = {
     },
     noda = {
         host = '127.0.0.1',
-        port = 9902
+        port = 5507
     }
 }
 

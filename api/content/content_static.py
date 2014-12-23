@@ -14,7 +14,11 @@ def get_content_users_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    return {'location': ''}
+    # query = session.query(Extras).\
+    return {
+        'location': '',
+        'empty': True,
+    }
 
 
 def get_content_persons_info(pk, session, **kwargs):
@@ -25,7 +29,11 @@ def get_content_persons_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    return {'location': ''}
+    # query = session.query(Extras).\
+    return {
+        'location': '',
+        'empty': True,
+    }
 
 
 def get_content_topics_info(pk, session, **kwargs):
@@ -36,7 +44,11 @@ def get_content_topics_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    return {'location': ''}
+    # query = session.query(Extras).\
+    return {
+        'location': '',
+        'empty': True,
+    }
 
 
 def get_content_media_info(pk, session, **kwargs):
@@ -47,7 +59,11 @@ def get_content_media_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    return {'location': ''}
+    # query = session.query(Extras).\
+    return {
+        'location': '',
+        'empty': True,
+    }
 
 
 def get_content_mediaunits_info(pk, session, **kwargs):
@@ -58,4 +74,8 @@ def get_content_mediaunits_info(pk, session, **kwargs):
     if not query is None:
         return {'location': query.location.strip()}
 
-    return {'location': ''}
+    # query = session.query(Extras).\
+    return {
+        'location': '',
+        'empty': True,
+    }
