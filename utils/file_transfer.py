@@ -1,5 +1,6 @@
 # coding: utf-8
 from argparse import ArgumentParser
+from os.path import dirname, join
 from subprocess import Popen, PIPE
 from traceback import print_exc
 from time import sleep
@@ -34,9 +35,9 @@ def transfer(source, destination, timeout):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('-t', '--timeout', dest='timeout', type=int, required=True)
-    parser.add_argument('-s', '--source', dest='source', required=True)
-    parser.add_argument('-d', '--destination', dest='destination', required=True)
+    parser.add_argument('-t', '--timeout', dest='timeout', type=int, default=2)
+    parser.add_argument('-s', '--source', dest='source', default=dirname(__file__)+'/../zerorpcservices/upload')
+    parser.add_argument('-d', '--destination', dest='destination', default='cdn@cdn.serialov.tv:/cdn/cdn/storage/')
     args = parser.parse_args()
 
     transfer(args.source, args.destination, args.timeout)
