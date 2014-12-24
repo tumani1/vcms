@@ -16,10 +16,6 @@ local conf = {
     memcache = {
         host = '127.0.0.1',
         port = 11211
-    },
-    noda = {
-        host = '127.0.0.1',
-        port = 5507
     }
 }
 
