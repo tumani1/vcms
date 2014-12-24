@@ -13,8 +13,9 @@ handler = RotatingFileHandler('transfer.log', maxBytes=10*1024*1024, backupCount
 logger.addHandler(handler)
 logger.setLevel(DEBUG)
 
-#rsync -avzr -e  ssh /home/vladimir/mv cdn@cdn.serialov.tv:/cdn/cdn/storage/
 
+BASE_PATH = dirname(__file__)
+SOCIAL_AVATAR_UPLOAD_DIR = join(BASE_PATH, 'zerorpcservices', 'upload')
 
 def transfer(source, destination, timeout):
     """Файлы отправляются через ssh, соответственно нужно иметь публичный ключ на удаленном сервере.
@@ -36,8 +37,8 @@ def transfer(source, destination, timeout):
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-t', '--timeout', dest='timeout', type=int, default=2)
-    parser.add_argument('-s', '--source', dest='source', default=dirname(__file__)+'/../zerorpcservices/upload')
-    parser.add_argument('-d', '--destination', dest='destination', default='cdn@cdn.serialov.tv:/cdn/cdn/storage/')
+    parser.add_argument('-s', '--source', dest='source', default=SOCIAL_AVATAR_UPLOAD_DIR)
+    parser.add_argument('-d', '--destination', dest='destination', required=True)
     args = parser.parse_args()
 
     transfer(args.source, args.destination, args.timeout)
