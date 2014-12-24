@@ -70,7 +70,10 @@ class Media(Base):
         return query
 
     @classmethod
-    def get_media_list(cls, user, session, id=None, text=None, topic=None, releasedate=None, persons=None, units=None, morder=None, order=None, limit = (12,None,None,None)):
+    def get_media_list(cls, user, session, id=None, text=None, topic=None,
+                       releasedate=None, persons=None, units=None, morder=None,
+                       order=None, limit = (12,None,None,None)):
+
         query = cls.tmpl_for_media(user, session)
 
         if not id is None:

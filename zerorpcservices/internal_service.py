@@ -19,14 +19,9 @@ class ZeroRpcInternalApiService(BaseService):
             'reader': self.reader_geoip,
         }
 
-    def route(self, IPC_pack):
-        response = super(ZeroRpcInternalApiService, self).route(IPC_pack)
-        try:
-            self.reader_geoip.close()
-        except Exception, e:
-            pass
+    def __del__(self):
+        self.reader_geoip.close()
 
-        return response
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
