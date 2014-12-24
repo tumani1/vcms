@@ -1,5 +1,6 @@
 # coding: utf-8
 from argparse import ArgumentParser
+from os.path import dirname, join
 from subprocess import Popen, PIPE
 from traceback import print_exc
 from time import sleep
@@ -12,6 +13,8 @@ handler = RotatingFileHandler('transfer.log', maxBytes=10*1024*1024, backupCount
 logger.addHandler(handler)
 logger.setLevel(DEBUG)
 
+#rsync -avzr -e  ssh /home/vladimir/mv cdn@cdn.serialov.tv:/cdn/cdn/storage/
+
 
 def transfer(source, destination, timeout):
     """Файлы отправляются через ssh, соответственно нужно иметь публичный ключ на удаленном сервере.
@@ -20,7 +23,8 @@ def transfer(source, destination, timeout):
     """
     while True:
         try:
-            command = 'rsync -rv --remove-source-files --ignore-existing -e ssh {0} {1} && rm -rfv {0}*'.format(source, destination)
+            #Чтобы передать папку нужно НЕ указывать слеш в конце
+            command = 'rsync -arvz --remove-source-files --ignore-existing -e ssh {0} {1} && rm -rfv {0}*'.format(source, destination)
             child_proc = Popen(command, stdout=PIPE, shell=True)
             output = child_proc.stdout.read()
             logger.info(output)
@@ -31,9 +35,9 @@ def transfer(source, destination, timeout):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('-t', '--timeout', dest='timeout', type=int, required=True)
-    parser.add_argument('-s', '--source', dest='source', required=True)
-    parser.add_argument('-d', '--destination', dest='destination', required=True)
+    parser.add_argument('-t', '--timeout', dest='timeout', type=int, default=2)
+    parser.add_argument('-s', '--source', dest='source', default=dirname(__file__)+'/../zerorpcservices/upload')
+    parser.add_argument('-d', '--destination', dest='destination', default='cdn@cdn.serialov.tv:/cdn/cdn/storage/')
     args = parser.parse_args()
 
     transfer(args.source, args.destination, args.timeout)

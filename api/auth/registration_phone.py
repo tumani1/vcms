@@ -1,6 +1,5 @@
 # coding: utf-8
 from random import choice
-from string import digits, ascii_letters
 from datetime import date, timedelta
 from phonenumbers import parse
 from models.users.users import Users
@@ -22,7 +21,7 @@ def post(session, auth_user, **kwargs):
         # методом parse отлавливаем некоторые виды исключений, связанных с номерами телефонов
         pn = parse(phone_number)
         smsc = SMSC(login=LOGIN, password=PASSWORD)
-        random_password = ''.join((choice(ascii_letters+digits) for _ in range(8)))
+        random_password = ''.join((choice('0123456789') for _ in range(7)))
         message = 'Ваш пароль для входа: '+random_password
 
         filtered = session.query(Users).filter(Users.phone == phone_number)
