@@ -12,6 +12,8 @@ handler = RotatingFileHandler('transfer.log', maxBytes=10*1024*1024, backupCount
 logger.addHandler(handler)
 logger.setLevel(DEBUG)
 
+#rsync -avzr -e  ssh /home/vladimir/mv cdn@cdn.serialov.tv:/cdn/cdn/storage/
+
 
 def transfer(source, destination, timeout):
     """Файлы отправляются через ssh, соответственно нужно иметь публичный ключ на удаленном сервере.
@@ -20,7 +22,8 @@ def transfer(source, destination, timeout):
     """
     while True:
         try:
-            command = 'rsync -rv --remove-source-files --ignore-existing -e ssh {0} {1} && rm -rfv {0}*'.format(source, destination)
+            #Чтобы передать папку нужно НЕ указывать слеш в конце
+            command = 'rsync -arvz --remove-source-files --ignore-existing -e ssh {0} {1} && rm -rfv {0}*'.format(source, destination)
             child_proc = Popen(command, stdout=PIPE, shell=True)
             output = child_proc.stdout.read()
             logger.info(output)
