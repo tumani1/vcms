@@ -5,7 +5,7 @@ local conf = require "common.config"
 
 local function not_found_url(memc)
     if (memc) then
-        memc:close()
+       -- memc:close()
     end
 
     return '/error_404'
@@ -43,7 +43,7 @@ if memc then
         -- Проверим, есть ли в кеше по данному ключу
         local result, flags, err = memc:get(memcache_key)
         if result and #result > 0 then
-            memc:close()
+            -- memc:close()
             return ngx.redirect(concat_url(result))
         end
     end
@@ -88,7 +88,7 @@ if not result then
             ngx.log(ngx.ERR, "Failed to set memcache: " .. err)
         end
 
-        memc:close()
+        -- memc:close()
     end
 
     -- Перенаправление на url
