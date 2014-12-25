@@ -145,7 +145,7 @@ class Extras(Base):
 
 
     def __repr__(self):
-        return u'<Extras(id={0}, cdn={1})>'.format(self.id, self.cdn_name)
+        return '<Extras(id={0}, cdn={1})>'.format(self.id, self.cdn_name)
 
 
 update_ts_vector = DDL('''
