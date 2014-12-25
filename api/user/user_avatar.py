@@ -26,9 +26,6 @@ def post(session, auth_user, **kwargs):
                 ue = UsersExtras(user_id=auth_user.id, extra_id=e.id)
                 session.add(ue)
                 session.commit()
-            else:  # обновление extras
-                session.add(e)
-                session.commit()
         else:
             raise RequestErrorException
     else:
