@@ -27,4 +27,4 @@ class LoginForm(form.Form):
     def get_user(self, email):
         session = get_session()
         self.user = session.query(Users).filter_by(email=email).first()
-        session.remove()
+        session.close()
