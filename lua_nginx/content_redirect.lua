@@ -5,7 +5,7 @@ local conf = require "common.config"
 
 local function not_found_url(memc)
     if (memc) then
-       -- memc:close()
+        memc:set_keepalive(0, 100)
     end
 
     return '/error_404'
@@ -36,18 +36,17 @@ local memcache_key = "/" .. group .. "/" .. pk
 
 -- Если инициализировали соединение
 local memc, err = memcached:new()
-if memc then
-    local ok, err = memc:connect(conf.memcache['host'], conf.memcache['port'])
+local ok, err = memc:connect(conf.memcache['host'], conf.memcache['port'])
 
-    if ok then
-        -- Проверим, есть ли в кеше по данному ключу
-        local result, flags, err = memc:get(memcache_key)
-        if result and #result > 0 then
-            -- memc:close()
-            return ngx.redirect(concat_url(result))
-        end
+if ok then
+    -- Проверим, есть ли в кеше по данному ключу
+    local result, flags, err = memc:get(memcache_key)
+    if result and #result > 0 then
+        memc:set_keepalive(0, 100)
+        return ngx.redirect(concat_url(result))
     end
 end
+
 
 -- Если в кеше ничего нету, отправим запрос в API
 if not result then
@@ -82,7 +81,8 @@ if not result then
 
     --Установка значения в memcache
     local cache_exptime = conf.exptime[group]
-    if memc and cache_exptime and not inner_empty then
+    -- and not inner_empty
+    if memc and cache_exptime then
         local ok, err = memc:set(memcache_key, location, cache_exptime)
         if not ok then
             ngx.log(ngx.ERR, "Failed to set memcache: " .. err)
