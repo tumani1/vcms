@@ -1,13 +1,13 @@
 import os
 import urllib
-from settings import SOCIAL_AVATAR_UPLOAD_DIR
+from settings import UPLOAD_DIR
 
 
 def save_avatar_to_file(link, name, subdirectory):
-    if not os.path.exists(SOCIAL_AVATAR_UPLOAD_DIR):
-        os.makedirs(SOCIAL_AVATAR_UPLOAD_DIR)
+    if not os.path.exists(UPLOAD_DIR):
+        os.makedirs(UPLOAD_DIR)
 
-    sub_dir = os.path.join(SOCIAL_AVATAR_UPLOAD_DIR, subdirectory)
+    sub_dir = os.path.join(UPLOAD_DIR, subdirectory)
     if not os.path.exists(sub_dir):
         os.makedirs(sub_dir)
     ext = os.path.splitext(link)[1]

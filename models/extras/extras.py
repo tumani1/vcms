@@ -1,4 +1,5 @@
 # coding: utf-8
+
 import time
 import datetime
 
@@ -12,6 +13,7 @@ from models.extras.extras_topics import ExtrasTopics
 from models.extras.extras_persons import PersonsExtras
 
 from models.extras.constants import APP_EXTRA_TYPE
+
 
 class Vars(Base):
     __tablename__ = 'vars'
@@ -49,6 +51,7 @@ class Extras(Base):
     users_extras     = relationship('UsersExtras', backref='extra', cascade='all, delete')
     extras_topics    = relationship('ExtrasTopics', backref='extra', cascade='all, delete')
     person_extras    = relationship('PersonsExtras', backref='extra', cascade='all, delete')
+    media_extras     = relationship('ExtrasMedia', backref='extra', cascade='all, delete')
     extra_items      = relationship('ItemsExtras', backref='extra', cascade='all, delete')
     extra_categories = relationship('CategoriesExtras', backref='extra', cascade='all, delete')
     extra_variants   = relationship('VariantsExtras', backref='extra', cascade='all, delete')
@@ -142,7 +145,7 @@ class Extras(Base):
 
 
     def __repr__(self):
-        return u'<Extras(id={0}, cdn={1})>'.format(self.id, self.cdn_name)
+        return '<Extras(id={0}, cdn={1})>'.format(self.id, self.cdn_name)
 
 
 update_ts_vector = DDL('''

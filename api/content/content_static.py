@@ -12,7 +12,7 @@ def get_content_users_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location.strip()}
+        return {'location': "http://cdn.serialov.tv/s/upload/users/{0}/{1}".format(query.id, query.location.strip())}
 
     query = session.query(Vars).filter(Vars.variable == 'default_user_pic').first()
     return {
@@ -27,7 +27,7 @@ def get_content_persons_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location.strip()}
+        return {'location': "http://cdn.serialov.tv/s/upload/persons/{0}/{1}".format(query.location.strip())}
 
     query = session.query(Vars).filter(Vars.variable == 'default_person_pic').first()
     return {
@@ -42,7 +42,7 @@ def get_content_topics_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location.strip()}
+        return {'location': "http://cdn.serialov.tv/s/upload/topics/{0}/{1}".format(query.id, query.location.strip())}
 
     query = session.query(Vars).filter(Vars.variable == 'default_topic_pic').first()
     return {
@@ -57,7 +57,7 @@ def get_content_media_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location.strip()}
+        return {'location': "http://cdn.serialov.tv/s/upload/media/{0}/{1}".format(query.id, query.location.strip())}
 
     query = session.query(Vars).filter(Vars.variable == 'default_media_pic').first()
     return {
@@ -72,7 +72,7 @@ def get_content_mediaunits_info(pk, session, **kwargs):
         filter(Extras.type == APP_EXTRA_TYPE_IMAGE).first()
 
     if not query is None:
-        return {'location': query.location.strip()}
+        return {'location': "http://cdn.serialov.tv/s/upload/mediaunits/{0}/{1}".format(query.id, query.location.strip())}
 
     query = session.query(Vars).filter(Vars.variable == 'default_mediaunits_pic').first()
     return {

@@ -2,7 +2,8 @@
 
 from sqlalchemy.sql.functions import concat
 
-from admin.fields import select_factory
+from flask.ext.admin.form.fields import Select2Field
+
 from admin.views.base import MongoDBModelView
 from admin.templates import chat_messages_formatter
 
@@ -58,15 +59,17 @@ class ChatMessagesModelView(MongoDBModelView):
     )
 
     form_overrides = dict(
-        user_id=select_factory(coerce=int),
-        chat_id=select_factory(coerce=int),
+        user_id=Select2Field,
+        chat_id=Select2Field,
     )
 
     form_args = dict(
         user_id=dict(
+            coerce=int,
             choices=users,
         ),
         chat_id=dict(
+            coerce=int,
             choices=chats,
         ),
     )
