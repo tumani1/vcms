@@ -1,6 +1,6 @@
 {% macro render_as_image(model, column) %}
     {% if model.type == "i" %}
-        <img src="http://cdn.serialov.tv/s/upload/media/{{ model[column] }}" width="250" height="250">
+        <img src="http://cdn.serialov.tv/s/upload/media/{{ model.id }}/{{ model[column] }}" width="250" height="250">
     {% endif %}
 {% endmacro %}
 

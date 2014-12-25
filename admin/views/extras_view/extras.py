@@ -13,7 +13,7 @@ from settings import UPLOAD_DIR
 
 
 def prefix_name(obj, file_data):
-    return "poster"
+    return "poster.jpg"
 
 
 class ExtrasModelView(SqlAlModelView):
@@ -82,6 +82,5 @@ class ExtrasModelView(SqlAlModelView):
             raise e
 
     def after_model_change(self, form, model, is_created):
-        filename = "{0}/{1}".format(model.id, model.location)
-        model.location = form.location._save_file(form.location.data, filename)
+        form.location._save_file(form.location.data, "{0}/{1}".format(model.id, model.location))
         self.session.commit()
