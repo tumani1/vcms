@@ -19,10 +19,12 @@ local function return_not_found(msg)
     ngx.exit(0)
 end
 
-local function concat_url(location)
-    local width, height = ngx.var.width, ngx.var.height
-    if width ~= "" and height ~= "" then
-        location = location .. "_" .. width .. "x" .. height
+local function concat_url(location, inner_empty)
+    if not inner_empty then
+        local width, height = ngx.var.width, ngx.var.height
+        if width ~= "" and height ~= "" then
+            location = location .. "_" .. width .. "x" .. height
+        end
     end
 
     ngx.log(ngx.INFO, "URL for redirect: " .. location)
@@ -43,10 +45,9 @@ if ok then
     local result, flags, err = memc:get(memcache_key)
     if result and #result > 0 then
         memc:set_keepalive(0, 100)
-        return ngx.redirect(concat_url(result))
+        return ngx.redirect(concat_url(result, false))
     end
 end
-
 
 -- Если в кеше ничего нету, отправим запрос в API
 if not result then
@@ -81,18 +82,17 @@ if not result then
 
     --Установка значения в memcache
     local cache_exptime = conf.exptime[group]
-    -- and not inner_empty
-    if memc and cache_exptime then
+    if memc and cache_exptime and not inner_empty then
         local ok, err = memc:set(memcache_key, location, cache_exptime)
         if not ok then
             ngx.log(ngx.ERR, "Failed to set memcache: " .. err)
         end
 
-        -- memc:close()
+        memc:set_keepalive(0, 100)
     end
 
     -- Перенаправление на url
-    return ngx.redirect(concat_url(location))
+    return ngx.redirect(concat_url(location, inner_empty))
 
 else
     ngx.log(ngx.ERR, "Error in lua application")
