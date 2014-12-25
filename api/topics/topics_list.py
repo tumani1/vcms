@@ -38,12 +38,10 @@ def get_topics_list(auth_user, session, **kwargs):
     if 'limit' in query:
         params['limit'] = validate_mLimit(limit=query['limit'])
 
-    instance = Topics.get_topics_list(**params).all()
-
     # Params
     params = {
         'user': auth_user,
-        'instance': instance,
+        'instance': Topics.get_topics_list(**params).all(),
         'session': session,
     }
 

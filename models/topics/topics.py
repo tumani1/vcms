@@ -2,7 +2,7 @@
 
 import time
 
-from sqlalchemy import Column, String, DateTime, and_, DDL, Index
+from sqlalchemy import Column, String, DateTime, and_, DDL, Index, func
 from sqlalchemy.event import listen
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType, TSVectorType, Choice
@@ -72,7 +72,7 @@ class Topics(Base):
 
         # Set description filter
         if not text is None:
-            query = query.filter(cls.search_description == text)
+            query = query.filter(cls.search_description.op('@@')(func.to_tsquery(text)))
 
         # Set type filter
         if not _type is None:

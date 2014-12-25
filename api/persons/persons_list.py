@@ -45,10 +45,8 @@ def get_person_list(auth_user, session, **kwargs):
             if query['type'] in dict(TOPIC_TYPE).keys():
                 params['_type'] = query['type']
 
-    instance = Persons.get_persons_list(**params).all()
-
     new_param = {
-        'instance': instance,
+        'instance': Persons.get_persons_list(**params).all(),
         'user': auth_user,
         'session': session,
     }
