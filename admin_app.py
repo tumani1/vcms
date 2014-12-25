@@ -43,7 +43,7 @@ if __name__ == '__main__':
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         if not exception is None:
-            db_session.remove()
+            db_session.close()
 
     ###############################################################################
     # Admin

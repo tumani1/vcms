@@ -13,7 +13,7 @@ SOCIAL_AUTH_VK_OAUTH2_SECRET = 'qa9kXSjeRTMybQCh6J2I'
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', ]
 
 BASE_PATH = dirname(__file__)
-SOCIAL_AVATAR_UPLOAD_DIR = join(BASE_PATH, 'zerorpcservices', 'upload')
+UPLOAD_DIR = join(BASE_PATH, 'upload')
 
 # Base path for configs folder
 CONFIG_PATH = join(BASE_PATH, 'configs')

@@ -1,10 +1,12 @@
 # coding: utf-8
 
+from flask.ext.admin.form.fields import Select2Field
+
 from sqlalchemy.sql.functions import concat
 
 from admin.validators import StreamUserTypeValidator
 from admin.views.base import MongoDBModelView
-from admin.fields import CKTextAreaField, select_factory
+from admin.fields import CKTextAreaField
 
 from models.users import Users
 from models.mongo.stream import Stream
@@ -30,7 +32,7 @@ class StreamModelView(MongoDBModelView):
     form_columns = ('user_id', 'type', 'object', 'attachments', 'text')
 
     form_overrides = dict(
-        user_id=select_factory(coerce=int, allow_blank=True, blank_text=u'Без пользователя'),
+        user_id=Select2Field,
         text=CKTextAreaField,
     )
 
@@ -42,5 +44,8 @@ class StreamModelView(MongoDBModelView):
         user_id=dict(
             choices=users,
             validators=[StreamUserTypeValidator('type', message=u'Неверно выбран пользователь'), ],
+            coerce=int,
+            allow_blank=True,
+            blank_text=u'Без пользователя',
         )
     )

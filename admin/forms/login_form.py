@@ -3,7 +3,7 @@
 from wtforms import fields, form, validators
 
 from models.users import Users
-from admin import session
+from utils.connection import get_session
 
 
 class LoginForm(form.Form):
@@ -25,4 +25,6 @@ class LoginForm(form.Form):
                 raise validators.ValidationError(u"Invalid password")
 
     def get_user(self, email):
+        session = get_session()
         self.user = session.query(Users).filter_by(email=email).first()
+        session.remove()
