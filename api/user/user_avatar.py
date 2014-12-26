@@ -26,6 +26,8 @@ def post(session, auth_user, **kwargs):
                 ue = UsersExtras(user_id=auth_user.id, extra_id=e.id)
                 session.add(ue)
                 session.commit()
+            return {'isavatar': True,
+                    'id': e.id}
         else:
             raise RequestErrorException
     else:
