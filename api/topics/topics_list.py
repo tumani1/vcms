@@ -5,13 +5,13 @@ from models.topics.constants import TOPIC_TYPE
 
 from api.serializers import mTopicSerializer
 
-from utils.validation import validate_mLimit
+from utils.validation import validate_mLimit, validate_string
 
 __all__ = ['get_topics_list']
 
 
 def get_topics_list(auth_user, session, **kwargs):
-    # Params
+    # Init Params
     params = {
         'user': auth_user,
         'session': session,
@@ -23,16 +23,13 @@ def get_topics_list(auth_user, session, **kwargs):
 
     query = kwargs['query_params']
     if 'name' in query:
-        params['name'] = str(query['name']).strip()
+        params['name'] = validate_string(query['name'])
 
     if 'text' in query:
-        try:
-            params['text'] = str(query['text']).strip()
-        except Exception, e:
-            pass
+        params['text'] = validate_string(query['text'])
 
     if 'type' in query:
-        if query['type'] in dict(TOPIC_TYPE).keys():
+        if query['type'] in dict(TOPIC_TYPE):
             params['_type'] = query['type']
 
     if 'limit' in query:
@@ -41,8 +38,8 @@ def get_topics_list(auth_user, session, **kwargs):
     # Params
     params = {
         'user': auth_user,
-        'instance': Topics.get_topics_list(**params).all(),
         'session': session,
+        'instance': Topics.get_topics_list(**params).all(),
     }
 
     return mTopicSerializer(**params).data

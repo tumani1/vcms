@@ -42,13 +42,13 @@ def get_person_list(auth_user, session, **kwargs):
         params['topic'] = validate_string(query['topic'])
 
         if 'type' in query:
-            if query['type'] in dict(TOPIC_TYPE).keys():
+            if query['type'] in dict(TOPIC_TYPE):
                 params['_type'] = query['type']
 
     new_param = {
-        'instance': Persons.get_persons_list(**params).all(),
         'user': auth_user,
         'session': session,
+        'instance': Persons.get_persons_list(**params).all(),
     }
 
     if not params['topic'] is None:

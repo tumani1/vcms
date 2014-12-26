@@ -72,7 +72,7 @@ class Topics(Base):
 
         # Set description filter
         if not text is None:
-            query = query.filter(cls.search_description.op('@@')(func.to_tsquery(text)))
+            query = search(query, text, vector=cls.search_name)
 
         # Set type filter
         if not _type is None:
@@ -131,18 +131,41 @@ update_ts_vector = DDL('''
 CREATE FUNCTION topics_desc_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        new.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
-        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
+        new.search_description = to_tsvector(
+            'pg_catalog.english', CONCAT(REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' ')
+        );
+
+        new.search_name = to_tsvector(
+            'pg_catalog.english',
+            CONCAT(
+                REGEXP_REPLACE(COALESCE(NEW.name, ''), '[-@.]', ' ', 'g'), ' ',
+                REGEXP_REPLACE(COALESCE(NEW.title, ''), '[-@.]', ' ', 'g'), ' ',
+                REGEXP_REPLACE(COALESCE(NEW.title_orig, ''), '[-@.]', ' ', 'g'), ' ',
+                REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' '
+            )
+        );
     END IF;
+
     IF TG_OP = 'UPDATE' THEN
         IF NEW.description <> OLD.description THEN
-            NEW.search_description = to_tsvector('pg_catalog.english', COALESCE(NEW.description, ''));
+            NEW.search_description = to_tsvector(
+                'pg_catalog.english', CONCAT(REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' ')
+            );
         END IF;
 
         IF NEW.description <> OLD.description OR NEW.name <> OLD.name OR NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig THEN
-            NEW.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.description, '') || ' ' || COALESCE(NEW.title_orig, '') || ' ' || COALESCE(NEW.title, '') || ' ' || COALESCE(NEW.name, ''));
+            NEW.search_name = to_tsvector(
+                'pg_catalog.english',
+                CONCAT(
+                    REGEXP_REPLACE(COALESCE(NEW.name, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.title, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.title_orig, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' '
+                )
+            );
         END IF;
     END IF;
+
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';

@@ -72,9 +72,7 @@ class Persons(Base):
 
         # Set filter by text
         if not text is None:
-            text_templ = "%{0}%".format(text.upper())
-            sql = "(UPPER(persons.firstname::text) LIKE :firstname OR UPPER(persons.lastname::text) LIKE :lastname)"
-            query = query.filter(sql).params(firstname=text_templ, lastname=text_templ)
+            query = search(query, text, vector=cls.search_name)
 
         # Set filter by topic
         if not topic is None:
@@ -154,14 +152,29 @@ update_ts_vector = DDL('''
 CREATE FUNCTION person_name_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        new.search_name = to_tsvector('pg_catalog.english', COALESCE(NEW.firstname, '') || ' ' || COALESCE(NEW.lastname, '') || ' ' || COALESCE(NEW.bio, ''));
+        new.search_name = to_tsvector(
+            'pg_catalog.english',
+            CONCAT(
+                    REGEXP_REPLACE(COALESCE(NEW.firstname, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.lastname, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.bio, ''), '[-@.]', ' ', 'g'), ' '
+                )
+        );
     END IF;
 
     IF TG_OP = 'UPDATE' THEN
         IF NEW.bio <> OLD.bio OR NEW.firstname <> OLD.firstname OR NEW.lastname <> OLD.lastname THEN
-            new.search_name =  to_tsvector('pg_catalog.english', COALESCE(NEW.firstname, '') || ' ' || COALESCE(NEW.lastname, '') || ' ' || COALESCE(NEW.bio, ''));
+            new.search_name =  to_tsvector(
+                'pg_catalog.english',
+                CONCAT(
+                    REGEXP_REPLACE(COALESCE(NEW.firstname, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.lastname, ''), '[-@.]', ' ', 'g'), ' ',
+                    REGEXP_REPLACE(COALESCE(NEW.bio, ''), '[-@.]', ' ', 'g'), ' '
+                )
+            );
         END IF;
     END IF;
+
     RETURN NEW;
 END
 $$ LANGUAGE 'plpgsql';
