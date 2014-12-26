@@ -17,7 +17,6 @@ class Topics(Base):
     __tablename__ = 'topics'
     __table_args__ = (
         Index('topic_search_name_gin_idx', 'search_name', postgresql_using='gin'),
-        Index('topic_search_description_gin_idx', 'search_description', postgresql_using='gin'),
     )
 
     name        = Column(String, primary_key=True, nullable=False, index=True)
@@ -28,7 +27,6 @@ class Topics(Base):
     status      = Column(ChoiceType(TOPIC_STATUS), nullable=False)
     type        = Column(ChoiceType(TOPIC_TYPE), nullable=False, index=True)
 
-    search_description = Column(TSVectorType('description'))
     search_name = Column(TSVectorType('name', 'title', 'title_orig', 'description'))
 
     topic_values = relationship('TopicsValues', backref='topics', cascade='all, delete')
@@ -131,10 +129,6 @@ update_ts_vector = DDL('''
 CREATE FUNCTION topics_desc_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        new.search_description = to_tsvector(
-            'pg_catalog.english', CONCAT(REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' ')
-        );
-
         new.search_name = to_tsvector(
             'pg_catalog.english',
             CONCAT(
@@ -147,12 +141,6 @@ BEGIN
     END IF;
 
     IF TG_OP = 'UPDATE' THEN
-        IF NEW.description <> OLD.description THEN
-            NEW.search_description = to_tsvector(
-                'pg_catalog.english', CONCAT(REGEXP_REPLACE(COALESCE(NEW.description, ''), '[-@.]', ' ', 'g'), ' ')
-            );
-        END IF;
-
         IF NEW.description <> OLD.description OR NEW.name <> OLD.name OR NEW.title <> OLD.title OR NEW.title_orig <> OLD.title_orig THEN
             NEW.search_name = to_tsvector(
                 'pg_catalog.english',
